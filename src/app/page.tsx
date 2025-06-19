@@ -1,10 +1,5 @@
-import { Playground } from "@/components/Playground";
+import Home from "@/app/home/page";
 
-const Page = () => (
-  <main>
-    {/* <Playground /> */}
-  </main>
-);
-
-export default Page;
-
+export default function Main() {
+  return <Home />;
+}
