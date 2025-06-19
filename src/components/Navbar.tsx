@@ -6,6 +6,8 @@ import Image from "next/image";
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+// Drawer
+import DrawerComponent from "@/components/Drawer";
 import {
   // faSearch,
   // faEllipsisV,
@@ -145,19 +147,25 @@ export default function NavbarComponent() {
             <FontAwesomeIcon
               icon={faBars}
               className="text-2xl text-gray-700"
-              onClick={() => setIsOpen(!isOpen)}
+              data-drawer-target="drawer-navigation"
+              data-drawer-show="drawer-navigation"
+              aria-controls="drawer-navigation"
+              onClick={() => {
+                const drawer = document.getElementById("drawer-navigation");
+                if (!drawer) return;
+
+                // Jika drawer saat ini disembunyikan, buka
+                if (drawer.classList.contains("-translate-x-full")) {
+                  drawer.classList.remove("-translate-x-full");
+                } else {
+                  drawer.classList.add("-translate-x-full");
+                }
+              }}
             />
           </div>
 
-          {/* Dropdown for burger */}
-          {isOpen && (
-            <div className="absolute top-10 left-0 bg-white shadow-md p-4 rounded-xl w-40 z-50 flex flex-col gap-4">
-              <IconItem icon={faDollarSign} label="ID/IDR RP" />
-              <IconItem icon={faHeart} label="WISHLIST" />
-              <IconItem icon={faShoppingCart} label="CART" />
-              <IconItem icon={faUser} label="PROFILE" />
-            </div>
-          )}
+          {/* Drawer */}
+          <DrawerComponent isOpen={isOpen} onClose={() => setIsOpen(false)} />
         </div>
 
         {/* Search */}

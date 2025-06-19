@@ -24,7 +24,7 @@ const JumbotronComponent: React.FC<JumbotronProps> = ({ image }) => {
             href="#"
             className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-red-800 hover:bg-red-900 focus:ring-4 focus:ring-blue-300"
           >
-            Get started
+            Book Now
             <svg
               className="w-3.5 h-3.5 ms-2 rtl:rotate-180"
               aria-hidden="true"
