@@ -20,43 +20,43 @@ const Galery: React.FC<GaleryProps> = ({
       <div>
         <img
           className="h-auto max-w-full rounded-lg"
-          src="https://flowbite.s3.amazonaws.com/docs/gallery/featured/image.jpg"
+          src="/images/destination/tanah-lot/tanah-lot6.jpg"
           alt=""
         />
       </div>
       <div className="grid grid-cols-5 gap-4">
         <div>
           <img
-            className="h-auto max-w-full rounded-lg"
-            src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg"
+            className="h-auto md:h-50 max-w-full rounded-lg"
+            src="/images/destination/tanah-lot/tanah-lot5.jpg"
             alt=""
           />
         </div>
         <div>
           <img
-            className="h-auto max-w-full rounded-lg"
-            src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg"
+            className="h-auto md:h-50 max-w-full rounded-lg"
+            src="/images/destination/tanah-lot/tanah-lot4.jpg"
             alt=""
           />
         </div>
         <div>
           <img
-            className="h-auto max-w-full rounded-lg"
-            src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-3.jpg"
+            className="h-auto md:h-50 max-w-full rounded-lg"
+            src="/images/destination/tanah-lot/tanah-lot3.jpg"
             alt=""
           />
         </div>
         <div>
           <img
-            className="h-auto max-w-full rounded-lg"
-            src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg"
+            className="h-auto md:h-50 max-w-full rounded-lg"
+            src="/images/destination/tanah-lot/tanah-lot3.jpg"
             alt=""
           />
         </div>
         <div>
           <img
-            className="h-auto max-w-full rounded-lg"
-            src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-5.jpg"
+            className="h-auto md:h-50 max-w-full rounded-lg"
+            src="/images/destination/tanah-lot/tanah-lot1.jpg"
             alt=""
           />
         </div>
