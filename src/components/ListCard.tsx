@@ -1,15 +1,23 @@
-// components/EcommersCard.tsx
+// components/ListCard.tsx
 import React from "react";
+// Font Awesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import {
+  faCartPlus,
+  faPlus,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
 
-type EcommersCardProps = {
+type ListCardProps = {
   image: string;
   title: string;
   sub_title: string;
   price: number;
-  link?: string;
+  link?: string; // optional
 };
 
-const EcommersCard: React.FC<EcommersCardProps> = ({
+const ListCard: React.FC<ListCardProps> = ({
   image,
   title,
   sub_title,
@@ -18,20 +26,22 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
 }) => {
   return (
     <a href={link} className="block">
-      <div className="w-60 max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink">
-        <a href="#">
+      <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink">
+        <a href={link}>
           <img
-            className="p-4 rounded-t-lg w-full h-50 object-cover"
+            className="p-4 rounded-t-lg w-full h-40 md:h-50 object-cover"
             src={image}
             alt={title}
           />
         </a>
         <div className="px-4 pb-4">
-          <a href="#">
-            <h5 className="text-xl font-semibold tracking-tight text-gray-800 ">
+          <a href={link}>
+            <h5 className="md:text-xl font-semibold tracking-tight text-gray-800 ">
               {title}
             </h5>
-            <p className="text-gray-500 text-wrap text-sm">{sub_title}</p>
+            <p className="text-gray-500 text-wrap text-xs md:text-sm">
+              {sub_title}
+            </p>
           </a>
           {/* Ratings */}
           <div className="flex items-center mt-2.5 mb-5">
@@ -90,10 +100,19 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
             {/* Price */}
             <span className="text-2xl font-bold text-gray-700 ">${price}</span>
             <a
-              href="#"
-              className="text-white bg-red-800 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+              href={link}
+              className="hidden md:block text-white bg-red-800 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
             >
               Add to cart
+            </a>
+            <a
+              href={link}
+              className="block md:hidden text-white bg-red-800 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+            >
+              <FontAwesomeIcon
+                icon={faCartPlus}
+                className="w-4 h-4 text-white"
+              />
             </a>
           </div>
         </div>
@@ -102,4 +121,4 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
   );
 };
 
-export default EcommersCard;
+export default ListCard;

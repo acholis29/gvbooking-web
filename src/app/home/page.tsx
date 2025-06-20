@@ -157,9 +157,6 @@ sort Des"
           />
         </section>
       </div>
-
-      {/* Footer */}
-      <FooterComponent />
     </div>
   );
 }

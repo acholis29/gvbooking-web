@@ -12,6 +12,7 @@ import "flowbite";
 
 // Components
 import Navbar from "@/components/Navbar";
+import FooterComponent from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,6 +45,8 @@ export default function RootLayout({
       >
         <Navbar />
         {children}
+        {/* Footer */}
+        <FooterComponent />
       </body>
     </html>
   );
