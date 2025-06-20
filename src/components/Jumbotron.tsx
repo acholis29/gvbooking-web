@@ -21,7 +21,7 @@ const JumbotronComponent: React.FC<JumbotronProps> = ({ image }) => {
         </p>
         <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
           <a
-            href="#"
+            href="/list"
             className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-red-800 hover:bg-red-900 focus:ring-4 focus:ring-blue-300"
           >
             Book Now

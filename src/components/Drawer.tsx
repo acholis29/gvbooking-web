@@ -1,6 +1,7 @@
 // DrawerComponent.tsx
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 
 import {
   faClose,
@@ -49,22 +50,30 @@ export default function DrawerComponent({
         <div className="py-4 overflow-y-auto">
           <ul className="space-y-2 font-medium">
             <li>
-              <a
-                href="#"
+              <Link
+                href="/"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                onClick={() => {
+                  const drawer = document.getElementById("drawer-navigation");
+                  if (drawer) drawer.classList.add("-translate-x-full");
+                }}
               >
                 <FontAwesomeIcon
                   icon={faUser}
                   className="w-5 h-5 text-xl text-gray-400"
                 />
                 <span className="ms-3 text-gray-500">Profile</span>
-              </a>
+              </Link>
             </li>
 
             <li>
-              <a
-                href="#"
+              <Link
+                href="/cart"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                onClick={() => {
+                  const drawer = document.getElementById("drawer-navigation");
+                  if (drawer) drawer.classList.add("-translate-x-full");
+                }}
               >
                 <FontAwesomeIcon
                   icon={faShoppingCart}
@@ -76,12 +85,16 @@ export default function DrawerComponent({
                 <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white-800 bg-red-900 rounded-full">
                   3
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="#"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                onClick={() => {
+                  const drawer = document.getElementById("drawer-navigation");
+                  if (drawer) drawer.classList.add("-translate-x-full");
+                }}
               >
                 <FontAwesomeIcon
                   icon={faHeart}
@@ -93,12 +106,16 @@ export default function DrawerComponent({
                 <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white-800 bg-red-900 rounded-full">
                   3
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="#"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                onClick={() => {
+                  const drawer = document.getElementById("drawer-navigation");
+                  if (drawer) drawer.classList.add("-translate-x-full");
+                }}
               >
                 <FontAwesomeIcon
                   icon={faDollar}
@@ -107,13 +124,17 @@ export default function DrawerComponent({
                 <span className="flex-1 ms-3 text-gray-500 whitespace-nowrap">
                   IDR / RP
                 </span>
-              </a>
+              </Link>
             </li>
 
             <li>
-              <a
+              <Link
                 href="#"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                onClick={() => {
+                  const drawer = document.getElementById("drawer-navigation");
+                  if (drawer) drawer.classList.add("-translate-x-full");
+                }}
               >
                 <svg
                   className="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -133,12 +154,16 @@ export default function DrawerComponent({
                 <span className="flex-1 ms-3 text-gray-500 whitespace-nowrap">
                   Sign In
                 </span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="#"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                onClick={() => {
+                  const drawer = document.getElementById("drawer-navigation");
+                  if (drawer) drawer.classList.add("-translate-x-full");
+                }}
               >
                 <svg
                   className="shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -154,7 +179,7 @@ export default function DrawerComponent({
                 <span className="flex-1 ms-3 text-gray-500 whitespace-nowrap">
                   Sign Up
                 </span>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
