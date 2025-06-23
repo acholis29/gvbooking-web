@@ -1,5 +1,17 @@
+"use client";
+// State
+import { useState } from "react";
 import Image from "next/image";
+// Font Awesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 export default function FooterComponent() {
+  const [isDropdownLangOpen, setDropdownLangOpen] = useState(false);
+  const [selectedLang, setSelectedLang] = useState("English (US)");
+  const [selectedPathLang, setSelectedPathLang] = useState(
+    "/images/flag/amerika.png"
+  );
   return (
     <footer className="bg-gray-300">
       <div className="mx-auto w-full max-w-screen-xl">
@@ -239,28 +251,151 @@ export default function FooterComponent() {
             </a>
 
             <button
+              onClick={() => setDropdownLangOpen(!isDropdownLangOpen)}
               id="dropdownDefaultButton"
               data-dropdown-toggle="dropdown"
               className="text-gray-900 bg-gray-300  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center "
               type="button"
             >
-              English (United State){" "}
-              <svg
-                className="w-2.5 h-2.5 ms-3"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 10 6"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m1 1 4 4 4-4"
-                />
-              </svg>
+              <img src={selectedPathLang} className="w-7 mr-2" alt="" />
+              {selectedLang}
+              <FontAwesomeIcon
+                icon={faChevronDown}
+                className="w-4 h-4 text-gray-600 pl-2"
+              />
             </button>
+            {isDropdownLangOpen && (
+              <div className="absolute z-20 bg-gray-400 divide-y divide-gray-100 rounded-lg shadow-sm w-40 -mt-75 ml-45">
+                <ul className="py-2 text-sm text-gray-700">
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedLang("English (US)");
+                        setSelectedPathLang("/images/flag/amerika.png");
+                        setDropdownLangOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      <img
+                        src="/images/flag/amerika.png"
+                        className="w-7 mr-2"
+                        alt=""
+                      />
+                      English (US)
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedLang("Germany");
+                        setSelectedPathLang("/images/flag/germany.png");
+                        setDropdownLangOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      <img
+                        src="/images/flag/germany.png"
+                        className="w-7 mr-2"
+                        alt=""
+                      />
+                      Germany
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedLang("Indonesia");
+                        setSelectedPathLang("/images/flag/indonesia.png");
+                        setDropdownLangOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      <img
+                        src="/images/flag/indonesia.png"
+                        className="w-7 mr-2"
+                        alt=""
+                      />
+                      Indonesia
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedLang("Thailand");
+                        setSelectedPathLang("/images/flag/thailand.png");
+                        setDropdownLangOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      <img
+                        src="/images/flag/thailand.png"
+                        className="w-7 mr-2"
+                        alt=""
+                      />
+                      Thailand
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedLang("Vietnam");
+                        setSelectedPathLang("/images/flag/vietnam.png");
+                        setDropdownLangOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      <img
+                        src="/images/flag/vietnam.png"
+                        className="w-7 mr-2"
+                        alt=""
+                      />
+                      Vietnam
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedLang("Srilangka");
+                        setSelectedPathLang("/images/flag/srilangka.png");
+                        setDropdownLangOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      <img
+                        src="/images/flag/srilangka.png"
+                        className="w-7 mr-2"
+                        alt=""
+                      />
+                      Srilangka
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedLang("India");
+                        setSelectedPathLang("/images/flag/india.png");
+                        setDropdownLangOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      <img
+                        src="/images/flag/india.png"
+                        className="w-7 mr-2"
+                        alt=""
+                      />
+                      India
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -16,7 +16,7 @@ const JumbotronComponent: React.FC<JumbotronProps> = ({ image }) => {
           Discover and book activities from around the world
         </h1>
         <p className="mb-8 text-lg font-normal text-white drop-shadow-sm lg:text-xl sm:px-16 lg:px-48">
-          &quote;Dream Vacation Starts Here: The Ultimate Travel Experience,
+          &quot; Dream Vacation Starts Here: The Ultimate Travel Experience,
           Just for You. &quot;
         </p>
         <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">

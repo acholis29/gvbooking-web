@@ -1,5 +1,35 @@
+"use client";
+// State
+import { useState, useEffect, useRef } from "react";
+
 import Galery from "@/components/Galery";
+// Font Awesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 export default function DetailDestination() {
+  const [isDropdownPersonOpen, setDropdownPersonOpen] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState("");
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // ❗ Detect click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownPersonOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="max-w-screen-xl mx-auto px-4">
       {/* Baris Title */}
@@ -110,79 +140,51 @@ export default function DetailDestination() {
               Select date and participants
             </p>
             <div className="flex justify-between gap-2">
+              {/* date */}
               <div className="w-1/2">
                 <input
                   type="date"
                   className="bg-white p-2 rounded-2xl w-full"
                 />
               </div>
-              <div>
+              {/* Dropdown */}
+              <div ref={dropdownRef}>
                 <button
+                  onClick={() => setDropdownPersonOpen(!isDropdownPersonOpen)}
                   id="dropdownDefaultButton"
                   data-dropdown-toggle="dropdown"
                   className="w-50 rounded-2xl text-gray-600 bg-white hover:bg-gray-300 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center justify-between"
                   type="button"
                 >
-                  Persons
-                  <svg
-                    className="w-2.5 h-2.5 ms-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 10 6"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m1 1 4 4 4-4"
-                    />
-                  </svg>
+                  Persons {selectedPerson}
+                  <FontAwesomeIcon
+                    icon={faChevronDown}
+                    className="w-4 h-4 text-gray-600"
+                  />
                 </button>
 
-                <div
-                  id="dropdown"
-                  className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700"
-                >
-                  <ul
-                    className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                    aria-labelledby="dropdownDefaultButton"
-                  >
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Dashboard
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Settings
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Earnings
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Sign out
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                {isDropdownPersonOpen && (
+                  <div className="absolute z-20 bg-gray-400 divide-y divide-gray-100 rounded-lg shadow-sm w-50 mt-2">
+                    <ul className="py-2 text-sm text-gray-700">
+                      {Array.from({ length: 10 }, (_, i) => i + 1).map(
+                        (num) => (
+                          <li key={num}>
+                            <button
+                              onClick={() => {
+                                setSelectedPerson(num.toString());
+                                setDropdownPersonOpen(false);
+                              }}
+                              type="button"
+                              className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                            >
+                              {num} Person{num > 1 && "s"}
+                            </button>
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
             <button

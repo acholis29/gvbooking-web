@@ -1,6 +1,6 @@
 "use client";
 // State
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 // Next Image
 import Image from "next/image";
 // Font Awesome
@@ -15,12 +15,36 @@ import {
   faChevronDown,
   faDollarSign,
   faHeart,
+  faSearch,
   faShoppingCart,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function NavbarComponent() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("All categories");
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // ❗ Detect click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+        // setDrawerOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <nav className="bg-white border-gray-200">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -40,14 +64,15 @@ export default function NavbarComponent() {
 
         {/* Search */}
         <form className="max-w-xl w-full mx-auto hidden md:block">
-          <div className="flex">
+          <div className="flex" ref={dropdownRef}>
             <button
+              onClick={() => setDropdownOpen(!isDropdownOpen)}
               id="dropdown-button"
-              data-dropdown-toggle="dropdown"
+              data-dropdown-toggle="dropdown-category"
               className="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100"
               type="button"
             >
-              All categories{" "}
+              {selectedCategory}
               <span className="ml-2">
                 <FontAwesomeIcon
                   icon={faChevronDown}
@@ -55,48 +80,72 @@ export default function NavbarComponent() {
                 />
               </span>
             </button>
-            <div
-              id="dropdown"
-              className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 "
-            >
-              <ul
-                className="py-2 text-sm text-gray-700 "
-                aria-labelledby="dropdown-button"
-              >
-                <li>
-                  <button
-                    type="button"
-                    className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                  >
-                    Mockups
-                  </button>
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                  >
-                    Templates
-                  </button>
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                  >
-                    Design
-                  </button>
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                  >
-                    Logos
-                  </button>
-                </li>
-              </ul>
-            </div>
+            {isDropdownOpen && (
+              <div className="absolute z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 mt-11">
+                <ul className="py-2 text-sm text-gray-700">
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory("All Categories");
+                        setDropdownOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      All Categories
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory("Mockups");
+                        setDropdownOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      Mockups
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory("Template");
+                        setDropdownOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      Templates
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory("Design");
+                        setDropdownOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      Design
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory("Logos");
+                        setDropdownOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      Logos
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
 
             <div className="relative w-full">
               <input
@@ -110,21 +159,10 @@ export default function NavbarComponent() {
                 type="submit"
                 className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-800 rounded-e-lg border border-red-800 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 "
               >
-                <svg
-                  className="w-4 h-4"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                  />
-                </svg>
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  className="w-4 h-4 text-gray-100"
+                />
 
                 <span className="sr-only">Search</span>
               </button>
@@ -165,19 +203,23 @@ export default function NavbarComponent() {
           </div>
 
           {/* Drawer */}
-          <DrawerComponent isOpen={isOpen} onClose={() => setIsOpen(false)} />
+          <DrawerComponent
+            isOpen={isDrawerOpen}
+            onClose={() => setDrawerOpen(false)}
+          />
         </div>
 
         {/* Search */}
         <form className="max-w-xl w-full mx-auto md:hidden">
           <div className="flex">
             <button
+              onClick={() => setDropdownOpen(!isDropdownOpen)}
               id="dropdown-button"
               data-dropdown-toggle="dropdown"
               className="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100"
               type="button"
             >
-              All categories{" "}
+              {selectedCategory}
               <span className="ml-2">
                 <FontAwesomeIcon
                   icon={faChevronDown}
@@ -185,48 +227,73 @@ export default function NavbarComponent() {
                 />
               </span>
             </button>
-            <div
-              id="dropdown"
-              className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 "
-            >
-              <ul
-                className="py-2 text-sm text-gray-700 "
-                aria-labelledby="dropdown-button"
-              >
-                <li>
-                  <button
-                    type="button"
-                    className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                  >
-                    Mockups
-                  </button>
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                  >
-                    Templates
-                  </button>
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                  >
-                    Design
-                  </button>
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                  >
-                    Logos
-                  </button>
-                </li>
-              </ul>
-            </div>
+
+            {isDropdownOpen && (
+              <div className="absolute z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 mt-11">
+                <ul className="py-2 text-sm text-gray-700">
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory("All Categories");
+                        setDropdownOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      All Categories
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory("Mockups");
+                        setDropdownOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      Mockups
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory("Template");
+                        setDropdownOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      Templates
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory("Design");
+                        setDropdownOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      Design
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory("Logos");
+                        setDropdownOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                    >
+                      Logos
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
 
             <div className="relative w-full">
               <input
