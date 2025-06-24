@@ -35,7 +35,6 @@ export default function NavbarComponent() {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setDropdownOpen(false);
-        // setDrawerOpen(false);
       }
     };
 
@@ -69,7 +68,7 @@ export default function NavbarComponent() {
               onClick={() => setDropdownOpen(!isDropdownOpen)}
               id="dropdown-button"
               data-dropdown-toggle="dropdown-category"
-              className="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100"
+              className="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 cursor-pointer"
               type="button"
             >
               {selectedCategory}
@@ -90,7 +89,7 @@ export default function NavbarComponent() {
                         setDropdownOpen(false);
                       }}
                       type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
                     >
                       All Categories
                     </button>
@@ -102,7 +101,7 @@ export default function NavbarComponent() {
                         setDropdownOpen(false);
                       }}
                       type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
                     >
                       Mockups
                     </button>
@@ -114,7 +113,7 @@ export default function NavbarComponent() {
                         setDropdownOpen(false);
                       }}
                       type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
                     >
                       Templates
                     </button>
@@ -126,7 +125,7 @@ export default function NavbarComponent() {
                         setDropdownOpen(false);
                       }}
                       type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
                     >
                       Design
                     </button>
@@ -138,7 +137,7 @@ export default function NavbarComponent() {
                         setDropdownOpen(false);
                       }}
                       type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
                     >
                       Logos
                     </button>
@@ -157,7 +156,7 @@ export default function NavbarComponent() {
               />
               <button
                 type="submit"
-                className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-800 rounded-e-lg border border-red-800 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 "
+                className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-600 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer "
               >
                 <FontAwesomeIcon
                   icon={faSearch}
@@ -305,7 +304,7 @@ export default function NavbarComponent() {
               />
               <button
                 type="submit"
-                className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-800 rounded-e-lg border border-red-800 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 "
+                className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 "
               >
                 <svg
                   className="w-4 h-4"

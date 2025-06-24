@@ -18,7 +18,7 @@ const HorizontalCard: React.FC<HorizontalCardProps> = ({
   return (
     <a
       href={link}
-      className="flex flex-row items-start bg-white border border-gray-200 rounded-lg shadow-sm md:max-w-xl hover:bg-gray-100 mb-3"
+      className="flex flex-row items-start bg-white border border-gray-200 rounded-lg shadow-sm md:max-w-3xl hover:bg-gray-100 mb-3"
     >
       <img
         className="w-30 h-40 p-2 object-cover rounded-2xl"

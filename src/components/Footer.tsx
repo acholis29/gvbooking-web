@@ -1,6 +1,6 @@
 "use client";
 // State
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,9 +12,40 @@ export default function FooterComponent() {
   const [selectedPathLang, setSelectedPathLang] = useState(
     "/images/flag/amerika.png"
   );
+
+  const dropdownWrapperRef = useRef<HTMLDivElement>(null);
+
+  // ✅ Tutup dropdown jika klik di luar wrapper
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownWrapperRef.current &&
+        !dropdownWrapperRef.current.contains(event.target as Node)
+      ) {
+        setDropdownLangOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const languages = [
+    { name: "English (US)", flag: "amerika" },
+    { name: "Germany", flag: "germany" },
+    { name: "Indonesia", flag: "indonesia" },
+    { name: "Thailand", flag: "thailand" },
+    { name: "Vietnam", flag: "vietnam" },
+    { name: "Srilangka", flag: "srilangka" },
+    { name: "India", flag: "india" },
+  ];
+
   return (
-    <footer className="bg-gray-300">
+    <footer className="bg-gray-100 pb-20">
       <div className="mx-auto w-full max-w-screen-xl">
+        <div className="pt-10">
+          <hr className="text-gray-200" />
+        </div>
         <div className="grid grid-cols-2 gap-8 px-4 py-6 lg:py-8 md:grid-cols-5">
           <div>
             <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase">
@@ -152,12 +183,13 @@ export default function FooterComponent() {
             </a>
           </div>
         </div>
-        <div className="px-4 py-6 bg-gray-300  md:flex md:items-center md:justify-between">
+        <hr className="text-gray-200" />
+        <div className="px-4 py-6 bg-gray-100  md:flex md:items-center md:justify-between">
           <span className="text-sm text-gray-900  sm:text-center">
             © 2025 <a href="https://flowbite.com/">GoVacation™</a>. All Rights
             Reserved.
           </span>
-          <div className="flex mt-4 sm:justify-center items-center md:mt-0 space-x-5 rtl:space-x-reverse">
+          <div className="flex mt-4 justify-between items-center md:mt-0 space-x-5 rtl:space-x-reverse">
             <a
               href="#"
               className="text-gray-400 hover:text-gray-900 dark:hover:text-white"
@@ -230,172 +262,49 @@ export default function FooterComponent() {
               </svg>
               <span className="sr-only">GitHub account</span>
             </a>
-            <a
-              href="#"
-              className="text-gray-400 hover:text-gray-900 dark:hover:text-white"
-            >
-              <svg
-                className="w-4 h-4"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 0a10 10 0 1 0 10 10A10.009 10.009 0 0 0 10 0Zm6.613 4.614a8.523 8.523 0 0 1 1.93 5.32 20.094 20.094 0 0 0-5.949-.274c-.059-.149-.122-.292-.184-.441a23.879 23.879 0 0 0-.566-1.239 11.41 11.41 0 0 0 4.769-3.366ZM8 1.707a8.821 8.821 0 0 1 2-.238 8.5 8.5 0 0 1 5.664 2.152 9.608 9.608 0 0 1-4.476 3.087A45.758 45.758 0 0 0 8 1.707ZM1.642 8.262a8.57 8.57 0 0 1 4.73-5.981A53.998 53.998 0 0 1 9.54 7.222a32.078 32.078 0 0 1-7.9 1.04h.002Zm2.01 7.46a8.51 8.51 0 0 1-2.2-5.707v-.262a31.64 31.64 0 0 0 8.777-1.219c.243.477.477.964.692 1.449-.114.032-.227.067-.336.1a13.569 13.569 0 0 0-6.942 5.636l.009.003ZM10 18.556a8.508 8.508 0 0 1-5.243-1.8 11.717 11.717 0 0 1 6.7-5.332.509.509 0 0 1 .055-.02 35.65 35.65 0 0 1 1.819 6.476 8.476 8.476 0 0 1-3.331.676Zm4.772-1.462A37.232 37.232 0 0 0 13.113 11a12.513 12.513 0 0 1 5.321.364 8.56 8.56 0 0 1-3.66 5.73h-.002Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <span className="sr-only">Dribbble account</span>
-            </a>
 
-            <button
-              onClick={() => setDropdownLangOpen(!isDropdownLangOpen)}
-              id="dropdownDefaultButton"
-              data-dropdown-toggle="dropdown"
-              className="text-gray-900 bg-gray-300  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center "
-              type="button"
-            >
-              <img src={selectedPathLang} className="w-7 mr-2" alt="" />
-              {selectedLang}
-              <FontAwesomeIcon
-                icon={faChevronDown}
-                className="w-4 h-4 text-gray-600 pl-2"
-              />
-            </button>
-            {isDropdownLangOpen && (
-              <div className="absolute z-20 bg-gray-400 divide-y divide-gray-100 rounded-lg shadow-sm w-40 -mt-75 ml-45">
-                <ul className="py-2 text-sm text-gray-700">
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedLang("English (US)");
-                        setSelectedPathLang("/images/flag/amerika.png");
-                        setDropdownLangOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                    >
-                      <img
-                        src="/images/flag/amerika.png"
-                        className="w-7 mr-2"
-                        alt=""
-                      />
-                      English (US)
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedLang("Germany");
-                        setSelectedPathLang("/images/flag/germany.png");
-                        setDropdownLangOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                    >
-                      <img
-                        src="/images/flag/germany.png"
-                        className="w-7 mr-2"
-                        alt=""
-                      />
-                      Germany
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedLang("Indonesia");
-                        setSelectedPathLang("/images/flag/indonesia.png");
-                        setDropdownLangOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                    >
-                      <img
-                        src="/images/flag/indonesia.png"
-                        className="w-7 mr-2"
-                        alt=""
-                      />
-                      Indonesia
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedLang("Thailand");
-                        setSelectedPathLang("/images/flag/thailand.png");
-                        setDropdownLangOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                    >
-                      <img
-                        src="/images/flag/thailand.png"
-                        className="w-7 mr-2"
-                        alt=""
-                      />
-                      Thailand
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedLang("Vietnam");
-                        setSelectedPathLang("/images/flag/vietnam.png");
-                        setDropdownLangOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                    >
-                      <img
-                        src="/images/flag/vietnam.png"
-                        className="w-7 mr-2"
-                        alt=""
-                      />
-                      Vietnam
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedLang("Srilangka");
-                        setSelectedPathLang("/images/flag/srilangka.png");
-                        setDropdownLangOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                    >
-                      <img
-                        src="/images/flag/srilangka.png"
-                        className="w-7 mr-2"
-                        alt=""
-                      />
-                      Srilangka
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedLang("India");
-                        setSelectedPathLang("/images/flag/india.png");
-                        setDropdownLangOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                    >
-                      <img
-                        src="/images/flag/india.png"
-                        className="w-7 mr-2"
-                        alt=""
-                      />
-                      India
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            )}
+            <div ref={dropdownWrapperRef} className="relative">
+              <button
+                onClick={() => setDropdownLangOpen(!isDropdownLangOpen)}
+                id="dropdownDefaultButton"
+                data-dropdown-toggle="dropdown"
+                className="text-gray-900 bg-gray-200  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center cursor-pointer"
+                type="button"
+              >
+                <img src={selectedPathLang} className="w-7 mr-2" alt="" />
+                {selectedLang}
+                <FontAwesomeIcon
+                  icon={faChevronDown}
+                  className="w-4 h-4 text-gray-600 pl-2"
+                />
+              </button>
+              {isDropdownLangOpen && (
+                <div className="absolute z-20 bg-gray-200 divide-y divide-gray-100 rounded-lg shadow-sm w-40 -mt-80">
+                  <ul className="py-2 text-sm text-gray-700">
+                    {languages.map(({ name, flag }) => (
+                      <li key={flag}>
+                        <button
+                          onClick={() => {
+                            setSelectedLang(name);
+                            setSelectedPathLang(`/images/flag/${flag}.png`);
+                            setDropdownLangOpen(false);
+                          }}
+                          type="button"
+                          className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        >
+                          <img
+                            src={`/images/flag/${flag}.png`}
+                            className="w-7 mr-2"
+                            alt={name}
+                          />
+                          {name}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

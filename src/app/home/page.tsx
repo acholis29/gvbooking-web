@@ -53,7 +53,7 @@ export default function Home() {
       </section>
 
       {/* Section Favorite Tour */}
-      <div className="bg-gray-300 my-6 pb-6">
+      <div className="bg-gray-100 my-6 pb-6">
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
           <p className="text-gray-600 font-bold">Favorite Tours :</p>
         </section>

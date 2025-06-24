@@ -90,7 +90,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
           <span className="text-2xl font-bold text-gray-700 ">${price}</span>
           <a
             href={link}
-            className="text-white bg-red-800 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+            className="text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
           >
             Add to cart
           </a>

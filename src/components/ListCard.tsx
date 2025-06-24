@@ -100,13 +100,13 @@ const ListCard: React.FC<ListCardProps> = ({
           <span className="text-2xl font-bold text-gray-700 ">${price}</span>
           <a
             href={link}
-            className="hidden md:block text-white bg-red-800 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+            className="hidden md:block text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
           >
             Add to cart
           </a>
           <a
             href={link}
-            className="block md:hidden text-white bg-red-800 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+            className="block md:hidden text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
           >
             <FontAwesomeIcon icon={faCartPlus} className="w-4 h-4 text-white" />
           </a>

@@ -26,3 +26,51 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* COLOR GVI */
+.text-red-gvi {
+  /* Dertour */
+  color: #e40028;
+}
+
+.text-grey-gvi-20 {
+  color: #dadada;
+}
+
+.text-grey-gvi-40 {
+  color: #b2b2b2;
+}
+
+.text-grey-gvi-60 {
+  color: #878787;
+}
+
+.text-grey-gvi-80 {
+  color: #575757;
+}
+
+.bg-red-gvi {
+  /* Dertour */
+  background-color: #e40028;
+}
+
+.bg-grey-gvi-20 {
+  background-color: #dadada;
+}
+
+.bg-grey-gvi-40 {
+  background-color: #b2b2b2;
+}
+
+.bg-grey-gvi-60 {
+  background-color: #878787;
+}
+
+.bg-grey-gvi-80 {
+  background-color: #575757;
+}
+
+.border-red-gvi {
+  /* Dertour */
+  border-color: #e40028;
+}
