@@ -21,7 +21,7 @@ const Search: React.FC<SearchProps> = ({
         <input
           type="text"
           id="voice-search"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 block w-full md:w-md ps-10 p-2.5"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-red-500 focus:border-red-500 block w-full md:w-md ps-10 p-2.5"
           placeholder="Search"
           required
         />

@@ -46,7 +46,7 @@ export default function FooterComponent() {
         <div className="pt-10">
           <hr className="text-gray-200" />
         </div>
-        <div className="grid grid-cols-2 gap-8 px-4 py-6 lg:py-8 md:grid-cols-5">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 px-4 py-6 lg:py-8">
           <div>
             <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase">
               Company

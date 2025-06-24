@@ -50,112 +50,114 @@ export default function NavbarComponent() {
         </a>
 
         {/* Search */}
-        <form className="max-w-xl w-full mx-auto hidden md:block">
-          <div className="flex">
-            <button
-              onClick={() => setDropdownOpen(!isDropdownOpen)}
-              id="dropdown-button"
-              data-dropdown-toggle="dropdown-category"
-              className="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 cursor-pointer"
-              type="button"
-            >
-              {selectedCategory}
-              <span className="ml-2">
-                <FontAwesomeIcon
-                  icon={faChevronDown}
-                  className="w-4 h-4 text-gray-600"
-                />
-              </span>
-            </button>
-            {isDropdownOpen && (
-              <div className="absolute z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 mt-11">
-                <ul className="py-2 text-sm text-gray-700">
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedCategory("All Categories");
-                        setDropdownOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    >
-                      All Categories
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedCategory("Mockups");
-                        setDropdownOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    >
-                      Mockups
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedCategory("Template");
-                        setDropdownOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    >
-                      Templates
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedCategory("Design");
-                        setDropdownOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    >
-                      Design
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedCategory("Logos");
-                        setDropdownOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    >
-                      Logos
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            )}
-
-            <div className="relative w-full">
-              <input
-                type="search"
-                id="search-dropdown"
-                className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
-                placeholder="Search your destinations..."
-                required
-              />
+        {!hideSearch && (
+          <form className="max-w-xl w-full mx-auto hidden md:block">
+            <div className="flex">
               <button
-                type="submit"
-                className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-600 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer "
+                onClick={() => setDropdownOpen(!isDropdownOpen)}
+                id="dropdown-button"
+                data-dropdown-toggle="dropdown-category"
+                className="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 cursor-pointer"
+                type="button"
               >
-                <FontAwesomeIcon
-                  icon={faSearch}
-                  className="w-4 h-4 text-gray-100"
-                />
-
-                <span className="sr-only">Search</span>
+                {selectedCategory}
+                <span className="ml-2">
+                  <FontAwesomeIcon
+                    icon={faChevronDown}
+                    className="w-4 h-4 text-gray-600"
+                  />
+                </span>
               </button>
+              {isDropdownOpen && (
+                <div className="absolute z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 mt-11">
+                  <ul className="py-2 text-sm text-gray-700">
+                    <li>
+                      <button
+                        onClick={() => {
+                          setSelectedCategory("All Categories");
+                          setDropdownOpen(false);
+                        }}
+                        type="button"
+                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      >
+                        All Categories
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => {
+                          setSelectedCategory("Mockups");
+                          setDropdownOpen(false);
+                        }}
+                        type="button"
+                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      >
+                        Mockups
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => {
+                          setSelectedCategory("Template");
+                          setDropdownOpen(false);
+                        }}
+                        type="button"
+                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      >
+                        Templates
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => {
+                          setSelectedCategory("Design");
+                          setDropdownOpen(false);
+                        }}
+                        type="button"
+                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      >
+                        Design
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => {
+                          setSelectedCategory("Logos");
+                          setDropdownOpen(false);
+                        }}
+                        type="button"
+                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      >
+                        Logos
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              )}
+
+              <div className="relative w-full">
+                <input
+                  type="search"
+                  id="search-dropdown"
+                  className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-red-500 focus:border-red-500 "
+                  placeholder="Search your destinations..."
+                  required
+                />
+                <button
+                  type="submit"
+                  className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-600 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 cursor-pointer "
+                >
+                  <FontAwesomeIcon
+                    icon={faSearch}
+                    className="w-4 h-4 text-gray-100"
+                  />
+
+                  <span className="sr-only">Search</span>
+                </button>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        )}
 
         {/* Icon */}
         <div className="relative">
@@ -287,13 +289,13 @@ export default function NavbarComponent() {
                 <input
                   type="search"
                   id="search-dropdown"
-                  className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
+                  className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-red-500 focus:border-red-500 "
                   placeholder="Search your destinations..."
                   required
                 />
                 <button
                   type="submit"
-                  className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 "
+                  className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 "
                 >
                   <svg
                     className="w-4 h-4"

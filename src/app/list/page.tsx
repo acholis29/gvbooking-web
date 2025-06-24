@@ -28,9 +28,9 @@ export default function List() {
         {/* Konten Kiri */}
         <div className="md:w-1/6 text-gray-700">
           <p className="text-sm mb-2 font-semibold">Keywords</p>
-          <Chips title="Spring" />
-          <Chips title="Smart" />
-          <Chips title="Modern" />
+          <Chips title="Spring" id="badge1" />
+          <Chips title="Smart" id="badge2" />
+          <Chips title="Modern" id="badge3" />
           <Range />
 
           <div className="flex flex-row gap-3 md:flex-col">
@@ -53,7 +53,7 @@ export default function List() {
           {/* Baris Search dan Badge */}
           <div className="hidden md:flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             {/* Search akan full width di HP */}
-            <div className="">
+            <div className="w-md">
               <Search />
             </div>
 
