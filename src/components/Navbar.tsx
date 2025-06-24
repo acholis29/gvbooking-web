@@ -3,11 +3,13 @@
 import { useState, useEffect, useRef } from "react";
 // Next Image
 import Image from "next/image";
+// Drawer
+import DrawerComponent from "@/components/Drawer";
+// Path
+import { usePathname } from "next/navigation";
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-// Drawer
-import DrawerComponent from "@/components/Drawer";
 import {
   // faSearch,
   // faEllipsisV,
@@ -25,45 +27,31 @@ export default function NavbarComponent() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All categories");
 
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // ❗ Detect click outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  const pathname = usePathname();
+  const hideSearch = pathname.startsWith("/list"); // atau sesuaikan dengan rute list-mu
 
   return (
     <nav className="bg-white border-gray-200">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        {/* Logo */}
         <a
           href="/home"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
-          <Image
-            src="/images/logo/gvi-logo-removebg-slim.svg"
-            alt="GVI logo"
-            width={180}
-            height={38}
-            priority
-          />
+          <div className="w-[150px] h-auto">
+            <Image
+              src="/images/logo/gvi-logo-removebg-slim.svg"
+              alt="GVI logo"
+              width={180}
+              height={38}
+              className="w-full h-auto"
+              priority
+            />
+          </div>
         </a>
 
         {/* Search */}
         <form className="max-w-xl w-full mx-auto hidden md:block">
-          <div className="flex" ref={dropdownRef}>
+          <div className="flex">
             <button
               onClick={() => setDropdownOpen(!isDropdownOpen)}
               id="dropdown-button"
@@ -209,124 +197,126 @@ export default function NavbarComponent() {
         </div>
 
         {/* Search */}
-        <form className="max-w-xl w-full mx-auto md:hidden">
-          <div className="flex">
-            <button
-              onClick={() => setDropdownOpen(!isDropdownOpen)}
-              id="dropdown-button"
-              data-dropdown-toggle="dropdown"
-              className="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100"
-              type="button"
-            >
-              {selectedCategory}
-              <span className="ml-2">
-                <FontAwesomeIcon
-                  icon={faChevronDown}
-                  className="w-4 h-4 text-gray-600"
-                />
-              </span>
-            </button>
-
-            {isDropdownOpen && (
-              <div className="absolute z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 mt-11">
-                <ul className="py-2 text-sm text-gray-700">
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedCategory("All Categories");
-                        setDropdownOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                    >
-                      All Categories
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedCategory("Mockups");
-                        setDropdownOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                    >
-                      Mockups
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedCategory("Template");
-                        setDropdownOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                    >
-                      Templates
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedCategory("Design");
-                        setDropdownOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                    >
-                      Design
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        setSelectedCategory("Logos");
-                        setDropdownOpen(false);
-                      }}
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                    >
-                      Logos
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            )}
-
-            <div className="relative w-full">
-              <input
-                type="search"
-                id="search-dropdown"
-                className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
-                placeholder="Search your destinations..."
-                required
-              />
+        {!hideSearch && (
+          <form className="max-w-xl w-full mx-auto md:hidden">
+            <div className="flex">
               <button
-                type="submit"
-                className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 "
+                onClick={() => setDropdownOpen(!isDropdownOpen)}
+                id="dropdown-button"
+                data-dropdown-toggle="dropdown"
+                className="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100"
+                type="button"
               >
-                <svg
-                  className="w-4 h-4"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                {selectedCategory}
+                <span className="ml-2">
+                  <FontAwesomeIcon
+                    icon={faChevronDown}
+                    className="w-4 h-4 text-gray-600"
                   />
-                </svg>
-
-                <span className="sr-only">Search</span>
+                </span>
               </button>
+
+              {isDropdownOpen && (
+                <div className="absolute z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 mt-11">
+                  <ul className="py-2 text-sm text-gray-700">
+                    <li>
+                      <button
+                        onClick={() => {
+                          setSelectedCategory("All Categories");
+                          setDropdownOpen(false);
+                        }}
+                        type="button"
+                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                      >
+                        All Categories
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => {
+                          setSelectedCategory("Mockups");
+                          setDropdownOpen(false);
+                        }}
+                        type="button"
+                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                      >
+                        Mockups
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => {
+                          setSelectedCategory("Template");
+                          setDropdownOpen(false);
+                        }}
+                        type="button"
+                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                      >
+                        Templates
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => {
+                          setSelectedCategory("Design");
+                          setDropdownOpen(false);
+                        }}
+                        type="button"
+                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                      >
+                        Design
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => {
+                          setSelectedCategory("Logos");
+                          setDropdownOpen(false);
+                        }}
+                        type="button"
+                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                      >
+                        Logos
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              )}
+
+              <div className="relative w-full">
+                <input
+                  type="search"
+                  id="search-dropdown"
+                  className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
+                  placeholder="Search your destinations..."
+                  required
+                />
+                <button
+                  type="submit"
+                  className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 "
+                >
+                  <svg
+                    className="w-4 h-4"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                    />
+                  </svg>
+
+                  <span className="sr-only">Search</span>
+                </button>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        )}
       </div>
     </nav>
   );

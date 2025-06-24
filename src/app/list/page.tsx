@@ -9,7 +9,22 @@ export default function List() {
   return (
     // List Page
     <div className="max-w-screen-xl mx-auto">
-      <section className="flex flex-col md:flex-row p-6 bg-white gap-6">
+      <section className="flex flex-col md:flex-row px-6 pb-6 bg-white gap-6">
+        {/* Search List Mobile  */}
+        <div className="md:hidden flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+          {/* Search akan full width di HP */}
+          <div className="">
+            <Search />
+          </div>
+
+          {/* Badge akan di bawah search di HP, dan di samping saat md */}
+          <div className="flex flex-wrap gap-1">
+            <Badge title="New" />
+            <Badge title="Price Ascending" />
+            <Badge title="Price Descending" />
+            <Badge title="Rating" />
+          </div>
+        </div>
         {/* Konten Kiri */}
         <div className="md:w-1/6 text-gray-700">
           <p className="text-sm mb-2 font-semibold">Keywords</p>
@@ -36,7 +51,7 @@ export default function List() {
         {/* Konten Kanan */}
         <div className="md:w-5/6 text-black">
           {/* Baris Search dan Badge */}
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+          <div className="hidden md:flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             {/* Search akan full width di HP */}
             <div className="">
               <Search />
