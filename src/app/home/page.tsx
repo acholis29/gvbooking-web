@@ -13,6 +13,7 @@ import {
   faMapLocationDot,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
+import SkeletonImage from "@/components/SkeletonImage";
 
 export default function Home() {
   type DestinationItem = {
@@ -62,11 +63,16 @@ export default function Home() {
               activities={334}
               link={`/destination/${item.country
                 .toLowerCase()
-                .replace(/\s+/g, "-")}`}
+                .replace(/\s+/g, "-")}?idx-comp-alias=${item.idx_comp_alias}`}
             />
           ))
         ) : (
-          <p className="text-center w-full">Loading...</p>
+          <>
+            <SkeletonImage />
+            <SkeletonImage />
+            <SkeletonImage />
+            <SkeletonImage />
+          </>
         )}
       </section>
 
