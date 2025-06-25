@@ -70,43 +70,38 @@ export default function List() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 py-4">
             <ListCard
               image="/images/destination/thailand.jpg"
-              title="Name Of Tour"
-              sub_title="Sort Description sort Des 
-sort Des"
-              price={2000}
+              title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+              sub_title="10 hours • Skip the line • Pickup availables"
+              price={"2.000.000"}
               link="/destination/detail/thailand"
             />
 
             <ListCard
               image="/images/destination/india.jpg"
-              title="Name Of Tour"
-              sub_title="Sort Description sort Des 
-sort Des"
-              price={2000}
+              title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+              sub_title="10 hours • Skip the line • Pickup availables"
+              price={"2.000.000"}
             />
 
             <ListCard
               image="/images/destination/vietnam.jpg"
-              title="Name Of Tour"
-              sub_title="Sort Description sort Des 
-sort Des"
-              price={2000}
+              title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+              sub_title="10 hours • Skip the line • Pickup availables"
+              price={"2.000.000"}
             />
 
             <ListCard
               image="/images/destination/srilangka.jpg"
-              title="Name Of Tour"
-              sub_title="Sort Description sort Des 
-sort Des"
-              price={2000}
+              title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+              sub_title="10 hours • Skip the line • Pickup availables"
+              price={"2.000.000"}
             />
 
             <ListCard
               image="/images/destination/bali.jpg"
-              title="Name Of Tour"
-              sub_title="Sort Description sort Des 
-sort Des"
-              price={2000}
+              title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+              sub_title="10 hours • Skip the line • Pickup availables"
+              price={"2.000.000"}
             />
           </div>
         </div>

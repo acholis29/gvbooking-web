@@ -42,7 +42,7 @@ export default function Home() {
           image="/images/destination/bali.jpg"
           title="Bali, Indonesia"
           activities={334}
-          link="/destination/bali"
+          link="/destination/indonesia"
         />
 
         <DestinationCard

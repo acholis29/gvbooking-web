@@ -1,19 +1,32 @@
 import React from "react";
+// Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import {
-  faArrowAltCircleRight,
-  faArrowLeft,
-  faArrowRight,
-  faCheck,
-  faSearch,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 type JumbotronProps = {
   image: string;
+  destination?: String;
 };
 
-const JumbotronComponent: React.FC<JumbotronProps> = ({ image }) => {
+const JumbotronComponent: React.FC<JumbotronProps> = ({
+  image,
+  destination,
+}) => {
+  const arrDestination: Record<string, string> = {
+    cambodia: "https://www.go-vacation.com/destinations/destination-cambodia/",
+    indonesia:
+      "https://www.go-vacation.com/destinations/destination-indonesia/",
+    india: "https://www.go-vacation.com/destinations/destination-india/",
+    srilangka:
+      "https://www.go-vacation.com/destinations/destination-sri-langka/",
+    thailand: "https://www.go-vacation.com/destinations/destination-thailand/",
+    vietnam: "https://www.go-vacation.com/destinations/destination-vietnam/",
+  };
+
+  const destinationUrl = destination
+    ? arrDestination[destination.toLowerCase()]
+    : "https://www.go-vacation.com/";
+
   return (
     <section
       className="relative w-full h-[600px] bg-center bg-cover flex items-center justify-center"
@@ -43,7 +56,7 @@ const JumbotronComponent: React.FC<JumbotronProps> = ({ image }) => {
             />
           </a> */}
           <a
-            href="https://go-vacation.com"
+            href={destinationUrl}
             className="py-3 px-5 sm:ms-4 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-red-900 focus:z-10 focus:ring-4 focus:ring-gray-100"
           >
             Learn more{" "}

@@ -47,24 +47,21 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
           <div className="flex items-center space-x-1 rtl:space-x-reverse">
             <FontAwesomeIcon
               icon={faStar}
-              className="w-4 h-4 text-gray-600 text-yellow-300"
+              className="w-4 h-4 text-yellow-300"
             />
             <FontAwesomeIcon
               icon={faStar}
-              className="w-4 h-4 text-gray-600 text-yellow-300"
+              className="w-4 h-4 text-yellow-300"
             />
             <FontAwesomeIcon
               icon={faStar}
-              className="w-4 h-4 text-gray-600 text-yellow-300"
+              className="w-4 h-4 text-yellow-300"
             />
             <FontAwesomeIcon
               icon={faStar}
-              className="w-4 h-4 text-gray-600 text-yellow-300"
+              className="w-4 h-4 text-yellow-300"
             />
-            <FontAwesomeIcon
-              icon={faStar}
-              className="w-4 h-4 text-gray-600 text-gray-600"
-            />
+            <FontAwesomeIcon icon={faStar} className="w-4 h-4 text-gray-600" />
           </div>
           <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm dark:bg-blue-200 dark:text-blue-800 ms-3">
             5.0

@@ -51,7 +51,7 @@ export default function DetailDestination() {
       {/* Baris Content */}
       <div className="flex flex-col md:flex-row pb-5 gap-5">
         {/* Kontent Kiri */}
-        <div className="order-2 md:order-1 w-full md:w-4/6 text-gray-600">
+        <div className="order-2 md:order-1 w-full md:flex-[5] text-gray-600">
           <p className="font-bold text-lg">
             The Legendary Charm of Tanah Lot Temple: Bali's Eternal Wonder
           </p>
@@ -127,7 +127,7 @@ export default function DetailDestination() {
           </div>
         </div>
         {/* Kontent Kanan */}
-        <div className="order-1 md:order-2 w-full md:w-2/6 text-gray-600">
+        <div className="order-1 md:order-2 w-full md:flex-[1] text-gray-600">
           <div className="border p-3 rounded-2xl">
             <p className="font-bold text-lg">FROM</p>
             <p>
@@ -148,12 +148,12 @@ export default function DetailDestination() {
                 />
               </div>
               {/* Dropdown */}
-              <div ref={dropdownRef}>
+              <div className="w-1/2" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownPersonOpen(!isDropdownPersonOpen)}
                   id="dropdownDefaultButton"
                   data-dropdown-toggle="dropdown"
-                  className="w-50 rounded-2xl text-gray-600 bg-white hover:bg-gray-300 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center justify-between"
+                  className="w-40 rounded-2xl text-gray-600 bg-white hover:bg-gray-300 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center justify-between"
                   type="button"
                 >
                   Persons {selectedPerson}
