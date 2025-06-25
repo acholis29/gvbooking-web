@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   description:
     "Go Vacation Indonesia, Go Vacation Thailand, Go Vacation Vietnam",
   icons: {
-    icon: "/images/icon/favicon.ico", // pastikan sesuai dengan nama file di public
+    icon: "/images/icon/icon-gvi.ico", // pastikan sesuai dengan nama file di public
   },
 };
 

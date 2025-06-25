@@ -9,7 +9,7 @@ const SkeletonImage: React.FC<SkeletonImageProps> = ({ id }) => {
   return (
     <div
       role="status"
-      className="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse "
+      className="flex items-center justify-center max-w-sm bg-gray-300  animate-pulse relative shrink-0 md:shrink h-48 w-72 md:w-full rounded-xl overflow-hidden shadow-lg"
     >
       <svg
         className="w-10 h-10 text-gray-500 "
