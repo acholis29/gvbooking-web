@@ -1,4 +1,13 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import {
+  faArrowAltCircleRight,
+  faArrowLeft,
+  faArrowRight,
+  faCheck,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
 
 type JumbotronProps = {
   image: string;
@@ -7,11 +16,14 @@ type JumbotronProps = {
 const JumbotronComponent: React.FC<JumbotronProps> = ({ image }) => {
   return (
     <section
-      className="relative bg-cover bg-center h-96 w-full"
+      className="relative w-full h-[600px] bg-center bg-cover flex items-center justify-center"
       style={{ backgroundImage: `url('${image}')` }}
     >
-      <div className="absolute inset-0 bg-black/40"></div>
-      <div className="relative z-10 py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16">
+      {/* Overlay hitam */}
+      <div className="absolute inset-0 bg-black/40 z-0"></div>
+
+      {/* Konten */}
+      <div className="relative z-10 text-center px-4 max-w-screen-xl">
         <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white drop-shadow-md md:text-5xl lg:text-6xl">
           Discover and book activities from around the world
         </h1>
@@ -20,32 +32,25 @@ const JumbotronComponent: React.FC<JumbotronProps> = ({ image }) => {
           Just for You. &quot;
         </p>
         <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
-          <a
+          {/* <a
             href="/list"
-            className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-red-gvi hover:bg-red-900 focus:ring-4 focus:ring-blue-300"
+            className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-white rounded-lg bg-red-gvi hover:bg-red-900 focus:ring-4 focus:ring-blue-300"
           >
             Book Now
-            <svg
-              className="w-3.5 h-3.5 ms-2 rtl:rotate-180"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 10"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M1 5h12m0 0L9 1m4 4L9 9"
-              />
-            </svg>
-          </a>
+            <FontAwesomeIcon
+              icon={faArrowRight}
+              className="w-4 h-4 text-white pl-2"
+            />
+          </a> */}
           <a
-            href="#"
-            className="py-3 px-5 sm:ms-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-red-900 focus:z-10 focus:ring-4 focus:ring-gray-100"
+            href="https://go-vacation.com"
+            className="py-3 px-5 sm:ms-4 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-red-900 focus:z-10 focus:ring-4 focus:ring-gray-100"
           >
-            Learn more
+            Learn more{" "}
+            <FontAwesomeIcon
+              icon={faArrowRight}
+              className="w-4 h-4 text-gray-900 pl-2"
+            />
           </a>
         </div>
       </div>

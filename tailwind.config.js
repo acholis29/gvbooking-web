@@ -8,7 +8,11 @@ module.exports = {
     "./node_modules/flowbite/**/*.js",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        "red-gvi": "#dc2626", // ← definisikan di sini
+      },
+    },
   },
   plugins: [require("flowbite/plugin")],
 };

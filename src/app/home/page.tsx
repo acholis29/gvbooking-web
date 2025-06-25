@@ -3,6 +3,14 @@ import JumbotronComponent from "@/components/Jumbotron";
 import DestinationCard from "@/components/DestinationCard";
 import EcommersCard from "@/components/EcommersCard";
 import FooterComponent from "@/components/Footer";
+// Font Awesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faHeart,
+  faMapLocationDot,
+  faSearch,
+  faStarHalfStroke,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
   return (
@@ -13,7 +21,14 @@ export default function Home() {
 
       {/* Section Destination */}
       <section className="py-6 px-4 max-w-screen-xl mx-auto">
-        <p className="text-gray-500 font-bold">Destinations :</p>
+        <p className="text-red-gvi font-bold text-3xl mt-10">
+          {" "}
+          <FontAwesomeIcon
+            icon={faMapLocationDot}
+            className="w-10 h-10 text-red-gvi 0 pl-2"
+          />{" "}
+          Destinations
+        </p>
       </section>
       <section className="max-w-screen-xl mx-auto flex gap-3 overflow-x-auto md:overflow-x-visible whitespace-nowrap flex-nowrap px-4">
         <DestinationCard
@@ -55,55 +70,56 @@ export default function Home() {
       {/* Section Favorite Tour */}
       <div className="bg-gray-100 my-6 pb-6">
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
-          <p className="text-gray-600 font-bold">Favorite Tours :</p>
+          <p className="text-red-gvi font-bold text-3xl">
+            {" "}
+            <FontAwesomeIcon
+              icon={faHeart}
+              className="w-10 h-10 text-red-gvi 0 pl-2"
+            />{" "}
+            Favorite Tours
+          </p>
         </section>
-        <section className="max-w-screen-xl mx-auto flex gap-3 overflow-x-auto md:overflow-x-visible flex-nowrap md:flex-wrap px-4">
+        <section className="max-w-screen-xl mx-auto flex gap-6 overflow-x-auto md:overflow-x-visible flex-nowrap md:flex-wrap px-4">
           <EcommersCard
             image="/images/destination/thailand.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={2000}
+            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+            sub_title="10 hours • Skip the line • Pickup availables"
+            price={"2.000.000"}
           />
 
           <EcommersCard
             image="/images/destination/india.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={2000}
+            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+            sub_title="10 hours • Skip the line • Pickup availables"
+            price={"2.000.000"}
           />
 
           <EcommersCard
             image="/images/destination/vietnam.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={2000}
+            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+            sub_title="10 hours • Skip the line • Pickup availables"
+            price={"2.000.000"}
           />
 
           <EcommersCard
             image="/images/destination/srilangka.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={2000}
+            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+            sub_title="10 hours • Skip the line • Pickup availables"
+            price={"2.000.000"}
           />
 
           <EcommersCard
             image="/images/destination/bali.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={2000}
+            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+            sub_title="10 hours • Skip the line • Pickup availables"
+            price={"2.000.000"}
           />
 
           <EcommersCard
             image="/images/destination/thailand.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={2000}
+            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+            sub_title="10 hours • Skip the line • Pickup availables"
+            price={"2.000.000"}
           />
         </section>
 
@@ -113,47 +129,49 @@ sort Des"
       {/* Section Last Your Search */}
       <div className="bg-white my-6 pb-6">
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
-          <p className="text-gray-600 font-bold">Last Your Search :</p>
+          <p className="text-red-gvi font-bold text-3xl">
+            {" "}
+            <FontAwesomeIcon
+              icon={faSearch}
+              className="w-10 h-10 text-red-gvi 0 pl-2"
+            />{" "}
+            Last your search
+          </p>
         </section>
         <section className="max-w-screen-xl mx-auto flex gap-3 overflow-x-auto md:overflow-x-visible flex-nowrap md:flex-wrap px-4">
           <EcommersCard
             image="/images/destination/thailand.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={2000}
+            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+            sub_title="10 hours • Skip the line • Pickup availables"
+            price={"2.000.000"}
           />
 
           <EcommersCard
             image="/images/destination/india.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={2000}
+            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+            sub_title="10 hours • Skip the line • Pickup availables"
+            price={"2.000.000"}
           />
 
           <EcommersCard
             image="/images/destination/vietnam.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={2000}
+            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+            sub_title="10 hours • Skip the line • Pickup availables"
+            price={"2.000.000"}
           />
 
           <EcommersCard
             image="/images/destination/srilangka.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={2000}
+            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+            sub_title="10 hours • Skip the line • Pickup availables"
+            price={"2.000.000"}
           />
 
           <EcommersCard
             image="/images/destination/bali.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={2000}
+            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+            sub_title="10 hours • Skip the line • Pickup availables"
+            price={"2.000.000"}
           />
         </section>
       </div>
