@@ -26,7 +26,7 @@ export default async function Destination({ params }: PageProps) {
     <div>
       {/* Jumbotron */}
       <JumbotronComponent
-        image="/images/destination/thailand.jpg"
+        image={`/images/destination/${slug}.jpg`}
         destination={slug}
       />
 
