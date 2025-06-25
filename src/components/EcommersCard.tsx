@@ -26,7 +26,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
   link = "#",
 }) => {
   return (
-    <div className="w-72 max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink">
+    <div className="w-72 md:w-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink">
       <a href={link} className="block overflow-hidden rounded-t-lg">
         <img
           className="w-full h-65 object-cover transition-transform duration-300 ease-in-out hover:scale-105"

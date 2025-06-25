@@ -52,7 +52,7 @@ export default function Home() {
           Destinations
         </p>
       </section>
-      <section className="max-w-screen-xl mx-auto flex gap-3 overflow-x-auto md:overflow-x-visible whitespace-nowrap flex-nowrap px-4">
+      <section className="max-w-screen-xl mx-auto flex gap-3 overflow-x-auto md:grid md:grid-cols-4 md:overflow-visible whitespace-nowrap flex-nowrap px-4">
         {destination.length > 0 ? (
           destination.map((item) => (
             <DestinationCard
@@ -66,7 +66,7 @@ export default function Home() {
             />
           ))
         ) : (
-          <p className="text-center">Loading...</p>
+          <p className="text-center w-full">Loading...</p>
         )}
       </section>
 
@@ -82,7 +82,8 @@ export default function Home() {
             Favorite Tours
           </p>
         </section>
-        <section className="max-w-screen-xl mx-auto flex gap-6 overflow-x-auto md:overflow-x-visible flex-nowrap md:flex-wrap px-4">
+        {/* <section className="max-w-screen-xl mx-auto flex gap-6 overflow-x-auto md:overflow-x-visible flex-nowrap md:flex-wrap px-4"> */}
+        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4  md:grid md:grid-cols-4">
           <EcommersCard
             image="/images/destination/thailand.jpg"
             title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
@@ -141,7 +142,7 @@ export default function Home() {
             Last your search
           </p>
         </section>
-        <section className="max-w-screen-xl mx-auto flex gap-3 overflow-x-auto md:overflow-x-visible flex-nowrap md:flex-wrap px-4">
+        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4  md:grid md:grid-cols-4">
           <EcommersCard
             image="/images/destination/thailand.jpg"
             title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
