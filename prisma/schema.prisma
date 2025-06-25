@@ -4,18 +4,21 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlserver"
   url      = env("DATABASE_URL")
 }
 
-model tour {
-  id        BigInt  @id
-  nama_tour String? @db.VarChar(255)
-  harga     Int?
-}
-
-model User {
-  id    Int    @id @default(autoincrement())
-  name  String
-  email String @unique
+model MSExcursion {
+  Country        String?  @db.NVarChar(50)
+  State          String?  @db.NVarChar(500)
+  code_exc       String?  @db.NVarChar(50)
+  Idx_excursion  String   @id(map: "PK_MSExcursion") @db.NVarChar(50)
+  Name_excursion String?  @db.NVarChar(500)
+  Duration_Type  String?  @db.NVarChar(500)
+  Holiday_Type   String?  @db.NVarChar(500)
+  PriceFrom      Float?
+  Descr          String?  @db.NVarChar(2500)
+  StsDel         Boolean?
+  StsRecom       Boolean?
+  idx_comp       String?  @db.NVarChar(50)
 }

@@ -41,7 +41,7 @@ export default async function Destination({ params }: PageProps) {
           Local Destinations :
         </p>
       </section>
-      <section className="max-w-screen-xl mx-auto flex gap-3 overflow-x-auto md:overflow-x-visible whitespace-nowrap flex-nowrap px-4">
+      <section className="max-w-screen-xl mx-auto flex gap-3 overflow-x-auto md:grid md:grid-cols-4 md:overflow-visible whitespace-nowrap flex-nowrap px-4">
         <DestinationCard
           image="/images/destination/thailand.jpg"
           title="Bangkok, Thailand"
@@ -90,7 +90,7 @@ export default async function Destination({ params }: PageProps) {
             Recomended in {slug}
           </p>
         </section>
-        <section className="max-w-screen-xl mx-auto flex gap-3 overflow-x-auto md:overflow-x-visible flex-nowrap md:flex-wrap px-4">
+        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4  md:grid md:grid-cols-4">
           <EcommersCard
             image="/images/destination/thailand/thailand-phuket.jpg"
             title="Phuket, Thailand"
@@ -155,7 +155,7 @@ sort Des"
             Tour in {slug}
           </p>
         </section>
-        <section className="max-w-screen-xl mx-auto flex gap-3 overflow-x-auto md:overflow-x-visible flex-nowrap md:flex-wrap px-4">
+        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4  md:grid md:grid-cols-4">
           <EcommersCard
             image="/images/destination/thailand.jpg"
             title="Name Of Tour"

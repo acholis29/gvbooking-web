@@ -27,7 +27,9 @@ export default function Home() {
   const [destination, setDestination] = useState<DestinationItem[]>([]);
 
   useEffect(() => {
-    fetch("https://api.govacation.biz/mobile/corev2.json")
+    fetch("https://api.govacation.biz/mobile/corev2.json", {
+      cache: "no-store", // ⛔ jangan ambil dari cache
+    })
       .then((res) => res.json())
       .then((data) => {
         console.log("DATA:", data); // ← ini langsung array
