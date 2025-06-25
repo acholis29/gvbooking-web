@@ -1,4 +1,7 @@
-// import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+
 import JumbotronComponent from "@/components/Jumbotron";
 import DestinationCard from "@/components/DestinationCard";
 import EcommersCard from "@/components/EcommersCard";
@@ -9,10 +12,29 @@ import {
   faHeart,
   faMapLocationDot,
   faSearch,
-  faStarHalfStroke,
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
+  type DestinationItem = {
+    idx_comp_alias: string;
+    name: string;
+    country: string;
+    countryCode: string;
+    url_img_team: string;
+  };
+
+  const [destination, setDestination] = useState<DestinationItem[]>([]);
+
+  useEffect(() => {
+    fetch("https://api.govacation.biz/mobile/corev2.json")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("DATA:", data); // ← ini langsung array
+        setDestination(data); // ✅ langsung set array-nya
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     // Home Page
     <div>
@@ -31,40 +53,21 @@ export default function Home() {
         </p>
       </section>
       <section className="max-w-screen-xl mx-auto flex gap-3 overflow-x-auto md:overflow-x-visible whitespace-nowrap flex-nowrap px-4">
-        <DestinationCard
-          image="/images/destination/thailand.jpg"
-          title="Bangkok, Thailand"
-          activities={334}
-          link="/destination/thailand"
-        />
-
-        <DestinationCard
-          image="/images/destination/bali.jpg"
-          title="Bali, Indonesia"
-          activities={334}
-          link="/destination/indonesia"
-        />
-
-        <DestinationCard
-          image="/images/destination/vietnam.jpg"
-          title="Vietnam"
-          activities={334}
-          link="/destination/vietnam"
-        />
-
-        <DestinationCard
-          image="/images/destination/srilangka.jpg"
-          title="Srilangka"
-          activities={334}
-          link="/destination/srilangka"
-        />
-
-        <DestinationCard
-          image="/images/destination/india.jpg"
-          title="India"
-          activities={334}
-          link="/destination/india"
-        />
+        {destination.length > 0 ? (
+          destination.map((item) => (
+            <DestinationCard
+              key={item.idx_comp_alias}
+              image={`/images/destination/${item.country.toLowerCase()}.jpg`}
+              title={item.country}
+              activities={334}
+              link={`/destination/${item.country
+                .toLowerCase()
+                .replace(/\s+/g, "-")}`}
+            />
+          ))
+        ) : (
+          <p className="text-center">Loading...</p>
+        )}
       </section>
 
       {/* Section Favorite Tour */}
