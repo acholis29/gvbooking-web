@@ -31,7 +31,7 @@ export async function GET(
     const result = await prisma.$queryRawUnsafe(`api_MSExcursion_Filter '${idx_comp}' ,'s'`);
     return Response.json(result);
   } catch (error) {
-    console.error('Error GET /api/excursion/local_destination:', error);
+    console.error('Error GET /api/excursion/local_destination/[idx_comp]:', error);
     return Response.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

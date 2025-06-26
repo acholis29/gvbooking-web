@@ -24,6 +24,12 @@ export default function Home() {
     url_img_team: string;
   };
 
+  type ActivityCountryItem = {
+    idx_comp: string;
+    country: string;
+    qty: string;
+  };
+
   const [destination, setDestination] = useState<DestinationItem[]>([]);
 
   useEffect(() => {
@@ -34,6 +40,22 @@ export default function Home() {
       .then((data) => {
         console.log("DATA:", data); // ← ini langsung array
         setDestination(data); // ✅ langsung set array-nya
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  const [activityCountry, setActivityCountry] = useState<ActivityCountryItem[]>(
+    []
+  );
+
+  useEffect(() => {
+    fetch("/api/excursion/activity_country", {
+      cache: "no-store", // ⛔ jangan ambil dari cache
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("activity country:", data); // ← ini langsung array
+        setActivityCountry(data); // ✅ langsung set array-nya
       })
       .catch((err) => console.error(err));
   }, []);
@@ -57,17 +79,25 @@ export default function Home() {
       </section>
       <section className="max-w-screen-xl mx-auto flex gap-3 overflow-x-auto md:grid md:grid-cols-4 md:overflow-visible whitespace-nowrap flex-nowrap px-4">
         {destination.length > 0 ? (
-          destination.map((item) => (
-            <DestinationCard
-              key={item.idx_comp_alias}
-              image={`/images/destination/${item.country.toLowerCase()}.jpg`}
-              title={item.country}
-              activities={334}
-              link={`/destination/${item.country
-                .toLowerCase()
-                .replace(/\s+/g, "-")}?idx-comp-alias=${item.idx_comp_alias}`}
-            />
-          ))
+          destination.map((item) => {
+            const activity = activityCountry.find(
+              (ac) => ac.idx_comp === item.idx_comp_alias
+            );
+
+            console.log(activity?.qty);
+
+            return (
+              <DestinationCard
+                key={item.idx_comp_alias}
+                image={`/images/destination/${item.country.toLowerCase()}.jpg`}
+                title={item.country}
+                activities={`${activity?.qty ?? "0"}`}
+                link={`/destination/${item.country
+                  .toLowerCase()
+                  .replace(/\s+/g, "-")}?idx-comp-alias=${item.idx_comp_alias}`}
+              />
+            );
+          })
         ) : (
           <>
             <SkeletonImage />

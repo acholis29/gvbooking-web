@@ -1,11 +1,50 @@
+"use client";
+import { useEffect, useState } from "react";
 import Badge from "@/components/Badge";
 import Chips from "@/components/Chips";
 import Range from "@/components/Range";
 import Checkbox from "@/components/Checkbox";
 import Search from "@/components/Search";
 import ListCard from "@/components/ListCard";
+// Params Query
+import { useSearchParams } from "next/navigation";
+import SkeletonImage from "@/components/SkeletonImage";
+
+type DestinationItem = {
+  idx_comp: string;
+  Country: string;
+  State: string;
+  Name_excursion: string;
+  Duration_Type: string;
+  Holiday_Type: string;
+  Currency: string;
+  PriceFrom: string;
+};
 
 export default function List() {
+  const searchParams = useSearchParams();
+  const idx_comp = searchParams.get("idx-comp-alias");
+  const state = searchParams.get("state");
+
+  const [DetailDestination, setDetailDestination] = useState<DestinationItem[]>(
+    []
+  );
+
+  useEffect(() => {
+    fetch(
+      `/api/excursion/local_destination/detail?idx-comp-alias=${idx_comp}&state=${state}`,
+      {
+        cache: "no-store", // ⛔ jangan ambil dari cache
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("EXCUR:", data); // ← ini langsung array
+        setDetailDestination(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     // List Page
     <div className="max-w-screen-xl mx-auto">
@@ -68,41 +107,25 @@ export default function List() {
 
           {/* Baris Card */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 py-4">
-            <ListCard
-              image="/images/destination/thailand.jpg"
-              title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-              sub_title="10 hours • Skip the line • Pickup availables"
-              price={"2.000.000"}
-              link="/destination/detail/thailand"
-            />
-
-            <ListCard
-              image="/images/destination/india.jpg"
-              title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-              sub_title="10 hours • Skip the line • Pickup availables"
-              price={"2.000.000"}
-            />
-
-            <ListCard
-              image="/images/destination/vietnam.jpg"
-              title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-              sub_title="10 hours • Skip the line • Pickup availables"
-              price={"2.000.000"}
-            />
-
-            <ListCard
-              image="/images/destination/srilangka.jpg"
-              title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-              sub_title="10 hours • Skip the line • Pickup availables"
-              price={"2.000.000"}
-            />
-
-            <ListCard
-              image="/images/destination/bali.jpg"
-              title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-              sub_title="10 hours • Skip the line • Pickup availables"
-              price={"2.000.000"}
-            />
+            {DetailDestination.length > 0 ? (
+              DetailDestination.map((item, index) => (
+                <ListCard
+                  key={index}
+                  image={`https://picsum.photos/800/600?random=${index}`}
+                  title={item.Name_excursion}
+                  sub_title="10 hours • Skip the line • Pickup availables"
+                  price={item.PriceFrom ?? 0}
+                  currency={item.Currency ?? "Rp"}
+                />
+              ))
+            ) : (
+              <>
+                <SkeletonImage />
+                <SkeletonImage />
+                <SkeletonImage />
+                <SkeletonImage />
+              </>
+            )}
           </div>
         </div>
       </section>

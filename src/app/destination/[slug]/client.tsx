@@ -25,6 +25,7 @@ type LocalDestinationItem = {
   Country: string;
   State: string;
   Name_excursion: string;
+  qty: string;
 };
 
 type RecomendedDestinationItem = {
@@ -99,8 +100,8 @@ export default function DestinationClient({ slug }: Props) {
               key={index}
               image={`/images/destination/${slug}.jpg`}
               title={`${item.State}`}
-              activities={334}
-              link=""
+              activities={item.qty}
+              link={`/list?idx-comp-alias=${idx_comp}&state=${item.State}`}
             />
           ))
         ) : (

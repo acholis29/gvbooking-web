@@ -4,7 +4,7 @@ import React from "react";
 type DestinationCardProps = {
   image: string;
   title: string;
-  activities: number;
+  activities: string;
   link?: string; // optional
 };
 

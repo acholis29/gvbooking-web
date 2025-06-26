@@ -1,0 +1,8 @@
+//params idx_comp, state, 'holiday', 'price_from', 'price_to', 
+dbo.api_MSExcursion_List '4D340942-88D3-44DD-A52C-EAF00EACADE8', 'LOMBOK','','50','70'
+
+//param idx_comp thailand, indonesia
+api_MSExcursion_Recom '9D9F17A0-9F30-4BDF-85D6-E45C71ACBB95';
+
+//param idx_comp, type (S,H,C)
+api_MSExcursion_Filter '9D9F17A0-9F30-4BDF-85D6-E45C71ACBB95', '';

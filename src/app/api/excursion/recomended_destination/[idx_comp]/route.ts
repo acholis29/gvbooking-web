@@ -12,7 +12,7 @@ export async function GET(
     const result = await prisma.$queryRawUnsafe(`api_MSExcursion_Recom '${idx_comp}'`);
     return Response.json(result);
   } catch (error) {
-    console.error('Error GET /api/excursion/recomended_destinaton:', error);
+    console.error('Error GET /api/excursion/recomended_destinaton/[idx_comp]:', error);
     return Response.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
