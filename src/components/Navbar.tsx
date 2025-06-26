@@ -25,7 +25,7 @@ import {
 export default function NavbarComponent() {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("All categories");
+  const [selectedCategory, setSelectedCategory] = useState("All Destinations");
 
   const pathname = usePathname();
   const hideSearch = pathname.startsWith("/list"); // atau sesuaikan dengan rute list-mu
@@ -74,61 +74,61 @@ export default function NavbarComponent() {
                     <li>
                       <button
                         onClick={() => {
-                          setSelectedCategory("All Categories");
+                          setSelectedCategory("All Destinations");
                           setDropdownOpen(false);
                         }}
                         type="button"
                         className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
                       >
-                        All Categories
+                        All Destinations
                       </button>
                     </li>
                     <li>
                       <button
                         onClick={() => {
-                          setSelectedCategory("Mockups");
+                          setSelectedCategory("Indonesia");
                           setDropdownOpen(false);
                         }}
                         type="button"
                         className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
                       >
-                        Mockups
+                        Indonesia
                       </button>
                     </li>
                     <li>
                       <button
                         onClick={() => {
-                          setSelectedCategory("Template");
+                          setSelectedCategory("Thailand");
                           setDropdownOpen(false);
                         }}
                         type="button"
                         className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
                       >
-                        Templates
+                        Thailand
                       </button>
                     </li>
                     <li>
                       <button
                         onClick={() => {
-                          setSelectedCategory("Design");
+                          setSelectedCategory("Vietnam");
                           setDropdownOpen(false);
                         }}
                         type="button"
                         className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
                       >
-                        Design
+                        Vietnam
                       </button>
                     </li>
                     <li>
                       <button
                         onClick={() => {
-                          setSelectedCategory("Logos");
+                          setSelectedCategory("Cambodia");
                           setDropdownOpen(false);
                         }}
                         type="button"
                         className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
                       >
-                        Logos
+                        Cambodia
                       </button>
                     </li>
                   </ul>
@@ -224,25 +224,25 @@ export default function NavbarComponent() {
                     <li>
                       <button
                         onClick={() => {
-                          setSelectedCategory("All Categories");
+                          setSelectedCategory("All Destinations");
                           setDropdownOpen(false);
                         }}
                         type="button"
                         className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
                       >
-                        All Categories
+                        All Destinations
                       </button>
                     </li>
                     <li>
                       <button
                         onClick={() => {
-                          setSelectedCategory("Mockups");
+                          setSelectedCategory("Indonesia");
                           setDropdownOpen(false);
                         }}
                         type="button"
                         className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
                       >
-                        Mockups
+                        Indonesia
                       </button>
                     </li>
                     <li>

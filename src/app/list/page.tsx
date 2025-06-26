@@ -9,6 +9,8 @@ import ListCard from "@/components/ListCard";
 // Params Query
 import { useSearchParams } from "next/navigation";
 import SkeletonImage from "@/components/SkeletonImage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
 
 type DestinationItem = {
   idx_comp: string;
@@ -67,25 +69,44 @@ export default function List() {
         {/* Konten Kiri */}
         <div className="md:w-1/6 text-gray-700">
           <p className="text-sm mb-2 font-semibold">Keywords</p>
-          <Chips title="Spring" id="badge1" />
-          <Chips title="Smart" id="badge2" />
-          <Chips title="Modern" id="badge3" />
+          <Chips title="Bali" id="badge1" />
+          <Chips title="Lombok" id="badge2" />
+          <Chips title="Java" id="badge3" />
           <Range />
 
           <div className="flex flex-row gap-3 md:flex-col">
             <div>
-              <p className="text-sm mb-2 font-semibold">Color</p>
-              <Checkbox title="Label" />
-              <Checkbox title="Label" />
-              <Checkbox title="Label" />
+              <p className="text-sm mb-2 font-semibold">Holiday Type</p>
+              <Checkbox title="ADVENTURE" />
+              <Checkbox title="BEACH" />
+              <Checkbox title="CULTURE AND HISTORY" />
+              <Checkbox title="MOUNTAIN" />
+              <Checkbox title="NATURE" />
+              <Checkbox title="PRIVATE" />
+              <Checkbox title="SPECIAL ADDRESS" />
+              <Checkbox title="SPORT" />
+              <Checkbox title="SUN AND SEA" />
+              <Checkbox title="TOUR" />
+              <Checkbox title="TRANSFER" />
+              <Checkbox title="WELLNESS FOR BODY AND SOUL" />
             </div>
-            <div>
+            {/* <div>
               <p className="text-sm mb-2 font-semibold">Size</p>
               <Checkbox title="Label" />
               <Checkbox title="Label" />
               <Checkbox title="Label" />
-            </div>
+            </div> */}
           </div>
+          <button
+            type="button"
+            className="mt-4 text-white bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 me-2 mb-2  focus:outline-none w-full"
+          >
+            <FontAwesomeIcon
+              icon={faFilter}
+              className="w-4 h-4 text-gray-100 mr-2"
+            />
+            Apply
+          </button>
         </div>
         {/* Konten Kanan */}
         <div className="md:w-5/6 text-black">

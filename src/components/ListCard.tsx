@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
   faCartPlus,
+  faHeart,
   faPerson,
   faStar,
   faUser,
@@ -30,16 +31,26 @@ const ListCard: React.FC<ListCardProps> = ({
 }) => {
   return (
     <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
-      <a href={link}>
+      <a href={link} className="relative block overflow-hidden rounded-t-lg">
         <img
-          className="pb-4 rounded-t-lg w-full h-40 md:h-50 object-cover"
+          className="w-full h-40 md:h-50 object-cover"
           src={image}
           alt={title}
         />
+
+        {/* Wishlist button - posisi atas kanan gambar */}
+        <button
+          type="button"
+          className="absolute top-2 right-2 border border-white text-white hover:text-red-500 hover:border-red-500 p-2 rounded-full transition"
+          aria-label="Add to wishlist"
+        >
+          <FontAwesomeIcon icon={faHeart} className="w-4 h-4" />
+        </button>
       </a>
-      <div className="px-4 pb-4 flex flex-col flex-grow">
+
+      <div className="px-4 pb-4 flex flex-col flex-grow mt-3">
         <a href={link}>
-          <h5 className="text-md font-semibold tracking-tight text-gray-800 min-h-[40px]">
+          <h5 className="text-sm md:text-md font-semibold tracking-tight text-gray-800 min-h-[40px]">
             {title}
           </h5>
           <p className="text-gray-500 text-wrap text-xs md:text-sm min-h-[36px]">
@@ -54,10 +65,13 @@ const ListCard: React.FC<ListCardProps> = ({
               <FontAwesomeIcon
                 key={i}
                 icon={faStar}
-                className="w-4 h-4 text-yellow-300"
+                className="inline-block !w-3 !h-3 md:!w-4 md:!h-4 text-yellow-300"
               />
             ))}
-            <FontAwesomeIcon icon={faStar} className="w-4 h-4 text-gray-600" />
+            <FontAwesomeIcon
+              icon={faStar}
+              className="inline-block !w-3 !h-3 md:!w-4 md:!h-4 text-gray-600"
+            />
           </div>
           <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm dark:bg-blue-200 dark:text-blue-800 ms-3">
             5.0
@@ -65,7 +79,7 @@ const ListCard: React.FC<ListCardProps> = ({
         </div>
 
         {/* Bottom: harga dan tombol */}
-        <div className="flex items-center justify-between mt-auto">
+        <div className="flex flex-col md:flex-row items-center justify-between mt-auto">
           <span className="text-md font-bold text-gray-700">
             {currency} {price} /{" "}
             <span className="font-normal text-sm">
@@ -77,9 +91,10 @@ const ListCard: React.FC<ListCardProps> = ({
           </span>
           <a
             href={link}
-            className="text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            className="w-full md:w-auto text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
           >
-            <FontAwesomeIcon icon={faCartPlus} className="w-4 h-4 text-white" />
+            <FontAwesomeIcon icon={faCartPlus} className="w-4 h-4 text-white" />{" "}
+            <span className="md:hidden">Add</span>
           </a>
         </div>
       </div>
