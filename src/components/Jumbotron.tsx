@@ -60,6 +60,7 @@ const JumbotronComponent: React.FC<JumbotronProps> = ({
           </a> */}
           <a
             href={destinationUrl}
+            target="blank"
             className="py-3 px-5 sm:ms-4 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-red-900 focus:z-10 focus:ring-4 focus:ring-gray-100"
           >
             Learn more{" "}

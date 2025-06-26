@@ -8,8 +8,10 @@ import EcommersCard from "@/components/EcommersCard";
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBatteryEmpty,
   faCar,
   faHeart,
+  faInbox,
   faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 // Params Query
@@ -41,9 +43,12 @@ export default function DestinationClient({ slug }: Props) {
   const searchParams = useSearchParams();
   const idx_comp = searchParams.get("idx-comp-alias");
 
+  const [isLoadingDest, setIsLoadingDest] = useState(true);
   const [localDestination, setLocalDestination] = useState<
     LocalDestinationItem[]
   >([]);
+
+  const [isLoadingRecom, setIsLoadingRecom] = useState(true);
 
   const [recomdedDestination, setRecomendedDestination] = useState<
     RecomendedDestinationItem[]
@@ -58,7 +63,10 @@ export default function DestinationClient({ slug }: Props) {
         console.log("EXCUR:", data); // ← ini langsung array
         setLocalDestination(data);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => {
+        setIsLoadingDest(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -70,7 +78,10 @@ export default function DestinationClient({ slug }: Props) {
         console.log("EXCUR:", data); // ← ini langsung array
         setRecomendedDestination(data);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => {
+        setIsLoadingRecom(false);
+      });
   }, []);
 
   return (
@@ -123,11 +134,18 @@ export default function DestinationClient({ slug }: Props) {
               icon={faHeart}
               className="w-10 h-10 text-red-gvi 0 pl-2"
             />{" "}
-            Recomended in {slug}
+            Recomended
           </p>
         </section>
-        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4  md:grid md:grid-cols-4">
-          {recomdedDestination.length > 0 ? (
+        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
+          {isLoadingRecom ? (
+            <>
+              <SkeletonImage />
+              <SkeletonImage />
+              <SkeletonImage />
+              <SkeletonImage />
+            </>
+          ) : recomdedDestination.length > 0 ? (
             recomdedDestination.map((item, index) => (
               <EcommersCard
                 key={index}
@@ -138,12 +156,13 @@ export default function DestinationClient({ slug }: Props) {
               />
             ))
           ) : (
-            <>
-              <SkeletonImage />
-              <SkeletonImage />
-              <SkeletonImage />
-              <SkeletonImage />
-            </>
+            <p className="col-span-4 text-gray-500 text-center">
+              <FontAwesomeIcon
+                icon={faInbox}
+                className="w-10 h-10 text-red-gvi 0 pl-2"
+              />{" "}
+              Recomended is empty.
+            </p>
           )}
         </section>
 
