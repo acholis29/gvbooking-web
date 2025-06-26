@@ -38,6 +38,9 @@ const JumbotronComponent: React.FC<JumbotronProps> = ({
       {/* Konten */}
       <div className="relative z-10 text-center px-4 max-w-screen-xl">
         <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white drop-shadow-md md:text-5xl lg:text-6xl">
+          {destination?.toUpperCase()}
+        </h1>
+        <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white drop-shadow-md md:text-5xl lg:text-6xl">
           Discover and book activities from around the world
         </h1>
         <p className="mb-8 text-lg font-normal text-white drop-shadow-sm lg:text-xl sm:px-16 lg:px-48">

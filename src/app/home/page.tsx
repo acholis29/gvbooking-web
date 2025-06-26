@@ -38,17 +38,6 @@ export default function Home() {
       .catch((err) => console.error(err));
   }, []);
 
-  useEffect(() => {
-    fetch("/api/excursion", {
-      cache: "no-store", // ⛔ jangan ambil dari cache
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("EXCUR:", data); // ← ini langsung array
-      })
-      .catch((err) => console.error(err));
-  }, []);
-
   return (
     // Home Page
     <div>

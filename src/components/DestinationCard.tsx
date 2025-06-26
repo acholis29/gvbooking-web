@@ -23,7 +23,9 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
           className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
         />
         <div className="absolute bottom-0 left-0 right-0 bg-black/40 p-4">
-          <h3 className="text-white text-lg font-bold uppercase">{title}</h3>
+          <h3 className="text-white text-lg font-bold uppercase text-wrap">
+            {title}
+          </h3>
           <p className="text-white text-sm font-bold">
             {activities} Activities
           </p>
