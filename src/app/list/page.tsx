@@ -9,7 +9,7 @@ import SearchWithDropdown from "@/components/SearchWithDropdown";
 import ListCard from "@/components/ListCard";
 // Params Query
 import { useSearchParams } from "next/navigation";
-import SkeletonImage from "@/components/SkeletonImage";
+import SkeletonCard from "@/components/SkeletonCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faFilter } from "@fortawesome/free-solid-svg-icons";
 
@@ -217,10 +217,10 @@ export default function List() {
               ))
             ) : (
               <>
-                <SkeletonImage />
-                <SkeletonImage />
-                <SkeletonImage />
-                <SkeletonImage />
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
               </>
             )}
           </div>

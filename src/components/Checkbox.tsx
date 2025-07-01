@@ -7,7 +7,7 @@ type CheckboxProps = {
 
 const Checkbox: React.FC<CheckboxProps> = ({ title = "Checkbox" }) => {
   return (
-    <div className="flex items-center">
+    <div className="flex items-center mb-2">
       <input
         // disabled
         // checked

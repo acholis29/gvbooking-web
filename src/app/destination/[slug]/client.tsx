@@ -17,6 +17,7 @@ import {
 // Params Query
 import { useSearchParams } from "next/navigation";
 import SkeletonImage from "@/components/SkeletonImage";
+import SkeletonCard from "@/components/SkeletonCard";
 
 type Props = {
   slug: string;
@@ -141,10 +142,10 @@ export default function DestinationClient({ slug }: Props) {
         <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
           {isLoadingRecom ? (
             <>
-              <SkeletonImage />
-              <SkeletonImage />
-              <SkeletonImage />
-              <SkeletonImage />
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
             </>
           ) : recomdedDestination.length > 0 ? (
             recomdedDestination.map((item, index) => (
