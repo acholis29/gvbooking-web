@@ -33,7 +33,7 @@ const ListCard: React.FC<ListCardProps> = ({
     <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
       <a href={link} className="relative block overflow-hidden rounded-t-lg">
         <img
-          className="w-full h-40 md:h-50 object-cover"
+          className="w-full h-40 md:h-50 object-cover transition-transform duration-300 ease-in-out hover:scale-150"
           src={image}
           alt={title}
         />
