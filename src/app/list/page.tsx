@@ -28,10 +28,24 @@ type DestinationItem = {
   PriceFrom: string;
 };
 
+const holidayTypes = [
+  "ADVENTURE",
+  "BEACH",
+  "CULTURE AND HISTORY",
+  "MOUNTAIN",
+  "NATURE",
+  "PRIVATE",
+  "SPECIAL ADDRESS",
+  "SPORT",
+  "SUN AND SEA",
+  "TOUR",
+  "TRANSFER",
+  "WELLNESS FOR BODY AND SOUL",
+];
+
 export default function List() {
   const searchParams = useSearchParams();
   const idx_comp = searchParams.get("id"); //dari idx_comp_alias
-  // const state = searchParams.get("state");
   const country = searchParams.get("country");
   const capitalizedCountry = capitalizeWords(country ?? "");
 
@@ -44,9 +58,12 @@ export default function List() {
     capitalizeWords(searchParams.get("state") ?? "")
   );
 
+  // Holiday State
+  const [holidayState, setHolidayState] = useState("");
+
   useEffect(() => {
     fetch(
-      `/api/excursion/local_destination/detail?idx-comp-alias=${idx_comp}&state=${state}`,
+      `/api/excursion/local_destination/detail?idx-comp-alias=${idx_comp}&state=${state}&holiday-type=${holidayState}`,
       {
         cache: "no-store", // ⛔ jangan ambil dari cache
       }
@@ -57,7 +74,7 @@ export default function List() {
         setDetailDestination(data);
       })
       .catch((err) => console.error(err));
-  }, [state]);
+  }, [state, holidayState]);
 
   // Dropdown Sorting
   const [selectedSorting, setSelectedSorting] = useState("Sorting");
@@ -66,6 +83,24 @@ export default function List() {
     setSelectedSorting(value);
   };
 
+  // Checkbox
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+
+  const handleCheckboxChange = (checked: boolean, title: string) => {
+    if (checked) {
+      setSelectedTypes((prev) => [...prev, title]);
+    } else {
+      setSelectedTypes((prev) => prev.filter((t) => t !== title));
+    }
+  };
+
+  // Apply Filter
+  const handleApply = () => {
+    console.log("Checkbox filter applied");
+    const result = selectedTypes.join("|");
+    console.log(result);
+    setHolidayState(result);
+  };
   return (
     // List Page
     <div className="max-w-screen-xl mx-auto">
@@ -96,28 +131,19 @@ export default function List() {
           <div className="flex flex-row gap-3 md:flex-col">
             <div>
               <p className="text-sm mb-2 font-semibold">Holiday Type</p>
-              <Checkbox title="ADVENTURE" />
-              <Checkbox title="BEACH" />
-              <Checkbox title="CULTURE AND HISTORY" />
-              <Checkbox title="MOUNTAIN" />
-              <Checkbox title="NATURE" />
-              <Checkbox title="PRIVATE" />
-              <Checkbox title="SPECIAL ADDRESS" />
-              <Checkbox title="SPORT" />
-              <Checkbox title="SUN AND SEA" />
-              <Checkbox title="TOUR" />
-              <Checkbox title="TRANSFER" />
-              <Checkbox title="WELLNESS FOR BODY AND SOUL" />
+              {holidayTypes.map((type) => (
+                <Checkbox
+                  key={type}
+                  title={type}
+                  checked={selectedTypes.includes(type)}
+                  onChange={handleCheckboxChange}
+                />
+              ))}
             </div>
-            {/* <div>
-              <p className="text-sm mb-2 font-semibold">Size</p>
-              <Checkbox title="Label" />
-              <Checkbox title="Label" />
-              <Checkbox title="Label" />
-            </div> */}
           </div>
           <button
             type="button"
+            onClick={handleApply}
             className="mt-4 text-white bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 me-2 mb-2  focus:outline-none w-full"
           >
             <FontAwesomeIcon
