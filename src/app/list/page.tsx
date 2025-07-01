@@ -5,12 +5,15 @@ import Chips from "@/components/Chips";
 import Range from "@/components/Range";
 import Checkbox from "@/components/Checkbox";
 import Search from "@/components/Search";
+import SearchWithDropdown from "@/components/SearchWithDropdown";
 import ListCard from "@/components/ListCard";
 // Params Query
 import { useSearchParams } from "next/navigation";
 import SkeletonImage from "@/components/SkeletonImage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faFilter } from "@fortawesome/free-solid-svg-icons";
+
+import { Dropdown, DropdownItem } from "flowbite-react";
 
 type DestinationItem = {
   idx_comp: string;
@@ -46,6 +49,13 @@ export default function List() {
       })
       .catch((err) => console.error(err));
   }, []);
+
+  // Dropdown Sorting
+  const [selectedSorting, setSelectedSorting] = useState("Sorting");
+
+  const handleSelect = (value: string) => {
+    setSelectedSorting(value);
+  };
 
   return (
     // List Page
@@ -113,17 +123,53 @@ export default function List() {
           {/* Baris Search dan Badge */}
           <div className="hidden md:flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             {/* Search akan full width di HP */}
-            <div className="w-md">
-              <Search />
+            <div className="w-xl">
+              {/* <Search /> */}
+              <SearchWithDropdown />
             </div>
 
             {/* Badge akan di bawah search di HP, dan di samping saat md */}
-            <div className="flex flex-wrap gap-1">
+            {/* <div className="flex flex-wrap gap-1">
               <Badge title="New" />
               <Badge title="Price Ascending" />
               <Badge title="Price Descending" />
               <Badge title="Rating" />
-            </div>
+            </div> */}
+
+            <Dropdown
+              dismissOnClick={true}
+              renderTrigger={() => (
+                <button
+                  className="text-sm text-gray-600 bg-transparent border-none shadow-none 
+                 hover:bg-transparent focus:ring-0 focus:outline-none 
+                 dark:hover:bg-transparent dark:hover:text-inherit"
+                >
+                  {selectedSorting}
+                  <span className="ml-2">
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
+                      className="w-4 h-4 text-gray-600"
+                    />
+                  </span>
+                </button>
+              )}
+            >
+              <DropdownItem onClick={() => handleSelect("Price Ascending")}>
+                Price Ascending
+              </DropdownItem>
+              <DropdownItem onClick={() => handleSelect("Price Descending")}>
+                Price Descending
+              </DropdownItem>
+              <DropdownItem onClick={() => handleSelect("Low Price")}>
+                Low Price
+              </DropdownItem>
+              <DropdownItem onClick={() => handleSelect("High Price")}>
+                High Price
+              </DropdownItem>
+              <DropdownItem onClick={() => handleSelect("Sorting")}>
+                Reset
+              </DropdownItem>
+            </Dropdown>
           </div>
 
           {/* Baris Card */}

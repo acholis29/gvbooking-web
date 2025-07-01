@@ -18,3 +18,5 @@ api_MSExcursion_Filter '9D9F17A0-9F30-4BDF-85D6-E45C71ACBB95', '';
  // Example path
 
  https://bo.govacation.biz/media/EXC2500005/TN_400_Bali%20Village%20Experience%20(16).jpg
+ https://online.govacation.biz/media/EXC2500002/TN_400_Bali%20Village%20Experience%20(16).jpg
+ 

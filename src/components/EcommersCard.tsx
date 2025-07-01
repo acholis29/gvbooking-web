@@ -36,7 +36,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
         {/* Wishlist button - posisi atas kanan gambar */}
         <button
           type="button"
-          className="absolute top-2 right-2 border border-white text-white hover:text-red-500 hover:border-red-500 p-2 rounded-full transition"
+          className="absolute top-2 right-2 text-white hover:text-red-500 hover:border-red-500 p-2 rounded-full transition"
           aria-label="Add to wishlist"
         >
           <FontAwesomeIcon icon={faHeart} className="w-4 h-4" />
@@ -45,16 +45,19 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
 
       <div className="px-4 py-4 flex flex-col flex-grow">
         <a href={link}>
-          <h5 className="text-lg font-semibold tracking-tight text-gray-800 min-h-[48px]">
+          <h5
+            className="text-md font-semibold tracking-tight text-gray-800 min-h-[30px] truncate"
+            title={title}
+          >
             {title}
           </h5>
-          <p className="text-gray-500 text-wrap text-sm min-h-[36px]">
+          <p className="text-gray-500 text-wrap text-xs min-h-[36px]">
             {sub_title}
           </p>
         </a>
 
         {/* Ratings */}
-        <div className="flex items-center mt-2.5 mb-2">
+        {/* <div className="flex items-center mt-2.5 mb-2">
           <div className="flex items-center space-x-1 rtl:space-x-reverse">
             {[...Array(4)].map((_, i) => (
               <FontAwesomeIcon
@@ -68,7 +71,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
           <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm dark:bg-blue-200 dark:text-blue-800 ms-3">
             5.0
           </span>
-        </div>
+        </div> */}
 
         {/* Harga dan Tombol */}
         <div className="flex items-center justify-between mt-auto">
@@ -77,7 +80,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
           </span>
           <a
             href={link}
-            className="text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            className="text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center"
           >
             <FontAwesomeIcon icon={faCartPlus} className="w-4 h-4 text-white" />
           </a>
