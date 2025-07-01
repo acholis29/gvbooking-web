@@ -25,7 +25,7 @@ type DestinationItem = {
 
 export default function List() {
   const searchParams = useSearchParams();
-  const idx_comp = searchParams.get("idx-comp-alias");
+  const idx_comp = searchParams.get("id"); //dari idx_comp_alias
   const state = searchParams.get("state");
 
   const [DetailDestination, setDetailDestination] = useState<DestinationItem[]>(
