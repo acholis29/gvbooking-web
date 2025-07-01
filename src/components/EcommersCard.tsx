@@ -27,6 +27,11 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
           className="w-full h-65 object-cover transition-transform duration-300 ease-in-out hover:scale-150"
           src={image}
           alt={title}
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.onerror = null;
+            target.src = "/images/icon/android-chrome-512x512.png";
+          }}
         />
         {/* Wishlist button - posisi atas kanan gambar */}
         <button
