@@ -6,20 +6,41 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faChevronDown, faSearch } from "@fortawesome/free-solid-svg-icons";
+// Helper
+import { capitalizeWords } from "@/helper/helper"; // sesuaikan path
 
 type SearchProps = {
-  bgColor?: string;
-  textColor?: string;
-  title?: string;
+  country?: string;
+  idx_comp?: string;
 };
 
-const Search: React.FC<SearchProps> = ({
-  bgColor = "bg-gray-500",
-  textColor = "text-white",
-  title = "Search",
-}) => {
+type LocalDestinationItem = {
+  idx_comp: string;
+  Country: string;
+  State: string;
+  Name_excursion: string;
+  qty: string;
+};
+
+const Search: React.FC<SearchProps> = ({ country, idx_comp }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("All Indonesia");
+  const [selectedCategory, setSelectedCategory] = useState(`All ${country}`);
+  const [localDestination, setLocalDestination] = useState<
+    LocalDestinationItem[]
+  >([]);
+
+  useEffect(() => {
+    fetch(`/api/excursion/local_destination/${idx_comp}`, {
+      cache: "no-store", // ⛔ jangan ambil dari cache
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(`idx comp : ${idx_comp}`); // ← ini langsung array
+        console.log("Local Destination:", data); // ← ini langsung array
+        setLocalDestination(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
   return (
     <form className="max-w-xl w-full mx-auto">
@@ -41,21 +62,39 @@ const Search: React.FC<SearchProps> = ({
         </button>
 
         {isDropdownOpen && (
-          <div className="absolute z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 mt-11">
+          <div className="absolute z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-100 mt-11">
             <ul className="py-2 text-sm text-gray-700">
               <li>
                 <button
                   onClick={() => {
-                    setSelectedCategory("All Indonesia");
+                    setSelectedCategory(`All ${country}`);
                     setDropdownOpen(false);
                   }}
                   type="button"
                   className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
                 >
-                  All Indonesia
+                  All {country}
                 </button>
               </li>
-              <li>
+              {localDestination.length > 0 ? (
+                localDestination.map((item, index) => (
+                  <li>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory(capitalizeWords(item.State));
+                        setDropdownOpen(false);
+                      }}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 hover:bg-gray-100 truncate"
+                    >
+                      {capitalizeWords(item.State)}
+                    </button>
+                  </li>
+                ))
+              ) : (
+                <></>
+              )}
+              {/* <li>
                 <button
                   onClick={() => {
                     setSelectedCategory("Bali");
@@ -66,19 +105,7 @@ const Search: React.FC<SearchProps> = ({
                 >
                   Bali
                 </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => {
-                    setSelectedCategory("Lombok");
-                    setDropdownOpen(false);
-                  }}
-                  type="button"
-                  className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                >
-                  Lombok
-                </button>
-              </li>
+              </li> */}
             </ul>
           </div>
         )}
@@ -88,7 +115,7 @@ const Search: React.FC<SearchProps> = ({
             type="search"
             id="search-dropdown"
             className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-red-500 focus:border-red-500 "
-            placeholder="Search your destinations in Indonesia..."
+            placeholder={`Search your destinations in ${country} ...`}
             required
           />
           <button

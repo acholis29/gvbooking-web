@@ -30,6 +30,10 @@ export default function List() {
   const searchParams = useSearchParams();
   const idx_comp = searchParams.get("id"); //dari idx_comp_alias
   const state = searchParams.get("state");
+  const country = searchParams.get("country");
+  const capitalizedCountry = country
+    ? country.charAt(0).toUpperCase() + country.slice(1)
+    : "";
 
   const [DetailDestination, setDetailDestination] = useState<DestinationItem[]>(
     []
@@ -125,7 +129,10 @@ export default function List() {
             {/* Search akan full width di HP */}
             <div className="w-xl">
               {/* <Search /> */}
-              <SearchWithDropdown />
+              <SearchWithDropdown
+                country={capitalizedCountry ?? ""}
+                idx_comp={idx_comp ?? ""}
+              />
             </div>
 
             {/* Badge akan di bawah search di HP, dan di samping saat md */}
@@ -135,41 +142,42 @@ export default function List() {
               <Badge title="Price Descending" />
               <Badge title="Rating" />
             </div> */}
-
-            <Dropdown
-              dismissOnClick={true}
-              renderTrigger={() => (
-                <button
-                  className="text-sm text-gray-600 bg-transparent border-none shadow-none 
+            <div className="w-50 flex justify-end">
+              <Dropdown
+                dismissOnClick={true}
+                renderTrigger={() => (
+                  <button
+                    className="text-sm text-gray-600 bg-transparent border-none shadow-none 
                  hover:bg-transparent focus:ring-0 focus:outline-none 
                  dark:hover:bg-transparent dark:hover:text-inherit"
-                >
-                  {selectedSorting}
-                  <span className="ml-2">
-                    <FontAwesomeIcon
-                      icon={faChevronDown}
-                      className="w-4 h-4 text-gray-600"
-                    />
-                  </span>
-                </button>
-              )}
-            >
-              <DropdownItem onClick={() => handleSelect("Price Ascending")}>
-                Price Ascending
-              </DropdownItem>
-              <DropdownItem onClick={() => handleSelect("Price Descending")}>
-                Price Descending
-              </DropdownItem>
-              <DropdownItem onClick={() => handleSelect("Low Price")}>
-                Low Price
-              </DropdownItem>
-              <DropdownItem onClick={() => handleSelect("High Price")}>
-                High Price
-              </DropdownItem>
-              <DropdownItem onClick={() => handleSelect("Sorting")}>
-                Reset
-              </DropdownItem>
-            </Dropdown>
+                  >
+                    {selectedSorting}
+                    <span className="ml-2">
+                      <FontAwesomeIcon
+                        icon={faChevronDown}
+                        className="w-3 h-3 text-gray-600"
+                      />
+                    </span>
+                  </button>
+                )}
+              >
+                <DropdownItem onClick={() => handleSelect("Price Ascending")}>
+                  Price Ascending
+                </DropdownItem>
+                <DropdownItem onClick={() => handleSelect("Price Descending")}>
+                  Price Descending
+                </DropdownItem>
+                <DropdownItem onClick={() => handleSelect("Low Price")}>
+                  Low Price
+                </DropdownItem>
+                <DropdownItem onClick={() => handleSelect("High Price")}>
+                  High Price
+                </DropdownItem>
+                <DropdownItem onClick={() => handleSelect("Sorting")}>
+                  Reset
+                </DropdownItem>
+              </Dropdown>
+            </div>
           </div>
 
           {/* Baris Card */}

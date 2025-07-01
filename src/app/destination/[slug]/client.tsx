@@ -42,6 +42,7 @@ type RecomendedDestinationItem = {
 export default function DestinationClient({ slug }: Props) {
   const searchParams = useSearchParams();
   const idx_comp = searchParams.get("id"); //ini dari idx_comp_alias
+  const country = searchParams.get("country"); //ini dari idx_comp_alias
 
   const [isLoadingDest, setIsLoadingDest] = useState(true);
   const [localDestination, setLocalDestination] = useState<
@@ -112,7 +113,7 @@ export default function DestinationClient({ slug }: Props) {
               image={`/images/destination/${slug}.jpg`}
               title={`${item.State}`}
               activities={item.qty}
-              link={`/list?id=${idx_comp}&state=${item.State}`}
+              link={`/list?id=${idx_comp}&state=${item.State}&country=${country}`}
             />
           ))
         ) : (

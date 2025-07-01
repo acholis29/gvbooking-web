@@ -94,7 +94,9 @@ export default function Home() {
                 activities={`${activity?.qty ?? "0"}`}
                 link={`/destination/${item.country
                   .toLowerCase()
-                  .replace(/\s+/g, "-")}?id=${item.idx_comp_alias}`}
+                  .replace(/\s+/g, "-")}?id=${
+                  item.idx_comp_alias
+                }&country=${item.country.toLowerCase()}`}
               />
             );
           })
