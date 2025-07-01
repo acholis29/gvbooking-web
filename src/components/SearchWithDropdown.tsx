@@ -7,11 +7,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faChevronDown, faSearch } from "@fortawesome/free-solid-svg-icons";
 // Helper
-import { capitalizeWords } from "@/helper/helper"; // sesuaikan path
+import { capitalizeWords, truncateText } from "@/helper/helper"; // sesuaikan path
 
 type SearchProps = {
   country?: string;
   idx_comp?: string;
+  onChange: (value: string) => void;
+  state: string;
 };
 
 type LocalDestinationItem = {
@@ -22,9 +24,14 @@ type LocalDestinationItem = {
   qty: string;
 };
 
-const Search: React.FC<SearchProps> = ({ country, idx_comp }) => {
+const Search: React.FC<SearchProps> = ({
+  country,
+  idx_comp,
+  onChange,
+  state,
+}) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(`All ${country}`);
+  const [selectedCategory, setSelectedCategory] = useState(`${state}`);
   const [localDestination, setLocalDestination] = useState<
     LocalDestinationItem[]
   >([]);
@@ -42,6 +49,10 @@ const Search: React.FC<SearchProps> = ({ country, idx_comp }) => {
       .catch((err) => console.error(err));
   }, []);
 
+  const handleSelectState = (value: string) => {
+    onChange(value); // kirim value ke parent
+  };
+
   return (
     <form className="max-w-xl w-full mx-auto">
       <div className="flex">
@@ -52,7 +63,7 @@ const Search: React.FC<SearchProps> = ({ country, idx_comp }) => {
           className="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100"
           type="button"
         >
-          {selectedCategory}
+          {truncateText(selectedCategory, 20)}
           <span className="ml-2">
             <FontAwesomeIcon
               icon={faChevronDown}
@@ -69,6 +80,7 @@ const Search: React.FC<SearchProps> = ({ country, idx_comp }) => {
                   onClick={() => {
                     setSelectedCategory(`All ${country}`);
                     setDropdownOpen(false);
+                    handleSelectState("");
                   }}
                   type="button"
                   className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
@@ -78,11 +90,13 @@ const Search: React.FC<SearchProps> = ({ country, idx_comp }) => {
               </li>
               {localDestination.length > 0 ? (
                 localDestination.map((item, index) => (
-                  <li>
+                  <li key={item.State}>
+                    {/* Tambahkan key di sini */}
                     <button
                       onClick={() => {
                         setSelectedCategory(capitalizeWords(item.State));
                         setDropdownOpen(false);
+                        handleSelectState(`${item.State}`);
                       }}
                       type="button"
                       className="inline-flex w-full px-4 py-2 hover:bg-gray-100 truncate"

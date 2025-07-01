@@ -14,6 +14,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faFilter } from "@fortawesome/free-solid-svg-icons";
 
 import { Dropdown, DropdownItem } from "flowbite-react";
+// Helper
+import { capitalizeWords, truncateText } from "@/helper/helper"; // sesuaikan path
 
 type DestinationItem = {
   idx_comp: string;
@@ -29,14 +31,17 @@ type DestinationItem = {
 export default function List() {
   const searchParams = useSearchParams();
   const idx_comp = searchParams.get("id"); //dari idx_comp_alias
-  const state = searchParams.get("state");
+  // const state = searchParams.get("state");
   const country = searchParams.get("country");
-  const capitalizedCountry = country
-    ? country.charAt(0).toUpperCase() + country.slice(1)
-    : "";
+  const capitalizedCountry = capitalizeWords(country ?? "");
 
   const [DetailDestination, setDetailDestination] = useState<DestinationItem[]>(
     []
+  );
+
+  // Dropdown Search
+  const [state, setState] = useState<string | null>(
+    capitalizeWords(searchParams.get("state") ?? "")
   );
 
   useEffect(() => {
@@ -52,7 +57,7 @@ export default function List() {
         setDetailDestination(data);
       })
       .catch((err) => console.error(err));
-  }, []);
+  }, [state]);
 
   // Dropdown Sorting
   const [selectedSorting, setSelectedSorting] = useState("Sorting");
@@ -132,6 +137,8 @@ export default function List() {
               <SearchWithDropdown
                 country={capitalizedCountry ?? ""}
                 idx_comp={idx_comp ?? ""}
+                onChange={setState}
+                state={state ?? ""}
               />
             </div>
 
@@ -161,19 +168,34 @@ export default function List() {
                   </button>
                 )}
               >
-                <DropdownItem onClick={() => handleSelect("Price Ascending")}>
+                <DropdownItem
+                  onClick={() => handleSelect("Price Ascending")}
+                  className="justify-end"
+                >
                   Price Ascending
                 </DropdownItem>
-                <DropdownItem onClick={() => handleSelect("Price Descending")}>
+                <DropdownItem
+                  onClick={() => handleSelect("Price Descending")}
+                  className="justify-end"
+                >
                   Price Descending
                 </DropdownItem>
-                <DropdownItem onClick={() => handleSelect("Low Price")}>
+                <DropdownItem
+                  onClick={() => handleSelect("Low Price")}
+                  className="justify-end"
+                >
                   Low Price
                 </DropdownItem>
-                <DropdownItem onClick={() => handleSelect("High Price")}>
+                <DropdownItem
+                  onClick={() => handleSelect("High Price")}
+                  className="justify-end"
+                >
                   High Price
                 </DropdownItem>
-                <DropdownItem onClick={() => handleSelect("Sorting")}>
+                <DropdownItem
+                  onClick={() => handleSelect("Sorting")}
+                  className="justify-end"
+                >
                   Reset
                 </DropdownItem>
               </Dropdown>
