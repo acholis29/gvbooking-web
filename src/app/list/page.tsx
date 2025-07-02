@@ -23,6 +23,7 @@ import { capitalizeWords, truncateText } from "@/helper/helper"; // sesuaikan pa
 
 type DestinationItem = {
   idx_comp: string;
+  Idx_excursion: string;
   Country: string;
   State: string;
   Name_excursion: string;
@@ -260,6 +261,8 @@ export default function List() {
               DetailDestination.map((item, index) => (
                 <ListCard
                   key={index}
+                  idx_comp={item.idx_comp}
+                  idx_excursion={item.Idx_excursion}
                   image={`https://picsum.photos/800/600?random=${index}`}
                   title={item.Name_excursion}
                   sub_title="10 hours • Skip the line • Pickup availables"

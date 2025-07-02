@@ -5,6 +5,7 @@ type HorizontalCardProps = {
   title: string;
   sub_title: string;
   price: string;
+  currency: string;
   link?: string; // optional
 };
 
@@ -13,6 +14,7 @@ const HorizontalCard: React.FC<HorizontalCardProps> = ({
   title,
   sub_title,
   price,
+  currency,
   link = "#",
 }) => {
   return (
@@ -26,15 +28,17 @@ const HorizontalCard: React.FC<HorizontalCardProps> = ({
         alt={image}
       />
       <div className="flex flex-col w-full p-2 leading-normal">
-        <h5 className="mb-2 text-md md:text-2xl font-bold tracking-tight text-gray-900">
+        <h5 className="mb-2 text-sm md:text-md md:text-1xl font-bold tracking-tight text-gray-900">
           {title}
         </h5>
-        <p className="text-sm text-gray-700">Afternoon Tour</p>
-        <p className="text-sm text-gray-700">Thursday, July 10, 2025・13:30</p>
-        <p className="text-sm text-gray-700">2 Adult</p>
-        <p className="text-sm text-gray-700">Language: English</p>
-        <p className="text-lg md:text-2xl font-bold text-gray-700 text-right pr-2">
-          IDR 1.123.099
+        <p className="text-xs md:text-sm text-gray-700">{sub_title}</p>
+        <p className="text-xs md:text-sm text-gray-700">
+          Thursday, July 10, 2025・13:30
+        </p>
+        <p className="text-xs md:text-sm text-gray-700">2 Adult</p>
+        <p className="text-xs md:text-sm text-gray-700">Language: English</p>
+        <p className="text-md md:text-2xl font-bold text-gray-700 text-right pr-2">
+          {currency} {price}
         </p>
       </div>
     </a>

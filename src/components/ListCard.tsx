@@ -1,4 +1,7 @@
 // components/ListCard.tsx
+"use client"; // jika kamu pakai app directory
+
+import { useEffect, useState } from "react";
 import React from "react";
 
 // Font Awesome
@@ -13,6 +16,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 type ListCardProps = {
+  idx_comp: string;
+  idx_excursion: string;
   image: string;
   title: string;
   sub_title: string;
@@ -22,6 +27,8 @@ type ListCardProps = {
 };
 
 const ListCard: React.FC<ListCardProps> = ({
+  idx_comp,
+  idx_excursion,
   image,
   title,
   sub_title,
@@ -29,6 +36,31 @@ const ListCard: React.FC<ListCardProps> = ({
   currency,
   link = "#",
 }) => {
+  const handleAddToCart = () => {
+    if (typeof window === "undefined") return; // pastikan di browser
+
+    // Ambil cart lama
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    // Data produk baru
+    const data = {
+      idx_comp: idx_comp,
+      idx_excursion: idx_excursion,
+      title: title,
+      sub_title: sub_title,
+      price: price,
+      currency: currency,
+    };
+
+    // Gabungkan data baru ke cart lama
+    const updatedCart = [data, ...cart];
+
+    // Simpan ke localStorage
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+    console.log("Cart updated:", updatedCart);
+  };
+
   return (
     <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
       <a href={link} className="relative block overflow-hidden rounded-t-lg">
@@ -100,6 +132,7 @@ const ListCard: React.FC<ListCardProps> = ({
           </span>
           <a
             href={link}
+            onClick={handleAddToCart}
             className="w-full md:w-auto text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center"
           >
             <FontAwesomeIcon icon={faCartPlus} className="w-4 h-4 text-white" />{" "}
