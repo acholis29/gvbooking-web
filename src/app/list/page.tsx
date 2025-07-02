@@ -11,7 +11,11 @@ import ListCard from "@/components/ListCard";
 import { useSearchParams } from "next/navigation";
 import SkeletonCard from "@/components/SkeletonCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faFilter } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faFilter,
+  faInbox,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { Dropdown, DropdownItem } from "flowbite-react";
 // Helper
@@ -44,26 +48,63 @@ const holidayTypes = [
 ];
 
 export default function List() {
+  // Query Params
   const searchParams = useSearchParams();
   const idx_comp = searchParams.get("id"); //dari idx_comp_alias
   const country = searchParams.get("country");
   const capitalizedCountry = capitalizeWords(country ?? "");
 
+  // State Data Loading
+  const [isLoading, setIsLoading] = useState(true);
+
+  // State Data Detail Destination
   const [DetailDestination, setDetailDestination] = useState<DestinationItem[]>(
     []
   );
 
-  // Dropdown Search
+  // State Data State Dari Dropdown Search
   const [state, setState] = useState<string | null>(
     capitalizeWords(searchParams.get("state") ?? "")
   );
 
-  // Holiday State
+  // State Data Holiday Checkbox Yang Sudah Concat | To String
   const [holidayState, setHolidayState] = useState("");
+
+  // State Data Range Price
+  const [price, setPrice] = useState<number>(10000);
+
+  // State Data Button Apply
+  const [apply, setApply] = useState<number>(0);
+
+  // State Data Sorting Dropdown
+  const [selectedSorting, setSelectedSorting] = useState("Sorting");
+
+  // State Data Checkbox Array
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+
+  const handleSelect = (value: string) => {
+    setSelectedSorting(value);
+  };
+
+  // Function Hanlde Checkbox
+  const handleCheckboxChange = (checked: boolean, title: string) => {
+    if (checked) {
+      setSelectedTypes((prev) => [...prev, title]);
+    } else {
+      setSelectedTypes((prev) => prev.filter((t) => t !== title));
+    }
+  };
+
+  // Function Handle Apply Filter
+  const handleApply = () => {
+    const result = selectedTypes.join("|");
+    setHolidayState(result);
+    setApply(apply + 1); // untuk trigger apply filter
+  };
 
   useEffect(() => {
     fetch(
-      `/api/excursion/local_destination/detail?idx-comp-alias=${idx_comp}&state=${state}&holiday-type=${holidayState}`,
+      `/api/excursion/local_destination/detail?idx-comp-alias=${idx_comp}&state=${state}&holiday-type=${holidayState}&price-min=0&price-max=${price}`,
       {
         cache: "no-store", // ⛔ jangan ambil dari cache
       }
@@ -73,34 +114,12 @@ export default function List() {
         console.log("EXCUR:", data); // ← ini langsung array
         setDetailDestination(data);
       })
-      .catch((err) => console.error(err));
-  }, [state, holidayState]);
+      .catch((err) => console.error(err))
+      .finally(() => {
+        setIsLoading(false); // ✅ Loading selesai
+      });
+  }, [state, holidayState, apply]);
 
-  // Dropdown Sorting
-  const [selectedSorting, setSelectedSorting] = useState("Sorting");
-
-  const handleSelect = (value: string) => {
-    setSelectedSorting(value);
-  };
-
-  // Checkbox
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-
-  const handleCheckboxChange = (checked: boolean, title: string) => {
-    if (checked) {
-      setSelectedTypes((prev) => [...prev, title]);
-    } else {
-      setSelectedTypes((prev) => prev.filter((t) => t !== title));
-    }
-  };
-
-  // Apply Filter
-  const handleApply = () => {
-    console.log("Checkbox filter applied");
-    const result = selectedTypes.join("|");
-    console.log(result);
-    setHolidayState(result);
-  };
   return (
     // List Page
     <div className="max-w-screen-xl mx-auto">
@@ -126,7 +145,7 @@ export default function List() {
           <Chips title="Bali" id="badge1" />
           <Chips title="Lombok" id="badge2" />
           <Chips title="Java" id="badge3" />
-          <Range />
+          <Range min="0" max="500" value={price} onChange={setPrice} />
 
           <div className="flex flex-row gap-3 md:flex-col">
             <div>
@@ -230,7 +249,14 @@ export default function List() {
 
           {/* Baris Card */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 py-4">
-            {DetailDestination.length > 0 ? (
+            {isLoading ? (
+              <>
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
+              </>
+            ) : DetailDestination.length > 0 ? (
               DetailDestination.map((item, index) => (
                 <ListCard
                   key={index}
@@ -242,12 +268,13 @@ export default function List() {
                 />
               ))
             ) : (
-              <>
-                <SkeletonCard />
-                <SkeletonCard />
-                <SkeletonCard />
-                <SkeletonCard />
-              </>
+              <div className="col-span-4 text-center text-gray-500 py-10">
+                <FontAwesomeIcon
+                  icon={faInbox}
+                  className="w-4 h-4 text-gray-600 mr-2"
+                />
+                Data tidak ditemukan...
+              </div>
             )}
           </div>
         </div>
