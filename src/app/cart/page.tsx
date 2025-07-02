@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import HorizontalCard from "@/components/HorizontalCard";
-import SkeletonCard from "@/components/SkeletonCard";
+import SkeletonCardHorizontal from "@/components/SkeletonCardHorizontal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInbox } from "@fortawesome/free-solid-svg-icons";
 
@@ -42,10 +42,7 @@ export default function Cart() {
           <div className="md:w-4/6 text-gray-700">
             {isLoading ? (
               <>
-                <SkeletonCard />
-                <SkeletonCard />
-                <SkeletonCard />
-                <SkeletonCard />
+                <SkeletonCardHorizontal />
               </>
             ) : ListCart.length > 0 ? (
               ListCart.map((item, index) => (
