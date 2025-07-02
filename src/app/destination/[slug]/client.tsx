@@ -38,6 +38,8 @@ type RecomendedDestinationItem = {
   Name_excursion: string;
   Duration_Type: string;
   Holiday_Type: string;
+  PriceFrom: string;
+  Currency: string;
 };
 
 export default function DestinationClient({ slug }: Props) {
@@ -154,7 +156,8 @@ export default function DestinationClient({ slug }: Props) {
                 image="/images/destination/thailand/thailand-phuket.jpg"
                 title={`${item.State}, ${item.Name_excursion}`}
                 sub_title={`${item.Duration_Type}, ${item.Holiday_Type}`}
-                price={"2.000.000"}
+                price={`${item.PriceFrom}`}
+                currency={item.Currency}
               />
             ))
           ) : (
@@ -189,7 +192,8 @@ export default function DestinationClient({ slug }: Props) {
             title="Name Of Tour"
             sub_title="Sort Description sort Des 
 sort Des"
-            price={"2.000.000"}
+            price={"2.000"}
+            currency="EUR"
           />
 
           <EcommersCard
@@ -197,7 +201,8 @@ sort Des"
             title="Name Of Tour"
             sub_title="Sort Description sort Des 
 sort Des"
-            price={"2.000.000"}
+            price={"2.000"}
+            currency="EUR"
           />
 
           <EcommersCard
@@ -205,7 +210,8 @@ sort Des"
             title="Name Of Tour"
             sub_title="Sort Description sort Des 
 sort Des"
-            price={"2.000.000"}
+            price={"2.000"}
+            currency="EUR"
           />
 
           <EcommersCard
@@ -213,7 +219,8 @@ sort Des"
             title="Name Of Tour"
             sub_title="Sort Description sort Des 
 sort Des"
-            price={"2.000.000"}
+            price={"2.000"}
+            currency="EUR"
           />
 
           <EcommersCard
@@ -221,7 +228,8 @@ sort Des"
             title="Name Of Tour"
             sub_title="Sort Description sort Des 
 sort Des"
-            price={"2.000.000"}
+            price={"2.000"}
+            currency="EUR"
           />
         </section>
       </div>

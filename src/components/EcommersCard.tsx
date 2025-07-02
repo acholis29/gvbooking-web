@@ -3,13 +3,19 @@ import React from "react";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartPlus, faHeart, faStar } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCartPlus,
+  faHeart,
+  faStar,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
 type EcommersCardProps = {
   image: string;
   title: string;
   sub_title: string;
   price: string;
+  currency?: string;
   link?: string;
 };
 
@@ -18,6 +24,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
   title,
   sub_title,
   price,
+  currency,
   link = "#",
 }) => {
   return (
@@ -74,7 +81,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
         </div> */}
 
         {/* Harga dan Tombol */}
-        <div className="flex items-center justify-between mt-auto">
+        {/* <div className="flex items-center justify-between mt-auto">
           <span className="text-lg font-bold text-gray-700">
             Rp {price} / <span className="font-normal text-sm">Person</span>
           </span>
@@ -83,6 +90,24 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
             className="text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center"
           >
             <FontAwesomeIcon icon={faCartPlus} className="w-4 h-4 text-white" />
+          </a>
+        </div> */}
+        <div className="flex flex-col md:flex-row items-center justify-between mt-auto">
+          <span className="text-md font-bold text-gray-700">
+            {currency} {price} /{" "}
+            <span className="font-normal text-sm">
+              <FontAwesomeIcon
+                icon={faUser}
+                className="w-4 h-4 text-gray-600"
+              />
+            </span>
+          </span>
+          <a
+            href={link}
+            className="w-full md:w-auto text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center"
+          >
+            <FontAwesomeIcon icon={faCartPlus} className="w-4 h-4 text-white" />{" "}
+            <span className="md:hidden">Add</span>
           </a>
         </div>
       </div>
