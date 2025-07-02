@@ -165,7 +165,12 @@ export default function NavbarComponent() {
           <div className="hidden lg:flex gap-6 p-2 rounded-xl">
             <IconItem icon={faDollarSign} label="ID/IDR RP" />
             <IconItem icon={faHeart} label="WISHLIST" />
-            <IconItem icon={faShoppingCart} label="CART" link="/cart" />
+            <IconItemCart
+              icon={faShoppingCart}
+              label="CART"
+              link="/cart"
+              badgeCount={10}
+            />
             <IconItem icon={faUser} label="PROFILE" />
           </div>
 
@@ -338,6 +343,34 @@ function IconItem({
       <div className="flex flex-col items-center">
         <FontAwesomeIcon icon={icon} className="text-2xl text-gray-500" />
         <span className="text-xs text-gray-500 mt-1">{label}</span>
+      </div>
+    </a>
+  );
+}
+
+function IconItemCart({
+  icon,
+  label,
+  link = "#",
+  badgeCount,
+}: {
+  icon: IconDefinition;
+  label: string;
+  link?: string;
+  badgeCount?: number;
+}) {
+  return (
+    <a href={link}>
+      <div className="flex flex-col items-center relative w-fit">
+        <div className="relative">
+          <FontAwesomeIcon icon={icon} className="text-2xl text-gray-500" />
+          {badgeCount && badgeCount > 0 && (
+            <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+              {badgeCount}
+            </span>
+          )}
+        </div>
+        <span className="text-xs text-gray-500">{label}</span>
       </div>
     </a>
   );
