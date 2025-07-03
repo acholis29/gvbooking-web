@@ -128,42 +128,48 @@ export default function Home() {
             image="/images/destination/thailand.jpg"
             title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
             sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2.000.000"}
+            price={"2000"}
+            currency="EUR"
           />
 
           <EcommersCard
             image="/images/destination/india.jpg"
             title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
             sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2.000.000"}
+            price={"2000"}
+            currency="EUR"
           />
 
           <EcommersCard
             image="/images/destination/vietnam.jpg"
             title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
             sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2.000.000"}
+            price={"2000"}
+            currency="EUR"
           />
 
           <EcommersCard
             image="/images/destination/srilangka.jpg"
             title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
             sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2.000.000"}
+            price={"2000"}
+            currency="EUR"
           />
 
           <EcommersCard
             image="/images/destination/bali.jpg"
             title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
             sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2.000.000"}
+            price={"2000"}
+            currency="EUR"
           />
 
           <EcommersCard
             image="/images/destination/thailand.jpg"
             title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
             sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2.000.000"}
+            price={"2000"}
+            currency="EUR"
           />
         </section>
 
@@ -187,35 +193,40 @@ export default function Home() {
             image="/images/destination/thailand.jpg"
             title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
             sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2.000.000"}
+            price={"2000"}
+            currency="EUR"
           />
 
           <EcommersCard
             image="/images/destination/india.jpg"
             title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
             sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2.000.000"}
+            price={"2000"}
+            currency="EUR"
           />
 
           <EcommersCard
             image="/images/destination/vietnam.jpg"
             title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
             sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2.000.000"}
+            price={"2000"}
+            currency="EUR"
           />
 
           <EcommersCard
             image="/images/destination/srilangka.jpg"
             title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
             sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2.000.000"}
+            price={"2000"}
+            currency="EUR"
           />
 
           <EcommersCard
             image="/images/destination/bali.jpg"
             title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
             sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2.000.000"}
+            price={"2000"}
+            currency="EUR"
           />
         </section>
       </div>

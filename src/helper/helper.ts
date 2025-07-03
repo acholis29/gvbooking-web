@@ -31,3 +31,29 @@ export function truncateText(text: string, maxLength: number = 100): string {
   return (lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed).trim() + "...";
 }
 
+// Buat Tipe Data Object Add To Cart
+type CartItem = {
+  idx_comp: string,
+  idx_excursion: string,
+  title: string,
+  sub_title: string,
+  price: string,
+  currency: string,
+};
+
+export function handleAddToCart(data: CartItem) {
+  if (typeof window === "undefined") return; // pastikan di browser
+
+  // Ambil cart lama
+  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  // Gabungkan data baru ke cart lama
+  const updatedCart = [data, ...cart];
+
+  // Simpan ke localStorage
+  localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+  console.log("Cart updated:", updatedCart);
+};
+
+

@@ -10,7 +10,12 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
+// Helpers
+import { handleAddToCart } from "@/helper/helper";
+
 type EcommersCardProps = {
+  idx_comp?: string;
+  idx_excursion?: string;
   image: string;
   title: string;
   sub_title: string;
@@ -20,6 +25,8 @@ type EcommersCardProps = {
 };
 
 const EcommersCard: React.FC<EcommersCardProps> = ({
+  idx_comp,
+  idx_excursion,
   image,
   title,
   sub_title,
@@ -27,6 +34,16 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
   currency,
   link = "#",
 }) => {
+  // Data Produk Untuk Add To Cart
+  const data = {
+    idx_comp: idx_comp ?? "",
+    idx_excursion: idx_excursion ?? "",
+    title: title ?? "",
+    sub_title: sub_title ?? "",
+    price: price ?? "",
+    currency: currency ?? "",
+  };
+
   return (
     <div className="w-72 md:w-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
       <a href={link} className="relative block overflow-hidden rounded-t-lg">
@@ -104,6 +121,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
           </span>
           <a
             href={link}
+            onClick={() => handleAddToCart(data)} // ✅ benar: hanya dipanggil saat diklik
             className="w-full md:w-auto text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center"
           >
             <FontAwesomeIcon icon={faCartPlus} className="w-4 h-4 text-white" />{" "}

@@ -14,6 +14,8 @@ import {
   faStar,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+// Helper
+import { handleAddToCart } from "@/helper/helper";
 
 type ListCardProps = {
   idx_comp: string;
@@ -36,29 +38,14 @@ const ListCard: React.FC<ListCardProps> = ({
   currency,
   link = "#",
 }) => {
-  const handleAddToCart = () => {
-    if (typeof window === "undefined") return; // pastikan di browser
-
-    // Ambil cart lama
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
-    // Data produk baru
-    const data = {
-      idx_comp: idx_comp,
-      idx_excursion: idx_excursion,
-      title: title,
-      sub_title: sub_title,
-      price: price,
-      currency: currency,
-    };
-
-    // Gabungkan data baru ke cart lama
-    const updatedCart = [data, ...cart];
-
-    // Simpan ke localStorage
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-
-    console.log("Cart updated:", updatedCart);
+  // Data Produk Add To Cart
+  const data = {
+    idx_comp: idx_comp ?? "",
+    idx_excursion: idx_excursion ?? "",
+    title: title ?? "",
+    sub_title: sub_title ?? "",
+    price: price ?? "",
+    currency: currency ?? "",
   };
 
   return (
@@ -132,7 +119,7 @@ const ListCard: React.FC<ListCardProps> = ({
           </span>
           <a
             href={link}
-            onClick={handleAddToCart}
+            onClick={() => handleAddToCart(data)} // ✅ benar: hanya dipanggil saat diklik
             className="w-full md:w-auto text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center"
           >
             <FontAwesomeIcon icon={faCartPlus} className="w-4 h-4 text-white" />{" "}
