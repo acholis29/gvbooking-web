@@ -1,5 +1,6 @@
 // components/EcommersCard.tsx
 import React from "react";
+import { useEffect, useState } from "react";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,16 +13,18 @@ import {
 
 // State Global / Context
 import { useCart } from "@/context/CartContext";
+import { useWish } from "@/context/WishContext";
 
 type EcommersCardProps = {
-  idx_comp?: string;
-  idx_excursion?: string;
+  idx_comp: string;
+  idx_excursion: string;
   image: string;
   title: string;
   sub_title: string;
   price: string;
   currency?: string;
   link?: string;
+  colorWish?: boolean;
 };
 
 const EcommersCard: React.FC<EcommersCardProps> = ({
@@ -33,6 +36,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
   price,
   currency,
   link = "#",
+  colorWish = false,
 }) => {
   // Data Produk Untuk Add To Cart
   const data = {
@@ -45,6 +49,14 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
   };
 
   const { addToCart } = useCart();
+  const { addToWish, removeFromWish } = useWish();
+
+  // State Data Loading
+  const [isWish, setIsWish] = useState(false);
+
+  useEffect(() => {
+    setIsWish(colorWish);
+  }, []);
 
   return (
     <div className="w-72 md:w-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
@@ -62,7 +74,18 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
         {/* Wishlist button - posisi atas kanan gambar */}
         <button
           type="button"
-          className="absolute top-2 right-2 text-white hover:text-red-500 hover:border-red-500 p-2 rounded-full transition"
+          onClick={() => {
+            if (!isWish) {
+              addToWish(data);
+              setIsWish(!isWish);
+            } else {
+              removeFromWish(idx_excursion);
+              setIsWish(!isWish);
+            }
+          }}
+          className={`absolute top-2 right-2 ${
+            isWish ? "text-red-500" : "text-white"
+          } hover:text-red-500 hover:border-red-500 p-2 rounded-full transition`}
           aria-label="Add to wishlist"
         >
           <FontAwesomeIcon icon={faHeart} className="w-4 h-4" />

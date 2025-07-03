@@ -23,8 +23,6 @@ export default function Cart() {
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
 
-  // Total
-
   useEffect(() => {
     loadCart();
   }, []); // tetap kosong, agar hanya dijalankan sekali saat mount

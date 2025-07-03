@@ -17,6 +17,7 @@ import {
 
 // State Global / Context
 import { useCart } from "@/context/CartContext";
+import { useWish } from "@/context/WishContext";
 
 type ListCardProps = {
   idx_comp: string;
@@ -27,6 +28,7 @@ type ListCardProps = {
   price: string;
   currency?: string;
   link?: string; // optional
+  colorWish?: boolean;
 };
 
 const ListCard: React.FC<ListCardProps> = ({
@@ -38,6 +40,7 @@ const ListCard: React.FC<ListCardProps> = ({
   price,
   currency,
   link = "#",
+  colorWish = false,
 }) => {
   // Data Produk Add To Cart
   const data = {
@@ -49,7 +52,15 @@ const ListCard: React.FC<ListCardProps> = ({
     currency: currency ?? "",
   };
 
-  const { addToCart, removeFromCart } = useCart();
+  const { addToCart } = useCart();
+  const { addToWish, removeFromWish } = useWish();
+
+  // State Data Loading
+  const [isWish, setIsWish] = useState(false);
+
+  useEffect(() => {
+    setIsWish(colorWish);
+  }, []);
 
   return (
     <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
@@ -68,7 +79,18 @@ const ListCard: React.FC<ListCardProps> = ({
         {/* Wishlist button - posisi atas kanan gambar */}
         <button
           type="button"
-          className="absolute top-2 right-2 text-white hover:text-red-500 hover:border-red-500 p-2 rounded-full transition"
+          onClick={() => {
+            if (!isWish) {
+              addToWish(data);
+              setIsWish(!isWish);
+            } else {
+              removeFromWish(idx_excursion);
+              setIsWish(!isWish);
+            }
+          }}
+          className={`absolute top-2 right-2 ${
+            isWish ? "text-red-500" : "text-white"
+          } hover:text-red-500 hover:border-red-500 p-2 rounded-full transition`}
           aria-label="Add to wishlist"
         >
           <FontAwesomeIcon icon={faHeart} className="w-4 h-4" />

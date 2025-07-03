@@ -20,6 +20,8 @@ import {
 import { Dropdown, DropdownItem } from "flowbite-react";
 // Helper
 import { capitalizeWords, truncateText } from "@/helper/helper"; // sesuaikan path
+// Global State
+import { useWish } from "@/context/WishContext";
 
 type DestinationItem = {
   idx_comp: string;
@@ -48,12 +50,24 @@ const holidayTypes = [
   "WELLNESS FOR BODY AND SOUL",
 ];
 
+type WishItem = {
+  idx_comp: string;
+  idx_excursion: string;
+  title: string;
+  sub_title: string;
+  price: string;
+  currency?: string;
+};
+
 export default function List() {
   // Query Params
   const searchParams = useSearchParams();
   const idx_comp = searchParams.get("id"); //dari idx_comp_alias
   const country = searchParams.get("country");
   const capitalizedCountry = capitalizeWords(country ?? "");
+
+  // Wish Counter
+  const { wishItems } = useWish();
 
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
@@ -82,6 +96,9 @@ export default function List() {
 
   // State Data Checkbox Array
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+
+  // State Data WistList
+  const [ListWist, setWish] = useState<WishItem[]>([]);
 
   const handleSelect = (value: string) => {
     setSelectedSorting(value);
@@ -119,7 +136,17 @@ export default function List() {
       .finally(() => {
         setIsLoading(false); // ✅ Loading selesai
       });
-  }, [state, holidayState, apply]);
+  }, [state, holidayState, apply, JSON.stringify(wishItems)]);
+
+  useEffect(() => {
+    loadWishlish();
+  }, []); // tetap kosong, agar hanya dijalankan sekali saat mount
+
+  function loadWishlish() {
+    const wish = JSON.parse(localStorage.getItem("wish") || "[]");
+    setWish(wish);
+    setIsLoading(false);
+  }
 
   return (
     // List Page
@@ -268,6 +295,13 @@ export default function List() {
                   sub_title="10 hours • Skip the line • Pickup availables"
                   price={item.PriceFrom ?? 0}
                   currency={item.Currency ?? "Rp"}
+                  colorWish={
+                    ListWist.some(
+                      (wish) => wish.idx_excursion === item.Idx_excursion
+                    )
+                      ? true
+                      : false
+                  }
                 />
               ))
             ) : (

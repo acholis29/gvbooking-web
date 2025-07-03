@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 // Context State Global
 import { useCart } from "@/context/CartContext";
+import { useWish } from "@/context/WishContext";
 // Next Image
 import Image from "next/image";
 // Drawer
@@ -34,6 +35,8 @@ export default function NavbarComponent() {
 
   // Cart Counter
   const { cartCount } = useCart();
+  // Wish Counter
+  const { wishCount } = useWish();
 
   return (
     <nav className="bg-white border-gray-200">
@@ -169,8 +172,14 @@ export default function NavbarComponent() {
           {/* Desktop/Tablet: Show full icon menu */}
           <div className="hidden lg:flex gap-6 p-2 rounded-xl">
             <IconItem icon={faDollarSign} label="ID/IDR RP" />
-            <IconItem icon={faHeart} label="WISHLIST" />
-            <IconItemCart
+            {/* <IconItem icon={faHeart} label="WISHLIST" /> */}
+            <IconItemCartWish
+              icon={faHeart}
+              label="WISHLIST"
+              link="/"
+              badgeCount={wishCount}
+            />
+            <IconItemCartWish
               icon={faShoppingCart}
               label="CART"
               link="/cart"
@@ -353,7 +362,7 @@ function IconItem({
   );
 }
 
-function IconItemCart({
+function IconItemCartWish({
   icon,
   label,
   link = "#",
