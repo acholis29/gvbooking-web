@@ -3,8 +3,6 @@ import React from "react";
 // Font Awesome
 import { faMinus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// Helper
-import { handleDeleteCart } from "@/helper/helper";
 
 // State Global / Context
 import { useCart } from "@/context/CartContext";
@@ -44,7 +42,6 @@ const HorizontalCard: React.FC<HorizontalCardProps> = ({
         className="absolute top-2 right-2 bg-white border border-gray-300 hover:bg-red-100 text-red-500 p-1 rounded-full shadow transition"
         onClick={(e) => {
           e.preventDefault(); // mencegah redirect karena <a>
-          // handleDeleteCart(idx_excursion);
           removeFromCart(idx_excursion);
           console.log("Item removed"); // ganti dengan fungsi hapus cart
           onDelete?.(); // ✅ panggil fungsi dari parent jika ada

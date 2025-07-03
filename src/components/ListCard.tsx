@@ -14,8 +14,6 @@ import {
   faStar,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-// Helper
-import { handleAddToCart } from "@/helper/helper";
 
 // State Global / Context
 import { useCart } from "@/context/CartContext";
@@ -124,7 +122,6 @@ const ListCard: React.FC<ListCardProps> = ({
           </span>
           <a
             href={link}
-            // onClick={() => handleAddToCart(data)} // ✅ benar: hanya dipanggil saat diklik
             onClick={() => addToCart(data)} // ✅ benar: hanya dipanggil saat diklik
             className="w-full md:w-auto text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center"
           >
