@@ -173,7 +173,7 @@ export default function List() {
           <Chips title="Bali" id="badge1" />
           <Chips title="Lombok" id="badge2" />
           <Chips title="Java" id="badge3" />
-          <Range min="0" max="500" value={price} onChange={setPrice} />
+          <Range min="0" max="10000" value={price} onChange={setPrice} />
 
           <div className="flex flex-row gap-3 md:flex-col">
             <div>
