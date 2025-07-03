@@ -33,6 +33,7 @@ type LocalDestinationItem = {
 
 type RecomendedDestinationItem = {
   idx_comp: string;
+  Idx_excursion: string;
   Country: string;
   State: string;
   Name_excursion: string;
@@ -153,7 +154,9 @@ export default function DestinationClient({ slug }: Props) {
             recomdedDestination.map((item, index) => (
               <EcommersCard
                 key={index}
-                image="/images/destination/thailand/thailand-phuket.jpg"
+                idx_comp={item.idx_comp}
+                idx_excursion={item.Idx_excursion}
+                image={`https://picsum.photos/800/600?random=${index}`}
                 title={`${item.State}, ${item.Name_excursion}`}
                 sub_title={`${item.Duration_Type}, ${item.Holiday_Type}`}
                 price={`${item.PriceFrom}`}
@@ -187,50 +190,18 @@ export default function DestinationClient({ slug }: Props) {
           </p>
         </section>
         <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4  md:grid md:grid-cols-4">
-          <EcommersCard
-            image="/images/destination/thailand.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={"2.000"}
-            currency="EUR"
-          />
-
-          <EcommersCard
-            image="/images/destination/india.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={"2.000"}
-            currency="EUR"
-          />
-
-          <EcommersCard
-            image="/images/destination/vietnam.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={"2.000"}
-            currency="EUR"
-          />
-
-          <EcommersCard
-            image="/images/destination/srilangka.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={"2.000"}
-            currency="EUR"
-          />
-
-          <EcommersCard
-            image="/images/destination/bali.jpg"
-            title="Name Of Tour"
-            sub_title="Sort Description sort Des 
-sort Des"
-            price={"2.000"}
-            currency="EUR"
-          />
+          {Array.from({ length: 5 }).map((_, index) => (
+            <EcommersCard
+              key={index}
+              idx_comp={index.toString()}
+              idx_excursion={index.toString()}
+              image={`https://picsum.photos/800/600?random=${index}`}
+              title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+              sub_title="10 hours • Skip the line • Pickup availables"
+              price={"2000"}
+              currency="EUR"
+            />
+          ))}
         </section>
       </div>
     </div>

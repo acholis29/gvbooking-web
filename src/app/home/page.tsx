@@ -14,6 +14,7 @@ import {
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import SkeletonImage from "@/components/SkeletonImage";
+import { log } from "console";
 
 export default function Home() {
   type DestinationItem = {
@@ -29,6 +30,18 @@ export default function Home() {
     country: string;
     qty: string;
   };
+
+  type WishItem = {
+    idx_comp: string;
+    idx_excursion: string;
+    title: string;
+    sub_title: string;
+    price: string;
+    currency?: string;
+  };
+
+  // State Data WistList
+  const [ListWist, setWish] = useState<WishItem[]>([]);
 
   const [destination, setDestination] = useState<DestinationItem[]>([]);
 
@@ -60,6 +73,16 @@ export default function Home() {
       .catch((err) => console.error(err));
   }, []);
 
+  useEffect(() => {
+    loadWishlish();
+  }, []); // tetap kosong, agar hanya dijalankan sekali saat mount
+
+  function loadWishlish() {
+    const wish = JSON.parse(localStorage.getItem("wish") || "[]");
+    setWish(wish);
+  }
+  console.log("-----------");
+  console.log(ListWist);
   return (
     // Home Page
     <div>
@@ -124,53 +147,23 @@ export default function Home() {
         </section>
         {/* <section className="max-w-screen-xl mx-auto flex gap-6 overflow-x-auto md:overflow-x-visible flex-nowrap md:flex-wrap px-4"> */}
         <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4  md:grid md:grid-cols-4">
-          <EcommersCard
-            image="/images/destination/thailand.jpg"
-            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-            sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2000"}
-            currency="EUR"
-          />
-
-          <EcommersCard
-            image="/images/destination/india.jpg"
-            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-            sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2000"}
-            currency="EUR"
-          />
-
-          <EcommersCard
-            image="/images/destination/vietnam.jpg"
-            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-            sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2000"}
-            currency="EUR"
-          />
-
-          <EcommersCard
-            image="/images/destination/srilangka.jpg"
-            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-            sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2000"}
-            currency="EUR"
-          />
-
-          <EcommersCard
-            image="/images/destination/bali.jpg"
-            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-            sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2000"}
-            currency="EUR"
-          />
-
-          <EcommersCard
-            image="/images/destination/thailand.jpg"
-            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-            sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2000"}
-            currency="EUR"
-          />
+          {Array.from({ length: 5 }).map((_, index) => (
+            <EcommersCard
+              key={index}
+              idx_comp={index.toString()}
+              idx_excursion={index.toString()}
+              image={`https://picsum.photos/800/600?random=${index}`}
+              title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+              sub_title="10 hours • Skip the line • Pickup availables"
+              price={"2000"}
+              currency="EUR"
+              colorWish={
+                ListWist.some((wish) => wish.idx_excursion === index.toString())
+                  ? true
+                  : false
+              }
+            />
+          ))}
         </section>
 
         {/* Last Your Search */}
@@ -189,45 +182,23 @@ export default function Home() {
           </p>
         </section>
         <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4  md:grid md:grid-cols-4">
-          <EcommersCard
-            image="/images/destination/thailand.jpg"
-            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-            sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2000"}
-            currency="EUR"
-          />
-
-          <EcommersCard
-            image="/images/destination/india.jpg"
-            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-            sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2000"}
-            currency="EUR"
-          />
-
-          <EcommersCard
-            image="/images/destination/vietnam.jpg"
-            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-            sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2000"}
-            currency="EUR"
-          />
-
-          <EcommersCard
-            image="/images/destination/srilangka.jpg"
-            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-            sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2000"}
-            currency="EUR"
-          />
-
-          <EcommersCard
-            image="/images/destination/bali.jpg"
-            title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-            sub_title="10 hours • Skip the line • Pickup availables"
-            price={"2000"}
-            currency="EUR"
-          />
+          {Array.from({ length: 5 }).map((_, index) => (
+            <EcommersCard
+              key={index}
+              idx_comp={index.toString()}
+              idx_excursion={index.toString()}
+              image={`https://picsum.photos/800/600?random=${index}`}
+              title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
+              sub_title="10 hours • Skip the line • Pickup availables"
+              price={"2000"}
+              currency="EUR"
+              colorWish={
+                ListWist.some((wish) => wish.idx_excursion === index.toString())
+                  ? true
+                  : false
+              }
+            />
+          ))}
         </section>
       </div>
     </div>
