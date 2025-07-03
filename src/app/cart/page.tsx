@@ -26,12 +26,14 @@ export default function Cart() {
   // Total
 
   useEffect(() => {
-    // Ambil cart lama
+    loadCart();
+  }, []); // tetap kosong, agar hanya dijalankan sekali saat mount
+
+  function loadCart() {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    console.log(cart);
     setCart(cart);
     setIsLoading(false);
-  }, []);
+  }
 
   return (
     // Cart Page
@@ -48,12 +50,15 @@ export default function Cart() {
               ListCart.map((item, index) => (
                 <HorizontalCard
                   key={index}
+                  idx_comp={item.idx_comp}
+                  idx_excursion={item.idx_excursion}
                   image="/images/destination/tanah-lot/tanah-lot6.jpg"
                   title={item.title}
                   sub_title={item.sub_title}
                   link="/cart"
                   currency={`${item.currency}`}
                   price={`${item.price}`}
+                  onDelete={loadCart} // ✅ ini dikirim ke anak
                 />
               ))
             ) : (
