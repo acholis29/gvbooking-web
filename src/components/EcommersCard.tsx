@@ -13,6 +13,9 @@ import {
 // Helpers
 import { handleAddToCart } from "@/helper/helper";
 
+// State Global / Context
+import { useCart } from "@/context/CartContext";
+
 type EcommersCardProps = {
   idx_comp?: string;
   idx_excursion?: string;
@@ -43,6 +46,8 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
     price: price ?? "",
     currency: currency ?? "",
   };
+
+  const { addToCart, removeFromCart } = useCart();
 
   return (
     <div className="w-72 md:w-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
@@ -121,7 +126,8 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
           </span>
           <a
             href={link}
-            onClick={() => handleAddToCart(data)} // ✅ benar: hanya dipanggil saat diklik
+            // onClick={() => handleAddToCart(data)} // ✅ benar: hanya dipanggil saat diklik
+            onClick={() => addToCart(data)} // ✅ benar: hanya dipanggil saat diklik
             className="w-full md:w-auto text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center"
           >
             <FontAwesomeIcon icon={faCartPlus} className="w-4 h-4 text-white" />{" "}

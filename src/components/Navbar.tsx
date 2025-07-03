@@ -1,6 +1,8 @@
 "use client";
 // State
 import { useState, useEffect, useRef } from "react";
+// Context State Global
+import { useCart } from "@/context/CartContext";
 // Next Image
 import Image from "next/image";
 // Drawer
@@ -29,6 +31,9 @@ export default function NavbarComponent() {
 
   const pathname = usePathname();
   const hideSearch = pathname.startsWith("/list"); // atau sesuaikan dengan rute list-mu
+
+  // Cart Counter
+  const { cartCount } = useCart();
 
   return (
     <nav className="bg-white border-gray-200">
@@ -169,7 +174,7 @@ export default function NavbarComponent() {
               icon={faShoppingCart}
               label="CART"
               link="/cart"
-              badgeCount={10}
+              badgeCount={cartCount}
             />
             <IconItem icon={faUser} label="PROFILE" />
           </div>
@@ -357,14 +362,14 @@ function IconItemCart({
   icon: IconDefinition;
   label: string;
   link?: string;
-  badgeCount?: number;
+  badgeCount: number;
 }) {
   return (
     <a href={link}>
       <div className="flex flex-col items-center relative w-fit">
         <div className="relative">
           <FontAwesomeIcon icon={icon} className="text-2xl text-gray-500" />
-          {badgeCount && badgeCount > 0 && (
+          {badgeCount > 0 && (
             <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
               {badgeCount}
             </span>
