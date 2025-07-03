@@ -2,6 +2,8 @@
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+// Context State Global
+import { useCart } from "@/context/CartContext";
 
 import {
   faClose,
@@ -17,6 +19,8 @@ export default function DrawerComponent({
   isOpen: boolean;
   onClose: () => void;
 }) {
+  // Cart Counter
+  const { cartCount } = useCart();
   return (
     <>
       <div
@@ -82,9 +86,11 @@ export default function DrawerComponent({
                 <span className="flex-1 ms-3 text-gray-500 whitespace-nowrap">
                   Cart
                 </span>
-                <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white-800 bg-red-gvi rounded-full">
-                  3
-                </span>
+                {cartCount > 0 && (
+                  <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white-800 bg-red-gvi rounded-full">
+                    {cartCount}
+                  </span>
+                )}
               </Link>
             </li>
             <li>
