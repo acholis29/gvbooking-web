@@ -52,11 +52,12 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
   const { addToWish, removeFromWish } = useWish();
 
   // State Data Loading
-  const [isWish, setIsWish] = useState(false);
+  const [isWish, setIsWish] = useState(colorWish);
 
   useEffect(() => {
     setIsWish(colorWish);
-  }, []);
+  }, [colorWish]); // ← penting: hanya update ketika colorWish berubah
+  console.log("isWish :" + isWish);
 
   return (
     <div className="relative w-72 md:w-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
@@ -72,7 +73,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
           }}
         />
       </a>
-      {isWish.toString()}
+      {colorWish.toString()}
       {/* Wishlist button - posisi atas kanan gambar */}
       <button
         type="button"
