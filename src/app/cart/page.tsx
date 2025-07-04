@@ -108,7 +108,7 @@ export default function Cart() {
             icon={faInbox}
             className="w-4 h-4 text-gray-600 mr-2"
           />
-          Data tidak ditemukan...
+          Cart is empty
         </div>
       )}
     </div>

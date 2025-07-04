@@ -14,6 +14,7 @@ type CartContextType = {
   cartItems: CartItem[];
   cartCount: number;
   addToCart: (item: CartItem) => void;
+  addManyToCart: (items: CartItem[]) => void;
   removeFromCart: (idx_excursion: string) => void;
 };
 
@@ -37,6 +38,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     saveCart(updated);
   };
 
+  const addManyToCart = (items: CartItem[]) => {
+    const storedCart = JSON.parse(
+      localStorage.getItem("cart") || "[]"
+    ) as CartItem[];
+    const updated = [...items, ...storedCart];
+    saveCart(updated);
+  };
+
   const removeFromCart = (idx_excursion: string) => {
     const updated = cartItems.filter((i) => i.idx_excursion !== idx_excursion);
     saveCart(updated);
@@ -48,6 +57,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         cartItems,
         cartCount: cartItems.length,
         addToCart,
+        addManyToCart,
         removeFromCart,
       }}
     >

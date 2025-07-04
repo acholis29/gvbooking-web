@@ -157,6 +157,7 @@ export default function Home() {
               sub_title="10 hours • Skip the line • Pickup availables"
               price={"2000"}
               currency="EUR"
+              link={`/destination/detail/indonesia`}
               colorWish={
                 ListWist.some((wish) => wish.idx_excursion === index.toString())
                   ? true
@@ -192,6 +193,7 @@ export default function Home() {
               sub_title="10 hours • Skip the line • Pickup availables"
               price={"2000"}
               currency="EUR"
+              link={`/destination/detail/indonesia`}
               colorWish={
                 ListWist.some((wish) => wish.idx_excursion === index.toString())
                   ? true

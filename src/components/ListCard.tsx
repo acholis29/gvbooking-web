@@ -142,14 +142,13 @@ const ListCard: React.FC<ListCardProps> = ({
               />
             </span>
           </span>
-          <a
-            href={link}
+          <button
             onClick={() => addToCart(data)} // ✅ benar: hanya dipanggil saat diklik
-            className="w-full md:w-auto text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center"
+            className="w-full md:w-auto text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center cursor-pointer"
           >
             <FontAwesomeIcon icon={faCartPlus} className="w-4 h-4 text-white" />{" "}
             <span className="md:hidden">Add</span>
-          </a>
+          </button>
         </div>
       </div>
     </div>

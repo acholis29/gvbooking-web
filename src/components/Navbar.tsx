@@ -176,7 +176,7 @@ export default function NavbarComponent() {
             <IconItemCartWish
               icon={faHeart}
               label="WISHLIST"
-              link="/"
+              link="/wishlist"
               badgeCount={wishCount}
             />
             <IconItemCartWish

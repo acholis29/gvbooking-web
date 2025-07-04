@@ -64,6 +64,7 @@ export default function List() {
   const searchParams = useSearchParams();
   const idx_comp = searchParams.get("id"); //dari idx_comp_alias
   const country = searchParams.get("country");
+  const state_ = searchParams.get("state");
   const capitalizedCountry = capitalizeWords(country ?? "");
 
   // Wish Counter
@@ -79,7 +80,7 @@ export default function List() {
 
   // State Data State Dari Dropdown Search
   const [state, setState] = useState<string | null>(
-    capitalizeWords(searchParams.get("state") ?? "")
+    capitalizeWords(state_ ?? "")
   );
 
   // State Data Holiday Checkbox Yang Sudah Concat | To String
@@ -295,6 +296,7 @@ export default function List() {
                   sub_title="10 hours • Skip the line • Pickup availables"
                   price={item.PriceFrom ?? 0}
                   currency={item.Currency ?? "Rp"}
+                  link={`/destination/detail/${country}?id=${idx_comp}&state=${state}&country=${country}&exc=${item.Idx_excursion}`}
                   colorWish={
                     ListWist.some(
                       (wish) => wish.idx_excursion === item.Idx_excursion
