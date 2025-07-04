@@ -14,6 +14,8 @@ import {
 // State Global / Context
 import { useCart } from "@/context/CartContext";
 import { useWish } from "@/context/WishContext";
+// Toast
+import toast from "react-hot-toast";
 
 type EcommersCardProps = {
   idx_comp: string;
@@ -81,9 +83,11 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
           if (!isWish) {
             addToWish(data);
             setIsWish(!isWish);
+            toast.success("Save to wishlist");
           } else {
             removeFromWish(idx_excursion);
             setIsWish(!isWish);
+            toast.success("Delete from wishlist!");
           }
         }}
         className={`absolute top-2 right-2 ${
@@ -147,7 +151,10 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
             </span>
           </span>
           <button
-            onClick={() => addToCart(data)} // ✅ benar: hanya dipanggil saat diklik
+            onClick={() => {
+              addToCart(data);
+              toast.success("Add to cart!");
+            }} // ✅ benar: hanya dipanggil saat diklik
             className="w-full md:w-auto text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center cursor-pointer"
           >
             <FontAwesomeIcon icon={faCartPlus} className="w-4 h-4 text-white" />{" "}

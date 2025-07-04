@@ -16,6 +16,8 @@ import FooterComponent from "@/components/Footer";
 // State Global / Context
 import { CartProvider } from "@/context/CartContext";
 import { WishProvider } from "@/context/WishContext";
+// Toast
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,6 +52,7 @@ export default function RootLayout({
           <WishProvider>
             <Navbar />
             {children}
+            <Toaster position="top-center" />
             {/* Footer */}
             <FooterComponent />
           </WishProvider>

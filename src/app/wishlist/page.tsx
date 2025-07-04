@@ -11,6 +11,8 @@ import {
 
 // State Global / Context
 import { useCart } from "@/context/CartContext";
+// Toast
+import toast from "react-hot-toast";
 
 type WishItem = {
   idx_comp: string;
@@ -43,6 +45,7 @@ export default function Wishlist() {
   const { addManyToCart } = useCart();
   function addAllToCart() {
     addManyToCart(ListWishlist);
+    toast.success("Add to cart!");
   }
 
   return (
