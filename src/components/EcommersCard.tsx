@@ -59,7 +59,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
   useEffect(() => {
     setIsWish(colorWish);
   }, [colorWish]); // ← penting: hanya update ketika colorWish berubah
-  console.log("isWish :" + isWish);
+  // console.log("isWish :" + isWish);
 
   return (
     <div className="relative w-72 md:w-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
@@ -75,7 +75,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
           }}
         />
       </a>
-      {colorWish.toString()}
+      {/* {colorWish.toString()} */}
       {/* Wishlist button - posisi atas kanan gambar */}
       <button
         type="button"

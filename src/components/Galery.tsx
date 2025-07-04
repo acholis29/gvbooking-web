@@ -1,48 +1,47 @@
 // components/DestinationCard.tsx
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { faCheck, faSearch } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 
 type GaleryProps = {
-  bgColor?: string;
-  textColor?: string;
-  title?: string;
+  picture?: string;
+  galery?: string;
 };
 
 const Galery: React.FC<GaleryProps> = ({
-  bgColor = "bg-gray-500",
-  textColor = "text-white",
-  title = "Galery",
+  picture = "/images/destination/tanah-lot/tanah-lot6.jpg",
+  galery = "/images/destination/tanah-lot/tanah-lot6.jpg",
 }) => {
+  // Pecah string menjadi array dan filter yang tidak kosong
+  const galleryArray = galery
+    ? galery
+        .split("|")
+        .map((url) => url.trim())
+        .filter((url) => url && url !== "" && url.startsWith("http"))
+    : [];
+  console.log(galleryArray.length);
   return (
     <div className="grid gap-4 py-5">
       {/* Gambar Utama */}
       <div>
         <img
-          className="w-full h-96 object-cover rounded-lg"
-          src="/images/destination/tanah-lot/tanah-lot6.jpg"
+          className="w-full h-auto object-cover rounded-lg"
+          src={picture}
           alt=""
         />
       </div>
 
       {/* Grid Kecil */}
-      <div className="grid grid-cols-5 gap-4">
-        {[
-          "tanah-lot5.jpg",
-          "tanah-lot4.jpg",
-          "tanah-lot3.jpg",
-          "tanah-lot3.jpg",
-          "tanah-lot1.jpg",
-        ].map((img, i) => (
-          <div key={i}>
-            <img
-              className="w-full h-30 object-cover rounded-lg"
-              src={`/images/destination/tanah-lot/${img}`}
-              alt=""
-            />
-          </div>
-        ))}
+      <div className="overflow-x-auto md:overflow-visible">
+        <div className="flex md:grid md:grid-cols-5 gap-4 min-w-max md:min-w-0">
+          {galleryArray.map((img, i) => (
+            <div key={i} className="flex-shrink-0 w-40 md:w-full">
+              <img
+                className="w-full h-28 object-cover rounded-lg"
+                src={img}
+                alt={`Gambar ${i + 1}`}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
