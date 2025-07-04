@@ -63,7 +63,7 @@ const ListCard: React.FC<ListCardProps> = ({
   }, []);
 
   return (
-    <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
+    <div className="relative w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
       <a href={link} className="relative block overflow-hidden rounded-t-lg">
         <img
           className="w-full h-40 md:h-50 object-cover transition-transform duration-300 ease-in-out hover:scale-150"
@@ -75,27 +75,26 @@ const ListCard: React.FC<ListCardProps> = ({
             target.src = "/images/icon/android-chrome-512x512.png";
           }}
         />
-
-        {/* Wishlist button - posisi atas kanan gambar */}
-        <button
-          type="button"
-          onClick={() => {
-            if (!isWish) {
-              addToWish(data);
-              setIsWish(!isWish);
-            } else {
-              removeFromWish(idx_excursion);
-              setIsWish(!isWish);
-            }
-          }}
-          className={`absolute top-2 right-2 ${
-            isWish ? "text-red-500" : "text-white"
-          } hover:text-red-500 hover:border-red-500 p-2 rounded-full transition`}
-          aria-label="Add to wishlist"
-        >
-          <FontAwesomeIcon icon={faHeart} className="w-4 h-4" />
-        </button>
       </a>
+      {/* Wishlist button - posisi atas kanan gambar */}
+      <button
+        type="button"
+        onClick={() => {
+          if (!isWish) {
+            addToWish(data);
+            setIsWish(!isWish);
+          } else {
+            removeFromWish(idx_excursion);
+            setIsWish(!isWish);
+          }
+        }}
+        className={`absolute top-2 right-2 ${
+          isWish ? "text-red-500" : "text-white"
+        } hover:text-red-500 hover:border-red-500 p-2 rounded-full transition`}
+        aria-label="Add to wishlist"
+      >
+        <FontAwesomeIcon icon={faHeart} className="w-4 h-4" />
+      </button>
 
       <div className="px-4 pb-4 flex flex-col flex-grow mt-3">
         <a href={link}>

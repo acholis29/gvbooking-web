@@ -161,6 +161,7 @@ export default function DestinationClient({ slug }: Props) {
                 sub_title={`${item.Duration_Type}, ${item.Holiday_Type}`}
                 price={`${item.PriceFrom}`}
                 currency={item.Currency}
+                link="/destination/detail/indonesia"
               />
             ))
           ) : (
@@ -200,6 +201,7 @@ export default function DestinationClient({ slug }: Props) {
               sub_title="10 hours • Skip the line • Pickup availables"
               price={"2000"}
               currency="EUR"
+              link="/destination/detail/indonesia"
             />
           ))}
         </section>
