@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // State Global / Context
 import { useCart } from "@/context/CartContext";
+// Link Href
+import Link from "next/link";
 
 type HorizontalCardProps = {
   idx_comp: string;
@@ -32,7 +34,7 @@ const HorizontalCard: React.FC<HorizontalCardProps> = ({
 }) => {
   const { addToCart, removeFromCart } = useCart();
   return (
-    <a
+    <Link
       href={link}
       className="relative flex flex-row items-start bg-white border border-gray-200 rounded-lg shadow-sm md:max-w-3xl hover:bg-gray-100 mb-3"
     >
@@ -53,6 +55,11 @@ const HorizontalCard: React.FC<HorizontalCardProps> = ({
         className="w-30 h-40 p-2 object-cover rounded-2xl"
         src={image}
         alt={image}
+        onError={(e) => {
+          const target = e.target as HTMLImageElement;
+          target.onerror = null;
+          target.src = "/images/icon/android-chrome-512x512.png";
+        }}
       />
       <div className="flex flex-col w-full p-2 leading-normal">
         <h5 className="mb-2 text-sm md:text-md md:text-1xl font-bold tracking-tight text-gray-900">
@@ -68,7 +75,7 @@ const HorizontalCard: React.FC<HorizontalCardProps> = ({
           {currency} {price}
         </p>
       </div>
-    </a>
+    </Link>
   );
 };
 

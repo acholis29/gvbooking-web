@@ -24,6 +24,8 @@ import {
   faShoppingCart,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+// Link Href
+import Link from "next/link";
 
 export default function NavbarComponent() {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -41,7 +43,7 @@ export default function NavbarComponent() {
   return (
     <nav className="bg-white border-gray-200">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a
+        <Link
           href="/home"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
@@ -55,7 +57,7 @@ export default function NavbarComponent() {
               priority
             />
           </div>
-        </a>
+        </Link>
 
         {/* Search */}
         {!hideSearch && (
@@ -353,12 +355,12 @@ function IconItem({
   link?: string;
 }) {
   return (
-    <a href={link}>
+    <Link href={link}>
       <div className="flex flex-col items-center">
         <FontAwesomeIcon icon={icon} className="text-2xl text-gray-500" />
         <span className="text-xs text-gray-500 mt-1">{label}</span>
       </div>
-    </a>
+    </Link>
   );
 }
 
@@ -374,7 +376,7 @@ function IconItemCartWish({
   badgeCount: number;
 }) {
   return (
-    <a href={link}>
+    <Link href={link}>
       <div className="flex flex-col items-center relative w-fit">
         <div className="relative">
           <FontAwesomeIcon icon={icon} className="text-2xl text-gray-500" />
@@ -386,6 +388,6 @@ function IconItemCartWish({
         </div>
         <span className="text-xs text-gray-500">{label}</span>
       </div>
-    </a>
+    </Link>
   );
 }

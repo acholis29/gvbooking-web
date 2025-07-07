@@ -38,6 +38,11 @@ const Galery: React.FC<GaleryProps> = ({
                 className="w-full h-28 object-cover rounded-lg"
                 src={img}
                 alt={`Gambar ${i + 1}`}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null;
+                  target.src = "/images/icon/android-chrome-512x512.png";
+                }}
               />
             </div>
           ))}

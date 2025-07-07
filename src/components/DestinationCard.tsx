@@ -1,4 +1,5 @@
 // components/DestinationCard.tsx
+import Link from "next/link";
 import React from "react";
 
 type DestinationCardProps = {
@@ -15,7 +16,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
   link = "#",
 }) => {
   return (
-    <a href={link} className="block group">
+    <Link href={link} className="block group">
       <div className="relative shrink-0 md:shrink h-48 w-72 md:w-full rounded-xl overflow-hidden shadow-lg">
         <img
           className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-150"
@@ -36,7 +37,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
           </p>
         </div>
       </div>
-    </a>
+    </Link>
   );
 };
 

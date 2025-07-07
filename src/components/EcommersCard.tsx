@@ -16,6 +16,8 @@ import { useCart } from "@/context/CartContext";
 import { useWish } from "@/context/WishContext";
 // Toast
 import toast from "react-hot-toast";
+// Link Href
+import Link from "next/link";
 
 type EcommersCardProps = {
   idx_comp: string;
@@ -63,7 +65,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
 
   return (
     <div className="relative w-72 md:w-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
-      <a href={link} className="relative block overflow-hidden rounded-t-lg">
+      <Link href={link} className="relative block overflow-hidden rounded-t-lg">
         <img
           className="w-full h-65 object-cover transition-transform duration-300 ease-in-out hover:scale-150"
           src={image}
@@ -74,7 +76,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
             target.src = "/images/icon/android-chrome-512x512.png";
           }}
         />
-      </a>
+      </Link>
       {/* {colorWish.toString()} */}
       {/* Wishlist button - posisi atas kanan gambar */}
       <button
@@ -99,7 +101,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
       </button>
 
       <div className="px-4 py-4 flex flex-col flex-grow">
-        <a href={link}>
+        <Link href={link}>
           <h5
             className="text-md font-semibold tracking-tight text-gray-800 min-h-[30px] truncate"
             title={title}
@@ -109,7 +111,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
           <p className="text-gray-500 text-wrap text-xs min-h-[36px]">
             {sub_title}
           </p>
-        </a>
+        </Link>
 
         {/* Ratings */}
         {/* <div className="flex items-center mt-2.5 mb-2">

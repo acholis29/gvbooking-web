@@ -6,6 +6,10 @@ import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+
+// Link Href
+import Link from "next/link";
+
 export default function FooterComponent() {
   const [isDropdownLangOpen, setDropdownLangOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState("English (US)");
@@ -53,24 +57,24 @@ export default function FooterComponent() {
             </h2>
             <ul className="text-gray-900  font-medium">
               <li className="mb-4">
-                <a href="#" className=" hover:underline">
+                <Link href="#" className=" hover:underline">
                   About
-                </a>
+                </Link>
               </li>
               <li className="mb-4">
-                <a href="#" className="hover:underline">
+                <Link href="#" className="hover:underline">
                   Careers
-                </a>
+                </Link>
               </li>
               <li className="mb-4">
-                <a href="#" className="hover:underline">
+                <Link href="#" className="hover:underline">
                   Brand Center
-                </a>
+                </Link>
               </li>
               <li className="mb-4">
-                <a href="#" className="hover:underline">
+                <Link href="#" className="hover:underline">
                   Blog
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
