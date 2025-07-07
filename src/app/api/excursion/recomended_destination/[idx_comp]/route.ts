@@ -3,12 +3,12 @@ import { prisma } from '@/lib/prisma';
 // QUERY RAW FROM PROCEDURE
 export async function GET(
   request: Request,
-  { params }: { params: { idx_comp: string } }
+  { params }: { params: Promise<{ idx_comp: string }> }
 ) {
-  const { idx_comp } = await params;
+  const idx_comp = (await params).idx_comp;
 
   try {
-    console.log('ini dari params :'+ idx_comp);
+    console.log('ini dari params :' + idx_comp);
     const result = await prisma.$queryRawUnsafe(`api_MSExcursion_Recom '${idx_comp}'`);
     return Response.json(result);
   } catch (error) {

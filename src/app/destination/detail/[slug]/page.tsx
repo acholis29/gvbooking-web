@@ -129,7 +129,7 @@ export default function DetailDestination() {
           {/* Baris Title */}
           <div className="flex flex-row justify-between items-center mt-4">
             <div className="text-gray-700 w-1/2">
-              <h3 className="text-xl md:text-5xl font-bold">
+              <h3 className="text-xl md:text-4xl font-bold">
                 {/*EXMP : TANAH LOT BALI */}
                 {data != null ? data.msg.product_details[0].excursion_name : ""}
               </h3>
@@ -151,7 +151,11 @@ export default function DetailDestination() {
           {/* Baris Galery */}
 
           <Galery
-            picture={data != null ? data.msg.product_details[0].picture : ""}
+            picture={
+              data != null && data.msg.product_details.length > 0
+                ? data.msg.product_details[0].picture
+                : ""
+            }
             galery={data != null ? data.msg.product_details[0].gallery : ""}
           />
 
@@ -234,8 +238,13 @@ export default function DetailDestination() {
                   {/* <span className="font-bold text-2xl">IDR 1.234.567 /</span>{" "}
               <small>PERSON</small> */}
                   <span className="font-bold text-2xl">
-                    {data != null ? data.msg.product_subs[0].currency : ""}
-                    {data != null ? data.msg.product_subs[0].price : ""}/
+                    {data != null && data.msg.product_subs.length > 0
+                      ? data.msg.product_subs[0].currency
+                      : "IDR"}
+                    {data != null && data.msg.product_subs.length > 0
+                      ? data.msg.product_subs[0].price
+                      : "0"}
+                    /
                   </span>{" "}
                   <small>PERSON</small>
                 </p>

@@ -10,11 +10,13 @@ import FooterComponent from "@/components/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHeart,
+  faInbox,
   faMapLocationDot,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import SkeletonImage from "@/components/SkeletonImage";
 import { log } from "console";
+import SkeletonCard from "@/components/SkeletonCard";
 
 export default function Home() {
   type DestinationItem = {
@@ -40,10 +42,28 @@ export default function Home() {
     currency?: string;
   };
 
+  type RecomendedDestinationItem = {
+    idx_comp: string;
+    Idx_excursion: string;
+    Country: string;
+    State: string;
+    Name_excursion: string;
+    Duration_Type: string;
+    Holiday_Type: string;
+    PriceFrom: string;
+    Currency: string;
+  };
+
   // State Data WistList
   const [ListWist, setWish] = useState<WishItem[]>([]);
 
   const [destination, setDestination] = useState<DestinationItem[]>([]);
+
+  const [recomdedDestination, setRecomendedDestination] = useState<
+    RecomendedDestinationItem[]
+  >([]);
+
+  const [isLoadingRecom, setIsLoadingRecom] = useState(true);
 
   useEffect(() => {
     fetch("https://api.govacation.biz/mobile/corev2.json", {
@@ -83,6 +103,25 @@ export default function Home() {
   }
   console.log("-----------");
   console.log(ListWist);
+
+  useEffect(() => {
+    fetch(
+      `/api/excursion/recomended_destination/4D340942-88D3-44DD-A52C-EAF00EACADE8`,
+      {
+        cache: "no-store", // ⛔ jangan ambil dari cache
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("EXCUR:", data); // ← ini langsung array
+        setRecomendedDestination(data);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => {
+        setIsLoadingRecom(false);
+      });
+  }, []);
+
   return (
     // Home Page
     <div>
@@ -146,7 +185,7 @@ export default function Home() {
           </p>
         </section>
         {/* <section className="max-w-screen-xl mx-auto flex gap-6 overflow-x-auto md:overflow-x-visible flex-nowrap md:flex-wrap px-4"> */}
-        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4  md:grid md:grid-cols-4">
+        {/* <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4  md:grid md:grid-cols-4">
           {Array.from({ length: 5 }).map((_, index) => (
             <EcommersCard
               key={index}
@@ -165,6 +204,40 @@ export default function Home() {
               }
             />
           ))}
+        </section> */}
+
+        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
+          {isLoadingRecom ? (
+            <>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </>
+          ) : recomdedDestination.length > 0 ? (
+            recomdedDestination.map((item, index) => (
+              <EcommersCard
+                key={index}
+                idx_comp={item.idx_comp}
+                idx_excursion={item.Idx_excursion}
+                image={`https://picsum.photos/800/600?random=${index}`}
+                title={`${item.State}, ${item.Name_excursion}`}
+                sub_title={`${item.Duration_Type}, ${item.Holiday_Type}`}
+                price={`${item.PriceFrom}`}
+                currency={item.Currency}
+                // link="/destination/detail/indonesia"
+                link={`/destination/detail/${item.Country}?id=${item.idx_comp}&state=${item.State}&country=${item.Country}&exc=${item.Idx_excursion}`}
+              />
+            ))
+          ) : (
+            <p className="col-span-4 text-gray-500 text-center">
+              <FontAwesomeIcon
+                icon={faInbox}
+                className="w-10 h-10 text-red-gvi 0 pl-2"
+              />{" "}
+              Favorite is empty.
+            </p>
+          )}
         </section>
 
         {/* Last Your Search */}
@@ -182,7 +255,7 @@ export default function Home() {
             Last your search
           </p>
         </section>
-        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4  md:grid md:grid-cols-4">
+        {/* <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4  md:grid md:grid-cols-4">
           {Array.from({ length: 5 }).map((_, index) => (
             <EcommersCard
               key={index}
@@ -201,6 +274,39 @@ export default function Home() {
               }
             />
           ))}
+        </section> */}
+        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
+          {isLoadingRecom ? (
+            <>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </>
+          ) : recomdedDestination.length > 0 ? (
+            recomdedDestination.map((item, index) => (
+              <EcommersCard
+                key={index}
+                idx_comp={item.idx_comp}
+                idx_excursion={item.Idx_excursion}
+                image={`https://picsum.photos/800/600?random=${index}`}
+                title={`${item.State}, ${item.Name_excursion}`}
+                sub_title={`${item.Duration_Type}, ${item.Holiday_Type}`}
+                price={`${item.PriceFrom}`}
+                currency={item.Currency}
+                // link="/destination/detail/indonesia"
+                link={`/destination/detail/${item.Country}?id=${item.idx_comp}&state=${item.State}&country=${item.Country}&exc=${item.Idx_excursion}`}
+              />
+            ))
+          ) : (
+            <p className="col-span-4 text-gray-500 text-center">
+              <FontAwesomeIcon
+                icon={faInbox}
+                className="w-10 h-10 text-red-gvi 0 pl-2"
+              />{" "}
+              Last your search is empty.
+            </p>
+          )}
         </section>
       </div>
     </div>

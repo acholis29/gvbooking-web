@@ -161,7 +161,8 @@ export default function DestinationClient({ slug }: Props) {
                 sub_title={`${item.Duration_Type}, ${item.Holiday_Type}`}
                 price={`${item.PriceFrom}`}
                 currency={item.Currency}
-                link="/destination/detail/indonesia"
+                // link="/destination/detail/indonesia"
+                link={`/destination/detail/${item.Country}?id=${item.idx_comp}&state=${item.State}&country=${item.Country}&exc=${item.Idx_excursion}`}
               />
             ))
           ) : (
