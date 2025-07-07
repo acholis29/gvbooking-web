@@ -8,7 +8,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import SkeletonDetailProduk from "@/components/SkeletonDetailProduk";
+import { useSearchParams } from "next/navigation";
 export default function DetailDestination() {
+  const searchParams = useSearchParams();
+  const idx_comp = searchParams.get("id"); //ini dari idx_comp_alias
+  const idx_excursion = searchParams.get("exc"); //ini dari idx_excursion
+  const country = searchParams.get("country");
+  const state = searchParams.get("state");
+
   const [isDropdownPersonOpen, setDropdownPersonOpen] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState("");
 
@@ -74,9 +81,9 @@ export default function DetailDestination() {
     const fetchData = async () => {
       setIsLoading(true); // mulai loading
       const formBody = new URLSearchParams({
-        shared_key: "4D340942-88D3-44DD-A52C-EAF00EACADE8",
+        shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
         xml: "false",
-        id_excursion: "03208A45-4A41-4E1B-A597-20525C090E52",
+        id_excursion: idx_excursion ?? "", // Examp : "03208A45-4A41-4E1B-A597-20525C090E52"
         code_of_language: "DE",
         code_of_currency: "IDR",
         promo_code: "R-BC",
