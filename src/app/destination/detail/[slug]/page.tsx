@@ -7,6 +7,7 @@ import Galery from "@/components/Galery";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import SkeletonDetailProduk from "@/components/SkeletonDetailProduk";
 export default function DetailDestination() {
   const [isDropdownPersonOpen, setDropdownPersonOpen] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState("");
@@ -115,6 +116,7 @@ export default function DetailDestination() {
 
   return (
     <div className="max-w-screen-xl mx-auto px-4">
+      {isLoading && <SkeletonDetailProduk />}
       {!isLoading && (
         <>
           {/* Baris Title */}
