@@ -19,11 +19,15 @@ export default function DetailDestination() {
   const [isDropdownPersonOpen, setDropdownPersonOpen] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState("");
 
+  const [isDropdownProductSubOpen, setDropdownProductSubOpen] = useState(false);
+  const [selectedProductSub, setSelectedProductSubOpen] = useState("");
+
   const [data, setData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownProductSubRef = useRef<HTMLDivElement>(null);
 
   // ❗ Detect click outside
   useEffect(() => {
@@ -33,6 +37,23 @@ export default function DetailDestination() {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setDropdownPersonOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // ❗ Detect click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownProductSubRef.current &&
+        !dropdownProductSubRef.current.contains(event.target as Node)
+      ) {
+        setDropdownProductSubOpen(false);
       }
     };
 
@@ -333,6 +354,50 @@ export default function DetailDestination() {
                       )}
                     </div>
                   </div>
+
+                  <div className="w-full pt-2" ref={dropdownProductSubRef}>
+                    <button
+                      onClick={() =>
+                        setDropdownProductSubOpen(!isDropdownProductSubOpen)
+                      }
+                      id="dropdownProductSubButton"
+                      data-dropdown-toggle="dropdown"
+                      className="w-full rounded-2xl text-gray-600 bg-white hover:bg-gray-300 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center justify-between"
+                      type="button"
+                    >
+                      {selectedProductSub == "1"
+                        ? selectedProductSub + " Product Sub"
+                        : selectedProductSub + " Product Subs"}
+                      <FontAwesomeIcon
+                        icon={faChevronDown}
+                        className="w-4 h-4 text-gray-600"
+                      />
+                    </button>
+
+                    {isDropdownProductSubOpen && (
+                      <div className="absolute z-20 bg-gray-200 divide-y divide-gray-100 rounded-lg shadow-sm h-70 w-40 mt-2 overflow-auto scrollbar-none scrollbar-hidden">
+                        <ul className="py-2 text-sm text-gray-700">
+                          {Array.from({ length: 2 }, (_, i) => i + 1).map(
+                            (num) => (
+                              <li key={num}>
+                                <button
+                                  onClick={() => {
+                                    setSelectedProductSubOpen(num.toString());
+                                    setDropdownProductSubOpen(false);
+                                  }}
+                                  type="button"
+                                  className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                                >
+                                  {num} Product Sub{num > 1 && "s"}
+                                </button>
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+
                   <button
                     type="button"
                     className="mt-3 w-full text-white bg-red-500 hover:bg-red-900 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
