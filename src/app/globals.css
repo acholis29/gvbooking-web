@@ -75,3 +75,13 @@ body {
   /* Dertour */
   border-color: #e40028;
 }
+
+/* Tambahkan ini ke globals.css */
+.scrollbar-hidden {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
