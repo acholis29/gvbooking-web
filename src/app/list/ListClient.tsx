@@ -60,6 +60,11 @@ type WishItem = {
   currency?: string;
 };
 
+type HolidayType = {
+  holiday_type: string;
+  qty: number;
+};
+
 export default function ListClient() {
   // Query Params
   const searchParams = useSearchParams();
@@ -86,6 +91,8 @@ export default function ListClient() {
 
   // State Data Holiday Checkbox Yang Sudah Concat | To String
   const [holidayState, setHolidayState] = useState("");
+  // State Master Holiday State
+  const [masterHoliday, setMasterHoliday] = useState<HolidayType[]>([]);
 
   // State Data Range Price
   const [price, setPrice] = useState<number>(10000);
@@ -141,6 +148,21 @@ export default function ListClient() {
   }, [state, holidayState, apply, JSON.stringify(wishItems)]);
 
   useEffect(() => {
+    fetch(`/api/excursion/holiday_type?idx-comp-alias=${idx_comp}`, {
+      cache: "no-store", // ⛔ jangan ambil dari cache
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Holiday Type:", data); // ← ini langsung array
+        setMasterHoliday(data);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => {
+        setIsLoading(false); // ✅ Loading selesai
+      });
+  }, []);
+
+  useEffect(() => {
     loadWishlish();
   }, []); // tetap kosong, agar hanya dijalankan sekali saat mount
 
@@ -180,11 +202,11 @@ export default function ListClient() {
           <div className="flex flex-row gap-3 md:flex-col">
             <div>
               <p className="text-sm mb-2 font-semibold">Holiday Type</p>
-              {holidayTypes.map((type) => (
+              {masterHoliday.map((item) => (
                 <Checkbox
-                  key={type}
-                  title={type}
-                  checked={selectedTypes.includes(type)}
+                  key={item.holiday_type}
+                  title={item.holiday_type}
+                  checked={selectedTypes.includes(item.holiday_type)}
                   onChange={handleCheckboxChange}
                 />
               ))}
@@ -294,7 +316,7 @@ export default function ListClient() {
                   idx_excursion={item.Idx_excursion}
                   image={`https://picsum.photos/800/600?random=${index}`}
                   title={item.Name_excursion}
-                  sub_title="10 hours • Skip the line • Pickup availables"
+                  sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                   price={item.PriceFrom ?? 0}
                   currency={item.Currency ?? "Rp"}
                   link={`/destination/detail/${country}?id=${idx_comp}&state=${state}&country=${country}&exc=${item.Idx_excursion}`}

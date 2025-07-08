@@ -222,7 +222,7 @@ export default function Home() {
                 idx_excursion={item.Idx_excursion}
                 image={`https://picsum.photos/800/600?random=${index}`}
                 title={`${item.State}, ${item.Name_excursion}`}
-                sub_title={`${item.Duration_Type}, ${item.Holiday_Type}`}
+                sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                 price={`${item.PriceFrom}`}
                 currency={item.Currency}
                 // link="/destination/detail/indonesia"
@@ -291,7 +291,7 @@ export default function Home() {
                 idx_excursion={item.Idx_excursion}
                 image={`https://picsum.photos/800/600?random=${index}`}
                 title={`${item.State}, ${item.Name_excursion}`}
-                sub_title={`${item.Duration_Type}, ${item.Holiday_Type}`}
+                sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                 price={`${item.PriceFrom}`}
                 currency={item.Currency}
                 // link="/destination/detail/indonesia"
