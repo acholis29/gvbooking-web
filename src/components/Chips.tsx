@@ -1,4 +1,5 @@
 import React from "react";
+import { truncateText } from "@/helper/helper";
 
 type ChipsProps = {
   id?: string;
@@ -19,7 +20,7 @@ const Chips: React.FC<ChipsProps> = ({
       id={chipId}
       className={`inline-flex items-center mt-2 px-2 py-1 me-2 text-sm font-medium rounded-sm ${bgColor} ${textColor}`}
     >
-      {title}
+      {truncateText(title, 15)}
       <button
         type="button"
         className="inline-flex items-center p-1 ms-2 text-sm text-gray-400 bg-transparent rounded-xs hover:bg-gray-200 hover:text-gray-900 "

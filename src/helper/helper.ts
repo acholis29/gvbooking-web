@@ -1,3 +1,4 @@
+// Mengubah Huruf Pertama Tiap Kata Jadi Capital
 export function capitalizeWords(sentence: string): string {
   return sentence
     .toLowerCase()

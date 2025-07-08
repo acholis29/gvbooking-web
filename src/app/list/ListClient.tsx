@@ -20,7 +20,7 @@ import {
 
 import { Dropdown, DropdownItem } from "flowbite-react";
 // Helper
-import { capitalizeWords, truncateText } from "@/helper/helper"; // sesuaikan path
+import { capitalizeWords } from "@/helper/helper"; // sesuaikan path
 // Global State
 import { useWish } from "@/context/WishContext";
 
@@ -88,6 +88,9 @@ export default function ListClient() {
   const [state, setState] = useState<string | null>(
     capitalizeWords(state_ ?? "")
   );
+
+  // State Data Badge Dari Dropdown Search
+  const [BadgeState, setBadgeState] = useState<string[]>([]);
 
   // State Data Holiday Checkbox Yang Sudah Concat | To String
   const [holidayState, setHolidayState] = useState("");
@@ -162,6 +165,34 @@ export default function ListClient() {
       });
   }, []);
 
+  // Badge Chips
+  useEffect(() => {
+    const allBadge = `ALL ${capitalizedCountry}`; // mis. "ALL Indonesia"
+
+    if (state) {
+      const normalized = state.toLowerCase();
+
+      setBadgeState((prev) => {
+        // 1️⃣ buang dulu badge “ALL …” agar tak ikut tersimpan
+        const withoutAll = prev.filter(
+          (b) => b.toLowerCase() !== allBadge.toLowerCase()
+        );
+
+        // 2️⃣ cek apakah badge state sudah ada (case‑insensitive)
+        const alreadyExists = withoutAll.some(
+          (b) => b.toLowerCase() === normalized
+        );
+        if (alreadyExists) return withoutAll;
+
+        // 3️⃣ tambahkan badge state baru
+        return [...withoutAll, state];
+      });
+    } else {
+      // state === "" | null → reset kembali ke “ALL …”
+      setBadgeState([allBadge]);
+    }
+  }, [state, capitalizedCountry]);
+
   useEffect(() => {
     loadWishlish();
   }, []); // tetap kosong, agar hanya dijalankan sekali saat mount
@@ -184,19 +215,19 @@ export default function ListClient() {
           </div>
 
           {/* Badge akan di bawah search di HP, dan di samping saat md */}
-          <div className="flex flex-wrap gap-1">
+          {/* <div className="flex flex-wrap gap-1">
             <Badge title="New" />
             <Badge title="Price Ascending" />
             <Badge title="Price Descending" />
             <Badge title="Rating" />
-          </div>
+          </div> */}
         </div>
         {/* Konten Kiri */}
         <div className="md:w-1/6 text-gray-700">
           <p className="text-sm mb-2 font-semibold">Keywords</p>
-          <Chips title="Bali" id="badge1" />
-          <Chips title="Lombok" id="badge2" />
-          <Chips title="Java" id="badge3" />
+          {BadgeState.map((item, index) => (
+            <Chips key={index} title={capitalizeWords(item)} id={item} />
+          ))}
           <Range min="0" max="10000" value={price} onChange={setPrice} />
 
           <div className="flex flex-row gap-3 md:flex-col">
