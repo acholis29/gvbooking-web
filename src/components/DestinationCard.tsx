@@ -29,7 +29,10 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
           }}
         />
         <div className="absolute bottom-0 left-0 right-0 bg-black/40 p-4">
-          <h3 className="text-white text-lg font-bold uppercase text-wrap">
+          <h3
+            className="text-white text-lg font-bold uppercase truncate"
+            title={title}
+          >
             {title}
           </h3>
           <p className="text-white text-sm font-bold">
