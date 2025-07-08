@@ -203,6 +203,12 @@ export default function ListClient() {
     setIsLoading(false);
   }
 
+  // Remove Badge
+  const handleRemoveBadge = (id: string) => {
+    setBadgeState((prev) =>
+      prev.filter((item) => item.toLowerCase() !== id.toLowerCase())
+    );
+  };
   return (
     // List Page
     <div className="max-w-screen-xl mx-auto">
@@ -226,7 +232,12 @@ export default function ListClient() {
         <div className="md:w-1/6 text-gray-700">
           <p className="text-sm mb-2 font-semibold">Keywords</p>
           {BadgeState.map((item, index) => (
-            <Chips key={index} title={capitalizeWords(item)} id={item} />
+            <Chips
+              key={index}
+              title={capitalizeWords(item)}
+              id={item}
+              onRemove={handleRemoveBadge} // ✅ Kirim fungsi hapus
+            />
           ))}
           <Range min="0" max="10000" value={price} onChange={setPrice} />
 

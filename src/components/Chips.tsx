@@ -6,6 +6,7 @@ type ChipsProps = {
   bgColor?: string;
   textColor?: string;
   title?: string;
+  onRemove?: (id: string) => void; // ✅ Tambah prop ini
 };
 
 const Chips: React.FC<ChipsProps> = ({
@@ -13,6 +14,7 @@ const Chips: React.FC<ChipsProps> = ({
   bgColor = "bg-gray-300",
   textColor = "text-black",
   title = "Badge",
+  onRemove,
 }) => {
   const chipId = id || `badge-${Math.random().toString(36).substring(2, 9)}`;
   return (
@@ -26,6 +28,7 @@ const Chips: React.FC<ChipsProps> = ({
         className="inline-flex items-center p-1 ms-2 text-sm text-gray-400 bg-transparent rounded-xs hover:bg-gray-200 hover:text-gray-900 "
         data-dismiss-target={`#${chipId}`}
         aria-label="Remove"
+        onClick={() => onRemove?.(id || "")} // ✅ Trigger hapus badge
       >
         <svg
           className="w-2 h-2"
