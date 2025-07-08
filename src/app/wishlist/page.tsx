@@ -13,6 +13,7 @@ import {
 import { useCart } from "@/context/CartContext";
 // Toast
 import toast from "react-hot-toast";
+import Breadcrumb from "@/components/Breadcrumb";
 
 type WishItem = {
   idx_comp: string;
@@ -51,6 +52,7 @@ export default function Wishlist() {
   return (
     // Cart Page
     <div className="max-w-screen-xl mx-auto">
+      <Breadcrumb pageName="Wishlist" />
       {ListWishlist.length > 0 ? (
         <section className="flex flex-col md:flex-row p-6 bg-white gap-1">
           {/* Konten Kiri */}

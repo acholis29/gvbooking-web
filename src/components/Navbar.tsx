@@ -33,7 +33,9 @@ export default function NavbarComponent() {
   const [selectedCategory, setSelectedCategory] = useState("All Destinations");
 
   const pathname = usePathname();
-  const hideSearch = pathname.startsWith("/list"); // atau sesuaikan dengan rute list-mu
+  const hideSearch = ["/list", "/cart", "/wishlist"].some((route) =>
+    pathname.startsWith(route)
+  );
 
   // Cart Counter
   const { cartCount } = useCart();

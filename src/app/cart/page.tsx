@@ -4,6 +4,7 @@ import HorizontalCard from "@/components/HorizontalCard";
 import SkeletonCardHorizontal from "@/components/SkeletonCardHorizontal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInbox } from "@fortawesome/free-solid-svg-icons";
+import Breadcrumb from "@/components/Breadcrumb";
 
 type CartItem = {
   idx_comp: string;
@@ -36,6 +37,7 @@ export default function Cart() {
   return (
     // Cart Page
     <div className="max-w-screen-xl mx-auto">
+      <Breadcrumb pageName="Cart" />
       {ListCart.length > 0 ? (
         <section className="flex flex-col md:flex-row p-6 bg-white gap-1">
           {/* Konten Kiri */}
