@@ -224,7 +224,7 @@ export default function DetailDestination() {
                 />
 
                 {/* About Activity */}
-                <p className="font-bold text-lg mt-3">About this activity</p>
+                {/* <p className="font-bold text-lg mt-3">About this activity</p>
                 <div className="border p-3 rounded-2xl w-full md:w-1/2">
                   <p className="font-bold text-lg">Order now and pay later</p>
                   <p>
@@ -270,7 +270,7 @@ export default function DetailDestination() {
                     sacred sea snakes. You can touch them (with a guide) and it
                     is believed to bring good luck.
                   </p>
-                </div>
+                </div> */}
               </div>
               {/* Kontent Kanan */}
               <div className="order-1 md:order-2 w-full md:flex-[1] text-gray-600">

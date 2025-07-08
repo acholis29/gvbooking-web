@@ -27,6 +27,7 @@ import { useWish } from "@/context/WishContext";
 type DestinationItem = {
   idx_comp: string;
   Idx_excursion: string;
+  code_exc: string;
   Country: string;
   State: string;
   Name_excursion: string;
@@ -34,6 +35,7 @@ type DestinationItem = {
   Holiday_Type: string;
   Currency: string;
   PriceFrom: string;
+  Gbr: string;
 };
 
 const holidayTypes = [
