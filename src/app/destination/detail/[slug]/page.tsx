@@ -184,17 +184,16 @@ export default function DetailDestination() {
               </div>
             </div>
             {/* Baris Galery */}
-          </div>
 
-          <Galery
-            picture={
-              data != null && data.msg.product_details.length > 0
-                ? data.msg.product_details[0].picture
-                : ""
-            }
-            galery={data != null ? data.msg.product_details[0].gallery : ""}
-          />
-          <div className="max-w-screen-xl mx-auto px-4">
+            <Galery
+              picture={
+                data != null && data.msg.product_details.length > 0
+                  ? data.msg.product_details[0].picture
+                  : ""
+              }
+              galery={data != null ? data.msg.product_details[0].gallery : ""}
+            />
+
             {/* Baris Content */}
             <div className="flex flex-col md:flex-row pb-5 gap-5">
               {/* Kontent Kiri */}

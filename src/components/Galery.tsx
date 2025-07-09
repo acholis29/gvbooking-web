@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPhotoFilm } from "@fortawesome/free-solid-svg-icons";
 
 type GaleryProps = {
   picture?: string;
@@ -22,12 +24,12 @@ const Galery: React.FC<GaleryProps> = ({
 
   return (
     <>
-      <div className="grid gap-4 py-5">
+      <div className="grid grid-cols-3 gap-2 py-5">
         {/* Gambar Utama */}
-        <div className="relative w-full h-[250px] sm:h-[350px] md:h-[450px] lg:h-[550px] overflow-hidden">
+        <div className="">
           <img
-            className="w-full h-full object-cover"
-            src={mainImage}
+            className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
+            src={galleryArray[0]}
             alt="Jumbotron"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
@@ -36,10 +38,65 @@ const Galery: React.FC<GaleryProps> = ({
             }}
           />
         </div>
+        <div className="">
+          <img
+            className="w-full h-full object-cover"
+            src={galleryArray[1]}
+            alt="Jumbotron"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.onerror = null;
+              target.src = "/images/icon/android-chrome-512x512.png";
+            }}
+          />
+        </div>
+        <div className="grid grid-rows-2 gap-2">
+          <div className="">
+            <img
+              className="w-full h-full object-cover rounde"
+              src={galleryArray[2]}
+              alt="Jumbotron"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.onerror = null;
+                target.src = "/images/icon/android-chrome-512x512.png";
+              }}
+            />
+          </div>
+          <div className="relative">
+            <img
+              className="w-full h-full object-cover"
+              src={galleryArray[3]}
+              alt="Jumbotron"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.onerror = null;
+                target.src = "/images/icon/android-chrome-512x512.png";
+              }}
+            />
+            {/* Button pojok kanan bawah */}
+            <button
+              className="absolute bottom-2 right-2 
+             px-3 py-1.5 text-sm 
+             md:px-5 md:py-2 md:text-base
+             border rounded-2xl 
+             bg-black/40 hover:bg-black/60 
+             shadow-md transition text-white cursor-pointer"
+              title="Lihat Galeri"
+              onClick={() => alert("jadi")}
+            >
+              <FontAwesomeIcon
+                icon={faPhotoFilm}
+                className="w-4 h-4 text-white mr-1 md:mr-2"
+              />
+              <span className="hidden md:inline">More</span> +12
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Grid Thumbnail */}
-      <div className="max-w-screen-xl mx-auto px-4 pb-4">
+      {/* <div className="max-w-screen-xl mx-auto px-4 pb-4">
         <div className="overflow-x-auto md:overflow-visible">
           <div className="flex md:grid md:grid-cols-5 gap-4 min-w-max md:min-w-0">
             {galleryArray.map((img, i) => (
@@ -62,7 +119,7 @@ const Galery: React.FC<GaleryProps> = ({
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
