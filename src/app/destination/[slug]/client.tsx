@@ -101,11 +101,11 @@ export default function DestinationClient({ slug }: Props) {
       {/* Section Destination */}
       <section className="py-6 px-4 max-w-screen-xl mx-auto">
         <p className="text-red-gvi font-bold text-3xl mt-10">
-          {" "}
+          {/* {" "}
           <FontAwesomeIcon
             icon={faMapLocationDot}
             className="w-10 h-10 text-red-gvi 0 pl-2"
-          />{" "}
+          />{" "} */}
           Local Destinations :
         </p>
       </section>
@@ -134,11 +134,11 @@ export default function DestinationClient({ slug }: Props) {
       <div className="bg-gray-100 my-6 pb-6">
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
           <p className="text-red-gvi font-bold text-3xl">
-            {" "}
+            {/* {" "}
             <FontAwesomeIcon
               icon={faHeart}
               className="w-10 h-10 text-red-gvi 0 pl-2"
-            />{" "}
+            />{" "} */}
             Recomended
           </p>
         </section>
@@ -183,11 +183,11 @@ export default function DestinationClient({ slug }: Props) {
       <div className="bg-white my-6 pb-6">
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
           <p className="text-red-gvi font-bold text-3xl">
-            {" "}
+            {/* {" "}
             <FontAwesomeIcon
               icon={faCar}
               className="w-10 h-10 text-red-gvi 0 pl-2"
-            />{" "}
+            />{" "} */}
             Tour in {slug}
           </p>
         </section>

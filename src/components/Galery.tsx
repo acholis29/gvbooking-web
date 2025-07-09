@@ -65,7 +65,7 @@ const Galery: React.FC<GaleryProps> = ({
         <div className="grid grid-rows-2 gap-2">
           <div className="">
             <img
-              className="w-full h-full object-cover rounde"
+              className="w-full h-full object-cover rounded-tr-sm"
               src={galleryArray[2]}
               alt="Jumbotron"
               onClick={() => {
@@ -81,7 +81,7 @@ const Galery: React.FC<GaleryProps> = ({
           </div>
           <div className="relative">
             <img
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-br-sm"
               src={galleryArray[3]}
               alt="Jumbotron"
               onClick={() => {

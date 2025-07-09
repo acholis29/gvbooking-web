@@ -17,6 +17,7 @@ import {
 import SkeletonImage from "@/components/SkeletonImage";
 import { log } from "console";
 import SkeletonCard from "@/components/SkeletonCard";
+import { API_HOSTS } from "@/lib/apihost";
 
 export default function Home() {
   type DestinationItem = {
@@ -66,7 +67,7 @@ export default function Home() {
   const [isLoadingRecom, setIsLoadingRecom] = useState(true);
 
   useEffect(() => {
-    fetch("https://api.govacation.biz/mobile/corev2.json", {
+    fetch(`${API_HOSTS.host1}/mobile/corev2.json`, {
       cache: "no-store", // ⛔ jangan ambil dari cache
     })
       .then((res) => res.json())
@@ -131,11 +132,11 @@ export default function Home() {
       {/* Section Destination */}
       <section className="py-6 px-4 max-w-screen-xl mx-auto">
         <p className="text-red-gvi font-bold text-3xl mt-10">
-          {" "}
+          {/* {" "}
           <FontAwesomeIcon
             icon={faMapLocationDot}
             className="w-10 h-10 text-red-gvi 0 pl-2"
-          />{" "}
+          />{" "} */}
           Destinations
         </p>
       </section>
@@ -176,11 +177,11 @@ export default function Home() {
       <div className="bg-gray-100 my-6 pb-6">
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
           <p className="text-red-gvi font-bold text-3xl">
-            {" "}
+            {/* {" "}
             <FontAwesomeIcon
               icon={faHeart}
               className="w-10 h-10 text-red-gvi 0 pl-2"
-            />{" "}
+            />{" "} */}
             Favorite Tours
           </p>
         </section>
@@ -247,11 +248,11 @@ export default function Home() {
       <div className="bg-white my-6 pb-6">
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
           <p className="text-red-gvi font-bold text-3xl">
-            {" "}
+            {/* {" "}
             <FontAwesomeIcon
               icon={faSearch}
               className="w-10 h-10 text-red-gvi 0 pl-2"
-            />{" "}
+            />{" "} */}
             Last your search
           </p>
         </section>
