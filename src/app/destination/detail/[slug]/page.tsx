@@ -9,6 +9,7 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import SkeletonDetailProduk from "@/components/SkeletonDetailProduk";
 import { useSearchParams } from "next/navigation";
+
 export default function DetailDestination() {
   const searchParams = useSearchParams();
   const idx_comp = searchParams.get("id"); //ini dari idx_comp_alias

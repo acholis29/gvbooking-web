@@ -1,7 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
+import * as React from "react";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhotoFilm } from "@fortawesome/free-solid-svg-icons";
+
+import "@/app/lightbox_custom.css"; // custom CSS override
 
 type GaleryProps = {
   picture?: string;
@@ -21,6 +27,8 @@ const Galery: React.FC<GaleryProps> = ({
 
   // State gambar utama
   const [mainImage, setMainImage] = useState<string>(picture);
+
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -83,7 +91,7 @@ const Galery: React.FC<GaleryProps> = ({
              bg-black/40 hover:bg-black/60 
              shadow-md transition text-white cursor-pointer"
               title="Lihat Galeri"
-              onClick={() => alert("jadi")}
+              onClick={() => setOpen(true)}
             >
               <FontAwesomeIcon
                 icon={faPhotoFilm}
@@ -94,6 +102,31 @@ const Galery: React.FC<GaleryProps> = ({
           </div>
         </div>
       </div>
+
+      {/* LightBox */}
+      <Lightbox
+        open={open}
+        close={() => setOpen(false)}
+        slides={[
+          {
+            src: "/images/destination/tanah-lot/tanah-lot2.jpg",
+            width: 3840,
+            height: 2560,
+          },
+          {
+            src: "/images/destination/tanah-lot/tanah-lot3.jpg",
+            width: 3840,
+            height: 2560,
+          },
+          {
+            src: "/images/destination/tanah-lot/tanah-lot4.jpg",
+            width: 3840,
+            height: 2560,
+          },
+          // ...
+        ]}
+        className="tailwind-lightbox"
+      />
 
       {/* Grid Thumbnail */}
       {/* <div className="max-w-screen-xl mx-auto px-4 pb-4">
