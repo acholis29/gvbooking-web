@@ -23,6 +23,8 @@ import { Dropdown, DropdownItem } from "flowbite-react";
 import { capitalizeWords } from "@/helper/helper"; // sesuaikan path
 // Global State
 import { useWish } from "@/context/WishContext";
+// Host Imgae
+import { API_HOSTS } from "@/lib/apihost";
 
 type DestinationItem = {
   idx_comp: string;
@@ -74,7 +76,16 @@ export default function ListClient() {
   const country = searchParams.get("country");
   const state_ = searchParams.get("state");
   const capitalizedCountry = capitalizeWords(country ?? "");
-
+  const host_img =
+    country == "indonesia"
+      ? API_HOSTS.img_indo
+      : country == "thailand"
+      ? API_HOSTS.img_thai
+      : country == "vietnam"
+      ? API_HOSTS.img_viet
+      : country == "cambodia"
+      ? API_HOSTS.img_camb
+      : "";
   // Wish Counter
   const { wishItems } = useWish();
 
@@ -358,7 +369,8 @@ export default function ListClient() {
                   key={index}
                   idx_comp={item.idx_comp}
                   idx_excursion={item.Idx_excursion}
-                  image={`https://picsum.photos/800/600?random=${index}`}
+                  // image={`https://picsum.photos/800/600?random=${index}`}
+                  image={`${host_img}/media/${item.code_exc}/TN_400_${item.Gbr}`}
                   title={item.Name_excursion}
                   sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                   price={item.PriceFrom ?? 0}
