@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 // Context State Global
 import { useCart } from "@/context/CartContext";
 import { useWish } from "@/context/WishContext";
+import { useCurrency } from "@/context/CurrencyContext";
 // Next Image
 import Image from "next/image";
 // Drawer
@@ -14,12 +15,18 @@ import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
+  faAngleRight,
+  faArrowAltCircleRight,
+  faArrowRight,
   // faSearch,
   // faEllipsisV,
   faBars,
   faChevronDown,
   faDollarSign,
+  faGlobe,
   faHeart,
+  faLitecoinSign,
+  faRightToBracket,
   faSearch,
   faShoppingCart,
   faUser,
@@ -32,10 +39,11 @@ export default function NavbarComponent() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All Destinations");
   const [isCurrencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
+  const [isProfilDropdownOpen, setProfilDropdownOpen] = useState(false);
   type CurrencyItem = {
     Currency: string;
   };
-  const [currency, setCurrency] = useState<CurrencyItem[]>([]);
+  const [currencyMaster, setCurrencyMaster] = useState<CurrencyItem[]>([]);
   const [selectedCurrency, setSelectedCurrency] = useState("USD"); // default
 
   const pathname = usePathname();
@@ -43,10 +51,14 @@ export default function NavbarComponent() {
     pathname.startsWith(route)
   );
 
+  const menu_profil = ["Sign In", "Currency", "Language"];
+
   // Cart Counter
   const { cartCount } = useCart();
   // Wish Counter
   const { wishCount } = useWish();
+  // Currency
+  const { currency } = useCurrency();
 
   useEffect(() => {
     fetch("/api/currency", {
@@ -55,7 +67,7 @@ export default function NavbarComponent() {
       .then((res) => res.json())
       .then((data) => {
         console.log("currency:", data); // ← ini langsung arra // ✅ langsung set array-nya
-        setCurrency(data);
+        setCurrencyMaster(data);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -194,40 +206,6 @@ export default function NavbarComponent() {
           {/* Desktop/Tablet: Show full icon menu */}
           <div className="hidden lg:flex gap-6 p-2 rounded-xl">
             {/* Icon Currency */}
-            <div className="relative">
-              <div
-                className="flex flex-col items-center cursor-pointer"
-                onClick={() => setCurrencyDropdownOpen(!isCurrencyDropdownOpen)}
-              >
-                <FontAwesomeIcon
-                  icon={faDollarSign}
-                  className="text-2xl text-gray-500"
-                />
-                <span className="text-xs text-gray-500 mt-1">ID/IDR RP</span>
-              </div>
-
-              {isCurrencyDropdownOpen && (
-                <div className="absolute z-30 mt-2 right-0 bg-white border border-gray-200 shadow-md rounded-md w-20">
-                  <ul className="text-sm text-gray-700">
-                    {currency.map((item) => (
-                      <li key={item.Currency}>
-                        <button
-                          className="w-full px-4 py-2 hover:bg-gray-100 text-left"
-                          onClick={() => {
-                            console.log(`${item.Currency} selected`);
-                            setSelectedCurrency(item.Currency);
-                            setCurrencyDropdownOpen(false);
-                          }}
-                        >
-                          {item.Currency}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
             <IconItemCartWish
               icon={faHeart}
               label="WISHLIST"
@@ -240,7 +218,64 @@ export default function NavbarComponent() {
               link="/cart"
               badgeCount={cartCount}
             />
-            <IconItem icon={faUser} label="PROFILE" />
+            {/* Profile */}
+            {/* <IconItem icon={faUser} label="PROFILE" /> */}
+            <div className="relative">
+              <div
+                className="flex flex-col items-center cursor-pointer"
+                onClick={() => setProfilDropdownOpen(!isProfilDropdownOpen)}
+              >
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className="text-2xl text-gray-500 hover:text-red-500"
+                />
+                <span className="text-xs text-gray-500 mt-1">PROFIL</span>
+              </div>
+
+              {isProfilDropdownOpen && (
+                <div className="absolute z-30 mt-2 right-0 bg-white border border-gray-200 shadow-md rounded-md w-80 py-3">
+                  <ul className="text-sm text-gray-700">
+                    {menu_profil.map((item, index) => (
+                      <li
+                        key={index}
+                        className="flex items-center hover:bg-gray-100"
+                      >
+                        <div className="ml-4 w-5 text-center">
+                          <FontAwesomeIcon
+                            icon={
+                              item === "Sign In"
+                                ? faRightToBracket
+                                : item === "Currency"
+                                ? faDollarSign
+                                : faGlobe
+                            }
+                            className="text-lg text-gray-500 shrink-0"
+                          />
+                        </div>
+                        <div className="w-40">
+                          <button
+                            className="w-full px-4 py-2  text-left flex items-center gap-x-2 truncate"
+                            onClick={() => {
+                              console.log(`Profil selected`);
+                            }}
+                          >
+                            <span className="text-gray-700 truncate">
+                              {item}
+                            </span>
+                          </button>
+                        </div>
+                        <div className="w-40 text-right mr-5">
+                          <FontAwesomeIcon
+                            icon={faAngleRight}
+                            className="text-lg text-gray-500 shrink-0"
+                          />
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Mobile: Show burger menu */}
@@ -432,7 +467,10 @@ function IconItemCartWish({
     <Link href={link}>
       <div className="flex flex-col items-center relative w-fit">
         <div className="relative">
-          <FontAwesomeIcon icon={icon} className="text-2xl text-gray-500" />
+          <FontAwesomeIcon
+            icon={icon}
+            className="text-2xl text-gray-500 hover:text-red-500"
+          />
           {badgeCount > 0 && (
             <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
               {badgeCount}
