@@ -23,10 +23,8 @@ const Galery: React.FC<GaleryProps> = ({
         .filter((url) => url && url !== "" && url.startsWith("http"))
     : [];
 
-  // State gambar utama
-  const [mainImage, setMainImage] = useState<string>(picture);
-
   const [open, setOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   return (
     <>
@@ -37,6 +35,10 @@ const Galery: React.FC<GaleryProps> = ({
             className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
             src={galleryArray[0]}
             alt="Jumbotron"
+            onClick={() => {
+              setSelectedIndex(0); // index gambar yang diklik
+              setOpen(true);
+            }}
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.onerror = null;
@@ -49,6 +51,10 @@ const Galery: React.FC<GaleryProps> = ({
             className="w-full h-full object-cover"
             src={galleryArray[1]}
             alt="Jumbotron"
+            onClick={() => {
+              setSelectedIndex(1); // index gambar yang diklik
+              setOpen(true);
+            }}
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.onerror = null;
@@ -62,6 +68,10 @@ const Galery: React.FC<GaleryProps> = ({
               className="w-full h-full object-cover rounde"
               src={galleryArray[2]}
               alt="Jumbotron"
+              onClick={() => {
+                setSelectedIndex(2); // index gambar yang diklik
+                setOpen(true);
+              }}
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.onerror = null;
@@ -74,6 +84,10 @@ const Galery: React.FC<GaleryProps> = ({
               className="w-full h-full object-cover"
               src={galleryArray[3]}
               alt="Jumbotron"
+              onClick={() => {
+                setSelectedIndex(3); // index gambar yang diklik
+                setOpen(true);
+              }}
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.onerror = null;
@@ -81,22 +95,25 @@ const Galery: React.FC<GaleryProps> = ({
               }}
             />
             {/* Button pojok kanan bawah */}
-            <button
-              className="absolute bottom-2 right-2 
+            {galleryArray.length > 4 && (
+              <button
+                className="absolute bottom-2 right-2 
              px-3 py-1.5 text-sm 
              md:px-5 md:py-2 md:text-base
              border rounded-2xl 
              bg-black/40 hover:bg-black/60 
              shadow-md transition text-white cursor-pointer"
-              title="Lihat Galeri"
-              onClick={() => setOpen(true)}
-            >
-              <FontAwesomeIcon
-                icon={faPhotoFilm}
-                className="w-4 h-4 text-white mr-1 md:mr-2"
-              />
-              <span className="hidden md:inline">More</span> +12
-            </button>
+                title="Lihat Galeri"
+                onClick={() => setOpen(true)}
+              >
+                <FontAwesomeIcon
+                  icon={faPhotoFilm}
+                  className="w-4 h-4 text-white mr-1 md:mr-2"
+                />
+                <span className="hidden md:inline">More</span> +
+                {galleryArray.length}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -107,24 +124,12 @@ const Galery: React.FC<GaleryProps> = ({
         close={() => setOpen(false)}
         styles={{ container: { backgroundColor: "rgba(0, 0, 0, .8)" } }}
         className="tailwind-lightbox"
-        slides={[
-          {
-            src: "/images/destination/tanah-lot/tanah-lot2.jpg",
-            width: 3840,
-            height: 2560,
-          },
-          {
-            src: "/images/destination/tanah-lot/tanah-lot3.jpg",
-            width: 3840,
-            height: 2560,
-          },
-          {
-            src: "/images/destination/tanah-lot/tanah-lot4.jpg",
-            width: 3840,
-            height: 2560,
-          },
-          // ...
-        ]}
+        index={selectedIndex}
+        slides={galleryArray.map((img) => ({
+          src: img,
+          width: 3840, // Atau ganti sesuai kebutuhan
+          height: 2560,
+        }))}
       />
 
       {/* Grid Thumbnail */}
