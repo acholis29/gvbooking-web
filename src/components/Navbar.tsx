@@ -31,6 +31,7 @@ export default function NavbarComponent() {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All Destinations");
+  const [isCurrencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
 
   const pathname = usePathname();
   const hideSearch = ["/list", "/cart", "/wishlist"].some((route) =>
@@ -175,8 +176,61 @@ export default function NavbarComponent() {
         <div className="relative">
           {/* Desktop/Tablet: Show full icon menu */}
           <div className="hidden lg:flex gap-6 p-2 rounded-xl">
-            <IconItem icon={faDollarSign} label="ID/IDR RP" />
-            {/* <IconItem icon={faHeart} label="WISHLIST" /> */}
+            {/* Icon Currency */}
+            <div className="relative">
+              <div
+                className="flex flex-col items-center cursor-pointer"
+                onClick={() => setCurrencyDropdownOpen(!isCurrencyDropdownOpen)}
+              >
+                <FontAwesomeIcon
+                  icon={faDollarSign}
+                  className="text-2xl text-gray-500"
+                />
+                <span className="text-xs text-gray-500 mt-1">ID/IDR RP</span>
+              </div>
+
+              {isCurrencyDropdownOpen && (
+                <div className="absolute z-30 mt-2 right-0 bg-white border border-gray-200 shadow-md rounded-md w-20">
+                  <ul className="text-sm text-gray-700">
+                    <li>
+                      <button
+                        className="w-full px-4 py-2 hover:bg-gray-100 text-left"
+                        onClick={() => {
+                          // Ganti ke fungsi pilihan mata uang jika ada
+                          console.log("IDR selected");
+                          setCurrencyDropdownOpen(false);
+                        }}
+                      >
+                        IDR
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className="w-full px-4 py-2 hover:bg-gray-100 text-left"
+                        onClick={() => {
+                          console.log("USD selected");
+                          setCurrencyDropdownOpen(false);
+                        }}
+                      >
+                        USD
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className="w-full px-4 py-2 hover:bg-gray-100 text-left"
+                        onClick={() => {
+                          console.log("EUR selected");
+                          setCurrencyDropdownOpen(false);
+                        }}
+                      >
+                        EUR
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+
             <IconItemCartWish
               icon={faHeart}
               label="WISHLIST"
