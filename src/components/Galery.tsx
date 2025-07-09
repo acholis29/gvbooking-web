@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 import * as React from "react";
-import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
+import Lightbox from "yet-another-react-lightbox";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhotoFilm } from "@fortawesome/free-solid-svg-icons";
@@ -105,6 +105,8 @@ const Galery: React.FC<GaleryProps> = ({
       <Lightbox
         open={open}
         close={() => setOpen(false)}
+        styles={{ container: { backgroundColor: "rgba(0, 0, 0, .8)" } }}
+        className="tailwind-lightbox"
         slides={[
           {
             src: "/images/destination/tanah-lot/tanah-lot2.jpg",
@@ -123,7 +125,6 @@ const Galery: React.FC<GaleryProps> = ({
           },
           // ...
         ]}
-        className="tailwind-lightbox"
       />
 
       {/* Grid Thumbnail */}
