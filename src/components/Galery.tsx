@@ -7,8 +7,6 @@ import "yet-another-react-lightbox/styles.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhotoFilm } from "@fortawesome/free-solid-svg-icons";
 
-import "@/app/lightbox_custom.css"; // custom CSS override
-
 type GaleryProps = {
   picture?: string;
   galery?: string;
