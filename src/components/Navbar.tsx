@@ -32,6 +32,11 @@ export default function NavbarComponent() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All Destinations");
   const [isCurrencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
+  type CurrencyItem = {
+    Currency: string;
+  };
+  const [currency, setCurrency] = useState<CurrencyItem[]>([]);
+  const [selectedCurrency, setSelectedCurrency] = useState("USD"); // default
 
   const pathname = usePathname();
   const hideSearch = ["/list", "/cart", "/wishlist"].some((route) =>
@@ -42,6 +47,18 @@ export default function NavbarComponent() {
   const { cartCount } = useCart();
   // Wish Counter
   const { wishCount } = useWish();
+
+  useEffect(() => {
+    fetch("/api/currency", {
+      cache: "no-store", // ⛔ jangan ambil dari cache
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("currency:", data); // ← ini langsung arra // ✅ langsung set array-nya
+        setCurrency(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
   return (
     <nav className="bg-white border-gray-200">
@@ -192,40 +209,20 @@ export default function NavbarComponent() {
               {isCurrencyDropdownOpen && (
                 <div className="absolute z-30 mt-2 right-0 bg-white border border-gray-200 shadow-md rounded-md w-20">
                   <ul className="text-sm text-gray-700">
-                    <li>
-                      <button
-                        className="w-full px-4 py-2 hover:bg-gray-100 text-left"
-                        onClick={() => {
-                          // Ganti ke fungsi pilihan mata uang jika ada
-                          console.log("IDR selected");
-                          setCurrencyDropdownOpen(false);
-                        }}
-                      >
-                        IDR
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        className="w-full px-4 py-2 hover:bg-gray-100 text-left"
-                        onClick={() => {
-                          console.log("USD selected");
-                          setCurrencyDropdownOpen(false);
-                        }}
-                      >
-                        USD
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        className="w-full px-4 py-2 hover:bg-gray-100 text-left"
-                        onClick={() => {
-                          console.log("EUR selected");
-                          setCurrencyDropdownOpen(false);
-                        }}
-                      >
-                        EUR
-                      </button>
-                    </li>
+                    {currency.map((item) => (
+                      <li key={item.Currency}>
+                        <button
+                          className="w-full px-4 py-2 hover:bg-gray-100 text-left"
+                          onClick={() => {
+                            console.log(`${item.Currency} selected`);
+                            setSelectedCurrency(item.Currency);
+                            setCurrencyDropdownOpen(false);
+                          }}
+                        >
+                          {item.Currency}
+                        </button>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               )}
