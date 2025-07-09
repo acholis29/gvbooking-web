@@ -11,6 +11,7 @@ const SkeletonDetailProduk: React.FC<SkeletonDetailProdukProps> = ({ id }) => {
       className="w-full p-4 border border-gray-200 rounded-sm shadow-sm animate-pulse md:p-6 "
     >
       <div className="max-w-screen-xl mx-auto">
+        <div className="h-2.5 bg-gray-200 rounded-full w-full md:w-48 mb-4"></div>
         <div className="flex justify-between">
           <div className="h-2.5 bg-gray-200 rounded-full w-20 md:w-48 mb-4"></div>
           <div className="h-2.5 bg-gray-200 rounded-full w-20 md:w-48 mb-4"></div>
@@ -18,7 +19,7 @@ const SkeletonDetailProduk: React.FC<SkeletonDetailProdukProps> = ({ id }) => {
 
         {/* Banner */}
         <div className="grid grid-cols-3 gap-2 py-5">
-          <div className="flex items-center justify-center h-100 mb-4 bg-gray-300 rounded-sm ">
+          <div className="flex items-center justify-center h-50 md:h-100 mb-4 bg-gray-300 rounded-sm ">
             <svg
               className="w-10 h-10 text-gray-200 "
               aria-hidden="true"
@@ -30,7 +31,7 @@ const SkeletonDetailProduk: React.FC<SkeletonDetailProdukProps> = ({ id }) => {
               <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
             </svg>
           </div>
-          <div className="flex items-center justify-center h-100 mb-4 bg-gray-300 rounded-sm ">
+          <div className="flex items-center justify-center h-50 md:h-100 mb-4 bg-gray-300 rounded-sm ">
             <svg
               className="w-10 h-10 text-gray-200 "
               aria-hidden="true"
@@ -43,7 +44,7 @@ const SkeletonDetailProduk: React.FC<SkeletonDetailProdukProps> = ({ id }) => {
             </svg>
           </div>
           <div className="grid grid-rows-2">
-            <div className="flex items-center justify-center h-49 bg-gray-300 rounded-sm ">
+            <div className="flex items-center justify-center h-23 md:h-49 bg-gray-300 rounded-sm ">
               <svg
                 className="w-10 h-10 text-gray-200 "
                 aria-hidden="true"
@@ -55,7 +56,7 @@ const SkeletonDetailProduk: React.FC<SkeletonDetailProdukProps> = ({ id }) => {
                 <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
               </svg>
             </div>
-            <div className="flex items-center justify-center h-49 bg-gray-300 rounded-sm ">
+            <div className="flex items-center justify-center h-23 md:h-49 bg-gray-300 rounded-sm ">
               <svg
                 className="w-10 h-10 text-gray-200 "
                 aria-hidden="true"
