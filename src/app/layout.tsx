@@ -17,6 +17,7 @@ import FooterComponent from "@/components/Footer";
 import { CartProvider } from "@/context/CartContext";
 import { WishProvider } from "@/context/WishContext";
 import { CurrencyProvider } from "@/context/CurrencyContext";
+import { ModalProvider } from "@/context/ModalContext";
 // Toast
 import { Toaster } from "react-hot-toast";
 
@@ -52,11 +53,13 @@ export default function RootLayout({
         <CartProvider>
           <WishProvider>
             <CurrencyProvider>
-              <Navbar />
-              {children}
-              <Toaster position="top-center" />
-              {/* Footer */}
-              <FooterComponent />
+              <ModalProvider>
+                <Navbar />
+                {children}
+                <Toaster position="top-center" />
+                {/* Footer */}
+                <FooterComponent />
+              </ModalProvider>
             </CurrencyProvider>
           </WishProvider>
         </CartProvider>

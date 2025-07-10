@@ -21,18 +21,26 @@ import {
   // faSearch,
   // faEllipsisV,
   faBars,
+  faCheck,
   faChevronDown,
   faDollarSign,
+  faEuro,
   faGlobe,
   faHeart,
   faLitecoinSign,
+  faMoneyCheckDollar,
   faRightToBracket,
+  faRupiahSign,
   faSearch,
   faShoppingCart,
+  faUsd,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 // Link Href
 import Link from "next/link";
+// Modal
+import { useModal } from "@/context/ModalContext";
+import ModalComponent from "./ModalComponent";
 
 export default function NavbarComponent() {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -45,6 +53,7 @@ export default function NavbarComponent() {
   };
   const [currencyMaster, setCurrencyMaster] = useState<CurrencyItem[]>([]);
   const [selectedCurrency, setSelectedCurrency] = useState("USD"); // default
+  const [menuSelected, setMenuSelected] = useState("");
 
   const pathname = usePathname();
   const hideSearch = ["/list", "/cart", "/wishlist"].some((route) =>
@@ -57,7 +66,7 @@ export default function NavbarComponent() {
   const { cartCount } = useCart();
   // Wish Counter
   const { wishCount } = useWish();
-  // Currency
+  // Currency context
   const { currency } = useCurrency();
 
   // Timeout Delay
@@ -75,6 +84,8 @@ export default function NavbarComponent() {
       .catch((err) => console.error(err));
   }, []);
 
+  // Modal
+  const { openModal } = useModal();
   return (
     <nav className="bg-white border-gray-200">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -251,6 +262,11 @@ export default function NavbarComponent() {
                       <li
                         key={index}
                         className="flex items-center hover:bg-gray-100"
+                        onClick={() => {
+                          setMenuSelected(`${item}`);
+                          openModal(); // ⬅️ Ini akan memunculkan modal
+                          console.log(`Profil selected: ${item}`);
+                        }}
                       >
                         <div className="ml-4 w-5 text-center">
                           <FontAwesomeIcon
@@ -265,12 +281,7 @@ export default function NavbarComponent() {
                           />
                         </div>
                         <div className="w-40">
-                          <button
-                            className="w-full px-4 py-2  text-left flex items-center gap-x-2 truncate"
-                            onClick={() => {
-                              console.log(`Profil selected`);
-                            }}
-                          >
+                          <button className="w-full px-4 py-2  text-left flex items-center gap-x-2 truncate">
                             <span className="text-gray-700 truncate">
                               {item}
                             </span>
@@ -441,6 +452,19 @@ export default function NavbarComponent() {
           </form>
         )}
       </div>
+
+      {/* Modal */}
+      {menuSelected == "Currency" && (
+        <ModalComponent title="Currency" icon={faMoneyCheckDollar}>
+          <CurrencyContent />
+        </ModalComponent>
+      )}
+
+      {menuSelected == "Language" && (
+        <ModalComponent title="Language" icon={faMoneyCheckDollar}>
+          <LanguageContent />
+        </ModalComponent>
+      )}
     </nav>
   );
 }
@@ -494,3 +518,65 @@ function IconItemCartWish({
     </Link>
   );
 }
+
+const CurrencyContent = () => {
+  const { closeModal } = useModal();
+
+  return (
+    <ul className="space-y-3 list-none">
+      <li
+        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
+        onClick={closeModal}
+      >
+        IDR - INDONESIA{" "}
+        <FontAwesomeIcon
+          icon={faRupiahSign}
+          className="text-lg text-gray-500"
+        />
+        <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+      </li>
+      <li
+        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
+        onClick={closeModal}
+      >
+        USD - UNITED STATE{" "}
+        <FontAwesomeIcon icon={faUsd} className="text-lg text-gray-500" />
+      </li>
+      <li
+        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
+        onClick={closeModal}
+      >
+        EUR - EUROPE{" "}
+        <FontAwesomeIcon icon={faEuro} className="text-lg text-gray-500" />
+      </li>
+    </ul>
+  );
+};
+
+const LanguageContent = () => {
+  const { closeModal } = useModal();
+
+  return (
+    <ul className="space-y-3 list-none">
+      <li
+        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
+        onClick={closeModal}
+      >
+        EN - English{" "}
+        <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+      </li>
+      <li
+        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
+        onClick={closeModal}
+      >
+        ED - Germany{" "}
+      </li>
+      <li
+        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
+        onClick={closeModal}
+      >
+        ID - Indonesia{" "}
+      </li>
+    </ul>
+  );
+};
