@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { useCart } from "@/context/CartContext";
 import { useWish } from "@/context/WishContext";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useModal } from "@/context/ModalContext";
 // Next Image
 import Image from "next/image";
 // Drawer
@@ -16,10 +17,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
   faAngleRight,
-  faArrowAltCircleRight,
-  faArrowRight,
-  // faSearch,
-  // faEllipsisV,
   faBars,
   faCheck,
   faChevronDown,
@@ -27,7 +24,6 @@ import {
   faEuro,
   faGlobe,
   faHeart,
-  faLitecoinSign,
   faMoneyCheckDollar,
   faRightToBracket,
   faRupiahSign,
@@ -38,15 +34,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 // Link Href
 import Link from "next/link";
-// Modal
-import { useModal } from "@/context/ModalContext";
+// Modal Component
 import ModalComponent from "./ModalComponent";
 
 export default function NavbarComponent() {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All Destinations");
-  const [isCurrencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
   const [isProfilDropdownOpen, setProfilDropdownOpen] = useState(false);
   type CurrencyItem = {
     Currency: string;
@@ -66,8 +60,6 @@ export default function NavbarComponent() {
   const { cartCount } = useCart();
   // Wish Counter
   const { wishCount } = useWish();
-  // Currency context
-  const { currency } = useCurrency();
 
   // Timeout Delay
   let timeout: NodeJS.Timeout;
@@ -520,34 +512,49 @@ function IconItemCartWish({
 }
 
 const CurrencyContent = () => {
-  const { closeModal } = useModal();
+  // const { closeModal } = useModal();
+  const { currency, setCurrency } = useCurrency();
 
   return (
     <ul className="space-y-3 list-none">
       <li
         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={closeModal}
+        onClick={() => {
+          setCurrency("IDR");
+        }}
       >
         IDR - INDONESIA{" "}
         <FontAwesomeIcon
           icon={faRupiahSign}
           className="text-lg text-gray-500"
         />
-        <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+        {currency == "IDR" && (
+          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+        )}
       </li>
       <li
         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={closeModal}
+        onClick={() => {
+          setCurrency("USD");
+        }}
       >
         USD - UNITED STATE{" "}
         <FontAwesomeIcon icon={faUsd} className="text-lg text-gray-500" />
+        {currency == "USD" && (
+          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+        )}
       </li>
       <li
         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={closeModal}
+        onClick={() => {
+          setCurrency("EUR");
+        }}
       >
         EUR - EUROPE{" "}
         <FontAwesomeIcon icon={faEuro} className="text-lg text-gray-500" />
+        {currency == "EUR" && (
+          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+        )}
       </li>
     </ul>
   );
