@@ -18,6 +18,8 @@ import {
 import { useSearchParams } from "next/navigation";
 import SkeletonImage from "@/components/SkeletonImage";
 import SkeletonCard from "@/components/SkeletonCard";
+// Host Imgae
+import { API_HOSTS } from "@/lib/apihost";
 
 type Props = {
   slug: string;
@@ -41,12 +43,24 @@ type RecomendedDestinationItem = {
   Holiday_Type: string;
   PriceFrom: string;
   Currency: string;
+  Gbr?: string;
+  code_exc: string;
 };
 
 export default function DestinationClient({ slug }: Props) {
   const searchParams = useSearchParams();
   const idx_comp = searchParams.get("id"); //ini dari idx_comp_alias
   const country = searchParams.get("country"); //ini dari idx_comp_alias
+  const host_img =
+    country == "indonesia"
+      ? API_HOSTS.img_indo
+      : country == "thailand"
+      ? API_HOSTS.img_thai
+      : country == "vietnam"
+      ? API_HOSTS.img_viet
+      : country == "cambodia"
+      ? API_HOSTS.img_camb
+      : "";
 
   const [isLoadingDest, setIsLoadingDest] = useState(true);
   const [localDestination, setLocalDestination] = useState<
@@ -156,7 +170,8 @@ export default function DestinationClient({ slug }: Props) {
                 key={index}
                 idx_comp={item.idx_comp}
                 idx_excursion={item.Idx_excursion}
-                image={`https://picsum.photos/800/600?random=${index}`}
+                // image={`https://picsum.photos/800/600?random=${index}`}
+                image={`${host_img}/media/${item.code_exc}/TN_400_${item.Gbr}`}
                 title={`${item.State}, ${item.Name_excursion}`}
                 sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                 price={`${item.PriceFrom}`}
@@ -205,7 +220,8 @@ export default function DestinationClient({ slug }: Props) {
                 key={index}
                 idx_comp={item.idx_comp}
                 idx_excursion={item.Idx_excursion}
-                image={`https://picsum.photos/800/600?random=${index}`}
+                // image={`https://picsum.photos/800/600?random=${index}`}
+                image={`${host_img}/media/${item.code_exc}/TN_400_${item.Gbr}`}
                 title={`${item.State}, ${item.Name_excursion}`}
                 sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                 price={`${item.PriceFrom}`}

@@ -53,6 +53,8 @@ export default function Home() {
     Holiday_Type: string;
     PriceFrom: string;
     Currency: string;
+    Gbr?: string;
+    code_exc: string;
   };
 
   // State Data WistList
@@ -221,7 +223,8 @@ export default function Home() {
                 key={index}
                 idx_comp={item.idx_comp}
                 idx_excursion={item.Idx_excursion}
-                image={`https://picsum.photos/800/600?random=${index}`}
+                // image={`https://picsum.photos/800/600?random=${index}`}
+                image={`https://bo.govacation.biz/media/${item.code_exc}/TN_400_${item.Gbr}`}
                 title={`${item.State}, ${item.Name_excursion}`}
                 sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                 price={`${item.PriceFrom}`}
@@ -290,7 +293,8 @@ export default function Home() {
                 key={index}
                 idx_comp={item.idx_comp}
                 idx_excursion={item.Idx_excursion}
-                image={`https://picsum.photos/800/600?random=${index}`}
+                // image={`https://picsum.photos/800/600?random=${index}`}
+                image={`https://bo.govacation.biz/media/${item.code_exc}/TN_400_${item.Gbr}`}
                 title={`${item.State}, ${item.Name_excursion}`}
                 sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                 price={`${item.PriceFrom}`}
