@@ -16,6 +16,9 @@ import {
   faChevronDown,
   faFilter,
   faInbox,
+  faDollarSign,
+  faEur,
+  faRupiahSign,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Dropdown, DropdownItem } from "flowbite-react";
@@ -23,6 +26,7 @@ import { Dropdown, DropdownItem } from "flowbite-react";
 import { capitalizeWords } from "@/helper/helper"; // sesuaikan path
 // Global State
 import { useWish } from "@/context/WishContext";
+import { useCurrency } from "@/context/CurrencyContext";
 // Host Imgae
 import { API_HOSTS } from "@/lib/apihost";
 
@@ -88,6 +92,8 @@ export default function ListClient() {
       : "";
   // Wish Counter
   const { wishItems } = useWish();
+  // Curency
+  const { currency } = useCurrency();
 
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
@@ -111,7 +117,7 @@ export default function ListClient() {
   const [masterHoliday, setMasterHoliday] = useState<HolidayType[]>([]);
 
   // State Data Range Price
-  const [price, setPrice] = useState<number>(10000);
+  const [price, setPrice] = useState<number>(10000000);
 
   // State Data Button Apply
   const [apply, setApply] = useState<number>(0);
@@ -210,6 +216,14 @@ export default function ListClient() {
     loadWishlish();
   }, []); // tetap kosong, agar hanya dijalankan sekali saat mount
 
+  useEffect(() => {
+    if (currency == "IDR") {
+      setPrice(10000000);
+    } else {
+      setPrice(1000);
+    }
+  }, [currency]);
+
   function loadWishlish() {
     const wish = JSON.parse(localStorage.getItem("wish") || "[]");
     setWish(wish);
@@ -252,7 +266,13 @@ export default function ListClient() {
               onRemove={handleRemoveBadge} // ✅ Kirim fungsi hapus
             />
           ))}
-          <Range min="0" max="10000" value={price} onChange={setPrice} />
+          {/* Range Price */}
+          <Range
+            min="0"
+            max={currency == "USD" || currency == "EUR" ? "1000" : "10000000"}
+            value={price}
+            onChange={setPrice}
+          />
 
           <div className="flex flex-row gap-3 md:flex-col">
             <div>

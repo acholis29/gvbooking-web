@@ -1,5 +1,6 @@
 // components/DestinationCard.tsx
 import React, { useState } from "react";
+import { useCurrency } from "@/context/CurrencyContext";
 type RangeProps = {
   min?: String;
   max?: String;
@@ -17,6 +18,8 @@ const Range: React.FC<RangeProps> = ({
     onChange(Number(e.target.value));
   };
 
+  const { currency } = useCurrency();
+
   return (
     <div className="mb-3">
       <div className="flex justify-between mb-2 pt-3">
@@ -24,13 +27,17 @@ const Range: React.FC<RangeProps> = ({
           htmlFor="minmax-range"
           className="text-sm text-gray-800 font-semibold"
         >
-          Price
+          Price{" "}
+          <span className="font-normal text-xs">
+            ({currency} {" - "}
+            {currency == "EUR" ? "€" : currency == "USD" ? "$" : "Rp"})
+          </span>
         </label>
         <label
           htmlFor="minmax-range"
           className="text-sm font-medium text-gray-700"
         >
-          {value == 0 ? "$0" : `$0 - $${value}`}
+          {value == 0 ? `0` : `0 - ${value}`}
         </label>
       </div>
       <input

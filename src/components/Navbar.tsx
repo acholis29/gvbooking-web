@@ -6,6 +6,7 @@ import { useCart } from "@/context/CartContext";
 import { useWish } from "@/context/WishContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useModal } from "@/context/ModalContext";
+import { useLanguage } from "@/context/LanguageContext";
 // Next Image
 import Image from "next/image";
 // Drawer
@@ -562,27 +563,41 @@ const CurrencyContent = () => {
 
 const LanguageContent = () => {
   const { closeModal } = useModal();
-
+  const { language, setLanguage } = useLanguage();
   return (
     <ul className="space-y-3 list-none">
       <li
         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={closeModal}
+        onClick={() => {
+          setLanguage("EN");
+        }}
       >
         EN - English{" "}
-        <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+        {language == "EN" && (
+          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+        )}
       </li>
       <li
         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={closeModal}
+        onClick={() => {
+          setLanguage("ED");
+        }}
       >
         ED - Germany{" "}
+        {language == "ED" && (
+          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+        )}
       </li>
       <li
         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={closeModal}
+        onClick={() => {
+          setLanguage("ID");
+        }}
       >
         ID - Indonesia{" "}
+        {language == "ID" && (
+          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+        )}
       </li>
     </ul>
   );
