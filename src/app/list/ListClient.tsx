@@ -386,12 +386,18 @@ export default function ListClient() {
                 />
               ))
             ) : (
-              <div className="col-span-4 text-center text-gray-500 py-10">
-                <FontAwesomeIcon
+              <div className="col-span-4 text-center text-gray-500 py-10 flex flex-col justify-center items-center">
+                {/* <FontAwesomeIcon
                   icon={faInbox}
                   className="w-4 h-4 text-gray-600 mr-2"
                 />
-                Data tidak ditemukan...
+                Data tidak ditemukan... */}
+                <img
+                  src="/images/error/empty.svg"
+                  alt=""
+                  className="w-100 h-auto"
+                />
+                <p className="text-2xl">Opps Not Found!</p>
               </div>
             )}
           </div>

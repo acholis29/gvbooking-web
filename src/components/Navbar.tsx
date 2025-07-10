@@ -60,6 +60,9 @@ export default function NavbarComponent() {
   // Currency
   const { currency } = useCurrency();
 
+  // Timeout Delay
+  let timeout: NodeJS.Timeout;
+
   useEffect(() => {
     fetch("/api/currency", {
       cache: "no-store", // ⛔ jangan ambil dari cache
@@ -220,10 +223,19 @@ export default function NavbarComponent() {
             />
             {/* Profile */}
             {/* <IconItem icon={faUser} label="PROFILE" /> */}
-            <div className="relative">
+            <div
+              className="relative group"
+              onMouseLeave={() => {
+                timeout = setTimeout(() => setProfilDropdownOpen(false), 200); // delay 200ms
+              }}
+              onMouseEnter={() => {
+                clearTimeout(timeout);
+                setProfilDropdownOpen(true);
+              }}
+            >
               <div
                 className="flex flex-col items-center cursor-pointer"
-                onClick={() => setProfilDropdownOpen(!isProfilDropdownOpen)}
+                // onClick={() => setProfilDropdownOpen(!isProfilDropdownOpen)}
               >
                 <FontAwesomeIcon
                   icon={faUser}
