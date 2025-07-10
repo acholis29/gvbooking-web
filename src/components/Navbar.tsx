@@ -61,6 +61,10 @@ export default function NavbarComponent() {
   const { cartCount } = useCart();
   // Wish Counter
   const { wishCount } = useWish();
+  // Currency
+  const { currency } = useCurrency();
+  // Language
+  const { language } = useLanguage();
 
   // Timeout Delay
   let timeout: NodeJS.Timeout;
@@ -276,11 +280,21 @@ export default function NavbarComponent() {
                         <div className="w-40">
                           <button className="w-full px-4 py-2  text-left flex items-center gap-x-2 truncate">
                             <span className="text-gray-700 truncate">
-                              {item}
+                              {item}{" "}
                             </span>
                           </button>
                         </div>
-                        <div className="w-40 text-right mr-5">
+                        <div className="w-40 flex justify-end pr-4">
+                          {item == "Currency" ? (
+                            <span className="font-bold text-xs text-red-500 pr-1">{`(${currency})`}</span>
+                          ) : (
+                            ""
+                          )}
+                          {item == "Language" ? (
+                            <span className="font-bold text-xs text-red-500 pr-1">{`(${language})`}</span>
+                          ) : (
+                            ""
+                          )}
                           <FontAwesomeIcon
                             icon={faAngleRight}
                             className="text-lg text-gray-500 shrink-0"
