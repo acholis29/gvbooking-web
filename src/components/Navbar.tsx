@@ -55,6 +55,8 @@ export default function NavbarComponent() {
     pathname.startsWith(route)
   );
 
+  const hideCurrency = pathname === "/" || pathname === "/home";
+
   const menu_profil = ["Sign In", "Currency", "Language"];
 
   // Cart Counter
@@ -255,53 +257,59 @@ export default function NavbarComponent() {
               {isProfilDropdownOpen && (
                 <div className="absolute z-30 mt-2 right-0 bg-white border border-gray-200 shadow-md rounded-md w-80 py-3">
                   <ul className="text-sm text-gray-700">
-                    {menu_profil.map((item, index) => (
-                      <li
-                        key={index}
-                        className="flex items-center hover:bg-gray-100"
-                        onClick={() => {
-                          setMenuSelected(`${item}`);
-                          openModal(); // ⬅️ Ini akan memunculkan modal
-                          console.log(`Profil selected: ${item}`);
-                        }}
-                      >
-                        <div className="ml-4 w-5 text-center">
-                          <FontAwesomeIcon
-                            icon={
-                              item === "Sign In"
-                                ? faRightToBracket
-                                : item === "Currency"
-                                ? faDollarSign
-                                : faGlobe
-                            }
-                            className="text-lg text-gray-500 shrink-0"
-                          />
-                        </div>
-                        <div className="w-40">
-                          <button className="w-full px-4 py-2  text-left flex items-center gap-x-2 truncate">
-                            <span className="text-gray-700 truncate">
-                              {item}{" "}
-                            </span>
-                          </button>
-                        </div>
-                        <div className="w-40 flex justify-end pr-4">
-                          {item == "Currency" ? (
-                            <span className="font-bold text-xs text-red-500 pr-1">{`(${currency})`}</span>
-                          ) : (
-                            ""
-                          )}
-                          {item == "Language" ? (
-                            <span className="font-bold text-xs text-red-500 pr-1">{`(${language})`}</span>
-                          ) : (
-                            ""
-                          )}
-                          <FontAwesomeIcon
-                            icon={faAngleRight}
-                            className="text-lg text-gray-500 shrink-0"
-                          />
-                        </div>
-                      </li>
-                    ))}
+                    {menu_profil.map((item, index) => {
+                      if (item == "Currency" && hideCurrency) {
+                        return null;
+                      }
+
+                      return (
+                        <li
+                          key={index}
+                          className="flex items-center hover:bg-gray-100"
+                          onClick={() => {
+                            setMenuSelected(`${item}`);
+                            openModal(); // ⬅️ Ini akan memunculkan modal
+                            console.log(`Profil selected: ${item}`);
+                          }}
+                        >
+                          <div className="ml-4 w-5 text-center">
+                            <FontAwesomeIcon
+                              icon={
+                                item === "Sign In"
+                                  ? faRightToBracket
+                                  : item === "Currency"
+                                  ? faDollarSign
+                                  : faGlobe
+                              }
+                              className="text-lg text-gray-500 shrink-0"
+                            />
+                          </div>
+                          <div className="w-40">
+                            <button className="w-full px-4 py-2  text-left flex items-center gap-x-2 truncate">
+                              <span className="text-gray-700 truncate">
+                                {item}{" "}
+                              </span>
+                            </button>
+                          </div>
+                          <div className="w-40 flex justify-end pr-4">
+                            {item == "Currency" ? (
+                              <span className="font-bold text-xs text-red-500 pr-1">{`(${currency})`}</span>
+                            ) : (
+                              ""
+                            )}
+                            {item == "Language" ? (
+                              <span className="font-bold text-xs text-red-500 pr-1">{`(${language})`}</span>
+                            ) : (
+                              ""
+                            )}
+                            <FontAwesomeIcon
+                              icon={faAngleRight}
+                              className="text-lg text-gray-500 shrink-0"
+                            />
+                          </div>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}
@@ -468,7 +476,7 @@ export default function NavbarComponent() {
       )}
 
       {menuSelected == "Language" && (
-        <ModalComponent title="Language" icon={faMoneyCheckDollar}>
+        <ModalComponent title="Language" icon={faGlobe}>
           <LanguageContent />
         </ModalComponent>
       )}
