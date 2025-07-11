@@ -16,7 +16,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 
 // Provider
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useState("ID"); // default misalnya IDR
+  const [language, setLanguage] = useState("EN"); // default misalnya IDR
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage }}>

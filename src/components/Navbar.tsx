@@ -43,10 +43,7 @@ export default function NavbarComponent() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All Destinations");
   const [isProfilDropdownOpen, setProfilDropdownOpen] = useState(false);
-  type CurrencyItem = {
-    Currency: string;
-  };
-  const [currencyMaster, setCurrencyMaster] = useState<CurrencyItem[]>([]);
+
   const [selectedCurrency, setSelectedCurrency] = useState("USD"); // default
   const [menuSelected, setMenuSelected] = useState("");
 
@@ -70,18 +67,6 @@ export default function NavbarComponent() {
 
   // Timeout Delay
   let timeout: NodeJS.Timeout;
-
-  useEffect(() => {
-    fetch("/api/currency", {
-      cache: "no-store", // ⛔ jangan ambil dari cache
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("currency:", data); // ← ini langsung arra // ✅ langsung set array-nya
-        setCurrencyMaster(data);
-      })
-      .catch((err) => console.error(err));
-  }, []);
 
   // Modal
   const { openModal } = useModal();
@@ -537,48 +522,47 @@ function IconItemCartWish({
 const CurrencyContent = () => {
   // const { closeModal } = useModal();
   const { currency, setCurrency } = useCurrency();
+  type CurrencyItem = {
+    Currency: string;
+  };
+
+  const [currencyMaster, setCurrencyMaster] = useState<CurrencyItem[]>([]);
+
+  useEffect(() => {
+    fetch("/api/currency", {
+      cache: "no-store", // ⛔ jangan ambil dari cache
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("currency:", data); // ← ini langsung arra // ✅ langsung set array-nya
+        setCurrencyMaster(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
   return (
     <ul className="space-y-3 list-none">
-      <li
-        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={() => {
-          setCurrency("IDR");
-        }}
-      >
-        IDR - INDONESIA{" "}
-        <FontAwesomeIcon
-          icon={faRupiahSign}
-          className="text-lg text-gray-500"
-        />
-        {currency == "IDR" && (
-          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-        )}
-      </li>
-      <li
-        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={() => {
-          setCurrency("USD");
-        }}
-      >
-        USD - UNITED STATE{" "}
-        <FontAwesomeIcon icon={faUsd} className="text-lg text-gray-500" />
-        {currency == "USD" && (
-          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-        )}
-      </li>
-      <li
-        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={() => {
-          setCurrency("EUR");
-        }}
-      >
-        EUR - EUROPE{" "}
-        <FontAwesomeIcon icon={faEuro} className="text-lg text-gray-500" />
-        {currency == "EUR" && (
-          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-        )}
-      </li>
+      {currencyMaster.map((item, index) => (
+        <li
+          key={index}
+          className={`${
+            currency === item.Currency ? "bg-gray-200" : ""
+          } text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer`}
+          onClick={() => {
+            setCurrency(item.Currency);
+          }}
+        >
+          <div className="flex justify-between items-center">
+            <span>{item.Currency}</span>
+            {currency === item.Currency && (
+              <FontAwesomeIcon
+                icon={faCheck}
+                className="text-lg text-green-500"
+              />
+            )}
+          </div>
+        </li>
+      ))}
     </ul>
   );
 };
@@ -586,41 +570,46 @@ const CurrencyContent = () => {
 const LanguageContent = () => {
   const { closeModal } = useModal();
   const { language, setLanguage } = useLanguage();
+  type LanguageItem = {
+    MSLanguage: string;
+  };
+
+  const [languageMaster, setLanguageMaster] = useState<LanguageItem[]>([]);
+
+  useEffect(() => {
+    fetch("/api/language", {
+      cache: "no-store", // ⛔ jangan ambil dari cache
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("language:", data); // ← ini langsung arra // ✅ langsung set array-nya
+        setLanguageMaster(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
   return (
     <ul className="space-y-3 list-none">
-      <li
-        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={() => {
-          setLanguage("EN");
-        }}
-      >
-        EN - English{" "}
-        {language == "EN" && (
-          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-        )}
-      </li>
-      <li
-        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={() => {
-          setLanguage("ED");
-        }}
-      >
-        ED - Germany{" "}
-        {language == "ED" && (
-          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-        )}
-      </li>
-      <li
-        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={() => {
-          setLanguage("ID");
-        }}
-      >
-        ID - Indonesia{" "}
-        {language == "ID" && (
-          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-        )}
-      </li>
+      {languageMaster.map((item, index) => (
+        <li
+          key={index}
+          className={`${
+            language === item.MSLanguage ? "bg-gray-200" : ""
+          } text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer`}
+          onClick={() => {
+            setLanguage(item.MSLanguage);
+          }}
+        >
+          <div className="flex justify-between items-center">
+            <span>{item.MSLanguage}</span>
+            {language === item.MSLanguage && (
+              <FontAwesomeIcon
+                icon={faCheck}
+                className="text-lg text-green-500"
+              />
+            )}
+          </div>
+        </li>
+      ))}
     </ul>
   );
 };
