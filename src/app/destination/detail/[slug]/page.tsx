@@ -3,12 +3,15 @@
 import { useState, useEffect, useRef } from "react";
 
 import Galery from "@/components/Galery";
+import ProductSub from "@/components/ProductSubCard";
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import SkeletonDetailProduk from "@/components/SkeletonDetailProduk";
 import { useSearchParams } from "next/navigation";
+import { log } from "console";
+import { toLowerCaseAll } from "@/helper/helper";
 
 export default function DetailDestination() {
   const searchParams = useSearchParams();
@@ -23,7 +26,53 @@ export default function DetailDestination() {
   const [isDropdownProductSubOpen, setDropdownProductSubOpen] = useState(false);
   const [selectedProductSub, setSelectedProductSubOpen] = useState("");
 
-  const [data, setData] = useState<any>(null);
+  type ProductDetail = {
+    excursion_name: string;
+    info_location: string;
+    info_category: string;
+    info_duration: string;
+    info_general: string;
+    info_facilities: string;
+    info_pickup_service: string;
+    info_finish_time: string;
+    picture: string;
+    gallery: string;
+  };
+
+  type ProductSub = {
+    excursion_id: string;
+    sub_excursion_name: string;
+    sub_excursion_id: string;
+    minimum_pax: string;
+    maximum_pax: string;
+    picture: string;
+    latitude: string;
+    longitude: string;
+    currency: string;
+    price: string;
+    status: string;
+    buy_currency_id: string | null;
+  };
+
+  type ProductMsg = {
+    product_details: ProductDetail[];
+    product_subs: ProductSub[];
+    product_pickup_list: any[]; // bisa diperjelas nanti kalau tahu isinya
+  };
+
+  type ProductResponse = {
+    error: string;
+    msg: ProductMsg;
+    len: {
+      current_row: string;
+      total_row: string;
+      total_page: string;
+      time: string;
+    };
+    id: string;
+  };
+
+  const [dataProduct, setDataProduct] = useState<ProductResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,41 +113,7 @@ export default function DetailDestination() {
     };
   }, []);
 
-  // PROXY
-  // useEffect(() => {
-  //   const fetchProductDetail = async () => {
-  //     try {
-  //       const res = await fetch("/api/proxy/produk", {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //           shared_key: "4D340942-88D3-44DD-A52C-EAF00EACADE8",
-  //           xml: "false",
-  //           id_excursion: "03208A45-4A41-4E1B-A597-20525C090E52",
-  //           code_of_language: "DE",
-  //           code_of_currency: "IDR",
-  //           promo_code: "R-BC",
-  //         }),
-  //       });
-
-  //       if (!res.ok) throw new Error("Fetch gagal: " + res.status);
-
-  //       const result = await res.json();
-  //       setData(result);
-  //       setError(null);
-  //     } catch (err: any) {
-  //       console.error("Error:", err);
-  //       setError(err.message || "Terjadi kesalahan");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchProductDetail();
-  // }, []);
-
+  // Detail Tour / Produk Detail
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true); // mulai loading
@@ -127,10 +142,9 @@ export default function DetailDestination() {
 
         if (contentType.includes("application/json")) {
           const json = await res.json();
-          setData(json);
-        } else {
-          const text = await res.text();
-          setData(text); // bisa XML atau error message
+          setDataProduct(json);
+          console.log("DataProduct");
+          console.log(json);
         }
       } catch (err: any) {
         setError(err.message || "Terjadi kesalahan");
@@ -144,8 +158,8 @@ export default function DetailDestination() {
   }, []);
 
   const maximum_pax =
-    data != null && data.msg.product_subs.length > 0
-      ? parseInt(data.msg.product_subs[0].maximum_pax)
+    dataProduct != null && dataProduct.msg.product_subs.length > 0
+      ? parseInt(dataProduct.msg.product_subs[0].maximum_pax)
       : 1;
 
   return (
@@ -159,8 +173,8 @@ export default function DetailDestination() {
               <div className="text-gray-700 w-full">
                 <h3 className="text-xl md:text-4xl font-bold">
                   {/*EXMP : TANAH LOT BALI */}
-                  {data != null
-                    ? data.msg.product_details[0].excursion_name
+                  {dataProduct != null
+                    ? dataProduct.msg.product_details[0].excursion_name
                     : ""}
                 </h3>
               </div>
@@ -169,16 +183,16 @@ export default function DetailDestination() {
               <div className="text-gray-700 w-1/2">
                 <h3 className="text-small md:text-lg font-semibold md:font-bold text-left">
                   {/*DESC : Beraban, Kediri, Kabupaten Tabanan, Bali */}
-                  {data != null
-                    ? data.msg.product_details[0].info_location
+                  {dataProduct != null
+                    ? dataProduct.msg.product_details[0].info_location
                     : ""}
                 </h3>
               </div>
               <div className="text-gray-700 w-1/2">
                 <h3 className="text-small md:text-lg font-semibold md:font-bold text-right text-red-500">
                   {/* 07:00 - 19:00 WITA */}
-                  {data != null
-                    ? data.msg.product_details[0].info_pickup_service
+                  {dataProduct != null
+                    ? dataProduct.msg.product_details[0].info_pickup_service
                     : ""}
                   {" WITA "}
                 </h3>
@@ -188,28 +202,52 @@ export default function DetailDestination() {
 
             <Galery
               picture={
-                data != null && data.msg.product_details.length > 0
-                  ? data.msg.product_details[0].picture
+                dataProduct != null &&
+                dataProduct.msg.product_details.length > 0
+                  ? dataProduct.msg.product_details[0].picture
                   : ""
               }
-              galery={data != null ? data.msg.product_details[0].gallery : ""}
+              galery={
+                dataProduct != null
+                  ? dataProduct.msg.product_details[0].gallery
+                  : ""
+              }
             />
 
             {/* Baris Content */}
             <div className="flex flex-col md:flex-row pb-5 gap-5">
-              {/* Kontent Kiri */}
               <div className="order-2 md:order-1 w-full md:flex-[5] text-gray-600">
-                <p className="font-bold text-lg">
+                <div className="w-1/6 mt-3 mb-5">
+                  <input
+                    type="date"
+                    min={new Date().toISOString().split("T")[0]}
+                    className="bg-gray-50 p-2 rounded-2xl w-full shadow-sm focus:outline-none focus:ring-0 border-0"
+                  />
+                </div>
+                {dataProduct && dataProduct.msg.product_subs.length > 0 && (
+                  <>
+                    {dataProduct.msg.product_subs.map((item, index) => (
+                      <ProductSub
+                        key={index}
+                        item={item}
+                        idx_comp={idx_comp ?? ""}
+                        country={toLowerCaseAll(country ?? "")}
+                      />
+                    ))}
+                  </>
+                )}
+
+                <p className="font-bold text-lg mt-20">
                   {/* The Legendary Charm of Tanah Lot Temple: Bali's Eternal Wonder */}
-                  {data != null
-                    ? data.msg.product_details[0].excursion_name
+                  {dataProduct != null
+                    ? dataProduct.msg.product_details[0].excursion_name
                     : ""}{" "}
-                  {data != null
-                    ? data.msg.product_details[0].info_location
+                  {dataProduct != null
+                    ? dataProduct.msg.product_details[0].info_location
                     : ""}
                   {" | "}
-                  {data != null
-                    ? data.msg.product_details[0].info_category
+                  {dataProduct != null
+                    ? dataProduct.msg.product_details[0].info_category
                     : ""}
                 </p>
                 {/* Deskripsi  */}
@@ -217,8 +255,8 @@ export default function DetailDestination() {
                   className="prose max-w-none text-sm text-gray-700"
                   dangerouslySetInnerHTML={{
                     __html:
-                      data != null
-                        ? data.msg.product_details[0].info_general
+                      dataProduct != null
+                        ? dataProduct.msg.product_details[0].info_general
                         : "",
                   }}
                 />
@@ -271,140 +309,6 @@ export default function DetailDestination() {
                     is believed to bring good luck.
                   </p>
                 </div> */}
-              </div>
-              {/* Kontent Kanan */}
-              <div className="order-1 md:order-2 w-full md:flex-[1] text-gray-600">
-                <div className="border p-3 rounded-2xl">
-                  <p className="font-bold text-lg">FROM</p>
-                  <p>
-                    {/* <span className="font-bold text-2xl">IDR 1.234.567 /</span>{" "}
-              <small>PERSON</small> */}
-                    <span className="font-bold text-2xl">
-                      {data != null && data.msg.product_subs.length > 0
-                        ? data.msg.product_subs[0].currency
-                        : "IDR"}{" "}
-                      {data != null && data.msg.product_subs.length > 0
-                        ? data.msg.product_subs[0].price
-                        : "0"}{" "}
-                      /
-                    </span>{" "}
-                    <small>
-                      {data != null && data.msg.product_subs.length > 0
-                        ? data.msg.product_subs[0].minimum_pax
-                        : "0"}{" "}
-                      PERSON
-                    </small>
-                  </p>
-                </div>
-                <div className="border p-3 rounded-2xl mt-3 bg-gray-600">
-                  <p className="font-bold text-lg text-center text-white">
-                    Select date and participants
-                  </p>
-                  <div className="flex justify-between gap-2">
-                    {/* date */}
-                    <div className="w-1/2">
-                      <input
-                        type="date"
-                        min={new Date().toISOString().split("T")[0]}
-                        className="bg-white p-2 rounded-2xl w-full"
-                      />
-                    </div>
-                    {/* Dropdown */}
-                    <div className="w-1/2" ref={dropdownRef}>
-                      <button
-                        onClick={() =>
-                          setDropdownPersonOpen(!isDropdownPersonOpen)
-                        }
-                        id="dropdownDefaultButton"
-                        data-dropdown-toggle="dropdown"
-                        className="w-40 rounded-2xl text-gray-600 bg-white hover:bg-gray-300 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center justify-between"
-                        type="button"
-                      >
-                        {selectedPerson == "1"
-                          ? selectedPerson + " Person"
-                          : selectedPerson + " Persons"}
-                        <FontAwesomeIcon
-                          icon={faChevronDown}
-                          className="w-4 h-4 text-gray-600"
-                        />
-                      </button>
-
-                      {isDropdownPersonOpen && (
-                        <div className="absolute z-20 bg-gray-200 divide-y divide-gray-100 rounded-lg shadow-sm h-70 w-40 mt-2 overflow-auto scrollbar-none scrollbar-hidden">
-                          <ul className="py-2 text-sm text-gray-700">
-                            {Array.from(
-                              { length: maximum_pax },
-                              (_, i) => i + 1
-                            ).map((num) => (
-                              <li key={num}>
-                                <button
-                                  onClick={() => {
-                                    setSelectedPerson(num.toString());
-                                    setDropdownPersonOpen(false);
-                                  }}
-                                  type="button"
-                                  className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                                >
-                                  {num} Person{num > 1 && "s"}
-                                </button>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="w-full pt-2" ref={dropdownProductSubRef}>
-                    <button
-                      onClick={() =>
-                        setDropdownProductSubOpen(!isDropdownProductSubOpen)
-                      }
-                      id="dropdownProductSubButton"
-                      data-dropdown-toggle="dropdown"
-                      className="w-full rounded-2xl text-gray-600 bg-white hover:bg-gray-300 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center justify-between"
-                      type="button"
-                    >
-                      {selectedProductSub == "1"
-                        ? selectedProductSub + " Product Sub"
-                        : selectedProductSub + " Product Subs"}
-                      <FontAwesomeIcon
-                        icon={faChevronDown}
-                        className="w-4 h-4 text-gray-600"
-                      />
-                    </button>
-
-                    {isDropdownProductSubOpen && (
-                      <div className="absolute z-20 bg-gray-200 divide-y divide-gray-100 rounded-lg shadow-sm h-70 w-40 mt-2 overflow-auto scrollbar-none scrollbar-hidden">
-                        <ul className="py-2 text-sm text-gray-700">
-                          {Array.from({ length: 2 }, (_, i) => i + 1).map(
-                            (num) => (
-                              <li key={num}>
-                                <button
-                                  onClick={() => {
-                                    setSelectedProductSubOpen(num.toString());
-                                    setDropdownProductSubOpen(false);
-                                  }}
-                                  type="button"
-                                  className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                                >
-                                  {num} Product Sub{num > 1 && "s"}
-                                </button>
-                              </li>
-                            )
-                          )}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-
-                  <button
-                    type="button"
-                    className="mt-3 w-full text-white bg-red-500 hover:bg-red-900 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
-                  >
-                    CHECK AVAILABALITY
-                  </button>
-                </div>
               </div>
             </div>
           </div>

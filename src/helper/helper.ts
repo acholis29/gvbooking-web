@@ -32,4 +32,10 @@ export function truncateText(text: string, maxLength: number = 100): string {
   return (lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed).trim() + "...";
 }
 
+// Mengubah semua huruf menjadi huruf kecil (lowercase)
+export function toLowerCaseAll(text: string): string {
+  return text.toLowerCase();
+}
+
+
 
