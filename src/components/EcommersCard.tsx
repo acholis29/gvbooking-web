@@ -18,6 +18,8 @@ import { useWish } from "@/context/WishContext";
 import toast from "react-hot-toast";
 // Link Href
 import Link from "next/link";
+// Path
+import { usePathname } from "next/navigation";
 
 type EcommersCardProps = {
   idx_comp: string;
@@ -57,6 +59,9 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
 
   // State Data Loading
   const [isWish, setIsWish] = useState(colorWish);
+  // Hide
+  const pathname = usePathname();
+  const hidePrice = pathname === "/" || pathname === "/home";
 
   useEffect(() => {
     setIsWish(colorWish);
@@ -142,27 +147,32 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
             <FontAwesomeIcon icon={faCartPlus} className="w-4 h-4 text-white" />
           </a>
         </div> */}
-        <div className="flex flex-col md:flex-row items-center justify-between mt-auto">
-          <span className="text-md font-bold text-gray-700">
-            {currency} {price} /{" "}
-            <span className="font-normal text-sm">
-              <FontAwesomeIcon
-                icon={faUser}
-                className="w-4 h-4 text-gray-600"
-              />
+        {!hidePrice && (
+          <div className="flex flex-col md:flex-row items-center justify-between mt-auto">
+            <span className="text-md font-bold text-gray-700">
+              {currency} {price} /{" "}
+              <span className="font-normal text-sm">
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className="w-4 h-4 text-gray-600"
+                />
+              </span>
             </span>
-          </span>
-          <button
-            onClick={() => {
-              addToCart(data);
-              toast.success("Add to cart!");
-            }} // ✅ benar: hanya dipanggil saat diklik
-            className="w-full md:w-auto text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center cursor-pointer"
-          >
-            <FontAwesomeIcon icon={faCartPlus} className="w-4 h-4 text-white" />{" "}
-            <span className="md:hidden">Add</span>
-          </button>
-        </div>
+            <button
+              onClick={() => {
+                addToCart(data);
+                toast.success("Add to cart!");
+              }} // ✅ benar: hanya dipanggil saat diklik
+              className="w-full md:w-auto text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center cursor-pointer"
+            >
+              <FontAwesomeIcon
+                icon={faCartPlus}
+                className="w-4 h-4 text-white"
+              />{" "}
+              <span className="md:hidden">Add</span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
