@@ -44,8 +44,18 @@ export default function NavbarComponent() {
   const [selectedCategory, setSelectedCategory] = useState("All Destinations");
   const [isProfilDropdownOpen, setProfilDropdownOpen] = useState(false);
 
-  const [selectedCurrency, setSelectedCurrency] = useState("USD"); // default
   const [menuSelected, setMenuSelected] = useState("");
+  type CurrencyItem = {
+    Currency: string;
+  };
+
+  const [currencyMaster, setCurrencyMaster] = useState<CurrencyItem[]>([]);
+
+  type LanguageItem = {
+    MSLanguage: string;
+  };
+
+  const [languageMaster, setLanguageMaster] = useState<LanguageItem[]>([]);
 
   const pathname = usePathname();
   const hideSearch = ["/list", "/cart", "/wishlist"].some((route) =>
@@ -70,6 +80,31 @@ export default function NavbarComponent() {
 
   // Modal
   const { openModal } = useModal();
+
+  useEffect(() => {
+    fetch("/api/currency", {
+      cache: "no-store", // ⛔ jangan ambil dari cache
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("currency:", data); // ← ini langsung arra // ✅ langsung set array-nya
+        setCurrencyMaster(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/language", {
+      cache: "no-store", // ⛔ jangan ambil dari cache
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("language:", data); // ← ini langsung arra // ✅ langsung set array-nya
+        setLanguageMaster(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     <nav className="bg-white border-gray-200">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -456,13 +491,13 @@ export default function NavbarComponent() {
       {/* Modal */}
       {menuSelected == "Currency" && (
         <ModalComponent title="Currency" icon={faMoneyCheckDollar}>
-          <CurrencyContent />
+          <CurrencyContent currencies={currencyMaster} />
         </ModalComponent>
       )}
 
       {menuSelected == "Language" && (
         <ModalComponent title="Language" icon={faGlobe}>
-          <LanguageContent />
+          <LanguageContent languages={languageMaster} />
         </ModalComponent>
       )}
     </nav>
@@ -519,30 +554,16 @@ function IconItemCartWish({
   );
 }
 
-const CurrencyContent = () => {
+const CurrencyContent = ({
+  currencies = [],
+}: {
+  currencies: { Currency: string }[];
+}) => {
   // const { closeModal } = useModal();
   const { currency, setCurrency } = useCurrency();
-  type CurrencyItem = {
-    Currency: string;
-  };
-
-  const [currencyMaster, setCurrencyMaster] = useState<CurrencyItem[]>([]);
-
-  useEffect(() => {
-    fetch("/api/currency", {
-      cache: "no-store", // ⛔ jangan ambil dari cache
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("currency:", data); // ← ini langsung arra // ✅ langsung set array-nya
-        setCurrencyMaster(data);
-      })
-      .catch((err) => console.error(err));
-  }, []);
-
   return (
     <ul className="space-y-3 list-none">
-      {currencyMaster.map((item, index) => (
+      {currencies.map((item, index) => (
         <li
           key={index}
           className={`${
@@ -567,29 +588,17 @@ const CurrencyContent = () => {
   );
 };
 
-const LanguageContent = () => {
+const LanguageContent = ({
+  languages = [],
+}: {
+  languages: { MSLanguage: string }[];
+}) => {
   const { closeModal } = useModal();
   const { language, setLanguage } = useLanguage();
-  type LanguageItem = {
-    MSLanguage: string;
-  };
 
-  const [languageMaster, setLanguageMaster] = useState<LanguageItem[]>([]);
-
-  useEffect(() => {
-    fetch("/api/language", {
-      cache: "no-store", // ⛔ jangan ambil dari cache
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("language:", data); // ← ini langsung arra // ✅ langsung set array-nya
-        setLanguageMaster(data);
-      })
-      .catch((err) => console.error(err));
-  }, []);
   return (
     <ul className="space-y-3 list-none">
-      {languageMaster.map((item, index) => (
+      {languages.map((item, index) => (
         <li
           key={index}
           className={`${
