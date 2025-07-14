@@ -221,6 +221,7 @@ export default function DetailDestination() {
                   <input
                     type="date"
                     min={new Date().toISOString().split("T")[0]}
+                    defaultValue={new Date().toISOString().split("T")[0]}
                     className="bg-gray-50 p-2 rounded-2xl w-full shadow-sm focus:outline-none focus:ring-0 border-0"
                   />
                 </div>

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Select from "react-select";
+import { toLowerCaseAll } from "@/helper/helper";
 
 const customStyles = {
   control: (base: any, state: any) => ({
@@ -59,22 +60,73 @@ type Option = {
 
 type SelectCustomProps = {
   placeholder?: string;
-  options: Option[];
+  max_pax?: number;
+  age_from?: number;
+  age_to?: number;
   onSelect?: (value: string) => void;
 };
 
 export default function SelectCustom({
-  placeholder,
-  options,
+  placeholder = "",
+  max_pax = 1,
+  age_from = 1,
+  age_to = 1,
   onSelect,
 }: SelectCustomProps) {
+  const [selectedPerson, setSelectedPerson] = useState<string | null>(null);
+
+  const options = Array.from({ length: max_pax }, (_, i) => ({
+    value: `${i + 1}`,
+    label: `${i + 1} ${i + 1 > 1 ? placeholder + "s" : placeholder}`,
+  }));
+
   return (
-    <div className="w-72">
-      <Select
-        options={options}
-        styles={customStyles}
-        placeholder={placeholder}
-      />
+    <div className="w-44 mb-2">
+      {toLowerCaseAll(placeholder) == "child" ? (
+        <Select
+          options={options}
+          styles={customStyles}
+          placeholder={placeholder}
+          isClearable
+          onChange={(selected) => {
+            if (selected) {
+              const val = selected.value;
+              setSelectedPerson(val);
+              onSelect?.(val);
+            } else {
+              setSelectedPerson(null);
+              onSelect?.("");
+            }
+          }}
+        />
+      ) : (
+        <Select
+          defaultValue={options.find((opt) => opt.value === "1")}
+          options={options}
+          styles={customStyles}
+          placeholder={placeholder}
+          isClearable
+        />
+      )}
+
+      {/* Select Umur (muncul setelah memilih jumlah orang) */}
+      {selectedPerson &&
+        Array.from({ length: parseInt(selectedPerson) }, (_, index) => (
+          <Select
+            key={index}
+            className="mt-2"
+            styles={customStyles}
+            placeholder={`Age child ${index + 1}`}
+            options={Array.from({ length: age_to - age_from + 1 }, (_, i) => ({
+              value: `${i + age_from}`,
+              label: `${i + age_from} Years`,
+            }))}
+            isClearable
+            onChange={(selected) => {
+              console.log(`Age ${index + 1}:`, selected?.value);
+            }}
+          />
+        ))}
     </div>
   );
 }

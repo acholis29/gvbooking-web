@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import { API_HOSTS } from "@/lib/apihost";
 // Select
 import SelectCustomAsyn from "./SelectCustomAsyn";
+import SelectCustom from "./SelectCustom";
 
 type ProductSub = {
   excursion_id: string;
@@ -104,7 +105,7 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
   }, []);
 
   return (
-    <a className="flex flex-col items-center mb-3 bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row  hover:bg-gray-100 ">
+    <a className="flex flex-col items-start mb-3 bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row  hover:bg-gray-100 ">
       <div className="w-40 h-40 relative overflow-hidden rounded-2xl p-2 mr-2">
         <img
           className="w-full h-full object-cover rounded-lg"
@@ -126,23 +127,33 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
         </div>
         <div className="w-1/2 flex flex-row">
           <div className="flex flex-col justify-center">
-            <div className="">
+            <div className="mt-2">
               {/* Looping Adult/Child/Infant */}
-              {dataChargeType?.map((item) => (
-                <button
-                  key={item.code}
-                  id="dropdownPickupAreaButton"
-                  data-dropdown-toggle="dropdown"
-                  className="w-40 h-auto mb-2 rounded-2xl text-gray-600 shadow-sm focus:outline-none focus:ring-0 border-0 bg-gray-100 hover:bg-gray-300 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center justify-between"
-                  type="button"
-                >
-                  {item.name}
-                  <FontAwesomeIcon
-                    icon={faChevronDown}
-                    className="w-4 h-4 text-gray-600"
+              {dataChargeType?.map((item) => {
+                console.log(item);
+                return (
+                  <SelectCustom
+                    key={item.code}
+                    placeholder={item.name}
+                    max_pax={Number(item.max_pax)}
+                    age_from={Number(item.age_from)}
+                    age_to={Number(item.age_to)}
                   />
-                </button>
-              ))}
+                  // <button
+                  //   key={item.code}
+                  //   id="dropdownPickupAreaButton"
+                  //   data-dropdown-toggle="dropdown"
+                  //   className="w-40 h-auto mb-2 rounded-2xl text-gray-600 shadow-sm focus:outline-none focus:ring-0 border-0 bg-gray-100 hover:bg-gray-300 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center justify-between"
+                  //   type="button"
+                  // >
+                  //   {item.name}
+                  //   <FontAwesomeIcon
+                  //     icon={faChevronDown}
+                  //     className="w-4 h-4 text-gray-600"
+                  //   />
+                  // </button>
+                );
+              })}
             </div>
           </div>
           <div className="flex flex-col w-full p-5">
