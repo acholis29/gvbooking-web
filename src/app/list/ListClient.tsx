@@ -255,7 +255,8 @@ export default function ListClient() {
             <Badge title="Rating" />
           </div> */}
         </div>
-        {/* Konten Kiri */}
+        
+        {/* Konten Kiri */}        
         <div className="md:w-1/6 text-gray-700">
           <p className="text-sm mb-2 font-semibold">Keywords</p>
           {BadgeState.map((item, index) => (
@@ -267,13 +268,15 @@ export default function ListClient() {
             />
           ))}
           {/* Range Price */}
-          <Range
+          {/* <Range
             min="0"
             max={currency == "USD" || currency == "EUR" ? "1000" : "10000000"}
             value={price}
             onChange={setPrice}
-          />
-
+          /> */}
+          <div className="mt-5 mb-5">
+            <hr className="text-gray-200" />
+          </div>
           <div className="flex flex-row gap-3 md:flex-col">
             <div>
               <p className="text-sm mb-2 font-semibold">Holiday Type</p>
@@ -407,17 +410,13 @@ export default function ListClient() {
               ))
             ) : (
               <div className="col-span-4 text-center text-gray-500 py-10 flex flex-col justify-center items-center">
-                {/* <FontAwesomeIcon
-                  icon={faInbox}
-                  className="w-4 h-4 text-gray-600 mr-2"
-                />
-                Data tidak ditemukan... */}
+{/*                 
                 <img
                   src="/images/error/empty.svg"
                   alt=""
                   className="w-100 h-auto"
                 />
-                <p className="text-2xl">Opps Not Found!</p>
+                <p className="text-2xl">Opps Not Found!</p> */}
               </div>
             )}
           </div>

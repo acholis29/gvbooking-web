@@ -138,6 +138,7 @@ export default function SelectCustom({
 
       {toLowerCaseAll(placeholder) == "infant" && (
         <Select
+          
           options={options}
           styles={customStyles}
           placeholder={placeholder}
@@ -165,6 +166,11 @@ export default function SelectCustom({
               value: `${i + age_from}`,
               label: `${i + age_from} Years`,
             }))}
+            value={
+              ages[index]
+                ? { value: ages[index], label: `${ages[index]} Years` }
+                : { value: `${age_to}`, label: `${age_to} Years` }
+            }
             isClearable
             onChange={(selected) => {
               const updated = [...ages];

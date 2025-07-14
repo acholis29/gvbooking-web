@@ -47,11 +47,9 @@ export default function FooterComponent() {
   return (
     <footer className="bg-gray-100 pb-20">
       <div className="mx-auto w-full max-w-screen-xl">
-        <div className="pt-10">
-          <hr className="text-gray-200" />
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 px-4 py-6 lg:py-8">
-          <div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 px-4 py-6 lg:py-8">
+          {/* <div>
             <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase">
               Company
             </h2>
@@ -77,7 +75,7 @@ export default function FooterComponent() {
                 </Link>
               </li>
             </ul>
-          </div>
+          </div> */}
 
           <div>
             <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase">
@@ -145,20 +143,11 @@ export default function FooterComponent() {
                   Android
                 </a>
               </li>
-              <li className="mb-4">
-                <a href="#" className="hover:underline">
-                  Windows
-                </a>
-              </li>
-              <li className="mb-4">
-                <a href="#" className="hover:underline">
-                  MacOS
-                </a>
-              </li>
+              
             </ul>
           </div>
 
-          <div className="flex justify-center mt-4 gap-2">
+          <div className="flex justify-start mt-4 gap-2">
             <a
               href="https://play.google.com/store/apps/details?id=com.yourapp.package"
               target="_blank"
@@ -190,7 +179,7 @@ export default function FooterComponent() {
         <hr className="text-gray-200" />
         <div className="px-4 py-6 bg-gray-100  md:flex md:items-center md:justify-between">
           <span className="text-sm text-gray-900  sm:text-center">
-            © 2025 <a href="https://flowbite.com/">GoVacation™</a>. All Rights
+            © {new Date().getFullYear()} <a href="https://go-vacation.com/" target="_blank">GoVacation™</a>. All Rights
             Reserved.
           </span>
           <div className="flex mt-4 justify-between items-center md:mt-0 space-x-5 rtl:space-x-reverse">
@@ -267,7 +256,7 @@ export default function FooterComponent() {
               <span className="sr-only">GitHub account</span>
             </a>
 
-            <div ref={dropdownWrapperRef} className="relative">
+            {/* <div ref={dropdownWrapperRef} className="relative">
               <button
                 onClick={() => setDropdownLangOpen(!isDropdownLangOpen)}
                 id="dropdownDefaultButton"
@@ -308,7 +297,7 @@ export default function FooterComponent() {
                   </ul>
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

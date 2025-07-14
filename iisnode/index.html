@@ -1,0 +1,87 @@
+<html>
+<head>
+    <title>iisnode logs</title>
+    <style type="text/css">
+        body
+        {
+            font-family: "Trebuchet MS" , Arial, Helvetica, sans-serif;
+        }
+        table
+        {
+            border-collapse: collapse;
+        }
+        td, th
+        {
+            border: 1px solid lightgray;
+            padding: 3px 7px 2px 7px;
+        }
+        th
+        {
+            text-align: left;
+            padding-top: 5px;
+            padding-bottom: 4px;
+            background-color: Gray;
+            color: #ffffff;
+        }
+        td.stderr
+        {
+            color: Red;
+        }
+    </style>
+</head>
+<body>
+    <table id="logFilesTable">
+        <tr>
+            <th>
+                Computer name
+            </th>
+            <th>
+                PID
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Created
+            </th>
+            <th>
+                Link
+            </th>
+        </tr>
+    </table>
+    <p id="lastUpdated"></p>
+    <script type="text/javascript">
+
+        // this is replaced with actual data at runtime by code in interceptor.js
+        var logFiles = [{"file":"PC-AA-10544-stderr-1751596115644.txt","computername":"PC-AA","pid":10544,"type":"stderr","created":1751596115644},{"file":"PC-AA-11144-stderr-1751602182152.txt","computername":"PC-AA","pid":11144,"type":"stderr","created":1751602182152},{"file":"PC-AA-11404-stderr-1751602038189.txt","computername":"PC-AA","pid":11404,"type":"stderr","created":1751602038189},{"file":"PC-AA-11424-stderr-1751602273521.txt","computername":"PC-AA","pid":11424,"type":"stderr","created":1751602273521},{"file":"PC-AA-16888-stderr-1751602151405.txt","computername":"PC-AA","pid":16888,"type":"stderr","created":1751602151405},{"file":"PC-AA-17516-stderr-1751602270968.txt","computername":"PC-AA","pid":17516,"type":"stderr","created":1751602270968},{"file":"PC-AA-18108-stderr-1751602039364.txt","computername":"PC-AA","pid":18108,"type":"stderr","created":1751602039364},{"file":"PC-AA-18832-stderr-1751596054526.txt","computername":"PC-AA","pid":18832,"type":"stderr","created":1751596054526},{"file":"PC-AA-21976-stderr-1751602313495.txt","computername":"PC-AA","pid":21976,"type":"stderr","created":1751602313495},{"file":"PC-AA-23452-stderr-1751596060141.txt","computername":"PC-AA","pid":23452,"type":"stderr","created":1751596060141},{"file":"PC-AA-23840-stderr-1751602272168.txt","computername":"PC-AA","pid":23840,"type":"stderr","created":1751602272168},{"file":"PC-AA-2776-stderr-1751602183281.txt","computername":"PC-AA","pid":2776,"type":"stderr","created":1751602183281},{"file":"PC-AA-4936-stderr-1751602152552.txt","computername":"PC-AA","pid":4936,"type":"stderr","created":1751602152552},{"file":"PC-AA-8772-stderr-1751602274735.txt","computername":"PC-AA","pid":8772,"type":"stderr","created":1751602274735}];
+        var lastUpdated = 1751602314432;
+        var date = new Date();
+
+        date.setTime(lastUpdated);
+        document.getElementById('lastUpdated').innerHTML = 'Index was last updated ' + date;
+
+        logFiles.sort(function (a, b) {
+            return b.created - a.created;
+        });
+
+        var logFilesTable = document.getElementById("logFilesTable");
+        for (var i = 0; i < logFiles.length; i++) {
+            var logFile = logFiles[i];
+            date.setTime(logFile.created);
+            var row = logFilesTable.insertRow(-1);
+            var computerNameCell = row.insertCell(0);
+            var pidCell = row.insertCell(1);
+            var typeCell = row.insertCell(2);
+            var dateCell = row.insertCell(3);
+            var logCell = row.insertCell(4);
+            computerNameCell.innerHTML = logFile.computername;
+            pidCell.innerHTML = logFile.pid.toString();
+            typeCell.innerHTML = logFile.type;
+            typeCell.setAttribute('class', logFile.type);
+            dateCell.innerHTML = date.toString();
+            logCell.innerHTML = '<a href="' + logFile.file + '">log</a>';
+        };
+
+    </script>
+</body>
+</html>

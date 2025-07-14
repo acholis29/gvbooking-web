@@ -110,7 +110,7 @@ export default function DetailDestination() {
           console.log(json);
         }
       } catch (err: any) {
-        setError(err.message || "Terjadi kesalahan");
+        setError(err.message || "Error");
         console.error("Fetch error:", err);
       } finally {
         setIsLoading(false); // selesai loading
@@ -157,7 +157,7 @@ export default function DetailDestination() {
                   {dataProduct != null
                     ? dataProduct.msg.product_details[0].info_pickup_service
                     : ""}
-                  {" WITA "}
+                  {" Local Time"}
                 </h3>
               </div>
             </div>

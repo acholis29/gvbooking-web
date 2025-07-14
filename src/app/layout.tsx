@@ -33,9 +33,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Go Vacation",
+  title: "GoVacation",
   description:
-    "Go Vacation Indonesia, Go Vacation Thailand, Go Vacation Vietnam",
+    "GoVacation Indonesia, GoVacation Thailand, GoVacation Vietnam",
   icons: {
     icon: "/images/icon/icon-gvi.ico", // pastikan sesuai dengan nama file di public
   },

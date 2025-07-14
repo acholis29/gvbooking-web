@@ -69,7 +69,7 @@ const ListCard: React.FC<ListCardProps> = ({
     <div className="relative w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
       <Link href={link} className="relative block overflow-hidden rounded-t-lg">
         <img
-          className="w-full h-40 md:h-50 object-cover transition-transform duration-300 ease-in-out hover:scale-150"
+          className="w-full h-40 md:h-50 object-cover transition-transform duration-300 ease-in-out hover:scale-115"
           src={image}
           alt={title}
           onError={(e) => {
@@ -93,7 +93,7 @@ const ListCard: React.FC<ListCardProps> = ({
             toast.success("Save to wishlist!");
           }
         }}
-        className={`absolute top-2 right-2 ${
+        className={`absolute top-1 right-1 cursor-pointer ${
           isWish ? "text-red-500" : "text-white"
         } hover:text-red-500 hover:border-red-500 p-2 rounded-full transition`}
         aria-label="Add to wishlist"
@@ -104,13 +104,13 @@ const ListCard: React.FC<ListCardProps> = ({
       <div className="px-4 pb-4 flex flex-col flex-grow mt-3">
         <Link href={link}>
           <h5
-            className="text-sm md:text-sm font-semibold tracking-tight text-gray-800 min-h-[30px] truncate"
+            className="text-sm md:text-sm text-transform: uppercase font-semibold tracking-tight text-gray-800 min-h-[30px] truncate"
             title={title}
           >
             {title}
           </h5>
 
-          <p className="text-gray-500 text-wrap text-xs md:text-xs min-h-[36px]">
+          <p className="text-gray-500 text-wrap text-xs md:text-xs min-h-[36px] text-transform: uppercase">
             {sub_title}
           </p>
         </Link>
