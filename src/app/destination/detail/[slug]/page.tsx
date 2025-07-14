@@ -76,43 +76,6 @@ export default function DetailDestination() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const dropdownProductSubRef = useRef<HTMLDivElement>(null);
-
-  // ❗ Detect click outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setDropdownPersonOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  // ❗ Detect click outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownProductSubRef.current &&
-        !dropdownProductSubRef.current.contains(event.target as Node)
-      ) {
-        setDropdownProductSubOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   // Detail Tour / Produk Detail
   useEffect(() => {
     const fetchData = async () => {

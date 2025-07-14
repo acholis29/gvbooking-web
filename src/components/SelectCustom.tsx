@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { toLowerCaseAll } from "@/helper/helper";
 
@@ -73,16 +73,70 @@ export default function SelectCustom({
   age_to = 1,
   onSelect,
 }: SelectCustomProps) {
-  const [selectedPerson, setSelectedPerson] = useState<string | null>(null);
+  const [selectedPerson, setSelectedPerson] = useState<number>(0);
+  const [ages, setAges] = useState<(string | null)[]>([]);
 
   const options = Array.from({ length: max_pax }, (_, i) => ({
     value: `${i + 1}`,
     label: `${i + 1} ${i + 1 > 1 ? placeholder + "s" : placeholder}`,
   }));
 
+  useEffect(() => {
+    if (toLowerCaseAll(placeholder) == "child") {
+      onSelect?.("0");
+    }
+
+    if (toLowerCaseAll(placeholder) == "infant") {
+      onSelect?.("0");
+    }
+
+    if (toLowerCaseAll(placeholder) == "adult") {
+      onSelect?.("1");
+    }
+  }, []);
+
   return (
     <div className="w-44 mb-2">
-      {toLowerCaseAll(placeholder) == "child" ? (
+      {toLowerCaseAll(placeholder) == "adult" && (
+        <Select
+          defaultValue={options.find((opt) => opt.value === "1")}
+          options={options}
+          styles={customStyles}
+          placeholder={placeholder}
+          isClearable
+          onChange={(selected) => {
+            if (selected) {
+              const val = selected.value;
+              onSelect?.(val);
+            } else {
+              onSelect?.("");
+            }
+          }}
+        />
+      )}
+
+      {toLowerCaseAll(placeholder) == "child" && (
+        <Select
+          options={options}
+          styles={customStyles}
+          placeholder={placeholder}
+          isClearable
+          onChange={(selected) => {
+            if (selected) {
+              const val = parseInt(selected.value);
+              setSelectedPerson(val);
+              setAges(Array(val).fill(null)); // reset umur sesuai jumlah anak
+              onSelect?.(JSON.stringify({ count: val, ages: [] })); // optional: kirim awal
+            } else {
+              setSelectedPerson(0);
+              setAges([]);
+              onSelect?.(JSON.stringify({ count: 0, ages: [] }));
+            }
+          }}
+        />
+      )}
+
+      {toLowerCaseAll(placeholder) == "infant" && (
         <Select
           options={options}
           styles={customStyles}
@@ -91,27 +145,17 @@ export default function SelectCustom({
           onChange={(selected) => {
             if (selected) {
               const val = selected.value;
-              setSelectedPerson(val);
               onSelect?.(val);
             } else {
-              setSelectedPerson(null);
               onSelect?.("");
             }
           }}
         />
-      ) : (
-        <Select
-          defaultValue={options.find((opt) => opt.value === "1")}
-          options={options}
-          styles={customStyles}
-          placeholder={placeholder}
-          isClearable
-        />
       )}
 
       {/* Select Umur (muncul setelah memilih jumlah orang) */}
-      {selectedPerson &&
-        Array.from({ length: parseInt(selectedPerson) }, (_, index) => (
+      {selectedPerson != 0 &&
+        Array.from({ length: selectedPerson }, (_, index) => (
           <Select
             key={index}
             className="mt-2"
@@ -123,7 +167,15 @@ export default function SelectCustom({
             }))}
             isClearable
             onChange={(selected) => {
-              console.log(`Age ${index + 1}:`, selected?.value);
+              const updated = [...ages];
+              updated[index] = selected?.value ?? null;
+              setAges(updated);
+              onSelect?.(
+                JSON.stringify({
+                  count: selectedPerson,
+                  ages: updated.filter(Boolean),
+                })
+              );
             }}
           />
         ))}

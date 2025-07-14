@@ -8,6 +8,8 @@ import { API_HOSTS } from "@/lib/apihost";
 // Select
 import SelectCustomAsyn from "./SelectCustomAsyn";
 import SelectCustom from "./SelectCustom";
+// Form Libraries
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 
 type ProductSub = {
   excursion_id: string;
@@ -55,8 +57,11 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
   const [dataChargeType, setDataChargeType] = useState<ChargeTypeProps[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  console.log("ini idx comp");
-  console.log(idx_comp);
+  const { register, handleSubmit, setValue, getValues } = useForm();
+  const onSubmit = (data: any) => {
+    console.log("BOOKING BOS 🔥");
+    console.log(data); // ← semua input masuk sini
+  };
 
   // Product Allotment
   useEffect(() => {
@@ -105,72 +110,66 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
   }, []);
 
   return (
-    <a className="flex flex-col items-start mb-3 bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row  hover:bg-gray-100 ">
-      <div className="w-40 h-40 relative overflow-hidden rounded-2xl p-2 mr-2">
-        <img
-          className="w-full h-full object-cover rounded-lg"
-          src={`${host_img}/${item?.picture}`}
-          title={item?.picture}
-          alt={item?.picture}
-        />
-      </div>
-
-      <div className="w-full flex flex-row">
-        <div className="w-1/2">
-          <h5 className="text-2xl font-bold tracking-tight text-gray-900 mt-2">
-            {item?.sub_excursion_name}
-          </h5>
-          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-            Description
-          </p>
-          <SelectCustomAsyn placeholder="Find Pickup Area ..." />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <a className="flex flex-col items-start mb-3 bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row  hover:bg-gray-100 ">
+        <div className="w-40 h-40 relative overflow-hidden rounded-2xl p-2 mr-2">
+          <img
+            className="w-full h-full object-cover rounded-lg"
+            src={`${host_img}/${item?.picture}`}
+            title={item?.picture}
+            alt={item?.picture}
+          />
         </div>
-        <div className="w-1/2 flex flex-row">
-          <div className="flex flex-col justify-center">
-            <div className="mt-2">
-              {/* Looping Adult/Child/Infant */}
-              {dataChargeType?.map((item) => {
-                console.log(item);
-                return (
-                  <SelectCustom
-                    key={item.code}
-                    placeholder={item.name}
-                    max_pax={Number(item.max_pax)}
-                    age_from={Number(item.age_from)}
-                    age_to={Number(item.age_to)}
-                  />
-                  // <button
-                  //   key={item.code}
-                  //   id="dropdownPickupAreaButton"
-                  //   data-dropdown-toggle="dropdown"
-                  //   className="w-40 h-auto mb-2 rounded-2xl text-gray-600 shadow-sm focus:outline-none focus:ring-0 border-0 bg-gray-100 hover:bg-gray-300 font-medium text-sm px-5 py-2.5 text-center inline-flex items-center justify-between"
-                  //   type="button"
-                  // >
-                  //   {item.name}
-                  //   <FontAwesomeIcon
-                  //     icon={faChevronDown}
-                  //     className="w-4 h-4 text-gray-600"
-                  //   />
-                  // </button>
-                );
-              })}
+
+        <div className="w-full flex flex-row">
+          <div className="w-1/2">
+            <h5 className="text-2xl font-bold tracking-tight text-gray-900 mt-2">
+              {item?.sub_excursion_name}
+            </h5>
+            <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+              Description
+            </p>
+            <SelectCustomAsyn
+              onSelect={(val) => setValue("pickup_area", val)}
+              idx_comp={idx_comp}
+              id_excursion={item?.excursion_id}
+              placeholder="Find Pickup Area ..."
+            />
+          </div>
+          <div className="w-1/2 flex flex-row">
+            <div className="flex flex-col justify-center">
+              <div className="mt-2">
+                {/* Looping Adult/Child/Infant */}
+                {dataChargeType?.map((item) => {
+                  return (
+                    <SelectCustom
+                      key={item.code}
+                      placeholder={item.name}
+                      max_pax={Number(item.max_pax)}
+                      age_from={Number(item.age_from)}
+                      age_to={Number(item.age_to)}
+                      onSelect={(val) => setValue(`${item.name}`, val)}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+            <div className="flex flex-col w-full p-5">
+              <button
+                type="submit"
+                className="mt-3 w-full text-white bg-red-500 hover:bg-red-900 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+              >
+                BOOKING
+              </button>
+              <p className="font-normal text-gray-700 ">From</p>
+              <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">
+                {item?.currency} {item?.price} / person
+              </h3>
             </div>
           </div>
-          <div className="flex flex-col w-full p-5">
-            <button
-              type="button"
-              className="mt-3 w-full text-white bg-red-500 hover:bg-red-900 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
-            >
-              BOOKING
-            </button>
-            <p className="font-normal text-gray-700 ">From</p>
-            <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">
-              {item?.currency} {item?.price} / person
-            </h3>
-          </div>
         </div>
-      </div>
-    </a>
+      </a>
+    </form>
   );
 };
 

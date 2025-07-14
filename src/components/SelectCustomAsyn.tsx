@@ -1,3 +1,4 @@
+import { log } from "console";
 import React, { useState } from "react";
 import AsyncSelect from "react-select/async";
 
@@ -54,6 +55,8 @@ const customStyles = {
 
 type SelectCustomProps = {
   placeholder?: string;
+  idx_comp?: string;
+  id_excursion?: string;
   onSelect?: (value: string) => void;
 };
 
@@ -63,17 +66,20 @@ type OptionType = {
   data?: any; // kalau kamu tambahkan info pickup extra
 };
 
-// Select Asyncronus
+// Select Asyncronus Pickup Area
 export default function SelectCustomAsyn({
   placeholder = "Search",
+  idx_comp = "",
+  id_excursion = "",
+  onSelect,
 }: SelectCustomProps) {
   const [options, setOptions] = useState<OptionType[]>([]);
   const loadOptions = async (inputValue: string) => {
     if (!inputValue) return options; // gunakan opsi terakhir jika input kosong
     const formBody = new URLSearchParams({
-      shared_key: "4D340942-88D3-44DD-A52C-EAF00EACADE8",
+      shared_key: idx_comp,
       xml: "false",
-      id_excursion: "BA928E11-CE70-4427-ACD0-A7FC13C34891",
+      id_excursion: id_excursion,
       keyword: inputValue, // diketik user
     });
 
@@ -112,6 +118,7 @@ export default function SelectCustomAsyn({
         onChange={(selected) => {
           const selectedOption = selected as OptionType;
           console.log("Selected:", selectedOption.value, selectedOption.label);
+          onSelect?.(selectedOption.value); // ← kirim ke parent (form)
         }}
         placeholder={placeholder}
         styles={customStyles}
