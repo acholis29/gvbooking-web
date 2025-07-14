@@ -29,6 +29,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",
+    "react-select": "^5.10.2",
     "tailwind-merge": "^3.3.0",
     "winston": "^3.17.0",
     "yet-another-react-lightbox": "^3.24.0"
