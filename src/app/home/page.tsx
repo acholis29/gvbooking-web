@@ -75,6 +75,8 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) => {
         console.log("DATA:", data); // ← ini langsung array
+
+
         setDestination(data); // ✅ langsung set array-nya
       })
       .catch((err) => console.error(err));
@@ -109,7 +111,7 @@ export default function Home() {
 
   useEffect(() => {
     fetch(
-      `/api/excursion/recomended_destination/4D340942-88D3-44DD-A52C-EAF00EACADE8`,
+      `/api/excursion/recomended_destination`,
       {
         cache: "no-store", // ⛔ jangan ambil dari cache
       }
