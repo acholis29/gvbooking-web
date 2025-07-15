@@ -37,7 +37,7 @@ const ModalComponent: React.FC<ModalProps> = ({
 }) => {
   const { open, closeModal } = useModal();
   return (
-    <Modal dismissible show={open} onClose={closeModal} size="xl">
+    <Modal dismissible show={open} onClose={closeModal} size="md">
       <ModalHeader className={`${bgColor} ${textColor}`}>
         <div className="flex items-center gap-2">
           {icon && <FontAwesomeIcon icon={icon} className={`text-white`} />}

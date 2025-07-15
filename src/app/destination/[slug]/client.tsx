@@ -89,7 +89,7 @@ export default function DestinationClient({ slug }: Props) {
   }, []);
 
   useEffect(() => {
-    fetch(`/api/excursion/recomended_destination/${idx_comp}`, {
+    fetch(`/api/excursion/recomended_destination?idxcomp=${idx_comp}`, {
       cache: "no-store", // ⛔ jangan ambil dari cache
     })
       .then((res) => res.json())
