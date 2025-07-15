@@ -128,87 +128,98 @@ export default function NavbarComponent() {
         {!hideSearch && (
           <form className="max-w-xl w-full mx-auto hidden md:block">
             <div className="flex">
-              <button
-                onClick={() => setDropdownOpen(!isDropdownOpen)}
-                id="dropdown-button"
-                data-dropdown-toggle="dropdown-category"
-                className="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 cursor-pointer"
-                type="button"
+              <div
+                className="relative group"
+                onMouseLeave={() => {
+                  timeout = setTimeout(() => setDropdownOpen(false), 200); // delay 200ms
+                }}
+                onMouseEnter={() => {
+                  clearTimeout(timeout);
+                  setDropdownOpen(true);
+                }}
               >
-                {selectedCategory}
-                <span className="ml-2">
-                  <FontAwesomeIcon
-                    icon={faChevronDown}
-                    className="w-4 h-4 text-gray-600"
-                  />
-                </span>
-              </button>
-              {isDropdownOpen && (
-                <div className="absolute z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 mt-11">
-                  <ul className="py-2 text-sm text-gray-700">
-                    <li>
-                      <button
-                        onClick={() => {
-                          setSelectedCategory("All Destinations");
-                          setDropdownOpen(false);
-                        }}
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      >
-                        All Destinations
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        onClick={() => {
-                          setSelectedCategory("Indonesia");
-                          setDropdownOpen(false);
-                        }}
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      >
-                        Indonesia
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        onClick={() => {
-                          setSelectedCategory("Thailand");
-                          setDropdownOpen(false);
-                        }}
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      >
-                        Thailand
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        onClick={() => {
-                          setSelectedCategory("Vietnam");
-                          setDropdownOpen(false);
-                        }}
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      >
-                        Vietnam
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        onClick={() => {
-                          setSelectedCategory("Cambodia");
-                          setDropdownOpen(false);
-                        }}
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      >
-                        Cambodia
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              )}
+                <button
+                  // onClick={() => setDropdownOpen(!isDropdownOpen)}
+                  id="dropdown-button"
+                  data-dropdown-toggle="dropdown-category"
+                  className="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 cursor-pointer whitespace-nowrap"
+                  type="button"
+                >
+                  {selectedCategory}
+                  <span className="ml-2">
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
+                      className="w-4 h-4 text-gray-600"
+                    />
+                  </span>
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 mt-2">
+                    <ul className="py-2 text-sm text-gray-700">
+                      <li>
+                        <button
+                          onClick={() => {
+                            setSelectedCategory("All Destinations");
+                            setDropdownOpen(false);
+                          }}
+                          type="button"
+                          className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        >
+                          All Destinations
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => {
+                            setSelectedCategory("Indonesia");
+                            setDropdownOpen(false);
+                          }}
+                          type="button"
+                          className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        >
+                          Indonesia
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => {
+                            setSelectedCategory("Thailand");
+                            setDropdownOpen(false);
+                          }}
+                          type="button"
+                          className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        >
+                          Thailand
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => {
+                            setSelectedCategory("Vietnam");
+                            setDropdownOpen(false);
+                          }}
+                          type="button"
+                          className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        >
+                          Vietnam
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => {
+                            setSelectedCategory("Cambodia");
+                            setDropdownOpen(false);
+                          }}
+                          type="button"
+                          className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        >
+                          Cambodia
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
 
               <div className="relative w-full">
                 <input
