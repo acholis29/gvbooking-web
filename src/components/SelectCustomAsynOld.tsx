@@ -1,6 +1,7 @@
 import { log } from "console";
 import React, { useState } from "react";
 import AsyncSelect from "react-select/async";
+import { API_HOSTS } from "@/lib/apihost";
 
 const customStyles = {
   control: (base: any, state: any) => ({
@@ -84,8 +85,7 @@ export default function SelectCustomAsynOld({
     });
 
     try {
-      const res = await fetch(
-        "https://api.govacation.biz/excursion.asmx/v2_product_pickup_list",
+      const res = await fetch(`${API_HOSTS.host1}/excursion.asmx/v2_product_pickup_list`,
         {
           method: "POST",
           headers: {

@@ -7,3 +7,5 @@ export const API_HOSTS = {
     img_camb: "http://govacation-thailand.com/",
     img_indo: "https://bo.govacation.biz", //Server Indonesia
 };
+
+

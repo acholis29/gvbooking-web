@@ -1,4 +1,7 @@
 // src/app/api/proxy/produk/route.ts
+import { API_HOSTS } from "@/lib/apihost";  
+
+
 export async function POST(request: Request) {
     try {
         // 1. Ambil body dari request
@@ -12,7 +15,7 @@ export async function POST(request: Request) {
 
         // 3. Lakukan request ke API tujuan
         const response = await fetch(
-            "https://api.govacation.biz/excursion.asmx/v2_product_description",
+            `${API_HOSTS.host1}/excursion.asmx/v2_product_description`,
             {
                 method: "POST",
                 headers: {
