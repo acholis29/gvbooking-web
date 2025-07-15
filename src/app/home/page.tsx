@@ -111,7 +111,7 @@ export default function Home() {
 
   useEffect(() => {
     fetch(
-      `/api/excursion/recomended_destination`,
+      '/api/excursion/attr/recomended?idxcomp=', // gunakan '' untuk mendapatkan semua rekomendasi
       {
         cache: "no-store", // ⛔ jangan ambil dari cache
       }
