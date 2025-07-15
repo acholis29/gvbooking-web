@@ -7,11 +7,19 @@ import ProductSub from "@/components/ProductSubCard";
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCalendarAlt,
+  faCalendarCheck,
+  faCalendarDays,
+  faChevronDown,
+} from "@fortawesome/free-solid-svg-icons";
 import SkeletonDetailProduk from "@/components/SkeletonDetailProduk";
 import { useSearchParams } from "next/navigation";
 import { log } from "console";
 import { toLowerCaseAll } from "@/helper/helper";
+// Date Picker
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function DetailDestination() {
   const searchParams = useSearchParams();
@@ -75,6 +83,10 @@ export default function DetailDestination() {
   const [dataProduct, setDataProduct] = useState<ProductResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Datepicker
+  const disabledDates = [new Date("2025-07-16"), new Date("2025-07-25")];
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
   // Detail Tour / Produk Detail
   useEffect(() => {
@@ -180,13 +192,27 @@ export default function DetailDestination() {
             {/* Baris Content */}
             <div className="flex flex-col md:flex-row pb-5 gap-5">
               <div className="order-2 md:order-1 w-full md:flex-[5] text-gray-600">
-                <div className="w-1/6 mt-3 mb-5">
-                  <input
+                <div className="w-1/7 mt-3 mb-5">
+                  {/* <input
                     type="date"
                     min={new Date().toISOString().split("T")[0]}
                     defaultValue={new Date().toISOString().split("T")[0]}
                     className="bg-gray-50 p-2 rounded-2xl w-full shadow-sm focus:outline-none focus:ring-0 border-0"
-                  />
+                  /> */}
+                  <div className="flex flex-row justify-center items-center">
+                    <DatePicker
+                      selected={selectedDate}
+                      onChange={(date) => setSelectedDate(date)}
+                      minDate={new Date()}
+                      excludeDates={disabledDates}
+                      className="bg-gray-50 p-2 rounded-2xl w-full shadow-sm focus:outline-none focus:ring-0 border-0"
+                    />
+                    <FontAwesomeIcon
+                      icon={faCalendarCheck}
+                      className="w-10 h-10 text-gray-500"
+                      size="lg"
+                    />
+                  </div>
                 </div>
                 {dataProduct && dataProduct.msg.product_subs.length > 0 && (
                   <>
