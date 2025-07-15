@@ -122,7 +122,7 @@ export default function SelectCustom({
           options={options}
           styles={customStyles}
           placeholder={placeholder}
-          isClearable
+          // isClearable
           onChange={(selected) => {
             if (selected) {
               const val = selected.value;
