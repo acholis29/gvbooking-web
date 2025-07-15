@@ -1,14 +1,14 @@
+import { log } from "console";
 import React, { useState } from "react";
 import AsyncSelect from "react-select/async";
 
-// Styling custom Tailwind
 const customStyles = {
   control: (base: any, state: any) => ({
     ...base,
-    backgroundColor: "#f3f4f6",
-    borderRadius: "1.5rem",
-    borderColor: "#d1d5db",
-    boxShadow: state.isFocused ? "0 0 0 2px rgba(59,130,246,0.5)" : "none",
+    backgroundColor: "#f3f4f6", // Tailwind: bg-gray-100
+    borderRadius: "1.5rem", // Tailwind: rounded-2xl
+    borderColor: state.isFocused ? "#d1d5db" : "#d1d5db", // Tailwind: blue-500 / gray-300
+    boxShadow: state.isFocused ? "0 0 0 2px rgba(59,130,246,0.5)" : "none", // ring
     "&:hover": {
       borderColor: "#d1d5db",
     },
@@ -17,8 +17,8 @@ const customStyles = {
   }),
   singleValue: (base: any) => ({
     ...base,
-    fontSize: "0.875rem",
-    color: "#111827",
+    fontSize: "0.875rem", // Tailwind: text-sm
+    color: "#111827", // Tailwind: text-gray-900
   }),
   menu: (base: any) => ({
     ...base,
@@ -29,66 +29,58 @@ const customStyles = {
   }),
   option: (base: any, state: any) => ({
     ...base,
-    backgroundColor: state.isFocused ? "#e5e7eb" : "#fff",
-    color: "#111827",
+    backgroundColor: state.isFocused ? "#e5e7eb" : "#fff", // hover: bg-gray-200
+    color: "#111827", // Tailwind: text-gray-900
     padding: "0.5rem 1rem",
     cursor: "pointer",
-    fontSize: "0.875rem",
+    fontSize: "0.875rem", // Tailwind: text-sm (14px)
   }),
   input: (base: any) => ({
     ...base,
     fontSize: "0.875rem",
-    outline: "none",
-    boxShadow: "none",
+    outline: "none", // ⛔ hilangkan blue box
+    boxShadow: "none", // ⛔ hilangkan shadow
     border: "none",
-    caretColor: "#111827",
+    caretColor: "#111827", // ✅ warna cursor (opsional, Tailwind: text-gray-900)
     "input:focus": {
-      boxShadow: "none", //hilangin border biru
+      boxShadow: "none",
     },
   }),
   placeholder: (base: any) => ({
     ...base,
-    fontSize: "0.875rem",
-    color: "#9ca3af",
+    fontSize: "0.875rem", // Tailwind: text-sm
+    color: "#9ca3af", // Tailwind: text-gray-400
   }),
-};
-
-type OptionType = {
-  value: string;
-  label: string;
-  data?: any;
 };
 
 type SelectCustomProps = {
   placeholder?: string;
   idx_comp?: string;
   id_excursion?: string;
-  value?: string | null;
-  onChange?: (value: string | null) => void;
-  onBlur?: () => void;
-  name?: string;
-  error?: string;
+  onSelect?: (value: string) => void;
 };
 
-export default function SelectCustomAsyn({
+type OptionType = {
+  value: string;
+  label: string;
+  data?: any; // kalau kamu tambahkan info pickup extra
+};
+
+// Select Asyncronus Pickup Area
+export default function SelectCustomAsynOld({
   placeholder = "Search",
   idx_comp = "",
   id_excursion = "",
-  value,
-  onChange,
-  onBlur,
-  name,
-  error,
+  onSelect,
 }: SelectCustomProps) {
   const [options, setOptions] = useState<OptionType[]>([]);
-
   const loadOptions = async (inputValue: string) => {
-    if (!inputValue) return options;
+    if (!inputValue) return options; // gunakan opsi terakhir jika input kosong
     const formBody = new URLSearchParams({
       shared_key: idx_comp,
       xml: "false",
       id_excursion: id_excursion,
-      keyword: inputValue,
+      keyword: inputValue, // diketik user
     });
 
     try {
@@ -105,14 +97,12 @@ export default function SelectCustomAsyn({
 
       const json = await res.json();
 
-      const fetchedOptions = json.msg.map((item: any) => ({
+      // Ubah ke format react-select
+      return json.msg.map((item: any) => ({
         value: item.location_id,
         label: item.location_name,
-        data: item,
+        data: item, // bisa kamu pakai nanti
       }));
-
-      setOptions(fetchedOptions);
-      return fetchedOptions;
     } catch (err) {
       console.error("Fetch error:", err);
       return [];
@@ -120,27 +110,19 @@ export default function SelectCustomAsyn({
   };
 
   return (
-    <div className="w-full max-w-xs">
+    <div className="w-72">
       <AsyncSelect
         cacheOptions
         defaultOptions
-        isClearable
         loadOptions={loadOptions}
-        value={options.find((opt) => opt.value === value) || null}
         onChange={(selected) => {
-          const selectedOption = selected as OptionType | null;
-          onChange?.(selectedOption?.value ?? null);
+          const selectedOption = selected as OptionType;
+          console.log("Selected:", selectedOption.value, selectedOption.label);
+          onSelect?.(selectedOption.value); // ← kirim ke parent (form)
         }}
-        onBlur={onBlur}
         placeholder={placeholder}
         styles={customStyles}
-        name={name}
       />
-      {error && (
-        <div className="h-8">
-          <span className="text-red-500 text-xs italic pl-3">{error}</span>
-        </div>
-      )}
     </div>
   );
 }

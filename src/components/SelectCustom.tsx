@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { toLowerCaseAll } from "@/helper/helper";
+import { log } from "console";
 
 const customStyles = {
   control: (base: any, state: any) => ({
@@ -95,6 +96,24 @@ export default function SelectCustom({
     }
   }, []);
 
+  useEffect(() => {
+    if (selectedPerson > 0) {
+      const defaultAges = Array.from(
+        { length: selectedPerson },
+        () => `${age_to}`
+      );
+      setAges(defaultAges);
+
+      // langsung panggil onSelect juga
+      onSelect?.(
+        JSON.stringify({
+          count: selectedPerson,
+          ages: defaultAges,
+        })
+      );
+    }
+  }, [selectedPerson]);
+
   return (
     <div className="w-44 mb-2">
       {toLowerCaseAll(placeholder) == "adult" && (
@@ -109,7 +128,7 @@ export default function SelectCustom({
               const val = selected.value;
               onSelect?.(val);
             } else {
-              onSelect?.("");
+              onSelect?.("0");
             }
           }}
         />
@@ -138,7 +157,6 @@ export default function SelectCustom({
 
       {toLowerCaseAll(placeholder) == "infant" && (
         <Select
-          
           options={options}
           styles={customStyles}
           placeholder={placeholder}

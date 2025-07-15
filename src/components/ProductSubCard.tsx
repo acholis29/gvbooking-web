@@ -10,6 +10,8 @@ import SelectCustomAsyn from "./SelectCustomAsyn";
 import SelectCustom from "./SelectCustom";
 // Form Libraries
 import { useForm, Controller, useFieldArray } from "react-hook-form";
+// Toast
+import toast from "react-hot-toast";
 
 type ProductSub = {
   excursion_id: string;
@@ -57,10 +59,22 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
   const [dataChargeType, setDataChargeType] = useState<ChargeTypeProps[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const { register, handleSubmit, setValue, getValues } = useForm();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    control,
+    formState: { errors },
+  } = useForm();
   const onSubmit = (data: any) => {
     console.log("BOOKING BOS 🔥");
-    console.log(data); // ← semua input masuk sini
+    if (data.Adult == "0" && data.Child == "0") {
+      toast.error("Please fill input adult or child!");
+    } else {
+      toast.success("Booking Process");
+      console.log(data); // ← semua input masuk sini
+    }
   };
 
   // Product Allotment
@@ -129,11 +143,22 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
             <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
               Description
             </p>
-            <SelectCustomAsyn
-              onSelect={(val) => setValue("pickup_area", val)}
-              idx_comp={idx_comp}
-              id_excursion={item?.excursion_id}
-              placeholder="Find Pickup Area ..."
+            <Controller
+              name="pickup_area"
+              control={control}
+              rules={{ required: "pickup area is required!" }}
+              render={({ field, fieldState }) => (
+                <SelectCustomAsyn
+                  idx_comp={idx_comp}
+                  id_excursion={item?.excursion_id}
+                  placeholder="Find Pickup Area ..."
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                  error={fieldState.error?.message}
+                />
+              )}
             />
           </div>
           <div className="w-1/2 flex flex-row">
