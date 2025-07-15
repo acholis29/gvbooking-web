@@ -37,6 +37,10 @@ import {
 import Link from "next/link";
 // Modal Component
 import ModalComponent from "./ModalComponent";
+import { API_HOSTS } from "@/lib/apihost";
+// Redirect
+import { useRouter } from "next/navigation";
+import { toLowerCaseAll } from "@/helper/helper";
 
 export default function NavbarComponent() {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -56,6 +60,12 @@ export default function NavbarComponent() {
   };
 
   const [languageMaster, setLanguageMaster] = useState<LanguageItem[]>([]);
+
+  type CountryItem = {
+    country: string;
+    idx_comp: string;
+  };
+  const [countryMaster, setCountryMaster] = useState<CountryItem[]>([]);
 
   const pathname = usePathname();
   const hideSearch = ["/list", "/cart", "/wishlist"].some((route) =>
@@ -81,6 +91,9 @@ export default function NavbarComponent() {
   // Modal
   const { openModal } = useModal();
 
+  // Redirect
+  const router = useRouter();
+
   useEffect(() => {
     fetch("/api/currency", {
       cache: "no-store", // ⛔ jangan ambil dari cache
@@ -101,6 +114,19 @@ export default function NavbarComponent() {
       .then((data) => {
         console.log("language:", data); // ← ini langsung arra // ✅ langsung set array-nya
         setLanguageMaster(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    fetch(`${API_HOSTS.host1}/mobile/corev2.json`, {
+      cache: "no-store", // ⛔ jangan ambil dari cache
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("DATA:", data); // ← ini langsung array
+
+        setCountryMaster(data); // ✅ langsung set array-nya
       })
       .catch((err) => console.error(err));
   }, []);
@@ -161,6 +187,7 @@ export default function NavbarComponent() {
                           onClick={() => {
                             setSelectedCategory("All Destinations");
                             setDropdownOpen(false);
+                            router.push("/home"); // Ganti dengan path yang diinginkan
                           }}
                           type="button"
                           className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
@@ -168,54 +195,27 @@ export default function NavbarComponent() {
                           All Destinations
                         </button>
                       </li>
-                      <li>
-                        <button
-                          onClick={() => {
-                            setSelectedCategory("Indonesia");
-                            setDropdownOpen(false);
-                          }}
-                          type="button"
-                          className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                        >
-                          Indonesia
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          onClick={() => {
-                            setSelectedCategory("Thailand");
-                            setDropdownOpen(false);
-                          }}
-                          type="button"
-                          className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                        >
-                          Thailand
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          onClick={() => {
-                            setSelectedCategory("Vietnam");
-                            setDropdownOpen(false);
-                          }}
-                          type="button"
-                          className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                        >
-                          Vietnam
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          onClick={() => {
-                            setSelectedCategory("Cambodia");
-                            setDropdownOpen(false);
-                          }}
-                          type="button"
-                          className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                        >
-                          Cambodia
-                        </button>
-                      </li>
+                      {countryMaster.map((item) => (
+                        <li key={item.country}>
+                          <button
+                            onClick={() => {
+                              setSelectedCategory(item.country);
+                              setDropdownOpen(false);
+                              router.push(
+                                `/destination/${toLowerCaseAll(
+                                  item.country
+                                )}?id=${item.idx_comp}&country=${toLowerCaseAll(
+                                  item.country
+                                )}`
+                              );
+                            }}
+                            type="button"
+                            className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                          >
+                            {item.country}
+                          </button>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 )}
@@ -380,88 +380,73 @@ export default function NavbarComponent() {
         {!hideSearch && (
           <form className="max-w-xl w-full mx-auto md:hidden">
             <div className="flex">
-              <button
-                onClick={() => setDropdownOpen(!isDropdownOpen)}
-                id="dropdown-button"
-                data-dropdown-toggle="dropdown"
-                className="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100"
-                type="button"
+              <div
+                className="relative group"
+                onMouseLeave={() => {
+                  timeout = setTimeout(() => setDropdownOpen(false), 200); // delay 200ms
+                }}
+                onMouseEnter={() => {
+                  clearTimeout(timeout);
+                  setDropdownOpen(true);
+                }}
               >
-                {selectedCategory}
-                <span className="ml-2">
-                  <FontAwesomeIcon
-                    icon={faChevronDown}
-                    className="w-4 h-4 text-gray-600"
-                  />
-                </span>
-              </button>
+                <button
+                  onClick={() => setDropdownOpen(!isDropdownOpen)}
+                  id="dropdown-button"
+                  data-dropdown-toggle="dropdown"
+                  className="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 whitespace-nowrap"
+                  type="button"
+                >
+                  {selectedCategory}
+                  <span className="ml-2">
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
+                      className="w-4 h-4 text-gray-600"
+                    />
+                  </span>
+                </button>
 
-              {isDropdownOpen && (
-                <div className="absolute z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 mt-11">
-                  <ul className="py-2 text-sm text-gray-700">
-                    <li>
-                      <button
-                        onClick={() => {
-                          setSelectedCategory("All Destinations");
-                          setDropdownOpen(false);
-                        }}
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                      >
-                        All Destinations
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        onClick={() => {
-                          setSelectedCategory("Indonesia");
-                          setDropdownOpen(false);
-                        }}
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                      >
-                        Indonesia
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        onClick={() => {
-                          setSelectedCategory("Template");
-                          setDropdownOpen(false);
-                        }}
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                      >
-                        Templates
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        onClick={() => {
-                          setSelectedCategory("Design");
-                          setDropdownOpen(false);
-                        }}
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                      >
-                        Design
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        onClick={() => {
-                          setSelectedCategory("Logos");
-                          setDropdownOpen(false);
-                        }}
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
-                      >
-                        Logos
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              )}
+                {isDropdownOpen && (
+                  <div className="absolute z-20 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 mt-2">
+                    <ul className="py-2 text-sm text-gray-700">
+                      <li>
+                        <button
+                          onClick={() => {
+                            setSelectedCategory("All Destinations");
+                            setDropdownOpen(false);
+                            router.push("/home");
+                          }}
+                          type="button"
+                          className="inline-flex w-full px-4 py-2 hover:bg-gray-100"
+                        >
+                          All Destinations
+                        </button>
+                      </li>
+                      {countryMaster.map((item) => (
+                        <li key={item.country}>
+                          <button
+                            onClick={() => {
+                              setSelectedCategory(item.country);
+                              setDropdownOpen(false);
+                              router.push(
+                                `/destination/${toLowerCaseAll(
+                                  item.country
+                                )}?id=${item.idx_comp}&country=${toLowerCaseAll(
+                                  item.country
+                                )}`
+                              );
+                            }}
+                            type="button"
+                            className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                          >
+                            {item.country}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
 
               <div className="relative w-full">
                 <input
