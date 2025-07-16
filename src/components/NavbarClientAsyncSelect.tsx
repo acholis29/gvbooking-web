@@ -2,44 +2,33 @@
 "use client";
 
 import AsyncSelect from "react-select/async";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { API_HOSTS } from "@/lib/apihost";
+import { useSearchParams } from "next/navigation";
 
 export default function NavbarClientAsyncSelect(props: any) {
-  // const destinations = [
-  //   { label: "San Diego", value: "san-diego" },
-  //   { label: "San Francisco", value: "san-francisco" },
-  //   { label: "Santa Monica", value: "santa-monica" },
-  //   { label: "Seattle", value: "seattle" },
-  //   { label: "Sacramento", value: "sacramento" },
-  //   { label: "Santiago", value: "santiago" },
-  //   { label: "Sandakan", value: "sandakan" },
-  // ];
-
-  // const loadOptions = (
-  //   inputValue: string,
-  //   callback: (options: any[]) => void
-  // ) => {
-  //   setTimeout(() => {
-  //     const filtered = destinations.filter((item) =>
-  //       item.label.toLowerCase().includes(inputValue.toLowerCase())
-  //     );
-  //     callback(filtered);
-  //   }, 500); // Simulasi async
-  // };
-
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id"); //ini dari idx_comp_alias
   const router = useRouter(); // ✅ ini sekarang valid
   type OptionType = {
     value: string;
     label: string;
     data?: any;
   };
+
+  const [idx_comp, setIdxComp] = useState<string>("");
   const [options, setOptions] = useState<OptionType[]>([]);
+
+  useEffect(() => {
+    if (!id) return;
+    setIdxComp(id);
+  }, [searchParams]);
+
   const loadOptions = async (inputValue: string) => {
-    // if (!inputValue) return options;
     const formBody = new URLSearchParams({
-      shared_key: "4D340942-88D3-44DD-A52C-EAF00EACADE8",
+      shared_key:
+        idx_comp != "" ? idx_comp : "4D340942-88D3-44DD-A52C-EAF00EACADE8",
       xml: "false",
       date: "2025-07-15",
       code_of_language: "DE",
@@ -74,8 +63,10 @@ export default function NavbarClientAsyncSelect(props: any) {
       return [];
     }
   };
+
   return (
     <AsyncSelect<OptionType>
+      key={idx_comp}
       cacheOptions
       loadOptions={loadOptions}
       defaultOptions
