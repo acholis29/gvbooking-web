@@ -130,7 +130,7 @@ export default function DetailDestination() {
     };
 
     fetchData();
-  }, []);
+  }, [idx_excursion, idx_comp]);
 
   const maximum_pax =
     dataProduct != null && dataProduct.msg.product_subs.length > 0

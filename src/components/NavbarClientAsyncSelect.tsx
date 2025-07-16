@@ -3,6 +3,7 @@
 
 import AsyncSelect from "react-select/async";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function NavbarClientAsyncSelect(props: any) {
   // const destinations = [
@@ -27,6 +28,7 @@ export default function NavbarClientAsyncSelect(props: any) {
   //   }, 500); // Simulasi async
   // };
 
+  const router = useRouter(); // ✅ ini sekarang valid
   type OptionType = {
     value: string;
     label: string;
@@ -72,7 +74,7 @@ export default function NavbarClientAsyncSelect(props: any) {
     }
   };
   return (
-    <AsyncSelect
+    <AsyncSelect<OptionType>
       cacheOptions
       loadOptions={loadOptions}
       defaultOptions
@@ -80,6 +82,16 @@ export default function NavbarClientAsyncSelect(props: any) {
       isClearable
       onChange={(selectedOption) => {
         console.log("Selected:", selectedOption);
+        const country = selectedOption?.data.location_country;
+        const idx_comp_alias = "4D340942-88D3-44DD-A52C-EAF00EACADE8";
+        const state = selectedOption?.data.location_state;
+        const excursion_id = selectedOption?.data.excursion_id;
+        // Data untuk ke detail masih salah
+        if (selectedOption) {
+          router.push(
+            `/destination/detail/${country}?id=${idx_comp_alias}&state=${state}&country=${country}&exc=${excursion_id}`
+          );
+        }
       }}
       styles={{
         control: (base: any, state: any) => ({
