@@ -7,6 +7,10 @@ import ProductSub from "@/components/ProductSubCard";
 import { GLOBAL_VAR } from "@/lib/globalVar";
 import { API_HOSTS } from "@/lib/apihost";
 
+// Context Global
+import { useCurrency } from "@/context/CurrencyContext";
+import { useLanguage } from "@/context/LanguageContext";
+
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
@@ -36,6 +40,11 @@ export default function DetailDestination() {
 
   const [isDropdownProductSubOpen, setDropdownProductSubOpen] = useState(false);
   const [selectedProductSub, setSelectedProductSubOpen] = useState("");
+
+  // Currency
+  const { currency, setCurrency } = useCurrency();
+  // Language
+  const { language, setLanguage } = useLanguage();
 
   type ProductDetail = {
     excursion_name: string;
@@ -99,8 +108,8 @@ export default function DetailDestination() {
         shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
         xml: "false",
         id_excursion: idx_excursion ?? "", // Examp : "03208A45-4A41-4E1B-A597-20525C090E52"
-        code_of_language: "DE",
-        code_of_currency: "IDR",
+        code_of_language: language, // DE
+        code_of_currency: currency, // IDR
         promo_code: "R-BC",
       });
 
@@ -120,6 +129,8 @@ export default function DetailDestination() {
 
         if (contentType.includes("application/json")) {
           const json = await res.json();
+          console.log(json);
+
           setDataProduct(json);
         }
       } catch (err: any) {
@@ -131,7 +142,7 @@ export default function DetailDestination() {
     };
 
     fetchData();
-  }, [idx_excursion, idx_comp]);
+  }, [idx_excursion, idx_comp, currency, language]);
 
   const maximum_pax =
     dataProduct != null && dataProduct.msg.product_subs.length > 0

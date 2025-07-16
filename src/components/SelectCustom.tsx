@@ -189,7 +189,7 @@ export default function SelectCustom({
                 ? { value: ages[index], label: `${ages[index]} Years` }
                 : { value: `${age_to}`, label: `${age_to} Years` }
             }
-            isClearable
+            // isClearable
             onChange={(selected) => {
               const updated = [...ages];
               updated[index] = selected?.value ?? null;
