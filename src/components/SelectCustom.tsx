@@ -4,8 +4,13 @@ import { toLowerCaseAll } from "@/helper/helper";
 import { log } from "console";
 
 const customStyles = {
+  container: (base: any) => ({
+    ...base,
+    width: "100%",
+  }),
   control: (base: any, state: any) => ({
     ...base,
+    width: "100%",
     backgroundColor: "#f3f4f6", // Tailwind: bg-gray-100
     borderRadius: "1.5rem", // Tailwind: rounded-2xl
     borderColor: state.isFocused ? "#d1d5db" : "#d1d5db", // Tailwind: blue-500 / gray-300
@@ -115,7 +120,7 @@ export default function SelectCustom({
   }, [selectedPerson]);
 
   return (
-    <div className="w-44 mb-2">
+    <div className="w-full md:w-44 mb-2">
       {toLowerCaseAll(placeholder) == "adult" && (
         <Select
           defaultValue={options.find((opt) => opt.value === "1")}
