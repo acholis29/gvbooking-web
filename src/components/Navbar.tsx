@@ -93,9 +93,9 @@ export default function NavbarComponent() {
   // Wish Counter
   const { wishCount } = useWish();
   // Currency
-  const { currency } = useCurrency();
+  const { currency, setCurrency } = useCurrency();
   // Language
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
 
   // Timeout Delay
   let timeout: NodeJS.Timeout;
@@ -137,6 +137,18 @@ export default function NavbarComponent() {
         setCountryMaster(data); // ✅ langsung set array-nya
       })
       .catch((err) => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    const savedCurrency = localStorage.getItem("currency");
+    if (savedCurrency) {
+      setCurrency(savedCurrency);
+    }
+
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
   }, []);
 
   return (
@@ -573,6 +585,7 @@ const CurrencyContent = ({
           } text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer`}
           onClick={() => {
             setCurrency(item.Currency);
+            localStorage.setItem("currency", item.Currency); // simpan ke localStorage
           }}
         >
           <div className="flex justify-between items-center">
@@ -608,6 +621,7 @@ const LanguageContent = ({
           } text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer`}
           onClick={() => {
             setLanguage(item.MSLanguage);
+            localStorage.setItem("language", item.MSLanguage); // simpan ke localStorage
           }}
         >
           <div className="flex justify-between items-center">
