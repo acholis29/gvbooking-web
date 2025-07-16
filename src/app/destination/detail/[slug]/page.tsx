@@ -204,20 +204,24 @@ export default function DetailDestination() {
             {/* Baris Content */}
             <div className="flex flex-col md:flex-row pb-5 gap-5">
               <div className="order-2 md:order-1 w-full md:flex-[5] text-gray-600">
-                <div className="w-1/7 mt-3 mb-5">
+                <div className="w-full md:w-1/7 mt-3 mb-5">
                   {/* <input
                     type="date"
                     min={new Date().toISOString().split("T")[0]}
                     defaultValue={new Date().toISOString().split("T")[0]}
                     className="bg-gray-50 p-2 rounded-2xl w-full shadow-sm focus:outline-none focus:ring-0 border-0"
                   /> */}
-                  <div className="flex flex-row justify-center items-center">
+                  <p className="mr-2 font-semibold text-gray-500">
+                    Choose a date for your tour
+                  </p>
+                  <div className="flex flex-row w-full justify-start items-center">
                     <DatePicker
                       selected={selectedDate}
                       onChange={(date) => setSelectedDate(date)}
                       minDate={new Date()}
                       excludeDates={disabledDates}
                       className="bg-gray-50 p-2 rounded-2xl w-full shadow-sm focus:outline-none focus:ring-0 border-0"
+                      wrapperClassName="w-full md:w-auto"
                     />
                     <FontAwesomeIcon
                       icon={faCalendarCheck}
