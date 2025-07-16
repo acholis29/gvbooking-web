@@ -93,7 +93,7 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
 
       try {
         const res = await fetch(
-          "https://api.govacation.biz/excursion.asmx/v2_product_allotment_list_batch",
+          `${API_HOSTS.host1}/excursion.asmx/v2_product_allotment_list_batch`,
           {
             method: "POST",
             headers: {

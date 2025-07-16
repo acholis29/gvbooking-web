@@ -4,6 +4,7 @@
 import AsyncSelect from "react-select/async";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { API_HOSTS } from "@/lib/apihost";
 
 export default function NavbarClientAsyncSelect(props: any) {
   // const destinations = [
@@ -48,7 +49,7 @@ export default function NavbarClientAsyncSelect(props: any) {
 
     try {
       const res = await fetch(
-        "https://api.govacation.biz/excursion.asmx//v2_product_search_assist",
+        `${API_HOSTS.host1}/excursion.asmx/v2_product_search_assist`,
         {
           method: "POST",
           headers: {

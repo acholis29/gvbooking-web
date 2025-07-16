@@ -6,6 +6,11 @@ import JumbotronComponent from "@/components/Jumbotron";
 import DestinationCard from "@/components/DestinationCard";
 import EcommersCard from "@/components/EcommersCard";
 import FooterComponent from "@/components/Footer";
+import {GLOBAL_VAR} from "@/lib/globalVar";
+
+
+import { Geist, Geist_Mono } from "next/font/google";
+
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,7 +20,7 @@ import {
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import SkeletonImage from "@/components/SkeletonImage";
-import { log } from "console";
+import {log} from "console";
 import SkeletonCard from "@/components/SkeletonCard";
 import { API_HOSTS } from "@/lib/apihost";
 
@@ -67,6 +72,7 @@ export default function Home() {
   >([]);
 
   const [isLoadingRecom, setIsLoadingRecom] = useState(true);
+  
 
   useEffect(() => {
     fetch(`${API_HOSTS.host1}/mobile/corev2.json`, {
@@ -111,7 +117,7 @@ export default function Home() {
 
   useEffect(() => {
     fetch(
-      '/api/excursion/attr/recomended?idxcomp=', // gunakan '' untuk mendapatkan semua rekomendasi
+      '/api/excursion/attr/recomended', // gunakan '' untuk mendapatkan semua rekomendasi
       {
         cache: "no-store", // ⛔ jangan ambil dari cache
       }

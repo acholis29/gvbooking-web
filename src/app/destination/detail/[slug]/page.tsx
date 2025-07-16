@@ -4,6 +4,10 @@ import { useState, useEffect, useRef } from "react";
 
 import Galery from "@/components/Galery";
 import ProductSub from "@/components/ProductSubCard";
+import { GLOBAL_VAR } from "@/lib/globalVar"; 
+import { API_HOSTS } from "@/lib/apihost";
+
+
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
@@ -22,7 +26,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 export default function DetailDestination() {
-  const searchParams = useSearchParams();
+  
+  const searchParams = useSearchParams();  
   const idx_comp = searchParams.get("id"); //ini dari idx_comp_alias
   const idx_excursion = searchParams.get("exc"); //ini dari idx_excursion
   const country = searchParams.get("country");
@@ -103,7 +108,7 @@ export default function DetailDestination() {
 
       try {
         const res = await fetch(
-          "https://api.govacation.biz/excursion.asmx/v2_product_description",
+          `${API_HOSTS.host1}/excursion.asmx/v2_product_description`,
           {
             method: "POST",
             headers: {
