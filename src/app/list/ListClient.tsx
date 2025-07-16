@@ -160,7 +160,6 @@ export default function ListClient() {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log("EXCUR:", data); // ← ini langsung array
         setDetailDestination(data);
       })
       .catch((err) => console.error(err))
@@ -175,7 +174,6 @@ export default function ListClient() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Holiday Type:", data); // ← ini langsung array
         setMasterHoliday(data);
       })
       .catch((err) => console.error(err))
@@ -255,8 +253,8 @@ export default function ListClient() {
             <Badge title="Rating" />
           </div> */}
         </div>
-        
-        {/* Konten Kiri */}        
+
+        {/* Konten Kiri */}
         <div className="md:w-1/6 text-gray-700">
           <p className="text-sm mb-2 font-semibold">Keywords</p>
           {BadgeState.map((item, index) => (
@@ -410,7 +408,7 @@ export default function ListClient() {
               ))
             ) : (
               <div className="col-span-4 text-center text-gray-500 py-10 flex flex-col justify-center items-center">
-{/*                 
+                {/*                 
                 <img
                   src="/images/error/empty.svg"
                   alt=""

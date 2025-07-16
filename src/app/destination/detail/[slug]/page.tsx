@@ -4,9 +4,8 @@ import { useState, useEffect, useRef } from "react";
 
 import Galery from "@/components/Galery";
 import ProductSub from "@/components/ProductSubCard";
-import { GLOBAL_VAR } from "@/lib/globalVar"; 
+import { GLOBAL_VAR } from "@/lib/globalVar";
 import { API_HOSTS } from "@/lib/apihost";
-
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,8 +25,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 export default function DetailDestination() {
-  
-  const searchParams = useSearchParams();  
+  const searchParams = useSearchParams();
   const idx_comp = searchParams.get("id"); //ini dari idx_comp_alias
   const idx_excursion = searchParams.get("exc"); //ini dari idx_excursion
   const country = searchParams.get("country");
@@ -123,8 +121,6 @@ export default function DetailDestination() {
         if (contentType.includes("application/json")) {
           const json = await res.json();
           setDataProduct(json);
-          console.log("DataProduct");
-          console.log(json);
         }
       } catch (err: any) {
         setError(err.message || "Error");

@@ -44,8 +44,7 @@ export default function NavbarClientAsyncSelect(props: any) {
         );
 
         const json = await res.json();
-        console.log("===============recomended===========");
-        console.log(json);
+
         const fetchedOptions = json.map((item: any) => ({
           value: item.Idx_excursion,
           label: item.Name_excursion,
@@ -104,7 +103,6 @@ export default function NavbarClientAsyncSelect(props: any) {
       isClearable
       onChange={(selectedOption) => {
         if (homePage) {
-          console.log("Selected:", selectedOption);
           const country = selectedOption?.data.Country;
           const idx_comp_alias = selectedOption?.data.idx_comp;
           const state = selectedOption?.data.State;
@@ -115,7 +113,6 @@ export default function NavbarClientAsyncSelect(props: any) {
             );
           }
         } else {
-          console.log("Selected:", selectedOption);
           const country = selectedOption?.data.location_country;
           const idx_comp_alias = idx_comp;
           const state = selectedOption?.data.location_state;

@@ -68,12 +68,10 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
     formState: { errors },
   } = useForm();
   const onSubmit = (data: any) => {
-    console.log("BOOKING BOS 🔥");
     if (data.Adult == "0" && data.Child == "0") {
       toast.error("Please fill input adult or child!");
     } else {
       toast.success("Booking Process");
-      console.log(data); // ← semua input masuk sini
     }
   };
 
@@ -109,8 +107,6 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
           const json = await res.json();
           const chargeTypes = json?.msg?.[0]?.charge_type ?? null;
           setDataChargeType(chargeTypes);
-          console.log("chargeTypes");
-          console.log(chargeTypes);
         }
       } catch (err: any) {
         setError(err.message || "Terjadi kesalahan");

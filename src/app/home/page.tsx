@@ -6,8 +6,7 @@ import JumbotronComponent from "@/components/Jumbotron";
 import DestinationCard from "@/components/DestinationCard";
 import EcommersCard from "@/components/EcommersCard";
 import FooterComponent from "@/components/Footer";
-import {GLOBAL_VAR} from "@/lib/globalVar";
-
+import { GLOBAL_VAR } from "@/lib/globalVar";
 
 import { Geist, Geist_Mono } from "next/font/google";
 
@@ -20,7 +19,7 @@ import {
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import SkeletonImage from "@/components/SkeletonImage";
-import {log} from "console";
+import { log } from "console";
 import SkeletonCard from "@/components/SkeletonCard";
 import { API_HOSTS } from "@/lib/apihost";
 
@@ -72,7 +71,6 @@ export default function Home() {
   >([]);
 
   const [isLoadingRecom, setIsLoadingRecom] = useState(true);
-  
 
   useEffect(() => {
     fetch(`${API_HOSTS.host1}/mobile/corev2.json`, {
@@ -80,9 +78,6 @@ export default function Home() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("DATA:", data); // ← ini langsung array
-
-
         setDestination(data); // ✅ langsung set array-nya
       })
       .catch((err) => console.error(err));
@@ -98,7 +93,6 @@ export default function Home() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("activity country:", data); // ← ini langsung array
         setActivityCountry(data); // ✅ langsung set array-nya
       })
       .catch((err) => console.error(err));
@@ -112,19 +106,16 @@ export default function Home() {
     const wish = JSON.parse(localStorage.getItem("wish") || "[]");
     setWish(wish);
   }
-  console.log("-----------");
-  console.log(ListWist);
 
   useEffect(() => {
     fetch(
-      '/api/excursion/attr/recomended', // gunakan '' untuk mendapatkan semua rekomendasi
+      "/api/excursion/attr/recomended", // gunakan '' untuk mendapatkan semua rekomendasi
       {
         cache: "no-store", // ⛔ jangan ambil dari cache
       }
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log("EXCUR:", data); // ← ini langsung array
         setRecomendedDestination(data);
       })
       .catch((err) => console.error(err))
@@ -156,8 +147,6 @@ export default function Home() {
             const activity = activityCountry.find(
               (ac) => ac.idx_comp === item.idx_comp_alias
             );
-
-            console.log(activity?.qty);
 
             return (
               <DestinationCard

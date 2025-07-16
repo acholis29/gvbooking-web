@@ -24,7 +24,6 @@ export async function GET(
   const idx_comp = (await params).idx_comp;
 
   try {
-    console.log('ini dari params :' + idx_comp);
     // const result = await prisma.$queryRawUnsafe(`api_MSExcursion_Lis 'idx_comp');
     // const result = await prisma.$queryRawUnsafe(`api_MSExcursion_List '${idx_comp}' ,'',''`);
     // const result = await prisma.$queryRawUnsafe(`api_MSExcursion_Recom '${idx_comp}'`);

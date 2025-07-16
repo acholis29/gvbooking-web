@@ -107,7 +107,6 @@ export default function DrawerComponent({
                     onClick={() => {
                       openModal(); // ⬅️ Ini akan memunculkan modal
                       setMenuSelected(`SignIn`);
-                      // console.log(`Profil selected: ${item}`);
                     }}
                     className="flex items-center w-full p-2 text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 "
                   >
@@ -124,7 +123,6 @@ export default function DrawerComponent({
                     onClick={() => {
                       openModal(); // ⬅️ Ini akan memunculkan modal
                       setMenuSelected(`Currency`);
-                      // console.log(`Profil selected: ${item}`);
                     }}
                     className="flex items-center w-full p-2 text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 "
                   >
@@ -141,7 +139,6 @@ export default function DrawerComponent({
                     onClick={() => {
                       openModal(); // ⬅️ Ini akan memunculkan modal
                       setMenuSelected(`Language`);
-                      // console.log(`Profil selected: ${item}`);
                     }}
                     className="flex items-center w-full p-2 text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 "
                   >

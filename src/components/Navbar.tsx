@@ -112,7 +112,6 @@ export default function NavbarComponent() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("currency:", data); // ← ini langsung arra // ✅ langsung set array-nya
         setCurrencyMaster(data);
       })
       .catch((err) => console.error(err));
@@ -124,7 +123,6 @@ export default function NavbarComponent() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("language:", data); // ← ini langsung arra // ✅ langsung set array-nya
         setLanguageMaster(data);
       })
       .catch((err) => console.error(err));
@@ -136,8 +134,6 @@ export default function NavbarComponent() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("DATA:", data); // ← ini langsung array
-
         setCountryMaster(data); // ✅ langsung set array-nya
       })
       .catch((err) => console.error(err));
@@ -311,7 +307,6 @@ export default function NavbarComponent() {
                           onClick={() => {
                             setMenuSelected(`${item}`);
                             openModal(); // ⬅️ Ini akan memunculkan modal
-                            console.log(`Profil selected: ${item}`);
                           }}
                         >
                           <div className="ml-4 w-5 text-center">

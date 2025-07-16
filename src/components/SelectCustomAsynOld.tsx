@@ -85,7 +85,8 @@ export default function SelectCustomAsynOld({
     });
 
     try {
-      const res = await fetch(`${API_HOSTS.host1}/excursion.asmx/v2_product_pickup_list`,
+      const res = await fetch(
+        `${API_HOSTS.host1}/excursion.asmx/v2_product_pickup_list`,
         {
           method: "POST",
           headers: {
@@ -117,7 +118,6 @@ export default function SelectCustomAsynOld({
         loadOptions={loadOptions}
         onChange={(selected) => {
           const selectedOption = selected as OptionType;
-          console.log("Selected:", selectedOption.value, selectedOption.label);
           onSelect?.(selectedOption.value); // ← kirim ke parent (form)
         }}
         placeholder={placeholder}

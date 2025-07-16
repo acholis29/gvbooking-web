@@ -58,7 +58,6 @@ const HorizontalWishlistCard: React.FC<HorizontalWishlistCardProps> = ({
         onClick={(e) => {
           e.preventDefault(); // mencegah redirect karena <a>
           removeFromWish(idx_excursion);
-          console.log("Item removed From Wishlist"); // ganti dengan fungsi hapus cart
           onDelete?.(); // ✅ panggil fungsi dari parent jika ada
         }}
       >
@@ -70,7 +69,6 @@ const HorizontalWishlistCard: React.FC<HorizontalWishlistCardProps> = ({
         onClick={(e) => {
           e.preventDefault(); // mencegah redirect karena <a>
           addToCart(data);
-          console.log("Item add to cart"); // ganti dengan fungsi hapus cart
           onDelete?.(); // ✅ panggil fungsi dari parent jika ada
         }}
       >

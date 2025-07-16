@@ -79,7 +79,6 @@ export default function DestinationClient({ slug }: Props) {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("EXCUR:", data); // ← ini langsung array
         setLocalDestination(data);
       })
       .catch((err) => console.error(err))
@@ -94,7 +93,6 @@ export default function DestinationClient({ slug }: Props) {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("EXCUR:", data); // ← ini langsung array
         setRecomendedDestination(data);
       })
       .catch((err) => console.error(err))

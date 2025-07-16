@@ -45,7 +45,6 @@ const HorizontalCard: React.FC<HorizontalCardProps> = ({
         onClick={(e) => {
           e.preventDefault(); // mencegah redirect karena <a>
           removeFromCart(idx_excursion);
-          console.log("Item removed"); // ganti dengan fungsi hapus cart
           onDelete?.(); // ✅ panggil fungsi dari parent jika ada
         }}
       >

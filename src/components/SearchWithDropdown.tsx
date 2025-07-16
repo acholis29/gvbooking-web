@@ -42,8 +42,6 @@ const Search: React.FC<SearchProps> = ({
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(`idx comp : ${idx_comp}`); // ← ini langsung array
-        console.log("Local Destination:", data); // ← ini langsung array
         setLocalDestination(data);
       })
       .catch((err) => console.error(err));
