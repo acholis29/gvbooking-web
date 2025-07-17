@@ -10,6 +10,9 @@ import { useSearchParams } from "next/navigation";
 // Path
 import { usePathname } from "next/navigation";
 import { log } from "console";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { capitalizeWords } from "@/helper/helper";
 
 export default function NavbarClientAsyncSelect(props: any) {
   const searchParams = useSearchParams();
@@ -22,7 +25,10 @@ export default function NavbarClientAsyncSelect(props: any) {
   type OptionType = {
     value: string;
     label: string;
+    country?: string;
+    state?: string;
     data?: any;
+    icon?: any;
   };
 
   const [idx_comp, setIdxComp] = useState<string>("");
@@ -48,7 +54,10 @@ export default function NavbarClientAsyncSelect(props: any) {
         const fetchedOptions = json.map((item: any) => ({
           value: item.Idx_excursion,
           label: item.Name_excursion,
+          country: item.Country,
+          state: item.State,
           data: item,
+          icon: faLocationDot,
         }));
 
         setOptions(fetchedOptions);
@@ -82,7 +91,10 @@ export default function NavbarClientAsyncSelect(props: any) {
         const fetchedOptions = json.msg.map((item: any) => ({
           value: item.excursion_id,
           label: item.search_name,
+          country: item.location_country,
+          state: item.location_state,
           data: item,
+          icon: faLocationDot,
         }));
 
         setOptions(fetchedOptions);
@@ -101,6 +113,23 @@ export default function NavbarClientAsyncSelect(props: any) {
       defaultOptions
       placeholder="Search your destinations..."
       isClearable
+      formatOptionLabel={(option) => (
+        <div className="flex items-center gap-2">
+          <FontAwesomeIcon
+            icon={option.icon}
+            className="text-gray-600 w-4 h-4 bg-gray-100 rounded-xl p-3"
+          />
+          <div>
+            <span className="font-semibold text-xs block">
+              {capitalizeWords(option.label ?? "")}
+            </span>
+            <span className="text-xs block">
+              In {capitalizeWords(option.state ?? "")},{" "}
+              {capitalizeWords(option.country ?? "")}
+            </span>
+          </div>
+        </div>
+      )}
       onChange={(selectedOption) => {
         if (homePage) {
           const country = selectedOption?.data.Country;

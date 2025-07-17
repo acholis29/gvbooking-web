@@ -1,3 +1,5 @@
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import AsyncSelect from "react-select/async";
 
@@ -57,6 +59,7 @@ type OptionType = {
   value: string;
   label: string;
   data?: any;
+  icon?: any;
 };
 
 type SelectCustomProps = {
@@ -109,6 +112,7 @@ export default function SelectCustomAsyn({
         value: item.location_id,
         label: item.location_name,
         data: item,
+        icon: faLocationDot,
       }));
 
       setOptions(fetchedOptions);
@@ -127,6 +131,15 @@ export default function SelectCustomAsyn({
         isClearable
         loadOptions={loadOptions}
         value={options.find((opt) => opt.value === value) || null}
+        formatOptionLabel={(option) => (
+          <div className="flex items-center gap-2">
+            <FontAwesomeIcon
+              icon={option.icon}
+              className="text-gray-600 w-4 h-4"
+            />
+            <span>{option.label}</span>
+          </div>
+        )}
         onChange={(selected) => {
           const selectedOption = selected as OptionType | null;
           onChange?.(selectedOption?.value ?? null);

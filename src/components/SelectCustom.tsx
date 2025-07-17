@@ -3,6 +3,9 @@ import Select from "react-select";
 import { toLowerCaseAll } from "@/helper/helper";
 import { log } from "console";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faChild, faBaby } from "@fortawesome/free-solid-svg-icons";
+
 const customStyles = {
   container: (base: any) => ({
     ...base,
@@ -85,6 +88,12 @@ export default function SelectCustom({
   const options = Array.from({ length: max_pax }, (_, i) => ({
     value: `${i + 1}`,
     label: `${i + 1} ${i + 1 > 1 ? placeholder + "s" : placeholder}`,
+    icon:
+      placeholder.toLowerCase() === "adult"
+        ? faUser
+        : placeholder.toLowerCase() === "child"
+        ? faChild
+        : faBaby,
   }));
 
   useEffect(() => {
@@ -128,6 +137,15 @@ export default function SelectCustom({
           styles={customStyles}
           placeholder={placeholder}
           // isClearable
+          formatOptionLabel={(option) => (
+            <div className="flex items-center gap-2">
+              <FontAwesomeIcon
+                icon={option.icon}
+                className="text-gray-600 w-2 h-2 px-1"
+              />
+              <span>{option.label}</span>
+            </div>
+          )}
           onChange={(selected) => {
             if (selected) {
               const val = selected.value;
@@ -145,6 +163,15 @@ export default function SelectCustom({
           styles={customStyles}
           placeholder={placeholder}
           isClearable
+          formatOptionLabel={(option) => (
+            <div className="flex items-center gap-2">
+              <FontAwesomeIcon
+                icon={option.icon}
+                className="text-gray-600 w-4 h-4"
+              />
+              <span>{option.label}</span>
+            </div>
+          )}
           onChange={(selected) => {
             if (selected) {
               const val = parseInt(selected.value);
