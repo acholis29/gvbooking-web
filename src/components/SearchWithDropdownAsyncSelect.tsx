@@ -14,7 +14,7 @@ import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { capitalizeWords, toLowerCaseAll } from "@/helper/helper";
 
-export default function NavbarClientAsyncSelect(props: any) {
+export default function SearchWithDropdownAsyncSelect(props: any) {
   const searchParams = useSearchParams();
   const id = searchParams.get("id") ?? "home"; //ini dari idx_comp_alias
   const router = useRouter(); // ✅ ini sekarang valid
@@ -40,78 +40,53 @@ export default function NavbarClientAsyncSelect(props: any) {
   }, [searchParams, homePage]);
 
   const loadOptions = async (inputValue: string) => {
-    if (homePage) {
-      try {
-        const res = await fetch(
-          "/api/excursion/attr/recomended", // gunakan '' untuk mendapatkan semua rekomendasi
-          {
-            cache: "no-store", // ⛔ jangan ambil dari cache
-          }
-        );
+    const formBody = new URLSearchParams({
+      shared_key:
+        idx_comp != "" ? idx_comp : "4D340942-88D3-44DD-A52C-EAF00EACADE8",
+      xml: "false",
+      date: "2025-07-15",
+      code_of_language: "DE",
+      keyword: inputValue,
+      promo_code: "R-BC",
+    });
 
-        const json = await res.json();
+    try {
+      const res = await fetch(
+        `${API_HOSTS.host1}/excursion.asmx/v2_product_search_assist`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: formBody.toString(),
+        }
+      );
 
-        const fetchedOptions = json.map((item: any) => ({
-          value: item.Idx_excursion,
-          label: item.Name_excursion,
-          country: item.Country,
-          state: item.State,
-          data: item,
-          icon: faLocationDot,
-        }));
+      const json = await res.json();
 
-        setOptions(fetchedOptions);
-        return fetchedOptions;
-      } catch (error) {}
-    } else {
-      const formBody = new URLSearchParams({
-        shared_key:
-          idx_comp != "" ? idx_comp : "4D340942-88D3-44DD-A52C-EAF00EACADE8",
-        xml: "false",
-        date: "2025-07-15",
-        code_of_language: "DE",
-        keyword: inputValue,
-        promo_code: "R-BC",
-      });
+      const fetchedOptions = json.msg.map((item: any) => ({
+        value: item.excursion_id,
+        label: item.search_name,
+        country: item.location_country,
+        state: item.location_state,
+        data: item,
+        icon: faLocationDot,
+      }));
 
-      try {
-        const res = await fetch(
-          `${API_HOSTS.host1}/excursion.asmx/v2_product_search_assist`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: formBody.toString(),
-          }
-        );
-
-        const json = await res.json();
-
-        const fetchedOptions = json.msg.map((item: any) => ({
-          value: item.excursion_id,
-          label: item.search_name,
-          country: item.location_country,
-          state: item.location_state,
-          data: item,
-          icon: faLocationDot,
-        }));
-
-        setOptions(fetchedOptions);
-        return fetchedOptions;
-      } catch (err) {
-        console.error("Fetch error:", err);
-        return [];
-      }
+      setOptions(fetchedOptions);
+      return fetchedOptions;
+    } catch (err) {
+      console.error("Fetch error:", err);
+      return [];
     }
   };
   return (
     <AsyncSelect<OptionType>
-      key={idx_comp}
+      key={idx_comp + id}
       cacheOptions
       loadOptions={loadOptions}
       defaultOptions
-      placeholder="Find destinations..."
+      placeholder="Search your destinations..."
       isClearable
       formatOptionLabel={(option) => (
         <div className="flex items-center gap-2">
