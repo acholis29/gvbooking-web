@@ -134,7 +134,7 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
             />
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col w-full">
             <h5 className="text-md md:text-2xl font-bold tracking-tight text-gray-900 mt-2">
               {item?.sub_excursion_name}
             </h5>
@@ -162,7 +162,7 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
         </div>
 
         {/* <!-- Kolom 2: 1/4 20% --> */}
-        <div className="w-full md:basis-1/5  p-4">
+        <div className="w-full md:basis-1/5  p-2 md:p-4">
           <div className="flex flex-col justify-end items-center md:items-end">
             {/* Looping Adult/Child/Infant */}
             {dataChargeType?.map((item) => {
@@ -182,7 +182,7 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
 
         {/* <!-- Kolom 3: 1/4 20%--> */}
         <div className="w-full md:basis-1/3  ">
-          <div className="flex flex-col w-full px-5 md:p-5">
+          <div className="flex flex-col w-full px-4 md:p-4">
             <button
               type="submit"
               className="mt-3 w-full text-white bg-red-500 hover:bg-red-900 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
