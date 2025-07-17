@@ -127,7 +127,7 @@ const Search: React.FC<SearchProps> = ({
           /> */}
           <SearchWithDropdownAsyncSelect />
           <button
-            type="submit"
+            type="button"
             className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 "
           >
             <svg

@@ -10,7 +10,13 @@ import { useSearchParams } from "next/navigation";
 // Path
 import { usePathname } from "next/navigation";
 import { log } from "console";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCameraRetro,
+  faGlobe,
+  faLocationDot,
+  faMapMarked,
+  faSuitcaseRolling,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { capitalizeWords, toLowerCaseAll } from "@/helper/helper";
 
@@ -94,7 +100,16 @@ export default function NavbarClientAsyncSelect(props: any) {
           country: item.location_country,
           state: item.location_state,
           data: item,
-          icon: faLocationDot,
+          icon:
+            item.category == "Country"
+              ? faGlobe
+              : item.category == "Destination"
+              ? faMapMarked
+              : item.category == "Most Selling Excursion"
+              ? faSuitcaseRolling
+              : item.category == "Recommendation"
+              ? faCameraRetro
+              : faLocationDot,
         }));
 
         setOptions(fetchedOptions);
@@ -113,23 +128,28 @@ export default function NavbarClientAsyncSelect(props: any) {
       defaultOptions
       placeholder="Find destinations..."
       isClearable
-      formatOptionLabel={(option) => (
-        <div className="flex items-center gap-2">
-          <FontAwesomeIcon
-            icon={option.icon}
-            className="text-gray-600 w-4 h-4 bg-gray-100 rounded-xl p-3"
-          />
-          <div>
-            <span className="font-semibold text-xs block">
-              {capitalizeWords(option.label ?? "")}
-            </span>
-            <span className="text-xs block">
-              In {capitalizeWords(option.state ?? "")},{" "}
-              {capitalizeWords(option.country ?? "")}
-            </span>
+      formatOptionLabel={(option, { context }) =>
+        context === "menu" ? (
+          <div className="flex items-center gap-2">
+            <FontAwesomeIcon
+              icon={option.icon}
+              className="text-gray-600 w-4 h-4 bg-gray-100 rounded-xl p-3"
+            />
+            <div>
+              <span className="font-semibold text-xs block">
+                {capitalizeWords(option.label ?? "")}
+              </span>
+              <span className="text-xs block">
+                In {capitalizeWords(option.state ?? "")},{" "}
+                {capitalizeWords(option.country ?? "")}
+              </span>
+            </div>
           </div>
-        </div>
-      )}
+        ) : (
+          // Saat selected, tampilkan hanya teks (tanpa icon)
+          <div className="text-sm">{capitalizeWords(option.label ?? "")}</div>
+        )
+      }
       onChange={(selectedOption) => {
         if (homePage) {
           const country = selectedOption?.data.Country;
@@ -187,6 +207,12 @@ export default function NavbarClientAsyncSelect(props: any) {
           padding: "2px",
           backgroundColor: "#f3f4f6", // Tailwind: bg-gray-100
           // borderColor: "#d1d5db", // Tailwind: border-gray-300
+        }),
+        singleValue: (base: any) => ({
+          ...base,
+          display: "block", // Atur agar icon tidak tampil
+          fontSize: "0.875rem",
+          color: "#111827",
         }),
         menu: (base: any) => ({
           ...base,
