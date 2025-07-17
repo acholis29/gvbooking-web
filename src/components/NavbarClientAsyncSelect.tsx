@@ -63,7 +63,7 @@ export default function NavbarClientAsyncSelect(props: any) {
           country: item.Country,
           state: item.State,
           data: item,
-          icon: faLocationDot,
+          icon: faSuitcaseRolling,
         }));
 
         setOptions(fetchedOptions);
