@@ -47,6 +47,12 @@ const Search: React.FC<SearchProps> = ({
       .catch((err) => console.error(err));
   }, []);
 
+  useEffect(() => {
+    if (state == "") {
+      setSelectedCategory(`All ${country}`);
+    }
+  });
+
   const handleSelectState = (value: string) => {
     onChange(value); // kirim value ke parent
   };

@@ -1,3 +1,4 @@
+import { capitalizeWords } from "@/helper/helper";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
@@ -107,6 +108,7 @@ export default function SelectCustomAsyn({
       );
 
       const json = await res.json();
+      console.log(json);
 
       const fetchedOptions = json.msg.map((item: any) => ({
         value: item.location_id,
@@ -135,9 +137,11 @@ export default function SelectCustomAsyn({
           <div className="flex items-center gap-2">
             <FontAwesomeIcon
               icon={option.icon}
-              className="text-gray-600 w-4 h-4"
+              className="text-gray-600 w-4 h-4 bg-gray-100 rounded-xl p-3"
             />
-            <span>{option.label}</span>
+            <span className="font-semibold text-xs block">
+              {capitalizeWords(option.label ?? "")}
+            </span>
           </div>
         )}
         onChange={(selected) => {

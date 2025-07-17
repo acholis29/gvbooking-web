@@ -12,7 +12,7 @@ import { usePathname } from "next/navigation";
 import { log } from "console";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { capitalizeWords } from "@/helper/helper";
+import { capitalizeWords, toLowerCaseAll } from "@/helper/helper";
 
 export default function NavbarClientAsyncSelect(props: any) {
   const searchParams = useSearchParams();
@@ -137,9 +137,17 @@ export default function NavbarClientAsyncSelect(props: any) {
           const state = selectedOption?.data.State;
           const excursion_id = selectedOption?.data.Idx_excursion;
           if (selectedOption) {
-            router.push(
-              `/destination/detail/${country}?id=${idx_comp_alias}&state=${state}&country=${country}&exc=${excursion_id}`
-            );
+            if (excursion_id) {
+              router.push(
+                `/destination/detail/${country}?id=${idx_comp_alias}&state=${state}&country=${country}&exc=${excursion_id}`
+              );
+            } else {
+              router.push(
+                `/list?id=${idx_comp}&state=${state}&country=${toLowerCaseAll(
+                  country
+                )}`
+              );
+            }
           }
         } else {
           const country = selectedOption?.data.location_country;
@@ -148,9 +156,17 @@ export default function NavbarClientAsyncSelect(props: any) {
           const excursion_id = selectedOption?.data.excursion_id;
           // Data untuk ke detail masih salah
           if (selectedOption) {
-            router.push(
-              `/destination/detail/${country}?id=${idx_comp_alias}&state=${state}&country=${country}&exc=${excursion_id}`
-            );
+            if (excursion_id) {
+              router.push(
+                `/destination/detail/${country}?id=${idx_comp_alias}&state=${state}&country=${country}&exc=${excursion_id}`
+              );
+            } else {
+              router.push(
+                `/list?id=${idx_comp}&state=${state}&country=${toLowerCaseAll(
+                  country
+                )}`
+              );
+            }
           }
         }
       }}

@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
-import { toLowerCaseAll } from "@/helper/helper";
+import { capitalizeWords, toLowerCaseAll } from "@/helper/helper";
 import { log } from "console";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faChild, faBaby } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser,
+  faChild,
+  faBaby,
+  faHistory,
+} from "@fortawesome/free-solid-svg-icons";
+import { icon } from "@fortawesome/fontawesome-svg-core";
 
 const customStyles = {
   container: (base: any) => ({
@@ -143,7 +149,9 @@ export default function SelectCustom({
                 icon={option.icon}
                 className="text-gray-600 w-2 h-2 px-1"
               />
-              <span>{option.label}</span>
+              <span className="font-semibold text-xs block">
+                {capitalizeWords(option.label ?? "")}
+              </span>
             </div>
           )}
           onChange={(selected) => {
@@ -169,7 +177,9 @@ export default function SelectCustom({
                 icon={option.icon}
                 className="text-gray-600 w-4 h-4"
               />
-              <span>{option.label}</span>
+              <span className="font-semibold text-xs block">
+                {capitalizeWords(option.label ?? "")}
+              </span>
             </div>
           )}
           onChange={(selected) => {
@@ -193,6 +203,17 @@ export default function SelectCustom({
           styles={customStyles}
           placeholder={placeholder}
           isClearable
+          formatOptionLabel={(option) => (
+            <div className="flex items-center gap-2">
+              <FontAwesomeIcon
+                icon={option.icon}
+                className="text-gray-600 w-4 h-4"
+              />
+              <span className="font-semibold text-xs block">
+                {capitalizeWords(option.label ?? "")}
+              </span>
+            </div>
+          )}
           onChange={(selected) => {
             if (selected) {
               const val = selected.value;
@@ -209,17 +230,35 @@ export default function SelectCustom({
         Array.from({ length: selectedPerson }, (_, index) => (
           <Select
             key={index}
-            className="mt-2"
+            className="mt-2 md:pl-10"
             styles={customStyles}
             placeholder={`Age child ${index + 1}`}
             options={Array.from({ length: age_to - age_from + 1 }, (_, i) => ({
               value: `${i + age_from}`,
               label: `${i + age_from} Years`,
+              icon: faHistory, // Tambahkan icon
             }))}
+            formatOptionLabel={(option: any) => (
+              <div className="flex items-center gap-2">
+                <FontAwesomeIcon
+                  icon={option.icon}
+                  className="text-gray-500 w-4 h-4"
+                />
+                <span>{option.label}</span>
+              </div>
+            )}
             value={
               ages[index]
-                ? { value: ages[index], label: `${ages[index]} Years` }
-                : { value: `${age_to}`, label: `${age_to} Years` }
+                ? {
+                    value: ages[index],
+                    label: `${ages[index]} Years`,
+                    icon: faHistory,
+                  }
+                : {
+                    value: `${age_to}`,
+                    label: `${age_to} Years`,
+                    icon: faHistory,
+                  }
             }
             // isClearable
             onChange={(selected) => {
