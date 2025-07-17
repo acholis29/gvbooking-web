@@ -574,7 +574,7 @@ const CurrencyContent = ({
 }: {
   currencies: { Currency: string }[];
 }) => {
-  // const { closeModal } = useModal();
+  const { closeModal } = useModal();
   const { currency, setCurrency } = useCurrency();
   return (
     <ul className="space-y-3 list-none">
@@ -587,6 +587,7 @@ const CurrencyContent = ({
           onClick={() => {
             setCurrency(item.Currency);
             localStorage.setItem("currency", item.Currency); // simpan ke localStorage
+            closeModal();
           }}
         >
           <div className="flex justify-between items-center">
@@ -623,6 +624,7 @@ const LanguageContent = ({
           onClick={() => {
             setLanguage(item.MSLanguage);
             localStorage.setItem("language", item.MSLanguage); // simpan ke localStorage
+            closeModal();
           }}
         >
           <div className="flex justify-between items-center">
