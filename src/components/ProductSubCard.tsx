@@ -57,6 +57,7 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [dataChargeType, setDataChargeType] = useState<ChargeTypeProps[]>([]);
+  const [inputNote, setInputNote] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const {
@@ -125,7 +126,7 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
       <a className="flex flex-col md:flex-row w-full items-start mb-3 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 ">
         {/* <!-- Kolom 1: 1/2  40% --> */}
         <div className="w-full md:basis-1/2  p-2 flex flex-row">
-          <div className="w-50 md:w-40 h-40 relative overflow-hidden rounded-lg mr-2">
+          <div className="w-50 md:w-50 h-50 relative overflow-hidden rounded-lg mr-2">
             <img
               className="w-full h-full object-cover rounded-lg"
               src={`${host_img}/${item?.picture}`}
@@ -135,11 +136,11 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
           </div>
 
           <div className="flex flex-col w-full">
-            <h5 className="text-md md:text-2xl font-bold tracking-tight text-gray-900 mt-2">
+            <h5 className="text-md md:text-2xl font-bold tracking-tight text-gray-900 mts-2">
               {item?.sub_excursion_name}
             </h5>
-            <p className="mb-3 text-sm md:font-normal text-gray-700 dark:text-gray-400">
-              Description
+            <p className="ml-4 mt-1 text-xs font-bold md:font-normal text-gray-500 ">
+              Pickup from :
             </p>
             <Controller
               name="pickup_area"
@@ -156,6 +157,27 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
                   name={field.name}
                   error={fieldState.error?.message}
                 />
+              )}
+            />
+            <Controller
+              name="note"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <>
+                  <input
+                    type="text"
+                    className="text-gray-600 text-sm border-gray-300 hidden md:block w-80 h-12 bg-gray-100 rounded-3xl mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
+                    placeholder="Note..."
+                    {...field}
+                  />
+                  <input
+                    type="text"
+                    className="text-gray-600 text-sm border-gray-300 block md:hidden w-auto h-12 bg-gray-100 rounded-3xl mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
+                    placeholder="Note..."
+                    {...field}
+                  />
+                </>
               )}
             />
           </div>
