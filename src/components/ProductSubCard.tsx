@@ -12,6 +12,9 @@ import SelectCustom from "./SelectCustom";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 // Toast
 import toast from "react-hot-toast";
+// Context State Global
+import { useDate } from "@/context/DateContext";
+import { useCurrency } from "@/context/CurrencyContext";
 
 type ProductSub = {
   excursion_id: string;
@@ -60,6 +63,11 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
   const [inputNote, setInputNote] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
+  // Date Global
+  const { date, setDate } = useDate();
+  // Currency Global
+  const { currency, setCurrency } = useCurrency();
+
   const {
     register,
     handleSubmit,
@@ -86,8 +94,8 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
         xml: "false",
         id_excursion: item?.excursion_id || "", // Examp : "03208A45-4A41-4E1B-A597-20525C090E52"
         id_excursion_sub: item?.sub_excursion_id || "", // Examp : "03208A45-4A41-4E1B-A597-20525C090E52"
-        tour_date: "2025-07-07",
-        code_of_currency: "IDR",
+        tour_date: date, //2025-07-07
+        code_of_currency: currency, //IDR, EUR, USD
         promo_code: "R-BC",
       });
 
@@ -119,7 +127,7 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
     };
 
     fetchDataAllotment();
-  }, []);
+  }, [date, currency]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

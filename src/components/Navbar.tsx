@@ -280,43 +280,44 @@ export default function NavbarComponent() {
                 )}
               </div>
               {/* Button */}
-              <div
-                className="relative w-full"
-                onMouseEnter={() => {
-                  clearTimeout(timeout);
-                  setIsOpenDate(true);
-                }}
-                onMouseLeave={() => {
-                  timeout = setTimeout(() => setIsOpenDate(false), 200); // delay 200ms
-                }}
-              >
+              <div className="relative w-full">
                 {/* Select dropdown kamu */}
                 <NavbarClientAsyncSelect />
 
                 {/* Tombol Kalender */}
-                <button
-                  type="button"
-                  className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-600 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 cursor-pointer"
-                  title="Date"
-                  onClick={handleClick}
+                <div
+                  onMouseEnter={() => {
+                    clearTimeout(timeout);
+                    setIsOpenDate(true);
+                  }}
+                  onMouseLeave={() => {
+                    timeout = setTimeout(() => setIsOpenDate(false), 200); // delay 200ms
+                  }}
                 >
-                  <FontAwesomeIcon
-                    icon={faCalendarDays}
-                    className="w-4 h-4 text-gray-100"
-                  />
-                  <span className="sr-only">Date</span>
-                </button>
-                {isOpenDate && (
-                  <div className="absolute top-full mt-2 right-0 z-50 bg-white shadow-lg rounded">
-                    <DatePicker
-                      selected={selectedDate}
-                      onChange={handleChange}
-                      minDate={new Date()}
-                      inline
-                      className="p-2"
+                  <button
+                    type="button"
+                    className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-600 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 cursor-pointer"
+                    title="Date"
+                    onClick={handleClick}
+                  >
+                    <FontAwesomeIcon
+                      icon={faCalendarDays}
+                      className="w-4 h-4 text-gray-100"
                     />
-                  </div>
-                )}
+                    <span className="sr-only">Date</span>
+                  </button>
+                  {isOpenDate && (
+                    <div className="absolute top-full mt-2 right-0 z-50 bg-white shadow-lg rounded">
+                      <DatePicker
+                        selected={selectedDate}
+                        onChange={handleChange}
+                        minDate={new Date()}
+                        inline
+                        className="p-2"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </form>
@@ -525,43 +526,44 @@ export default function NavbarComponent() {
               </div>
 
               {/* Button */}
-              <div
-                className="relative w-full"
-                onMouseEnter={() => {
-                  clearTimeout(timeout);
-                  setIsOpenDate(true);
-                }}
-                onMouseLeave={() => {
-                  timeout = setTimeout(() => setIsOpenDate(false), 200); // delay 200ms
-                }}
-              >
+              <div className="relative w-full">
                 {/* Select dropdown kamu */}
                 <NavbarClientAsyncSelect />
 
                 {/* Tombol Kalender */}
-                <button
-                  type="button"
-                  className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-600 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 cursor-pointer"
-                  title="Date"
-                  onClick={handleClick}
+                <div
+                  onMouseEnter={() => {
+                    clearTimeout(timeout);
+                    setIsOpenDate(true);
+                  }}
+                  onMouseLeave={() => {
+                    timeout = setTimeout(() => setIsOpenDate(false), 200); // delay 200ms
+                  }}
                 >
-                  <FontAwesomeIcon
-                    icon={faCalendarDays}
-                    className="w-4 h-4 text-gray-100"
-                  />
-                  <span className="sr-only">Date</span>
-                </button>
-                {isOpenDate && (
-                  <div className="absolute top-full mt-2 right-0 z-50 bg-white shadow-lg rounded">
-                    <DatePicker
-                      selected={selectedDate}
-                      onChange={handleChange}
-                      minDate={new Date()}
-                      inline
-                      className="p-2"
+                  <button
+                    type="button"
+                    className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-600 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 cursor-pointer"
+                    title="Date"
+                    onClick={handleClick}
+                  >
+                    <FontAwesomeIcon
+                      icon={faCalendarDays}
+                      className="w-4 h-4 text-gray-100"
                     />
-                  </div>
-                )}
+                    <span className="sr-only">Date</span>
+                  </button>
+                  {isOpenDate && (
+                    <div className="absolute top-full mt-2 right-0 z-50 bg-white shadow-lg rounded">
+                      <DatePicker
+                        selected={selectedDate}
+                        onChange={handleChange}
+                        minDate={new Date()}
+                        inline
+                        className="p-2"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </form>

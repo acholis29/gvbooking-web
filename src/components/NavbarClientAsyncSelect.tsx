@@ -10,6 +10,7 @@ import { useSearchParams } from "next/navigation";
 // Path
 import { usePathname } from "next/navigation";
 import { log } from "console";
+// Font Awesome
 import {
   faCameraRetro,
   faGlobe,
@@ -18,7 +19,11 @@ import {
   faSuitcaseRolling,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// Helper
 import { capitalizeWords, toLowerCaseAll } from "@/helper/helper";
+// Context State Global
+import { useDate } from "@/context/DateContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function NavbarClientAsyncSelect(props: any) {
   const searchParams = useSearchParams();
@@ -39,6 +44,10 @@ export default function NavbarClientAsyncSelect(props: any) {
 
   const [idx_comp, setIdxComp] = useState<string>("");
   const [options, setOptions] = useState<OptionType[]>([]);
+
+  // Date
+  const { date, setDate } = useDate();
+  const { language, setLanguage } = useLanguage();
 
   useEffect(() => {
     if (!id) return;
@@ -74,8 +83,8 @@ export default function NavbarClientAsyncSelect(props: any) {
         shared_key:
           idx_comp != "" ? idx_comp : "4D340942-88D3-44DD-A52C-EAF00EACADE8",
         xml: "false",
-        date: "2025-07-15",
-        code_of_language: "DE",
+        date: date, //2025-07-15
+        code_of_language: language, //DE, EN
         keyword: inputValue,
         promo_code: "R-BC",
       });
