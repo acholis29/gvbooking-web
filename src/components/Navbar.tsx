@@ -7,6 +7,7 @@ import { useWish } from "@/context/WishContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useModal } from "@/context/ModalContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { useDate } from "@/context/DateContext";
 // Next Image
 import Image from "next/image";
 // Drawer
@@ -101,6 +102,8 @@ export default function NavbarComponent() {
   const { currency, setCurrency } = useCurrency();
   // Language
   const { language, setLanguage } = useLanguage();
+  // Date
+  const { date, setDate } = useDate();
 
   // Timeout Delay
   let timeout: NodeJS.Timeout;
@@ -111,13 +114,21 @@ export default function NavbarComponent() {
   // Redirect
   const router = useRouter();
 
+  // Konversi string ke Date (atau fallback ke hari ini jika kosong)
+  const initialDate = date ? new Date(date) : new Date();
   // Date Picker
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(initialDate);
   const [isOpenDate, setIsOpenDate] = useState(false);
 
   const handleChange = (e: any) => {
     setIsOpenDate(!isOpenDate);
     setSelectedDate(e);
+    // Date Global
+    // Format ke YYYY-MM-DD
+    const formattedDate = e.toISOString().split("T")[0];
+    // Date Global
+    // console.log(formattedDate); // hasil: 2025-07-17
+    setDate(formattedDate);
   };
 
   const handleClick = (e: any) => {
@@ -169,6 +180,16 @@ export default function NavbarComponent() {
       setLanguage(savedLanguage);
     }
   }, []);
+
+  useEffect(() => {
+    const today = new Date();
+    const formatted = today.toISOString().split("T")[0]; // hasil: '2025-07-18'
+    setDate(formatted);
+  }, []);
+
+  useEffect(() => {
+    setSelectedDate(new Date(date));
+  }, [date]);
 
   return (
     <nav className="bg-white border-gray-200">
@@ -290,6 +311,7 @@ export default function NavbarComponent() {
                     <DatePicker
                       selected={selectedDate}
                       onChange={handleChange}
+                      minDate={new Date()}
                       inline
                       className="p-2"
                     />
@@ -502,37 +524,44 @@ export default function NavbarComponent() {
                 )}
               </div>
 
-              <div className="relative w-full">
-                {/* <input
-                  type="search"
-                  id="search-dropdown"
-                  className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-red-500 focus:border-red-500 "
-                  placeholder="Search your destinations..."
-                  required
-                /> */}
+              {/* Button */}
+              <div
+                className="relative w-full"
+                onMouseEnter={() => {
+                  clearTimeout(timeout);
+                  setIsOpenDate(true);
+                }}
+                onMouseLeave={() => {
+                  timeout = setTimeout(() => setIsOpenDate(false), 200); // delay 200ms
+                }}
+              >
+                {/* Select dropdown kamu */}
                 <NavbarClientAsyncSelect />
-                <button
-                  type="submit"
-                  className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 "
-                >
-                  <svg
-                    className="w-4 h-4"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                    />
-                  </svg>
 
-                  <span className="sr-only">Search</span>
+                {/* Tombol Kalender */}
+                <button
+                  type="button"
+                  className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-600 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 cursor-pointer"
+                  title="Date"
+                  onClick={handleClick}
+                >
+                  <FontAwesomeIcon
+                    icon={faCalendarDays}
+                    className="w-4 h-4 text-gray-100"
+                  />
+                  <span className="sr-only">Date</span>
                 </button>
+                {isOpenDate && (
+                  <div className="absolute top-full mt-2 right-0 z-50 bg-white shadow-lg rounded">
+                    <DatePicker
+                      selected={selectedDate}
+                      onChange={handleChange}
+                      minDate={new Date()}
+                      inline
+                      className="p-2"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </form>

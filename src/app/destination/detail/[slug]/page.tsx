@@ -10,6 +10,7 @@ import { API_HOSTS } from "@/lib/apihost";
 // Context Global
 import { useCurrency } from "@/context/CurrencyContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { useDate } from "@/context/DateContext";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -45,6 +46,8 @@ export default function DetailDestination() {
   const { currency, setCurrency } = useCurrency();
   // Language
   const { language, setLanguage } = useLanguage();
+  // Date Global
+  const { date, setDate } = useDate();
 
   type ProductDetail = {
     excursion_name: string;
@@ -96,9 +99,11 @@ export default function DetailDestination() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Datepicker
+  // Konversi string ke Date (atau fallback ke hari ini jika kosong)
+  const initialDate = date ? new Date(date) : new Date();
+  // Datepicker Local
   const disabledDates = [new Date("2025-07-16"), new Date("2025-07-25")];
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate);
 
   // Detail Tour / Produk Detail
   useEffect(() => {
@@ -143,6 +148,10 @@ export default function DetailDestination() {
 
     fetchData();
   }, [idx_excursion, idx_comp, currency, language]);
+
+  useEffect(() => {
+    setSelectedDate(new Date(date));
+  }, [date]);
 
   const maximum_pax =
     dataProduct != null && dataProduct.msg.product_subs.length > 0
@@ -217,7 +226,14 @@ export default function DetailDestination() {
                   <div className="flex flex-row w-full justify-start items-center">
                     <DatePicker
                       selected={selectedDate}
-                      onChange={(date) => setSelectedDate(date)}
+                      onChange={(date) => {
+                        setSelectedDate(date);
+                        if (date) {
+                          // Format ke yyyy-mm-dd dan simpan di context
+                          const formatted = date.toISOString().split("T")[0];
+                          setDate(formatted);
+                        }
+                      }}
                       minDate={new Date()}
                       excludeDates={disabledDates}
                       className="bg-gray-100 font-semibold p-2 rounded-2xl w-full shadow-sm focus:outline-none focus:ring-0 border-0"

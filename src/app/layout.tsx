@@ -19,6 +19,7 @@ import { WishProvider } from "@/context/WishContext";
 import { CurrencyProvider } from "@/context/CurrencyContext";
 import { ModalProvider } from "@/context/ModalContext";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { DateProvider } from "@/context/DateContext";
 // Toast
 import { Toaster } from "react-hot-toast";
 
@@ -34,8 +35,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "GoVacation",
-  description:
-    "GoVacation Indonesia, GoVacation Thailand, GoVacation Vietnam",
+  description: "GoVacation Indonesia, GoVacation Thailand, GoVacation Vietnam",
   icons: {
     icon: "/images/icon/icon-gvi.ico", // pastikan sesuai dengan nama file di public
   },
@@ -56,11 +56,13 @@ export default function RootLayout({
             <CurrencyProvider>
               <ModalProvider>
                 <LanguageProvider>
-                  <Navbar />
-                  {children}
-                  <Toaster position="top-center" />
-                  {/* Footer */}
-                  <FooterComponent />
+                  <DateProvider>
+                    <Navbar />
+                    {children}
+                    <Toaster position="top-center" />
+                    {/* Footer */}
+                    <FooterComponent />
+                  </DateProvider>
                 </LanguageProvider>
               </ModalProvider>
             </CurrencyProvider>

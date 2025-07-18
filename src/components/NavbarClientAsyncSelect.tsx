@@ -126,7 +126,7 @@ export default function NavbarClientAsyncSelect(props: any) {
       cacheOptions
       loadOptions={loadOptions}
       defaultOptions
-      placeholder="Find destinations..."
+      placeholder="Find destination"
       isClearable
       formatOptionLabel={(option, { context }) =>
         context === "menu" ? (
