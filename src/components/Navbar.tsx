@@ -19,6 +19,8 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
   faAngleRight,
   faBars,
+  faCalendar,
+  faCalendarDays,
   faCheck,
   faChevronDown,
   faDollarSign,
@@ -44,6 +46,9 @@ import { toLowerCaseAll } from "@/helper/helper";
 // Select Autocomplate
 import AsyncSelect from "react-select/async";
 import { components } from "react-select";
+// Date Picker
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 // Select Search Autocomplate Component
 import dynamic from "next/dynamic";
@@ -105,6 +110,20 @@ export default function NavbarComponent() {
 
   // Redirect
   const router = useRouter();
+
+  // Date Picker
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isOpenDate, setIsOpenDate] = useState(false);
+
+  const handleChange = (e: any) => {
+    setIsOpenDate(!isOpenDate);
+    setSelectedDate(e);
+  };
+
+  const handleClick = (e: any) => {
+    e.preventDefault();
+    setIsOpenDate(!isOpenDate);
+  };
 
   useEffect(() => {
     fetch("/api/currency", {
@@ -239,26 +258,43 @@ export default function NavbarComponent() {
                   </div>
                 )}
               </div>
-
-              <div className="relative w-full">
-                {/* <input
-                  type="search"
-                  id="search-dropdown"
-                  className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-red-500 focus:border-red-500 "
-                  placeholder="Search your destinations..."
-                  required
-                /> */}
+              {/* Button */}
+              <div
+                className="relative w-full"
+                onMouseEnter={() => {
+                  clearTimeout(timeout);
+                  setIsOpenDate(true);
+                }}
+                onMouseLeave={() => {
+                  timeout = setTimeout(() => setIsOpenDate(false), 200); // delay 200ms
+                }}
+              >
+                {/* Select dropdown kamu */}
                 <NavbarClientAsyncSelect />
+
+                {/* Tombol Kalender */}
                 <button
                   type="button"
-                  className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-600 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 cursor-pointer "
+                  className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-600 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 cursor-pointer"
+                  title="Date"
+                  onClick={handleClick}
                 >
                   <FontAwesomeIcon
-                    icon={faSearch}
+                    icon={faCalendarDays}
                     className="w-4 h-4 text-gray-100"
                   />
-                  <span className="sr-only">Search</span>
+                  <span className="sr-only">Date</span>
                 </button>
+                {isOpenDate && (
+                  <div className="absolute top-full mt-2 right-0 z-50 bg-white shadow-lg rounded">
+                    <DatePicker
+                      selected={selectedDate}
+                      onChange={handleChange}
+                      inline
+                      className="p-2"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </form>
