@@ -5,6 +5,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInbox } from "@fortawesome/free-solid-svg-icons";
 import Breadcrumb from "@/components/Breadcrumb";
 import ReviewBookingCard from "@/components/ReviewBookingCard";
+import { useSearchParams } from "next/navigation";
+import { API_HOSTS } from "@/lib/apihost";
+// Context Global
+import { useCurrency } from "@/context/CurrencyContext";
+import { useLanguage } from "@/context/LanguageContext";
+import { useDate } from "@/context/DateContext";
 
 type ReviewBookingItem = {
   idx_comp: string;
@@ -18,13 +24,77 @@ type ReviewBookingItem = {
 };
 
 export default function ReviewBooking() {
+  const searchParams = useSearchParams();
+  const idx_comp = searchParams.get("id"); //ini dari idx_comp_alias
+  const idx_excursion = searchParams.get("exc"); //ini dari idx_excursion
+  const sub_excursion_name = searchParams.get("sub_exc_name"); //ini dari idx_excursion
+  const note = searchParams.get("note"); //ini dari idx_excursion
+  const pickup_name = searchParams.get("pickup_name");
+  const adult = searchParams.get("a");
+  const child = JSON.parse(searchParams.get("c") ?? "{}");
+  const infant = searchParams.get("i");
+
+  // Currency
+  const { currency, setCurrency } = useCurrency();
+  // Language
+  const { language, setLanguage } = useLanguage();
+  // Date Global
+  const { date, setDate } = useDate();
+
+  type ProductDetail = {
+    excursion_name: string;
+    info_location: string;
+    info_category: string;
+    info_duration: string;
+    info_general: string;
+    info_facilities: string;
+    info_pickup_service: string;
+    info_finish_time: string;
+    picture: string;
+    gallery: string;
+  };
+
+  type ProductSub = {
+    excursion_id: string;
+    sub_excursion_name: string;
+    sub_excursion_id: string;
+    minimum_pax: string;
+    maximum_pax: string;
+    picture: string;
+    latitude: string;
+    longitude: string;
+    currency: string;
+    price: string;
+    status: string;
+    buy_currency_id: string | null;
+  };
+
+  type ProductMsg = {
+    product_details: ProductDetail[];
+    product_subs: ProductSub[];
+    product_pickup_list: any[]; // bisa diperjelas nanti kalau tahu isinya
+  };
+
+  type ProductResponse = {
+    error: string;
+    msg: ProductMsg;
+    len: {
+      current_row: string;
+      total_row: string;
+      total_page: string;
+      time: string;
+    };
+    id: string;
+  };
+
+  const [dataProduct, setDataProduct] = useState<ProductResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   // State Data Detail Destination
   const [ListReviewBooking, setReviewBooking] = useState<ReviewBookingItem[]>(
     []
   );
-
-  // State Data Loading
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadReviewBooking();
@@ -37,6 +107,49 @@ export default function ReviewBooking() {
     setReviewBooking(review_booking);
     setIsLoading(false);
   }
+
+  // Detail Tour / Produk Detail
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true); // mulai loading
+      const formBody = new URLSearchParams({
+        shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
+        xml: "false",
+        id_excursion: idx_excursion ?? "", // Examp : "03208A45-4A41-4E1B-A597-20525C090E52"
+        code_of_language: language, // DE
+        code_of_currency: currency, // IDR
+        promo_code: "R-BC",
+      });
+
+      try {
+        const res = await fetch(
+          `${API_HOSTS.host1}/excursion.asmx/v2_product_description`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formBody.toString(),
+          }
+        );
+
+        const contentType = res.headers.get("content-type") || "";
+
+        if (contentType.includes("application/json")) {
+          const json = await res.json();
+          console.log(json);
+          setDataProduct(json);
+        }
+      } catch (err: any) {
+        setError(err.message || "Error");
+        console.error("Fetch error:", err);
+      } finally {
+        setIsLoading(false); // selesai loading
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     // Cart Page
@@ -53,16 +166,13 @@ export default function ReviewBooking() {
             idx_comp={"asas"}
             idx_excursion={"asas"}
             image="/images/destination/tanah-lot/tanah-lot6.jpg"
-            title={"TANAH LOT, BALI INDONESIA"}
-            sub_title_1={"Pickup Sanur Beach Hotel"}
-            sub_title_2={"Room 132 Lt 2"}
-            adult={"2"}
-            child={"1"}
-            infant={"0"}
-            link="/cart"
-            currency={`EURO`}
-            price={`1202`}
-            onDelete={loadReviewBooking} // ✅ ini dikirim ke anak
+            title={dataProduct?.msg.product_details[0].excursion_name ?? "-"}
+            sub_title_1={sub_excursion_name ?? ""}
+            sub_title_2={`Pickup : ${pickup_name}`}
+            sub_title_3={`Room : ${note}`}
+            adult={adult ?? ""}
+            child={child.count ?? ""}
+            infant={infant ?? ""}
           />
 
           {/* Table Surgery */}
@@ -79,69 +189,29 @@ export default function ReviewBooking() {
                 </tr>
               </thead>
               <tbody>
-                <tr className="bg-white  hover:bg-gray-100 ">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                  >
-                    <input
-                      id="helper-radio"
-                      aria-describedby="helper-radio-text"
-                      type="radio"
-                      value=""
-                      className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2 "
-                    />
-                    <label
-                      htmlFor="helper-radio"
-                      className="w-full py-4 ms-2 text-sm font-medium text-gray-900 "
+                {[1, 2, 3].map((_, index) => (
+                  <tr key={index} className="bg-white hover:bg-gray-100">
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                     >
-                      Guide Surcharge
-                    </label>
-                  </th>
-                  <td className="px-6 py-4">$200</td>
-                </tr>
-                <tr className="bg-white  hover:bg-gray-100 ">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                  >
-                    <input
-                      id="helper-radio"
-                      aria-describedby="helper-radio-text"
-                      type="radio"
-                      value=""
-                      className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2 "
-                    />
-                    <label
-                      htmlFor="helper-radio"
-                      className="w-full py-4 ms-2 text-sm font-medium text-gray-900 "
-                    >
-                      Guide Surcharge
-                    </label>
-                  </th>
-                  <td className="px-6 py-4">$200</td>
-                </tr>
-                <tr className="bg-white  hover:bg-gray-100 ">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                  >
-                    <input
-                      id="helper-radio"
-                      aria-describedby="helper-radio-text"
-                      type="radio"
-                      value=""
-                      className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2 "
-                    />
-                    <label
-                      htmlFor="helper-radio"
-                      className="w-full py-4 ms-2 text-sm font-medium text-gray-900 "
-                    >
-                      Guide Surcharge
-                    </label>
-                  </th>
-                  <td className="px-6 py-4">$200</td>
-                </tr>
+                      <input
+                        id={`surcharge-${index}`}
+                        aria-describedby="helper-radio-text"
+                        type="radio"
+                        value=""
+                        className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
+                      />
+                      <label
+                        htmlFor={`surcharge-${index}`}
+                        className="w-full py-4 ms-2 text-sm font-medium text-gray-900"
+                      >
+                        Guide Surcharge
+                      </label>
+                    </th>
+                    <td className="px-6 py-4">$200</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -157,12 +227,12 @@ export default function ReviewBooking() {
             <textarea
               id="message"
               rows={4}
-              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300 focus:ring-gray-500 focus:border-gray-500"
+              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300 focus:ring-gray-500 focus:border-gray-500 shadow-md"
               placeholder="Write your note here..."
             ></textarea>
           </div>
 
-          <div className="md:max-w-3xl flex h-20 w-full bg-gray-200 mt-15 rounded-sm">
+          <div className="md:max-w-3xl flex h-20 w-full bg-gray-200 mt-15 rounded-sm shadow-md">
             <div className="basis-[60%] flex flex-col items-start justify-center pl-3">
               {/* Kolom 1 (60%) */}
               <p className="font-semibold text-gray-700">Total</p>

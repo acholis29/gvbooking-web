@@ -85,8 +85,19 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
     if (data.Adult == "0" && data.Child == "0") {
       toast.error("Please fill input adult or child!");
     } else {
+      console.log("idx_comp : " + idx_comp);
+      console.log("excursion_id : " + item?.excursion_id);
+      console.log("sub_excursion_id : " + item?.sub_excursion_id);
       console.log(data);
-      router.push("/review_booking");
+      router.push(
+        `/review_booking?id=${idx_comp}&exc=${item?.excursion_id}&sub_exc=${
+          item?.sub_excursion_id ?? ""
+        }&sub_exc_name=${item?.sub_excursion_name}&pickup_id=${
+          data.pickup_area ?? ""
+        }&pickup_name=${data.pickup_area ?? ""}&note=${data.note ?? ""}&a=${
+          data.Adult ?? ""
+        }&c=${data.Child ?? ""}&i=${data.Infant ?? ""}`
+      );
       toast.success("Booking Process");
     }
   };
@@ -182,7 +193,7 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
                   <input
                     type="text"
                     className="text-gray-600 text-sm border-gray-300 hidden md:block w-80 h-12 bg-gray-100 rounded-3xl mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
-                    placeholder="Note..."
+                    placeholder="Room number (optional)..."
                     {...field}
                   />
                   <input
