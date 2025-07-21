@@ -5,10 +5,18 @@ import React from "react";
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCalendarDays,
+  faChevronDown,
+} from "@fortawesome/free-solid-svg-icons";
 // Helper
 import { capitalizeWords, truncateText } from "@/helper/helper"; // sesuaikan path
 import SearchWithDropdownAsyncSelect from "./SearchWithDropdownAsyncSelect";
+// Date Picker
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+// Context Global
+import { useDate } from "@/context/DateContext";
 
 type SearchProps = {
   country?: string;
@@ -37,6 +45,27 @@ const Search: React.FC<SearchProps> = ({
     LocalDestinationItem[]
   >([]);
 
+  // Date
+  const { date, setDate } = useDate();
+  // Timeout Delay
+  let timeout: NodeJS.Timeout;
+  // Konversi string ke Date (atau fallback ke hari ini jika kosong)
+  const initialDate = date ? new Date(date) : new Date();
+  // Date Picker
+  const [selectedDate, setSelectedDate] = useState(initialDate);
+  const [isOpenDate, setIsOpenDate] = useState(false);
+
+  const handleChange = (e: any) => {
+    setIsOpenDate(!isOpenDate);
+    setSelectedDate(e);
+    // Date Global
+    // Format ke YYYY-MM-DD
+    const formattedDate = e.toISOString().split("T")[0];
+    // Date Global
+    // console.log(formattedDate); // hasil: 2025-07-17
+    setDate(formattedDate);
+  };
+
   useEffect(() => {
     fetch(`/api/excursion/local_destination/${idx_comp}`, {
       cache: "no-store", // ⛔ jangan ambil dari cache
@@ -56,6 +85,11 @@ const Search: React.FC<SearchProps> = ({
 
   const handleSelectState = (value: string) => {
     onChange(value); // kirim value ke parent
+  };
+
+  const handleClick = (e: any) => {
+    e.preventDefault();
+    setIsOpenDate(!isOpenDate);
   };
 
   return (
@@ -118,36 +152,43 @@ const Search: React.FC<SearchProps> = ({
         )}
 
         <div className="relative w-full">
-          {/* <input
-            type="search"
-            id="search-dropdown"
-            className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-red-500 focus:border-red-500 "
-            placeholder={`Search your destinations in ${country} ...`}
-            required
-          /> */}
           <SearchWithDropdownAsyncSelect />
-          <button
-            type="button"
-            className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 "
-          >
-            <svg
-              className="w-4 h-4"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
 
-            <span className="sr-only">Search</span>
-          </button>
+          {/* Tombol Kalender */}
+          <div
+            onMouseEnter={() => {
+              clearTimeout(timeout);
+              setIsOpenDate(true);
+            }}
+            onMouseLeave={() => {
+              timeout = setTimeout(() => setIsOpenDate(false), 200); // delay 200ms
+            }}
+          >
+            <button
+              type="button"
+              className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-red-gvi rounded-e-lg border border-red-600 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 cursor-pointer"
+              title="Date"
+              onClick={handleClick}
+            >
+              <FontAwesomeIcon
+                icon={faCalendarDays}
+                className="w-4 h-4 text-gray-100"
+              />
+              <span className="sr-only">Date</span>
+            </button>
+
+            {isOpenDate && (
+              <div className="absolute top-full mt-2 right-0 z-50 bg-white shadow-lg rounded">
+                <DatePicker
+                  selected={selectedDate}
+                  onChange={handleChange}
+                  minDate={new Date()}
+                  inline
+                  className="p-2"
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </form>
