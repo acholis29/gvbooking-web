@@ -192,7 +192,7 @@ export default function NavbarComponent() {
   }, [date]);
 
   return (
-    <nav className="bg-white border-gray-200">
+    <nav className="sticky top-0 z-50 bg-white">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link
           href="/home"
