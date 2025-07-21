@@ -27,9 +27,11 @@ export default function ReviewBooking() {
   const searchParams = useSearchParams();
   const idx_comp = searchParams.get("id"); //ini dari idx_comp_alias
   const idx_excursion = searchParams.get("exc"); //ini dari idx_excursion
-  const sub_excursion_name = searchParams.get("sub_exc_name"); //ini dari idx_excursion
-  const note = searchParams.get("note"); //ini dari idx_excursion
-  const pickup_name = searchParams.get("pickup_name");
+  const idx_excursion_sub = searchParams.get("sub_exc"); //ini sub_excursion_id
+  const pickup_id = searchParams.get("pickup_id"); //ini dari pickup id
+  const note = searchParams.get("note"); //ini dari note
+  const pickup_name = searchParams.get("pickup_name"); //ini dari pickup name
+  const sub_excursion_name = searchParams.get("sub_exc_name"); //ini dari exc name
   const adult = searchParams.get("a");
   const child = JSON.parse(searchParams.get("c") ?? "{}");
   const infant = searchParams.get("i");
@@ -87,7 +89,17 @@ export default function ReviewBooking() {
     id: string;
   };
 
+  type PriceOfSurcharge = {
+    surcharge_id: string;
+    surcharge_name: string;
+    currency: string;
+    price: string;
+    price_in_format: string;
+    mandatory: string;
+  };
+
   const [dataProduct, setDataProduct] = useState<ProductResponse | null>(null);
+  const [dataSurcharge, setDataSurcharge] = useState<PriceOfSurcharge[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -151,6 +163,55 @@ export default function ReviewBooking() {
     fetchData();
   }, []);
 
+  // Guide Surcharge
+  useEffect(() => {
+    const fetchDataGuideSurcharge = async () => {
+      setIsLoading(true); // mulai loading
+      const formBody = new URLSearchParams({
+        shared_key: "4D340942-88D3-44DD-A52C-EAF00EACADE8", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
+        xml: "false",
+        id_excursion: "BA928E11-CE70-4427-ACD0-A7FC13C34891", // Examp : "BA928E11-CE70-4427-ACD0-A7FC13C34891"
+        id_excursion_sub: "123A24BD-56EC-4188-BE9D-B7318EF0FB84", // Examp :"123A24BD-56EC-4188-BE9D-B7318EF0FB84"
+        id_pickup_area: "1EC87603-7ECC-48BC-A56C-F513B7B28CE3", // Examp : "1EC87603-7ECC-48BC-A56C-F513B7B28CE3"
+        tour_date: "2025-07-11", //2025-07-11
+        total_pax_adult: "1", // 1
+        total_pax_child: "2", // 2
+        total_pax_infant: "2", // 2
+        code_of_currency: "IDR", // IDR
+        promo_code: "R-BC", // R-BC
+        acis_qty_age: "A|1|0,C|1|11,C|1|11", // A|1|0,C|1|11,C|1|11
+      });
+
+      try {
+        const res = await fetch(
+          `${API_HOSTS.host1}/excursion.asmx/v2_product_price`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formBody.toString(),
+          }
+        );
+
+        const contentType = res.headers.get("content-type") || "";
+
+        if (contentType.includes("application/json")) {
+          const json = await res.json();
+          console.log(json.msg.price_of_surcharge);
+          setDataSurcharge(json.msg.price_of_surcharge);
+        }
+      } catch (err: any) {
+        setError(err.message || "Error");
+        console.error("Fetch error:", err);
+      } finally {
+        setIsLoading(false); // selesai loading
+      }
+    };
+
+    fetchDataGuideSurcharge();
+  }, []);
+
   return (
     // Cart Page
     <div className="max-w-screen-xl mx-auto">
@@ -189,29 +250,33 @@ export default function ReviewBooking() {
                 </tr>
               </thead>
               <tbody>
-                {[1, 2, 3].map((_, index) => (
-                  <tr key={index} className="bg-white hover:bg-gray-100">
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                    >
-                      <input
-                        id={`surcharge-${index}`}
-                        aria-describedby="helper-radio-text"
-                        type="radio"
-                        value=""
-                        className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
-                      />
-                      <label
-                        htmlFor={`surcharge-${index}`}
-                        className="w-full py-4 ms-2 text-sm font-medium text-gray-900"
+                {dataSurcharge.map((items, index) => {
+                  return (
+                    <tr key={index} className="bg-white hover:bg-gray-100">
+                      <th
+                        scope="row"
+                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                       >
-                        Guide Surcharge
-                      </label>
-                    </th>
-                    <td className="px-6 py-4">$200</td>
-                  </tr>
-                ))}
+                        <input
+                          id={`surcharge-${index}`}
+                          aria-describedby="helper-radio-text"
+                          type="radio"
+                          value=""
+                          className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
+                        />
+                        <label
+                          htmlFor={`surcharge-${index}`}
+                          className="w-full py-4 ms-2 text-sm font-medium text-gray-900"
+                        >
+                          {items.surcharge_name}
+                        </label>
+                      </th>
+                      <td className="px-6 py-4">
+                        {items.currency} {items.price_in_format}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
