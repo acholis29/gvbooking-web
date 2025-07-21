@@ -15,6 +15,8 @@ import toast from "react-hot-toast";
 // Context State Global
 import { useDate } from "@/context/DateContext";
 import { useCurrency } from "@/context/CurrencyContext";
+// Redirect
+import { useRouter } from "next/navigation";
 
 type ProductSub = {
   excursion_id: string;
@@ -47,6 +49,9 @@ type ChargeTypeProps = {
 };
 
 const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
+  // Redirect
+  const router = useRouter();
+
   const host_img =
     country == "indonesia"
       ? API_HOSTS.img_indo
@@ -81,6 +86,7 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
       toast.error("Please fill input adult or child!");
     } else {
       console.log(data);
+      router.push("/review_booking");
       toast.success("Booking Process");
     }
   };
