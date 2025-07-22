@@ -177,7 +177,7 @@ export default function DetailDestination() {
             </div>
             <div className="flex flex-row justify-between items-center mt-4">
               <div className="text-gray-700 w-1/2">
-                <h3 className="text-small md:text-lg font-semibold md:font-bold text-left">
+                <h3 className="text-sm md:text-lg font-semibold md:font-bold text-left">
                   {/*DESC : Beraban, Kediri, Kabupaten Tabanan, Bali */}
                   {dataProduct != null
                     ? dataProduct.msg.product_details[0].info_location
@@ -185,7 +185,7 @@ export default function DetailDestination() {
                 </h3>
               </div>
               <div className="text-gray-700 w-1/2">
-                <h3 className="text-small md:text-lg font-semibold md:font-bold text-right text-red-500">
+                <h3 className="text-sm md:text-lg font-semibold md:font-bold text-right text-red-500">
                   {/* 07:00 - 19:00 WITA */}
                   {dataProduct != null
                     ? dataProduct.msg.product_details[0].info_pickup_service

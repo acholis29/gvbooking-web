@@ -6,6 +6,13 @@ import Lightbox from "yet-another-react-lightbox";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhotoFilm } from "@fortawesome/free-solid-svg-icons";
+// Carousel Flowbite
+import { Carousel } from "flowbite-react";
+// Carousel Swiper
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
 
 type GaleryProps = {
   picture?: string;
@@ -22,55 +29,24 @@ const Galery: React.FC<GaleryProps> = ({
         .map((url) => url.trim())
         .filter((url) => url && url !== "" && url.startsWith("http"))
     : [];
-
+  console.log("galleryArray", galleryArray);
   const [open, setOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   return (
     <>
       {galleryArray.length > 0 ? (
-        <div className="grid grid-cols-3 gap-2 py-5">
-          {/* Gambar Utama */}
-          <div className="">
-            <img
-              className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
-              src={galleryArray[0]}
-              alt="Galery"
-              onClick={() => {
-                setSelectedIndex(0); // index gambar yang diklik
-                setOpen(true);
-              }}
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.onerror = null;
-                target.src = "/images/icon/android-chrome-512x512.png";
-              }}
-            />
-          </div>
-          <div className="">
-            <img
-              className="w-full h-full object-cover"
-              src={galleryArray[1]}
-              alt="Galery"
-              onClick={() => {
-                setSelectedIndex(1); // index gambar yang diklik
-                setOpen(true);
-              }}
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.onerror = null;
-                target.src = "/images/icon/android-chrome-512x512.png";
-              }}
-            />
-          </div>
-          <div className="grid grid-rows-2 gap-2">
+        <>
+          {/* // Mode Desktop */}
+          <div className="hidden md:grid grid-cols-3 gap-2 py-5">
+            {/* Gambar Utama */}
             <div className="">
               <img
-                className="w-full h-full object-cover rounded-tr-sm"
-                src={galleryArray[2]}
+                className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
+                src={galleryArray[0]}
                 alt="Galery"
                 onClick={() => {
-                  setSelectedIndex(2); // index gambar yang diklik
+                  setSelectedIndex(0); // index gambar yang diklik
                   setOpen(true);
                 }}
                 onError={(e) => {
@@ -80,13 +56,13 @@ const Galery: React.FC<GaleryProps> = ({
                 }}
               />
             </div>
-            <div className="relative">
+            <div className="">
               <img
-                className="w-full h-full object-cover rounded-br-sm"
-                src={galleryArray[3]}
+                className="w-full h-full object-cover"
+                src={galleryArray[1]}
                 alt="Galery"
                 onClick={() => {
-                  setSelectedIndex(3); // index gambar yang diklik
+                  setSelectedIndex(1); // index gambar yang diklik
                   setOpen(true);
                 }}
                 onError={(e) => {
@@ -95,29 +71,100 @@ const Galery: React.FC<GaleryProps> = ({
                   target.src = "/images/icon/android-chrome-512x512.png";
                 }}
               />
-              {/* Button pojok kanan bawah */}
-              {galleryArray.length > 4 && (
-                <button
-                  className="absolute bottom-2 right-2 
+            </div>
+            <div className="grid grid-rows-2 gap-2">
+              <div className="">
+                <img
+                  className="w-full h-full object-cover rounded-tr-sm"
+                  src={galleryArray[2]}
+                  alt="Galery"
+                  onClick={() => {
+                    setSelectedIndex(2); // index gambar yang diklik
+                    setOpen(true);
+                  }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null;
+                    target.src = "/images/icon/android-chrome-512x512.png";
+                  }}
+                />
+              </div>
+              <div className="relative">
+                <img
+                  className="w-full h-full object-cover rounded-br-sm"
+                  src={galleryArray[3]}
+                  alt="Galery"
+                  onClick={() => {
+                    setSelectedIndex(3); // index gambar yang diklik
+                    setOpen(true);
+                  }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null;
+                    target.src = "/images/icon/android-chrome-512x512.png";
+                  }}
+                />
+                {/* Button pojok kanan bawah */}
+                {galleryArray.length > 4 && (
+                  <button
+                    className="absolute bottom-2 right-2 
              px-3 py-1.5 text-sm 
              md:px-5 md:py-2 md:text-base
              border rounded-2xl 
              bg-black/40 hover:bg-black/60 
              shadow-md transition text-white cursor-pointer"
-                  title="Lihat Galeri"
-                  onClick={() => setOpen(true)}
-                >
-                  <FontAwesomeIcon
-                    icon={faPhotoFilm}
-                    className="w-4 h-4 text-white mr-1 md:mr-2"
-                  />
-                  <span className="hidden md:inline">More</span> +
-                  {galleryArray.length}
-                </button>
-              )}
+                    title="Lihat Galeri"
+                    onClick={() => setOpen(true)}
+                  >
+                    <FontAwesomeIcon
+                      icon={faPhotoFilm}
+                      className="w-4 h-4 text-white mr-1 md:mr-2"
+                    />
+                    <span className="hidden md:inline">More</span> +
+                    {galleryArray.length}
+                  </button>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+          {/* Mode Handphone */}
+          <div className="h-56 sm:h-64 xl:h-80 2xl:h-96 mt-3 md:hidden">
+            <Swiper
+              modules={[Autoplay, Pagination]}
+              autoplay={{
+                delay: 3000,
+                disableOnInteraction: false,
+              }}
+              pagination={{
+                dynamicBullets: true,
+                clickable: true,
+              }}
+              loop={true}
+              spaceBetween={10}
+              slidesPerView={1}
+              className="w-full h-full"
+            >
+              {galleryArray.map((img, index) => (
+                <SwiperSlide key={`swiper-${index}`}>
+                  <img
+                    src={img}
+                    className="w-full h-full object-cover"
+                    alt={`Gallery ${index + 1}`}
+                    onClick={() => {
+                      setSelectedIndex(index);
+                      setOpen(true);
+                    }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.onerror = null;
+                      target.src = "/images/icon/android-chrome-512x512.png";
+                    }}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+        </>
       ) : (
         <div className="grid grid-cols-1 gap-2 py-5">
           {/* Gambar Utama */}

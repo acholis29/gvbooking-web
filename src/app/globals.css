@@ -85,3 +85,7 @@ body {
 .scrollbar-hidden::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+
+.swiper-pagination-bullet-active {
+  background-color: white !important;
+}
