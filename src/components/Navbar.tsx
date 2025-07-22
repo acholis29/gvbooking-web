@@ -86,8 +86,8 @@ export default function NavbarComponent() {
   const [countryMaster, setCountryMaster] = useState<CountryItem[]>([]);
 
   const pathname = usePathname();
-  const hideSearch = ["/list", "/cart", "/wishlist", "/review_booking"].some(
-    (route) => pathname.startsWith(route)
+  const hideSearch = ["/cart", "/wishlist", "/review_booking"].some((route) =>
+    pathname.startsWith(route)
   );
 
   const hideCurrency = pathname === "/" || pathname === "/home";

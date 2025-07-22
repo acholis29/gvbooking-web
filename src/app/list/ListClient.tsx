@@ -19,6 +19,8 @@ import {
   faDollarSign,
   faEur,
   faRupiahSign,
+  faHeart,
+  faSliders,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Dropdown, DropdownItem } from "flowbite-react";
@@ -29,6 +31,7 @@ import { useWish } from "@/context/WishContext";
 import { useCurrency } from "@/context/CurrencyContext";
 // Host Imgae
 import { API_HOSTS } from "@/lib/apihost";
+import ListCardMobile from "@/components/ListCardMobile";
 
 type DestinationItem = {
   idx_comp: string;
@@ -234,16 +237,27 @@ export default function ListClient() {
       prev.filter((item) => item.toLowerCase() !== id.toLowerCase())
     );
   };
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768); // Tailwind md breakpoint
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   return (
     // List Page
     <div className="max-w-screen-xl mx-auto">
-      <section className="flex flex-col md:flex-row px-6 pb-6 bg-white gap-6">
+      <section className="flex flex-col md:flex-row px-6 md:pb-6 bg-white gap-6">
         {/* Search List Mobile  */}
         <div className="md:hidden flex flex-col md:flex-row md:justify-between md:items-center gap-4">
           {/* Search akan full width di HP */}
-          <div className="">
-            <Search />
-          </div>
+          <div className="">{/* <Search /> */}</div>
 
           {/* Badge akan di bawah search di HP, dan di samping saat md */}
           {/* <div className="flex flex-wrap gap-1">
@@ -253,9 +267,10 @@ export default function ListClient() {
             <Badge title="Rating" />
           </div> */}
         </div>
-
-        {/* Konten Kiri */}
-        <div className="md:w-1/6 text-gray-700">
+      </section>
+      <section className="flex flex-col md:flex-row bg-white md:gap-6">
+        {/* Konten Kiri Desktop */}
+        <div className="hidden md:block w-full md:w-1/6  px-6 pb-6 text-gray-700">
           <p className="text-sm mb-2 font-semibold">Keywords</p>
           {BadgeState.map((item, index) => (
             <Chips
@@ -300,19 +315,38 @@ export default function ListClient() {
             Apply
           </button>
         </div>
+        {/* Kontent Kiri Mobile */}
+        <div className="flex flex-row gap-2 md:hidden h-15 items-center px-2 overflow-x-auto sticky top-31 z-30 bg-white">
+          <div className="w-10 h-10 border-2 border-gray-500 rounded-lg text-center align-middle flex items-center justify-center p-2">
+            <FontAwesomeIcon
+              icon={faSliders}
+              className="w-5 h-5 text-gray-500"
+            />
+          </div>
+          {masterHoliday.map((item) => (
+            <div
+              key={`mobileHoliday-${item.holiday_type}`}
+              className="w-auto h-10 border-2 border-gray-500 rounded-lg text-center align-middle flex items-center justify-center p-2 whitespace-nowrap"
+            >
+              <p className="text-sm text-gray-500">
+                {capitalizeWords(item.holiday_type)}
+              </p>
+            </div>
+          ))}
+        </div>
         {/* Konten Kanan */}
-        <div className="md:w-5/6 text-black">
+        <div className="w-full md:w-5/6  md:px-6 pb-6 text-black">
           {/* Baris Search dan Badge */}
           <div className="hidden md:flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             {/* Search akan full width di HP */}
             <div className="w-xl">
               {/* <Search /> */}
-              <SearchWithDropdown
+              {/* <SearchWithDropdown
                 country={capitalizedCountry ?? ""}
                 idx_comp={idx_comp ?? ""}
                 onChange={setState}
                 state={state ?? ""}
-              />
+              /> */}
             </div>
 
             {/* Badge akan di bawah search di HP, dan di samping saat md */}
@@ -376,7 +410,7 @@ export default function ListClient() {
           </div>
 
           {/* Baris Card */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 py-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 py-4">
             {isLoading ? (
               <>
                 <SkeletonCard />
@@ -385,27 +419,51 @@ export default function ListClient() {
                 <SkeletonCard />
               </>
             ) : DetailDestination.length > 0 ? (
-              DetailDestination.map((item, index) => (
-                <ListCard
-                  key={index}
-                  idx_comp={item.idx_comp}
-                  idx_excursion={item.Idx_excursion}
-                  // image={`https://picsum.photos/800/600?random=${index}`}
-                  image={`${host_img}/media/${item.code_exc}/TN_400_${item.Gbr}`}
-                  title={item.Name_excursion}
-                  sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
-                  price={item.PriceFrom ?? 0}
-                  currency={item.Currency ?? "Rp"}
-                  link={`/destination/detail/${country}?id=${idx_comp}&state=${state}&country=${country}&exc=${item.Idx_excursion}`}
-                  colorWish={
-                    ListWist.some(
-                      (wish) => wish.idx_excursion === item.Idx_excursion
-                    )
-                      ? true
-                      : false
-                  }
-                />
-              ))
+              DetailDestination.map((item, index) =>
+                isMobile ? (
+                  // Mobile layout
+                  <ListCardMobile
+                    key={`ListCardMobile-${index}`}
+                    idx_comp={item.idx_comp}
+                    idx_excursion={item.Idx_excursion}
+                    // image={`https://picsum.photos/800/600?random=${index}`}
+                    image={`${host_img}/media/${item.code_exc}/TN_400_${item.Gbr}`}
+                    title={item.Name_excursion}
+                    sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
+                    price={item.PriceFrom ?? 0}
+                    currency={item.Currency ?? "Rp"}
+                    link={`/destination/detail/${country}?id=${idx_comp}&state=${state}&country=${country}&exc=${item.Idx_excursion}`}
+                    colorWish={
+                      ListWist.some(
+                        (wish) => wish.idx_excursion === item.Idx_excursion
+                      )
+                        ? true
+                        : false
+                    }
+                  />
+                ) : (
+                  // Desktop Layout
+                  <ListCard
+                    key={`ListCard-${index}`}
+                    idx_comp={item.idx_comp}
+                    idx_excursion={item.Idx_excursion}
+                    // image={`https://picsum.photos/800/600?random=${index}`}
+                    image={`${host_img}/media/${item.code_exc}/TN_400_${item.Gbr}`}
+                    title={item.Name_excursion}
+                    sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
+                    price={item.PriceFrom ?? 0}
+                    currency={item.Currency ?? "Rp"}
+                    link={`/destination/detail/${country}?id=${idx_comp}&state=${state}&country=${country}&exc=${item.Idx_excursion}`}
+                    colorWish={
+                      ListWist.some(
+                        (wish) => wish.idx_excursion === item.Idx_excursion
+                      )
+                        ? true
+                        : false
+                    }
+                  />
+                )
+              )
             ) : (
               <div className="col-span-4 text-center text-gray-500 py-10 flex flex-col justify-center items-center">
                 {/*                 
