@@ -2,25 +2,33 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faCheck, faSearch } from "@fortawesome/free-solid-svg-icons";
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+
+
 
 type BreadcrumbProps = {
   pageName?: string;
+  country?: string;
+  state?: string;
+  idx_comp?: string;
   link?: string;
 };
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({
   pageName = "home",
+  country = "Country",
+  state = "State",
+  idx_comp = "",
   link = "/",
 }) => {
   return (
     <nav className="flex pl-4" aria-label="Breadcrumb">
       <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
         <li className="inline-flex items-center">
-          <Link
-            href="/"
-            className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-red-500"
+          <Link href="/"
+            className="inline-flex uppercase items-center text-sm font-medium text-gray-700 hover:text-red-500"
           >
             <svg
               className="w-3 h-3 me-2.5"
@@ -33,6 +41,8 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
             </svg>
             Home
           </Link>
+
+          
         </li>
         <li aria-current="page">
           <div className="flex items-center">
@@ -51,7 +61,51 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
                 d="m1 9 4-4-4-4"
               />
             </svg>
-            <span className="ms-1 text-sm font-medium text-gray-500 md:ms-2">
+            <Link href={`/destination/${country}?id=${idx_comp}&country=${country}`}  className="ms-1 uppercase text-sm font-medium text-gray-500 md:ms-2">
+              {country}
+            </Link>
+          </div>
+        </li>
+        <li aria-current="page">
+          <div className="flex items-center">
+            <svg
+              className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 6 10"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="m1 9 4-4-4-4"
+              />
+            </svg>
+            <Link href={`/list?id=${idx_comp}&country=${country}&state=${state}`} className="ms-1 uppercase text-sm font-medium text-gray-500 md:ms-2">
+              {state}
+            </Link>
+          </div>
+        </li>
+        <li aria-current="page">
+          <div className="flex items-center">
+            <svg
+              className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 6 10"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="m1 9 4-4-4-4"
+              />
+            </svg>
+            <span className="ms-1 uppercase text-sm font-medium text-gray-500 md:ms-2">
               {pageName}
             </span>
           </div>

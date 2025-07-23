@@ -290,7 +290,7 @@ export default function ListClient() {
       </section>
       <section className="flex flex-col md:flex-row bg-white md:gap-6">
         {/* Konten Kiri Desktop */}
-        <div className="hidden md:block w-full md:w-1/6  px-6 pb-6 text-gray-700">
+        <div className="hidden md:block   px-6 pb-6 text-gray-700">
           <p className="text-sm mb-2 font-semibold">Keywords</p>
           {BadgeState.map((item, index) => (
             <Chips
