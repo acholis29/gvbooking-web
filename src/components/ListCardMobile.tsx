@@ -69,9 +69,12 @@ const ListCardMobile: React.FC<ListCardMobileProps> = ({
     <div className="w-full h-45 bg-gray-100 shadow-md flex hover:bg-gray-200">
       <div className="w-[40%] h-50">
         <div className="p-2 relative">
-          <Link href={link}>
+          <Link
+            href={link}
+            className="relative block overflow-hidden rounded-sm"
+          >
             <img
-              className="object-cover w-full rounded-sm h-40 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
+              className="object-cover w-full rounded-sm h-40 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg transition-transform duration-300 ease-in-out hover:scale-115"
               src={image}
               alt={title}
               onError={(e) => {

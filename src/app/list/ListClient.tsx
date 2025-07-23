@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Badge from "@/components/Badge";
 import Chips from "@/components/Chips";
 import Range from "@/components/Range";
@@ -34,6 +34,7 @@ import { useCurrency } from "@/context/CurrencyContext";
 // Host Imgae
 import { API_HOSTS } from "@/lib/apihost";
 import ListCardMobile from "@/components/ListCardMobile";
+import SkeletonCardList from "@/components/SkeletonCardList";
 
 type DestinationItem = {
   idx_comp: string;
@@ -253,7 +254,7 @@ export default function ListClient() {
 
   const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768); // Tailwind md breakpoint
     };
@@ -263,6 +264,7 @@ export default function ListClient() {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
   return (
     // List Page
     <div className="max-w-screen-xl mx-auto">
@@ -446,10 +448,10 @@ export default function ListClient() {
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 py-4">
             {isLoading ? (
               <>
-                <SkeletonCard />
-                <SkeletonCard />
-                <SkeletonCard />
-                <SkeletonCard />
+                <SkeletonCardList />
+                <SkeletonCardList />
+                <SkeletonCardList />
+                <SkeletonCardList />
               </>
             ) : DetailDestination.length > 0 ? (
               DetailDestination.map((item, index) =>
@@ -499,13 +501,16 @@ export default function ListClient() {
               )
             ) : (
               <div className="col-span-4 text-center text-gray-500 py-10 flex flex-col justify-center items-center">
-                {/*                 
-                <img
-                  src="/images/error/empty.svg"
-                  alt=""
-                  className="w-100 h-auto"
-                />
-                <p className="text-2xl">Opps Not Found!</p> */}
+                {apply != 0 && (
+                  <>
+                    <img
+                      src="/images/error/empty.svg"
+                      alt=""
+                      className="w-50 md:w-100 h-auto"
+                    />
+                    <p className="text-2xl">Opps Not Found!</p>
+                  </>
+                )}
               </div>
             )}
           </div>
