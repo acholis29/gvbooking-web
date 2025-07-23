@@ -1,8 +1,8 @@
+import React, { useState, useEffect } from "react";
+import AsyncSelect from "react-select/async";
 import { capitalizeWords } from "@/helper/helper";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
-import AsyncSelect from "react-select/async";
 
 // Styling custom Tailwind
 const customStyles = {
@@ -108,7 +108,7 @@ export default function SelectCustomAsyn({
       );
 
       const json = await res.json();
-      console.log(json);
+      // console.log(json);
 
       const fetchedOptions = json.msg.map((item: any) => ({
         value: item.location_id,
@@ -128,8 +128,8 @@ export default function SelectCustomAsyn({
   return (
     <div className="w-full max-w-xs">
       <AsyncSelect
-        cacheOptions
-        defaultOptions
+        cacheOptions={false} // <- ini kunci
+        defaultOptions={true}
         isClearable
         loadOptions={loadOptions}
         value={options.find((opt) => opt.value === value) || null}

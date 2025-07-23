@@ -29,7 +29,6 @@ const Galery: React.FC<GaleryProps> = ({
         .map((url) => url.trim())
         .filter((url) => url && url !== "" && url.startsWith("http"))
     : [];
-  console.log("galleryArray", galleryArray);
   const [open, setOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
