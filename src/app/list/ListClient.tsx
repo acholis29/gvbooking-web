@@ -35,6 +35,8 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { API_HOSTS } from "@/lib/apihost";
 import ListCardMobile from "@/components/ListCardMobile";
 import SkeletonCardList from "@/components/SkeletonCardList";
+// BottomSheet
+import ModalBottomSheet from "@/components/ModalBottomSheet";
 
 type DestinationItem = {
   idx_comp: string;
@@ -140,6 +142,9 @@ export default function ListClient() {
   // State Handle Warna Filter Badge
   const [SelectBadgeFilterMobile, setSelectBadgeFilterMobile] =
     useState<string>("");
+
+  // State BottomSheet
+  const [openBottomSheet, setOpenBottomSheet] = useState(false);
 
   const handleSelect = (value: string) => {
     setSelectedSorting(value);
@@ -332,7 +337,10 @@ export default function ListClient() {
         </div>
         {/* Kontent Kiri Mobile */}
         <div className="flex flex-row gap-2 md:hidden h-15 items-center px-2 overflow-x-auto sticky top-31 z-30 bg-white">
-          <div className="w-10 h-10 border-1 border-gray-500 rounded-lg text-center align-middle flex items-center justify-center p-2">
+          <div
+            className="w-10 h-10 border-1 border-gray-500 rounded-lg text-center align-middle flex items-center justify-center p-2"
+            onClick={() => setOpenBottomSheet(true)}
+          >
             <FontAwesomeIcon
               icon={faSliders}
               className="w-5 h-5 text-gray-500"
@@ -513,6 +521,22 @@ export default function ListClient() {
                 )}
               </div>
             )}
+
+            <ModalBottomSheet
+              isOpen={openBottomSheet}
+              onClose={() => setOpenBottomSheet(false)}
+            >
+              <div className="text-center">
+                <h2 className="text-lg font-bold mb-2">Filter</h2>
+                <p>Isi Filter Disini</p>
+                <button
+                  onClick={() => setOpenBottomSheet(false)}
+                  className="mt-4 bg-red-600 text-white px-4 py-2 rounded"
+                >
+                  Tutup
+                </button>
+              </div>
+            </ModalBottomSheet>
           </div>
         </div>
       </section>
