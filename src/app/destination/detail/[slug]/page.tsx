@@ -28,6 +28,7 @@ import { toLowerCaseAll } from "@/helper/helper";
 // Date Picker
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Breadcrumb from "@/components/Breadcrumb";
 
 export default function DetailDestination() {
   const searchParams = useSearchParams();
@@ -164,6 +165,7 @@ export default function DetailDestination() {
       {!isLoading && (
         <>
           <div className="max-w-screen-xl mx-auto px-4">
+            <Breadcrumb pageName="Detail Destination" />
             {/* Baris Title */}
             <div className="flex flex-row justify-between items-center mt-4">
               <div className="text-gray-700 w-full">
