@@ -89,13 +89,13 @@ export default function ListClient() {
   const state_ = searchParams.get("state");
   const capitalizedCountry = capitalizeWords(country ?? "");
   const host_img =
-    country == "indonesia"
+    country?.toLocaleLowerCase() == "indonesia"
       ? API_HOSTS.img_indo
-      : country == "thailand"
+      : country?.toLocaleLowerCase() == "thailand"
       ? API_HOSTS.img_thai
-      : country == "vietnam"
+      : country?.toLocaleLowerCase() == "vietnam"
       ? API_HOSTS.img_viet
-      : country == "cambodia"
+      : country?.toLocaleLowerCase() == "cambodia"
       ? API_HOSTS.img_camb
       : "";
   // Wish Counter
