@@ -1,7 +1,7 @@
 // components/HorizontalCard.tsx
 import React, { useEffect } from "react";
 // Font Awesome
-import { faMinus, faUser, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faClock, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // State Global / Context
@@ -59,9 +59,22 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
         <p className="text-xs md:text-md font-semibold text-gray-700">
           {sub_title_2}
         </p>
-        <p className="text-xs md:text-md font-semibold text-gray-700">
-          {sub_title_3}
-        </p>
+        <input
+          type="text"
+          className="text-gray-600 text-sm border-gray-300 w-80 h-8 bg-gray-100 rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
+          placeholder="Room number (optional)..."
+        />
+        <div className="relative">
+          <div className="absolute inset-y-0 end-50 top-2 flex items-center pe-3.5 pointer-events-none">
+            <FontAwesomeIcon icon={faClock} className="w-4 h-4 text-gray-600" />{" "}
+          </div>
+          <input
+            type="time"
+            id="time"
+            className="text-gray-600 text-sm border-gray-300 w-30 h-8 bg-gray-100 rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
+            required
+          />
+        </div>
       </div>
 
       <div className="flex flex-row w-full p-2 leading-normal my-auto">

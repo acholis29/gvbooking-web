@@ -402,24 +402,24 @@ export default function ReviewBookingClient() {
                 {currency} {formatToIDR(total)}
               </p>
             </div>
-            <div className="basis-[20%] flex items-center justify-center">
-              {/* Kolom 2 (20%) */}
+            <div className="basis-[40%] flex items-center justify-center">
+              {/* Kolom 2 (40%) */}
               <button
                 type="button"
-                className="text-gray-700 font-bold  shadow-2xl bg-amber-300 w-full hover:bg-amber-400 focus:ring-4 focus:ring-amber-300 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
+                className="text-gray-700 font-bold  shadow-2xl bg-amber-400 w-full hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
               >
                 Add Cart
               </button>
             </div>
-            <div className="basis-[20%]  flex items-center justify-center">
-              {/* Kolom 3 (20%) */}
-              <button
+            {/* <div className="basis-[20%]  flex items-center justify-center"> */}
+            {/* Kolom 3 (20%) */}
+            {/* <button
                 type="button"
                 className="text-white font-bold shadow-2xl bg-red-700 w-full hover:bg-red-800 focus:ring-4 focus:ring-red-300 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
               >
                 Payment
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
