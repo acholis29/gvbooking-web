@@ -12,6 +12,7 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDate } from "@/context/DateContext";
 import { useReviewBooking } from "@/context/ReviewBookingContext";
+import { acis_qty_age, formatToIDR } from "@/helper/helper";
 
 type ReviewBookingItem = {
   idx_comp: string;
@@ -34,6 +35,8 @@ export default function ReviewBookingClient() {
   // Review Booking Global
   const { reviewBookingObj, setReviewBookingObj } = useReviewBooking();
 
+  console.log(reviewBookingObj);
+
   const idx_comp = reviewBookingObj?.idx_comp; //ini dari idx_comp_alias
   const idx_excursion = reviewBookingObj?.exc_id; //ini dari idx_excursion
   const idx_excursion_sub = reviewBookingObj?.sub_exc_id; //ini sub_excursion_id
@@ -46,6 +49,11 @@ export default function ReviewBookingClient() {
   const infant = reviewBookingObj?.infant;
   const country = reviewBookingObj?.country;
   const state = reviewBookingObj?.state;
+  const acis = acis_qty_age(
+    adult ?? "",
+    reviewBookingObj?.child ?? "{}",
+    infant ?? ""
+  );
 
   type ProductDetail = {
     excursion_name: string;
@@ -102,10 +110,38 @@ export default function ReviewBookingClient() {
     mandatory: string;
   };
 
+  type PriceOfChargeType = {
+    excursion_id: string;
+    sub_excursion_id: string;
+    contract_id: string;
+    market_id: string;
+    supplier_id: string;
+    tour_date: string;
+    charge_type: string;
+    pax: string;
+    age: string;
+    raw_sale_rates: string;
+    raw_exchange_rates: string;
+    sale_currency: string;
+    sale_currency_id: string;
+    sale_rates: string;
+    sale_rates_total: string;
+    sale_rates_total_in_format: string;
+    buy_currency_id: string;
+    buy_rates: string;
+    buy_rates_total: string;
+    markup_value: string;
+    markup_type_PV: string;
+    markup_type_HJ_HB: string;
+    category_MA: string;
+  };
+
   const [dataProduct, setDataProduct] = useState<ProductResponse | null>(null);
   const [dataSurcharge, setDataSurcharge] = useState<PriceOfSurcharge[]>([]);
+  const [dataChargeType, setDataChargeType] = useState<PriceOfChargeType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [total, setTotal] = useState<number>(0);
 
   // State Data Detail Destination
   const [ListReviewBooking, setReviewBooking] = useState<ReviewBookingItem[]>(
@@ -167,23 +203,23 @@ export default function ReviewBookingClient() {
     fetchData();
   }, []);
 
-  // Guide Surcharge
+  // Charge type & Guide Surcharge
   useEffect(() => {
     const fetchDataGuideSurcharge = async () => {
       setIsLoading(true); // mulai loading
       const formBody = new URLSearchParams({
-        shared_key: "4D340942-88D3-44DD-A52C-EAF00EACADE8", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
+        shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
         xml: "false",
-        id_excursion: "BA928E11-CE70-4427-ACD0-A7FC13C34891", // Examp : "BA928E11-CE70-4427-ACD0-A7FC13C34891"
-        id_excursion_sub: "123A24BD-56EC-4188-BE9D-B7318EF0FB84", // Examp :"123A24BD-56EC-4188-BE9D-B7318EF0FB84"
-        id_pickup_area: "1EC87603-7ECC-48BC-A56C-F513B7B28CE3", // Examp : "1EC87603-7ECC-48BC-A56C-F513B7B28CE3"
-        tour_date: "2025-07-11", //2025-07-11
-        total_pax_adult: "1", // 1
-        total_pax_child: "2", // 2
-        total_pax_infant: "2", // 2
-        code_of_currency: "IDR", // IDR
+        id_excursion: idx_excursion ?? "", // Examp : "BA928E11-CE70-4427-ACD0-A7FC13C34891"
+        id_excursion_sub: idx_excursion_sub ?? "", // Examp :"123A24BD-56EC-4188-BE9D-B7318EF0FB84"
+        id_pickup_area: pickup_id ?? "", // Examp : "1EC87603-7ECC-48BC-A56C-F513B7B28CE3"
+        tour_date: date, //2025-07-11
+        total_pax_adult: adult ?? "0", // 1
+        total_pax_child: child.count ?? "0", // 2
+        total_pax_infant: infant ?? "0", // 2
+        code_of_currency: currency, // IDR
         promo_code: "R-BC", // R-BC
-        acis_qty_age: "A|1|0,C|1|11,C|1|11", // A|1|0,C|1|11,C|1|11
+        acis_qty_age: acis, // A|1|0,C|1|11,C|1|11
       });
 
       try {
@@ -204,6 +240,10 @@ export default function ReviewBookingClient() {
           const json = await res.json();
           console.log(json.msg.price_of_surcharge);
           setDataSurcharge(json.msg.price_of_surcharge);
+          hitungTotal(
+            json.msg.price_of_charge_type,
+            json.msg.price_of_surcharge
+          );
         }
       } catch (err: any) {
         setError(err.message || "Error");
@@ -215,6 +255,29 @@ export default function ReviewBookingClient() {
 
     fetchDataGuideSurcharge();
   }, []);
+
+  function hitungTotal(
+    ChargeType: PriceOfChargeType[],
+    Surcharge: PriceOfSurcharge[]
+  ): number {
+    let total = 0;
+    if (ChargeType.length > 0) {
+      for (let i = 0; i < ChargeType.length; i++) {
+        total += parseInt(ChargeType[i].sale_rates_total);
+      }
+    }
+
+    if (Surcharge.length > 0) {
+      for (let j = 0; j < Surcharge.length; j++) {
+        if (Surcharge[j].mandatory.toLocaleLowerCase() == "true") {
+          total += parseInt(Surcharge[j].price);
+        }
+      }
+    }
+
+    setTotal(total);
+    return total;
+  }
 
   return (
     // Cart Page
@@ -247,49 +310,59 @@ export default function ReviewBookingClient() {
           />
 
           {/* Table Surgery */}
-          <div className="relative overflow-x-auto shadow-md sm:rounded-l md:max-w-3xl">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
-                <tr>
-                  <th scope="col" className="px-6 py-3">
-                    # Surcharge
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Price
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {dataSurcharge.map((items, index) => {
-                  return (
-                    <tr key={index} className="bg-white hover:bg-gray-100">
-                      <th
-                        scope="row"
-                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                      >
-                        <input
-                          id={`surcharge-${index}`}
-                          aria-describedby="helper-radio-text"
-                          type="radio"
-                          value=""
-                          className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
-                        />
-                        <label
-                          htmlFor={`surcharge-${index}`}
-                          className="w-full py-4 ms-2 text-sm font-medium text-gray-900"
+          {dataSurcharge.length > 0 && (
+            <div className="relative overflow-x-auto shadow-md sm:rounded-l md:max-w-3xl">
+              <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
+                  <tr>
+                    <th scope="col" className="px-6 py-3">
+                      # Surcharge
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Price
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dataSurcharge.map((items, index) => {
+                    return (
+                      <tr key={index} className="bg-white hover:bg-gray-100">
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                         >
-                          {items.surcharge_name}
-                        </label>
-                      </th>
-                      <td className="px-6 py-4">
-                        {items.currency} {items.price_in_format}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                          <input
+                            id={`surcharge-${index}`}
+                            type="checkbox"
+                            defaultChecked={
+                              items.mandatory.toLocaleLowerCase() == "true"
+                                ? true
+                                : false
+                            } // atau false
+                            className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
+                            disabled={
+                              items.mandatory.toLowerCase() === "true"
+                                ? true
+                                : false
+                            }
+                          />
+                          <label
+                            htmlFor={`surcharge-${index}`}
+                            className="w-full py-4 ms-2 text-sm font-medium text-gray-900"
+                          >
+                            {items.surcharge_name}
+                          </label>
+                        </th>
+                        <td className="px-6 py-4">
+                          {items.currency} {items.price_in_format}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Text Area Note */}
           <div className="md:max-w-3xl my-3">
@@ -311,7 +384,9 @@ export default function ReviewBookingClient() {
             <div className="basis-[60%] flex flex-col items-start justify-center pl-3">
               {/* Kolom 1 (60%) */}
               <p className="font-semibold text-gray-700">Total</p>
-              <p className="font-bold text-gray-800">IDR 1.200.000</p>
+              <p className="font-bold text-gray-800">
+                {currency} {formatToIDR(total)}
+              </p>
             </div>
             <div className="basis-[20%] flex items-center justify-center">
               {/* Kolom 2 (20%) */}
