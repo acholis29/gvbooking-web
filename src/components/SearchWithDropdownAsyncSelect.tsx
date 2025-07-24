@@ -114,13 +114,13 @@ export default function SearchWithDropdownAsyncSelect(props: any) {
           if (selectedOption) {
             if (excursion_id) {
               router.push(
-                `/destination/detail/${country}?id=${idx_comp_alias}&state=${state}&country=${country}&exc=${excursion_id}`
+                `/destination/detail/${country}?id=${idx_comp_alias}&country=${country}&state=${state}&exc=${excursion_id}`
               );
             } else {
               router.push(
-                `/list?id=${idx_comp}&state=${state}&country=${toLowerCaseAll(
+                `/list?id=${idx_comp}&country=${toLowerCaseAll(
                   country
-                )}`
+                )}&state=${state}`
               );
             }
           }
@@ -133,13 +133,13 @@ export default function SearchWithDropdownAsyncSelect(props: any) {
           if (selectedOption) {
             if (excursion_id) {
               router.push(
-                `/destination/detail/${country}?id=${idx_comp_alias}&state=${state}&country=${country}&exc=${excursion_id}`
+                `/destination/detail/${country}?id=${idx_comp_alias}&country=${country}&state=${state}&exc=${excursion_id}`
               );
             } else {
               router.push(
-                `/list?id=${idx_comp}&state=${state}&country=${toLowerCaseAll(
+                `/list?id=${idx_comp}&country=${toLowerCaseAll(
                   country
-                )}`
+                )}&state=${state}`
               );
             }
           }

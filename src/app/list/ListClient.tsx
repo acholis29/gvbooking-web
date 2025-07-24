@@ -475,7 +475,7 @@ export default function ListClient() {
                     sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                     price={item.PriceFrom ?? 0}
                     currency={item.Currency ?? "Rp"}
-                    link={`/destination/detail/${country}?id=${idx_comp}&state=${state}&country=${country}&exc=${item.Idx_excursion}`}
+                    link={`/destination/detail/${country}?id=${idx_comp}&country=${country}&state=${state}&exc=${item.Idx_excursion}`}
                     colorWish={
                       ListWist.some(
                         (wish) => wish.idx_excursion === item.Idx_excursion
@@ -496,7 +496,7 @@ export default function ListClient() {
                     sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                     price={item.PriceFrom ?? 0}
                     currency={item.Currency ?? "Rp"}
-                    link={`/destination/detail/${country}?id=${idx_comp}&state=${state}&country=${country}&exc=${item.Idx_excursion}`}
+                    link={`/destination/detail/${country}?id=${idx_comp}&country=${country}&state=${state}&exc=${item.Idx_excursion}`}
                     colorWish={
                       ListWist.some(
                         (wish) => wish.idx_excursion === item.Idx_excursion

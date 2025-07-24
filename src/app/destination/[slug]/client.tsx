@@ -175,7 +175,7 @@ export default function DestinationClient({ slug }: Props) {
                 price={`${item.PriceFrom}`}
                 currency={item.Currency}
                 // link="/destination/detail/indonesia"
-                link={`/destination/detail/${item.Country}?id=${item.idx_comp}&state=${item.State}&country=${item.Country}&exc=${item.Idx_excursion}`}
+                link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
               />
             ))
           ) : (
@@ -225,7 +225,7 @@ export default function DestinationClient({ slug }: Props) {
                 price={`${item.PriceFrom}`}
                 currency={item.Currency}
                 // link="/destination/detail/indonesia"
-                link={`/destination/detail/${item.Country}?id=${item.idx_comp}&state=${item.State}&country=${item.Country}&exc=${item.Idx_excursion}`}
+                link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
               />
             ))
           ) : (
