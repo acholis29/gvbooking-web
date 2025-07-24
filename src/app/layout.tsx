@@ -20,6 +20,7 @@ import { CurrencyProvider } from "@/context/CurrencyContext";
 import { ModalProvider } from "@/context/ModalContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { DateProvider } from "@/context/DateContext";
+import { ReviewBookingProvider } from "@/context/ReviewBookingContext";
 // Toast
 import { Toaster } from "react-hot-toast";
 
@@ -57,11 +58,13 @@ export default function RootLayout({
               <ModalProvider>
                 <LanguageProvider>
                   <DateProvider>
-                    <Navbar />
-                    {children}
-                    <Toaster position="top-center" />
-                    {/* Footer */}
-                    <FooterComponent />
+                    <ReviewBookingProvider>
+                      <Navbar />
+                      {children}
+                      <Toaster position="top-center" />
+                      {/* Footer */}
+                      <FooterComponent />
+                    </ReviewBookingProvider>
                   </DateProvider>
                 </LanguageProvider>
               </ModalProvider>

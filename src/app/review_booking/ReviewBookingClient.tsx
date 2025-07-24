@@ -5,12 +5,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInbox } from "@fortawesome/free-solid-svg-icons";
 import Breadcrumb from "@/components/Breadcrumb";
 import ReviewBookingCard from "@/components/ReviewBookingCard";
-import { useSearchParams } from "next/navigation";
+
 import { API_HOSTS } from "@/lib/apihost";
 // Context Global
 import { useCurrency } from "@/context/CurrencyContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDate } from "@/context/DateContext";
+import { useReviewBooking } from "@/context/ReviewBookingContext";
 
 type ReviewBookingItem = {
   idx_comp: string;
@@ -24,24 +25,25 @@ type ReviewBookingItem = {
 };
 
 export default function ReviewBookingClient() {
-  const searchParams = useSearchParams();
-  const idx_comp = searchParams.get("id"); //ini dari idx_comp_alias
-  const idx_excursion = searchParams.get("exc"); //ini dari idx_excursion
-  const idx_excursion_sub = searchParams.get("sub_exc"); //ini sub_excursion_id
-  const pickup_id = searchParams.get("pickup_id"); //ini dari pickup id
-  const note = searchParams.get("note"); //ini dari note
-  const pickup_name = searchParams.get("pickup_name"); //ini dari pickup name
-  const sub_excursion_name = searchParams.get("sub_exc_name"); //ini dari exc name
-  const adult = searchParams.get("a");
-  const child = JSON.parse(searchParams.get("c") ?? "{}");
-  const infant = searchParams.get("i");
-
   // Currency
   const { currency, setCurrency } = useCurrency();
   // Language
   const { language, setLanguage } = useLanguage();
   // Date Global
   const { date, setDate } = useDate();
+  // Review Booking Global
+  const { reviewBookingObj, setReviewBookingObj } = useReviewBooking();
+
+  const idx_comp = reviewBookingObj?.idx_comp; //ini dari idx_comp_alias
+  const idx_excursion = reviewBookingObj?.exc_id; //ini dari idx_excursion
+  const idx_excursion_sub = reviewBookingObj?.sub_exc_id; //ini sub_excursion_id
+  const pickup_id = reviewBookingObj?.pickup_id; //ini dari pickup id
+  const room = reviewBookingObj?.room; //ini dari room
+  const pickup_name = reviewBookingObj?.pickup_name; //ini dari pickup name
+  const sub_excursion_name = reviewBookingObj?.sub_exc_name; //ini dari exc name
+  const adult = reviewBookingObj?.adult;
+  const child = JSON.parse(reviewBookingObj?.child ?? "{}");
+  const infant = reviewBookingObj?.infant;
 
   type ProductDetail = {
     excursion_name: string;
@@ -230,7 +232,7 @@ export default function ReviewBookingClient() {
             title={dataProduct?.msg.product_details[0].excursion_name ?? "-"}
             sub_title_1={sub_excursion_name ?? ""}
             sub_title_2={`Pickup : ${pickup_name}`}
-            sub_title_3={`Room : ${note}`}
+            sub_title_3={`Room : ${room}`}
             adult={adult ?? ""}
             child={child.count ?? ""}
             infant={infant ?? ""}

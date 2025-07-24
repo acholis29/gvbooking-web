@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 // Context State Global
 import { useDate } from "@/context/DateContext";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useReviewBooking } from "@/context/ReviewBookingContext";
 // Redirect
 import { useRouter } from "next/navigation";
 
@@ -72,7 +73,8 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
   const { date, setDate } = useDate();
   // Currency Global
   const { currency, setCurrency } = useCurrency();
-
+  // Review Booking Global
+  const { reviewBookingObj, setReviewBookingObj } = useReviewBooking();
   const {
     register,
     handleSubmit,
@@ -89,15 +91,34 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
       console.log("excursion_id : " + item?.excursion_id);
       console.log("sub_excursion_id : " + item?.sub_excursion_id);
       console.log(data);
-      router.push(
-        `/review_booking?id=${idx_comp}&exc=${item?.excursion_id}&sub_exc=${
-          item?.sub_excursion_id ?? ""
-        }&sub_exc_name=${item?.sub_excursion_name}&pickup_id=${
-          data.pickup_area ?? ""
-        }&pickup_name=${data.pickup_area ?? ""}&note=${data.note ?? ""}&a=${
-          data.Adult ?? ""
-        }&c=${data.Child ?? ""}&i=${data.Infant ?? ""}`
-      );
+
+      setReviewBookingObj({
+        idx_comp: "",
+        exc_id: "",
+        sub_exc_id: "",
+        sub_exc_name: "",
+        pickup_id: "",
+        pickup_name: "",
+        room: "",
+        adult: "0",
+        child: "0",
+        infant: "0",
+      });
+
+      setReviewBookingObj({
+        idx_comp: idx_comp ?? "",
+        exc_id: item?.excursion_id ?? "",
+        sub_exc_id: item?.sub_excursion_id ?? "",
+        sub_exc_name: item?.sub_excursion_name ?? "",
+        pickup_id: data.pickup_area ?? "",
+        pickup_name: data.pickup_area ?? "",
+        room: data.room ?? "",
+        adult: data.Adult ?? "0",
+        child: data.Child ?? "0",
+        infant: data.Infant ?? "0",
+      });
+
+      router.push("/review_booking");
       toast.success("Booking Process");
     }
   };
@@ -185,7 +206,7 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
               )}
             />
             <Controller
-              name="note"
+              name="room"
               control={control}
               defaultValue=""
               render={({ field }) => (
@@ -199,7 +220,7 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
                   <input
                     type="text"
                     className="text-gray-600 text-sm border-gray-300 block md:hidden w-auto h-12 bg-gray-100 rounded-3xl mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
-                    placeholder="Note..."
+                    placeholder="Room number (optional)"
                     {...field}
                   />
                 </>
