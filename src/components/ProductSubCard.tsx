@@ -36,7 +36,8 @@ type ProductSub = {
 
 type ProductSubProps = {
   item?: ProductSub;
-  country?: String;
+  country?: string;
+  state?: string;
   idx_comp?: string;
 };
 
@@ -49,7 +50,12 @@ type ChargeTypeProps = {
   age_to: string;
 };
 
-const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
+const ProductSub: React.FC<ProductSubProps> = ({
+  item,
+  country,
+  state,
+  idx_comp,
+}) => {
   // Redirect
   const router = useRouter();
 
@@ -94,6 +100,8 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
 
       setReviewBookingObj({
         idx_comp: "",
+        state: "",
+        country: "",
         exc_id: "",
         sub_exc_id: "",
         sub_exc_name: "",
@@ -107,6 +115,8 @@ const ProductSub: React.FC<ProductSubProps> = ({ item, country, idx_comp }) => {
 
       setReviewBookingObj({
         idx_comp: idx_comp ?? "",
+        state: state ?? "",
+        country: country ?? "",
         exc_id: item?.excursion_id ?? "",
         sub_exc_id: item?.sub_excursion_id ?? "",
         sub_exc_name: item?.sub_excursion_name ?? "",

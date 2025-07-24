@@ -165,10 +165,12 @@ export default function DetailDestination() {
       {!isLoading && (
         <>
           <div className="max-w-screen-xl mx-auto px-4">
-            <Breadcrumb pageName="Detail Destination"
-            country={country || ''}
-            state={state || ''}  
-            idx_comp={idx_comp || ''} />
+            <Breadcrumb
+              pageName="Detail Destination"
+              country={country || ""}
+              state={state || ""}
+              idx_comp={idx_comp || ""}
+            />
             {/* Baris Title */}
             <div className="flex flex-row justify-between items-center mt-4">
               <div className="text-gray-700 w-full">
@@ -178,7 +180,6 @@ export default function DetailDestination() {
                     ? dataProduct.msg.product_details[0].excursion_name
                     : ""}
                 </h3>
-                
               </div>
             </div>
             <div className="flex flex-row justify-between items-center mt-4">
@@ -260,6 +261,7 @@ export default function DetailDestination() {
                         item={item}
                         idx_comp={idx_comp ?? ""}
                         country={toLowerCaseAll(country ?? "")}
+                        state={toLowerCaseAll(state ?? "")}
                       />
                     ))}
                   </>

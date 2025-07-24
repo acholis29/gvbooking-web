@@ -44,6 +44,8 @@ export default function ReviewBookingClient() {
   const adult = reviewBookingObj?.adult;
   const child = JSON.parse(reviewBookingObj?.child ?? "{}");
   const infant = reviewBookingObj?.infant;
+  const country = reviewBookingObj?.country;
+  const state = reviewBookingObj?.state;
 
   type ProductDetail = {
     excursion_name: string;
@@ -217,7 +219,13 @@ export default function ReviewBookingClient() {
   return (
     // Cart Page
     <div className="max-w-screen-xl mx-auto">
-      <Breadcrumb pageName="Review Booking" />
+      <Breadcrumb
+        pageName="Review Booking"
+        country={country}
+        state={state}
+        idx_comp={idx_comp}
+        idx_excursion={idx_excursion}
+      />
       <h1 className="text-gray-500 px-6 pt-6 text-2xl font-bold">
         REVIEW BOOKING
       </h1>

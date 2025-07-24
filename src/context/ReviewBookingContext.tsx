@@ -12,6 +12,8 @@ type ReviewBooking = {
   adult: string;
   child: string;
   infant: string;
+  state: string;
+  country: string;
 };
 
 type ReviewBookingContextType = {
