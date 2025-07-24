@@ -307,7 +307,11 @@ export default function ReviewBookingClient() {
             key={1}
             idx_comp={"asas"}
             idx_excursion={"asas"}
-            image="/images/destination/tanah-lot/tanah-lot6.jpg"
+            image={
+              dataProduct != null && dataProduct.msg.product_details.length > 0
+                ? dataProduct.msg.product_details[0].picture
+                : "/images/error/loading.gif"
+            }
             title={dataProduct?.msg.product_details[0].excursion_name ?? "-"}
             sub_title_1={sub_excursion_name ?? ""}
             sub_title_2={`Pickup : ${pickup_name}`}
