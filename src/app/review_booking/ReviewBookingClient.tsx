@@ -279,6 +279,14 @@ export default function ReviewBookingClient() {
     return total;
   }
 
+  const handleCheckboxChange = (checked: boolean, price: number) => {
+    if (checked) {
+      setTotal((prev) => prev + price);
+    } else {
+      setTotal((prev) => prev - price);
+    }
+  };
+
   return (
     // Cart Page
     <div className="max-w-screen-xl mx-auto">
@@ -339,6 +347,12 @@ export default function ReviewBookingClient() {
                                 ? true
                                 : false
                             } // atau false
+                            onChange={(e) =>
+                              handleCheckboxChange(
+                                e.target.checked,
+                                Number(items.price)
+                              )
+                            }
                             className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
                             disabled={
                               items.mandatory.toLowerCase() === "true"
