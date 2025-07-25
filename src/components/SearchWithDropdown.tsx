@@ -62,8 +62,7 @@ const Search: React.FC<SearchProps> = ({
     // Format ke YYYY-MM-DD
     const formattedDate = e.toISOString().split("T")[0];
     // Date Global
-    // console.log(formattedDate); // hasil: 2025-07-17
-    setDate(formattedDate);
+    setDate(formattedDate); // hasil: 2025-07-17
   };
 
   useEffect(() => {

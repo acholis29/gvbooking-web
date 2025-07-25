@@ -74,6 +74,7 @@ const ProductSub: React.FC<ProductSubProps> = ({
   const [dataChargeType, setDataChargeType] = useState<ChargeTypeProps[]>([]);
   const [inputNote, setInputNote] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const [labelSelectPickup, setLabelSelectPickup] = useState<string>("");
 
   // Date Global
   const { date, setDate } = useDate();
@@ -93,11 +94,7 @@ const ProductSub: React.FC<ProductSubProps> = ({
     if (data.Adult == "0" && data.Child == "0") {
       toast.error("Please fill input adult or child!");
     } else {
-      console.log("idx_comp : " + idx_comp);
-      console.log("excursion_id : " + item?.excursion_id);
-      console.log("sub_excursion_id : " + item?.sub_excursion_id);
-      console.log(data);
-
+      // Set Kosong Awal
       setReviewBookingObj({
         idx_comp: "",
         state: "",
@@ -107,13 +104,14 @@ const ProductSub: React.FC<ProductSubProps> = ({
         sub_exc_name: "",
         pickup_id: "",
         pickup_name: "",
+        pickup_time_from: "",
         room: "",
         adult: "0",
         child: "0",
         infant: "0",
       });
 
-      setReviewBookingObj({
+      const paramsBooking = {
         idx_comp: idx_comp ?? "",
         state: state ?? "",
         country: country ?? "",
@@ -121,12 +119,18 @@ const ProductSub: React.FC<ProductSubProps> = ({
         sub_exc_id: item?.sub_excursion_id ?? "",
         sub_exc_name: item?.sub_excursion_name ?? "",
         pickup_id: data.pickup_area ?? "",
-        pickup_name: data.pickup_area ?? "",
+        pickup_name: labelSelectPickup ?? "",
+        pickup_time_from: "",
         room: data.room ?? "",
         adult: data.Adult ?? "0",
         child: data.Child ?? "0",
         infant: data.Infant ?? "0",
-      });
+      };
+      setReviewBookingObj(paramsBooking);
+      sessionStorage.setItem(
+        "paramsReviewBooking",
+        JSON.stringify(paramsBooking)
+      );
 
       router.push("/review_booking");
       toast.success("Booking Process");
@@ -198,7 +202,7 @@ const ProductSub: React.FC<ProductSubProps> = ({
             <p className="ml-4 mt-1 text-xs font-bold md:font-normal text-gray-500 ">
               Pickup from :
             </p>
-            <Controller
+            <Controller //validasi
               name="pickup_area"
               control={control}
               rules={{ required: "pickup area is required!" }}
@@ -208,7 +212,11 @@ const ProductSub: React.FC<ProductSubProps> = ({
                   id_excursion={item?.excursion_id}
                   placeholder="Find Pickup Area ..."
                   value={field.value}
-                  onChange={field.onChange}
+                  // onChange={field.onChange}
+                  onChange={(val) => {
+                    field.onChange(val?.value);
+                    setLabelSelectPickup(val?.label ?? "");
+                  }}
                   onBlur={field.onBlur}
                   name={field.name}
                   error={fieldState.error?.message}

@@ -135,8 +135,6 @@ export default function DetailDestination() {
 
         if (contentType.includes("application/json")) {
           const json = await res.json();
-          console.log(json);
-
           setDataProduct(json);
         }
       } catch (err: any) {

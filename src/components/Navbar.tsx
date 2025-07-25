@@ -8,6 +8,7 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { useModal } from "@/context/ModalContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDate } from "@/context/DateContext";
+import { useReviewBooking } from "@/context/ReviewBookingContext";
 // Next Image
 import Image from "next/image";
 // Drawer
@@ -104,6 +105,8 @@ export default function NavbarComponent() {
   const { language, setLanguage } = useLanguage();
   // Date
   const { date, setDate } = useDate();
+  // Review Booking
+  const { reviewBookingObj, setReviewBookingObj } = useReviewBooking();
 
   // Timeout Delay
   let timeout: NodeJS.Timeout;
@@ -127,8 +130,7 @@ export default function NavbarComponent() {
     // Format ke YYYY-MM-DD
     const formattedDate = e.toISOString().split("T")[0];
     // Date Global
-    // console.log(formattedDate); // hasil: 2025-07-17
-    setDate(formattedDate);
+    setDate(formattedDate); // hasil: 2025-07-17
   };
 
   const handleClick = (e: any) => {
@@ -178,6 +180,11 @@ export default function NavbarComponent() {
     const savedLanguage = localStorage.getItem("language");
     if (savedLanguage) {
       setLanguage(savedLanguage);
+    }
+
+    const savedReviewBooking = sessionStorage.getItem("paramsReviewBooking");
+    if (savedReviewBooking) {
+      setReviewBookingObj(JSON.parse(savedReviewBooking));
     }
   }, []);
 

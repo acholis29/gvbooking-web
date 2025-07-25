@@ -57,7 +57,6 @@ export function acis_qty_age(adult: string, child: string, infant: string): stri
   if (child !== "" && child !== "{}" && child != "0") {
     let child_data = JSON.parse(child);
     child_data.ages.forEach((age: any, index: number) => {
-      console.log(`Index ${index}: ${age}`);
       _child += `C|1|${age},`;
     });
   }

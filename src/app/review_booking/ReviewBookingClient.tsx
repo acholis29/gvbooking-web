@@ -13,6 +13,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useDate } from "@/context/DateContext";
 import { useReviewBooking } from "@/context/ReviewBookingContext";
 import { acis_qty_age, formatToIDR } from "@/helper/helper";
+import { log } from "node:console";
 
 type ReviewBookingItem = {
   idx_comp: string;
@@ -34,8 +35,6 @@ export default function ReviewBookingClient() {
   const { date, setDate } = useDate();
   // Review Booking Global
   const { reviewBookingObj, setReviewBookingObj } = useReviewBooking();
-
-  console.log(reviewBookingObj);
 
   const idx_comp = reviewBookingObj?.idx_comp; //ini dari idx_comp_alias
   const idx_excursion = reviewBookingObj?.exc_id; //ini dari idx_excursion
@@ -140,28 +139,13 @@ export default function ReviewBookingClient() {
   const [dataSurcharge, setDataSurcharge] = useState<PriceOfSurcharge[]>([]);
   const [dataChargeType, setDataChargeType] = useState<PriceOfChargeType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingSurcharge, setIsLoadingSurcharge] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState<number>(0);
 
-  // State Data Detail Destination
-  const [ListReviewBooking, setReviewBooking] = useState<ReviewBookingItem[]>(
-    []
-  );
-
-  useEffect(() => {
-    loadReviewBooking();
-  }, []); // tetap kosong, agar hanya dijalankan sekali saat mount
-
-  function loadReviewBooking() {
-    const review_booking = JSON.parse(
-      localStorage.getItem("review_booking") || "[]"
-    );
-    setReviewBooking(review_booking);
-    setIsLoading(false);
-  }
-
   // Detail Tour / Produk Detail
   useEffect(() => {
+    if (!idx_comp || !idx_excursion) return;
     const fetchData = async () => {
       setIsLoading(true); // mulai loading
       const formBody = new URLSearchParams({
@@ -189,7 +173,6 @@ export default function ReviewBookingClient() {
 
         if (contentType.includes("application/json")) {
           const json = await res.json();
-          console.log(json);
           setDataProduct(json);
         }
       } catch (err: any) {
@@ -201,12 +184,14 @@ export default function ReviewBookingClient() {
     };
 
     fetchData();
-  }, []);
+  }, [reviewBookingObj]);
 
   // Charge type & Guide Surcharge
   useEffect(() => {
+    if (!idx_comp || !idx_excursion) return;
     const fetchDataGuideSurcharge = async () => {
       setIsLoading(true); // mulai loading
+      setIsLoadingSurcharge(true); // mulai loading surcharge
       const formBody = new URLSearchParams({
         shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
         xml: "false",
@@ -238,7 +223,6 @@ export default function ReviewBookingClient() {
 
         if (contentType.includes("application/json")) {
           const json = await res.json();
-          console.log(json.msg.price_of_surcharge);
           setDataSurcharge(json.msg.price_of_surcharge);
           hitungTotal(
             json.msg.price_of_charge_type,
@@ -249,12 +233,13 @@ export default function ReviewBookingClient() {
         setError(err.message || "Error");
         console.error("Fetch error:", err);
       } finally {
+        setIsLoadingSurcharge(false); // selesai loading
         setIsLoading(false); // selesai loading
       }
     };
 
     fetchDataGuideSurcharge();
-  }, []);
+  }, [reviewBookingObj]);
 
   function hitungTotal(
     ChargeType: PriceOfChargeType[],
@@ -408,12 +393,14 @@ export default function ReviewBookingClient() {
             </div>
             <div className="basis-[40%] flex items-center justify-center">
               {/* Kolom 2 (40%) */}
-              <button
-                type="button"
-                className="text-gray-700 font-bold  shadow-2xl bg-amber-400 w-full hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
-              >
-                Add Cart
-              </button>
+              {!isLoadingSurcharge && (
+                <button
+                  type="button"
+                  className="text-gray-700 font-bold  shadow-2xl bg-amber-400 w-full hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
+                >
+                  Add Cart
+                </button>
+              )}
             </div>
             {/* <div className="basis-[20%]  flex items-center justify-center"> */}
             {/* Kolom 3 (20%) */}

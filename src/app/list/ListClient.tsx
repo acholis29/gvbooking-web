@@ -162,7 +162,6 @@ export default function ListClient() {
   // Function Handle Apply Filter Desktop
   const handleApply = () => {
     const result = selectedTypes.join("|");
-    console.log(result);
     setHolidayState(result);
     setApply(apply + 1); // untuk trigger apply filter
   };

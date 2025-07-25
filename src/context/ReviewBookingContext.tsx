@@ -8,6 +8,7 @@ type ReviewBooking = {
   sub_exc_name: string;
   pickup_id: string;
   pickup_name: string;
+  pickup_time_from: string;
   room: string;
   adult: string;
   child: string;

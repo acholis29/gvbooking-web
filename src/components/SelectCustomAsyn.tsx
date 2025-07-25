@@ -68,7 +68,8 @@ type SelectCustomProps = {
   idx_comp?: string;
   id_excursion?: string;
   value?: string | null;
-  onChange?: (value: string | null) => void;
+  // onChange?: (value: string | null) => void;
+  onChange?: (value: OptionType | null) => void;
   onBlur?: () => void;
   name?: string;
   error?: string;
@@ -108,7 +109,6 @@ export default function SelectCustomAsyn({
       );
 
       const json = await res.json();
-      // console.log(json);
 
       const fetchedOptions = json.msg.map((item: any) => ({
         value: item.location_id,
@@ -146,7 +146,8 @@ export default function SelectCustomAsyn({
         )}
         onChange={(selected) => {
           const selectedOption = selected as OptionType | null;
-          onChange?.(selectedOption?.value ?? null);
+          // onChange?.(selectedOption?.value ?? null);
+          onChange?.(selectedOption);
         }}
         onBlur={onBlur}
         placeholder={placeholder}
