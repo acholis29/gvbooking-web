@@ -196,7 +196,7 @@ const ProductSub: React.FC<ProductSubProps> = ({
           </div>
 
           <div className="flex flex-col w-full">
-            <h5 className="text-md md:text-2xl font-bold tracking-tight text-gray-900 mts-2">
+            <h5 className="text-md font-bold tracking-tight text-gray-900 mts-2">
               {item?.sub_excursion_name}
             </h5>
             <p className="ml-4 mt-1 text-xs font-bold md:font-normal text-gray-500 ">
@@ -223,7 +223,7 @@ const ProductSub: React.FC<ProductSubProps> = ({
                 />
               )}
             />
-            <Controller
+            {/* <Controller
               name="room"
               control={control}
               defaultValue=""
@@ -243,7 +243,7 @@ const ProductSub: React.FC<ProductSubProps> = ({
                   />
                 </>
               )}
-            />
+            /> */}
           </div>
         </div>
 

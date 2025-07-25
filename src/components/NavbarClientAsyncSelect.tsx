@@ -79,6 +79,9 @@ export default function NavbarClientAsyncSelect(props: any) {
         return fetchedOptions;
       } catch (error) {}
     } else {
+      let fetchedOptions = [];
+      if(!idx_comp) return [];
+      
       const formBody = new URLSearchParams({
         shared_key:
           idx_comp != "" ? idx_comp : "4D340942-88D3-44DD-A52C-EAF00EACADE8",
@@ -103,7 +106,7 @@ export default function NavbarClientAsyncSelect(props: any) {
 
         const json = await res.json();
 
-        const fetchedOptions = json.msg.map((item: any) => ({
+         fetchedOptions = json.msg.map((item: any) => ({
           value: item.excursion_id,
           label: item.search_name,
           country: item.location_country,
