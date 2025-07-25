@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as React from "react";
 import "yet-another-react-lightbox/styles.css";
 import Lightbox from "yet-another-react-lightbox";
@@ -31,6 +31,18 @@ const Galery: React.FC<GaleryProps> = ({
     : [];
   const [open, setOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768); // 768px = md breakpoint Tailwind
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <>
@@ -127,42 +139,44 @@ const Galery: React.FC<GaleryProps> = ({
             </div>
           </div>
           {/* Mode Handphone */}
-          <div className="h-56 sm:h-64 xl:h-80 2xl:h-96 mt-3 md:hidden">
-            <Swiper
-              modules={[Autoplay, Pagination]}
-              autoplay={{
-                delay: 3000,
-                disableOnInteraction: false,
-              }}
-              pagination={{
-                dynamicBullets: true,
-                clickable: true,
-              }}
-              loop={true}
-              spaceBetween={10}
-              slidesPerView={1}
-              className="w-full h-full"
-            >
-              {galleryArray.map((img, index) => (
-                <SwiperSlide key={`swiper-${index}`}>
-                  <img
-                    src={img}
-                    className="w-full h-full object-cover"
-                    alt={`Gallery ${index + 1}`}
-                    onClick={() => {
-                      setSelectedIndex(index);
-                      setOpen(true);
-                    }}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.onerror = null;
-                      target.src = "/images/icon/android-chrome-512x512.png";
-                    }}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
+          {isMobile ? (
+            <div className="h-56 sm:h-64 xl:h-80 2xl:h-96 mt-3 md:hidden">
+              <Swiper
+                modules={[Autoplay, Pagination]}
+                autoplay={{
+                  delay: 3000,
+                  disableOnInteraction: false,
+                }}
+                pagination={{
+                  dynamicBullets: true,
+                  clickable: true,
+                }}
+                loop={galleryArray.length > 1}
+                spaceBetween={10}
+                slidesPerView={1}
+                className="w-full h-full"
+              >
+                {galleryArray.map((img, index) => (
+                  <SwiperSlide key={`swiper-${index}`}>
+                    <img
+                      src={img}
+                      className="w-full h-full object-cover"
+                      alt={`Gallery ${index + 1}`}
+                      onClick={() => {
+                        setSelectedIndex(index);
+                        setOpen(true);
+                      }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.onerror = null;
+                        target.src = "/images/icon/android-chrome-512x512.png";
+                      }}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          ) : null}
         </>
       ) : (
         <div className="grid grid-cols-1 gap-2 py-5">
