@@ -143,6 +143,11 @@ export default function ReviewBookingClient() {
   const [isLoadingSurcharge, setIsLoadingSurcharge] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState<number>(0);
+  // State Form
+  const [selectedSurcharge, setSelectedSurcharge] = useState<
+    PriceOfSurcharge[]
+  >([]);
+  const [specialNote, setSpecialNote] = useState<string>("");
 
   // Detail Tour / Produk Detail
   useEffect(() => {
@@ -257,6 +262,8 @@ export default function ReviewBookingClient() {
       for (let j = 0; j < Surcharge.length; j++) {
         if (Surcharge[j].mandatory.toLocaleLowerCase() == "true") {
           total += parseInt(Surcharge[j].price);
+          // masukin data cheked
+          setSelectedSurcharge((prev) => [...prev, Surcharge[j]]);
         }
       }
     }
@@ -265,11 +272,19 @@ export default function ReviewBookingClient() {
     return total;
   }
 
-  const handleCheckboxChange = (checked: boolean, price: number) => {
+  const handleCheckboxChange = (checked: boolean, price: number, data: any) => {
     if (checked) {
       setTotal((prev) => prev + price);
+
+      // Tambah data ke selectedSurcharge jika belum ada
+      setSelectedSurcharge((prev) => [...prev, data]);
     } else {
       setTotal((prev) => prev - price);
+
+      // Hapus data dari selectedSurcharge (berdasarkan ID atau properti unik lainnya)
+      setSelectedSurcharge((prev) =>
+        prev.filter((item) => item.surcharge_id !== data.surcharge_id)
+      );
     }
   };
 
@@ -341,7 +356,8 @@ export default function ReviewBookingClient() {
                             onChange={(e) =>
                               handleCheckboxChange(
                                 e.target.checked,
-                                Number(items.price)
+                                Number(items.price),
+                                items
                               )
                             }
                             className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
@@ -382,6 +398,9 @@ export default function ReviewBookingClient() {
               rows={4}
               className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300 focus:ring-gray-500 focus:border-gray-500 shadow-md"
               placeholder="Write your note here..."
+              onChange={(e) => {
+                setSpecialNote(e.target.value);
+              }}
             ></textarea>
           </div>
 
