@@ -144,6 +144,7 @@ export default function ReviewBookingClient() {
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState<number>(0);
   // State Form
+  const [roomNumber, setRoomNumber] = useState<string>("");
   const [selectedSurcharge, setSelectedSurcharge] = useState<
     PriceOfSurcharge[]
   >([]);
@@ -321,6 +322,11 @@ export default function ReviewBookingClient() {
             adult={adult ?? ""}
             child={child.count ?? ""}
             infant={infant ?? ""}
+            onChange={(val) => {
+              console.log("Room Number:", val);
+              setRoomNumber(val);
+              // atau simpan ke state
+            }}
           />
 
           {/* Table Surgery */}

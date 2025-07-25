@@ -21,6 +21,7 @@ type ReviewBookingCardProps = {
   adult: string;
   child: string;
   infant: string;
+  onChange: (value: string) => void; // Ubah ini
 };
 
 const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
@@ -35,6 +36,7 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
   adult,
   child,
   infant,
+  onChange,
 }) => {
   const { addToCart, removeFromCart } = useCart();
   const [pickupTimeFrom, setPickupTimeFrom] = useState<string>(
@@ -72,6 +74,7 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
           type="text"
           className="text-gray-600 text-sm border-gray-300 w-80 h-8 bg-gray-100 rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
           placeholder="Room number (optional)..."
+          onChange={(e) => onChange(e.target.value)}
         />
         <div className="relative">
           <div className="absolute inset-y-0 end-50 top-2 flex items-center pe-3.5 pointer-events-none">
