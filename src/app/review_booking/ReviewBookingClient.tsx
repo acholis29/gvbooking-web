@@ -15,6 +15,9 @@ import { useReviewBooking } from "@/context/ReviewBookingContext";
 import { acis_qty_age, formatToIDR } from "@/helper/helper";
 import { log } from "node:console";
 
+// Toast
+import toast from "react-hot-toast";
+
 type ReviewBookingItem = {
   idx_comp: string;
   idx_excursion: string;
@@ -35,7 +38,7 @@ export default function ReviewBookingClient() {
   const { date, setDate } = useDate();
   // Review Booking Global
   const { reviewBookingObj, setReviewBookingObj } = useReviewBooking();
-  console.log(reviewBookingObj);
+
   const idx_comp = reviewBookingObj?.idx_comp; //ini dari idx_comp_alias
   const idx_excursion = reviewBookingObj?.exc_id; //ini dari idx_excursion
   const idx_excursion_sub = reviewBookingObj?.sub_exc_id; //ini sub_excursion_id
@@ -149,6 +152,7 @@ export default function ReviewBookingClient() {
     PriceOfSurcharge[]
   >([]);
   const [specialNote, setSpecialNote] = useState<string>("");
+  const [timePickup, setTimePickup] = useState<string>("");
 
   // Detail Tour / Produk Detail
   useEffect(() => {
@@ -322,13 +326,14 @@ export default function ReviewBookingClient() {
             adult={adult ?? ""}
             child={child.count ?? ""}
             infant={infant ?? ""}
-            onChange={(val) => {
-              console.log("Room Number:", val);
+            onRoomChange={(val) => {
               setRoomNumber(val);
               // atau simpan ke state
             }}
+            onTimeChange={(val) => {
+              setTimePickup(val);
+            }}
           />
-
           {/* Table Surgery */}
           {dataSurcharge.length > 0 && (
             <div className="relative overflow-x-auto shadow-md sm:rounded-l md:max-w-3xl">
@@ -424,6 +429,9 @@ export default function ReviewBookingClient() {
                 <button
                   type="button"
                   className="text-gray-700 font-bold  shadow-2xl bg-amber-400 w-full hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
+                  onClick={() => {
+                    toast.success("Add To Chart!");
+                  }}
                 >
                   Add Cart
                 </button>

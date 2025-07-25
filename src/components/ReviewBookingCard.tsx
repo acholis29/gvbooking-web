@@ -21,7 +21,8 @@ type ReviewBookingCardProps = {
   adult: string;
   child: string;
   infant: string;
-  onChange: (value: string) => void; // Ubah ini
+  onRoomChange: (value: string) => void; // Ubah ini
+  onTimeChange: (value: string) => void; // Ubah ini
 };
 
 const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
@@ -36,7 +37,8 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
   adult,
   child,
   infant,
-  onChange,
+  onRoomChange,
+  onTimeChange,
 }) => {
   const { addToCart, removeFromCart } = useCart();
   const [pickupTimeFrom, setPickupTimeFrom] = useState<string>(
@@ -74,7 +76,7 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
           type="text"
           className="text-gray-600 text-sm border-gray-300 w-80 h-8 bg-gray-100 rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
           placeholder="Room number (optional)..."
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onRoomChange(e.target.value)}
         />
         <div className="relative">
           <div className="absolute inset-y-0 end-50 top-2 flex items-center pe-3.5 pointer-events-none">
@@ -86,11 +88,14 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
             value={pickupTimeFrom}
             onChange={(e) => {
               setPickupTimeFrom(e.target.value);
+              onTimeChange(e.target.value);
             }}
             className="text-gray-600 text-sm border-gray-300 w-30 h-8 bg-gray-100 rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
             required
             disabled={
-              pickupTimeFrom == "00:00" || pickupTimeFrom == "" ? false : true
+              pickup_time_from == "00:00" || pickup_time_from == ""
+                ? false
+                : true
             }
           />
         </div>
