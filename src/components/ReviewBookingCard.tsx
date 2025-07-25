@@ -1,5 +1,5 @@
 // components/HorizontalCard.tsx
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // Font Awesome
 import { faClock, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,6 +17,7 @@ type ReviewBookingCardProps = {
   sub_title_1: string;
   sub_title_2: string;
   sub_title_3: string;
+  pickup_time_from: string;
   adult: string;
   child: string;
   infant: string;
@@ -30,11 +31,19 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
   sub_title_1,
   sub_title_2,
   sub_title_3,
+  pickup_time_from,
   adult,
   child,
   infant,
 }) => {
   const { addToCart, removeFromCart } = useCart();
+  const [pickupTimeFrom, setPickupTimeFrom] = useState<string>(
+    pickup_time_from || ""
+  );
+
+  useEffect(() => {
+    setPickupTimeFrom(pickup_time_from ?? "");
+  }, [pickup_time_from]);
 
   return (
     <div className="relative flex flex-row items-start bg-white border border-gray-200 rounded-lg shadow-sm md:max-w-3xl hover:bg-gray-100 mb-3">
@@ -71,8 +80,15 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
           <input
             type="time"
             id="time"
+            value={pickupTimeFrom}
+            onChange={(e) => {
+              setPickupTimeFrom(e.target.value);
+            }}
             className="text-gray-600 text-sm border-gray-300 w-30 h-8 bg-gray-100 rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
             required
+            disabled={
+              pickupTimeFrom == "00:00" || pickupTimeFrom == "" ? false : true
+            }
           />
         </div>
       </div>

@@ -75,6 +75,7 @@ const ProductSub: React.FC<ProductSubProps> = ({
   const [inputNote, setInputNote] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [labelSelectPickup, setLabelSelectPickup] = useState<string>("");
+  const [pickupTimeFrom, setPickupTimeFrom] = useState<string>("");
 
   // Date Global
   const { date, setDate } = useDate();
@@ -120,7 +121,7 @@ const ProductSub: React.FC<ProductSubProps> = ({
         sub_exc_name: item?.sub_excursion_name ?? "",
         pickup_id: data.pickup_area ?? "",
         pickup_name: labelSelectPickup ?? "",
-        pickup_time_from: "",
+        pickup_time_from: pickupTimeFrom ?? "",
         room: data.room ?? "",
         adult: data.Adult ?? "0",
         child: data.Child ?? "0",
@@ -216,6 +217,7 @@ const ProductSub: React.FC<ProductSubProps> = ({
                   onChange={(val) => {
                     field.onChange(val?.value);
                     setLabelSelectPickup(val?.label ?? "");
+                    setPickupTimeFrom(val?.data.time_pickup_from);
                   }}
                   onBlur={field.onBlur}
                   name={field.name}

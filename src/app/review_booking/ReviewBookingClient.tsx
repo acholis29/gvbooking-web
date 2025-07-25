@@ -35,13 +35,14 @@ export default function ReviewBookingClient() {
   const { date, setDate } = useDate();
   // Review Booking Global
   const { reviewBookingObj, setReviewBookingObj } = useReviewBooking();
-
+  console.log(reviewBookingObj);
   const idx_comp = reviewBookingObj?.idx_comp; //ini dari idx_comp_alias
   const idx_excursion = reviewBookingObj?.exc_id; //ini dari idx_excursion
   const idx_excursion_sub = reviewBookingObj?.sub_exc_id; //ini sub_excursion_id
   const pickup_id = reviewBookingObj?.pickup_id; //ini dari pickup id
   const room = reviewBookingObj?.room; //ini dari room
   const pickup_name = reviewBookingObj?.pickup_name; //ini dari pickup name
+  const pickup_time_from = reviewBookingObj?.pickup_time_from;
   const sub_excursion_name = reviewBookingObj?.sub_exc_name; //ini dari exc name
   const adult = reviewBookingObj?.adult;
   const child = JSON.parse(reviewBookingObj?.child ?? "{}");
@@ -301,6 +302,7 @@ export default function ReviewBookingClient() {
             sub_title_1={sub_excursion_name ?? ""}
             sub_title_2={`Pickup : ${pickup_name}`}
             sub_title_3={`Room : ${room}`}
+            pickup_time_from={pickup_time_from ?? ""}
             adult={adult ?? ""}
             child={child.count ?? ""}
             infant={infant ?? ""}
