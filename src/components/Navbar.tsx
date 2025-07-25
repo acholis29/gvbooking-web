@@ -202,7 +202,7 @@ export default function NavbarComponent() {
     <nav className="sticky top-0 z-50 bg-white">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link
-          href="/home"
+          href="/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <div className="w-[150px] h-auto">

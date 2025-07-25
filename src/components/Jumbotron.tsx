@@ -58,7 +58,9 @@ const JumbotronComponent: React.FC<JumbotronProps> = ({
               className="w-4 h-4 text-white pl-2"
             />
           </a> */}
-          <a
+
+          
+          {/* <a
             href={destinationUrl}
             target="blank"
             className="py-3 px-5 sm:ms-4 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-red-900 focus:z-10 focus:ring-4 focus:ring-gray-100"
@@ -68,7 +70,7 @@ const JumbotronComponent: React.FC<JumbotronProps> = ({
               icon={faArrowRight}
               className="w-4 h-4 text-gray-900 pl-2"
             />
-          </a>
+          </a> */}
         </div>
       </div>
     </section>
