@@ -297,7 +297,7 @@ export default function ReviewBookingClient() {
     // Cart Page
     <div className="max-w-screen-xl mx-auto">
       <Breadcrumb
-        pageName="Review Booking"
+        pageName="Review "
         country={country}
         state={state}
         idx_comp={idx_comp}

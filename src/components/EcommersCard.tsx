@@ -147,29 +147,30 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
           </a>
         </div> */}
         {!hidePrice && (
-          <div className="flex flex-col md:flex-row items-center justify-between mt-auto">
-            <span className="text-md font-bold text-gray-700">
-              {currency} {price} /{" "}
-              <span className="font-normal text-sm">
+          <div className="flex items-center justify-between mt-auto">
+            <div>
+              <span className="text-md font-bold text-gray-700"> {currency} {price} { " "}</span>
+              {/* <span className="font-normal text-sm">
                 <FontAwesomeIcon
                   icon={faUser}
                   className="w-4 h-4 text-gray-600"
                 />
-              </span>
-            </span>
-            <button
+              </span> */}
+              <span className="text-sm  text-gray-700">per person</span>
+            </div> 
+            {/* <button
               onClick={() => {
                 addToCart(data);
                 toast.success("Add to cart!");
               }} // ✅ benar: hanya dipanggil saat diklik
-              className="w-full md:w-auto text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center cursor-pointer"
+              className=" md:w-auto text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center cursor-pointer"
             >
               <FontAwesomeIcon
                 icon={faCartPlus}
                 className="w-4 h-4 text-white"
-              />{" "}
-              <span className="md:hidden">Add</span>
-            </button>
+              />
+              
+            </button> */}
           </div>
         )}
       </div>

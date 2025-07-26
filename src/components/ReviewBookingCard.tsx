@@ -74,12 +74,12 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
         </p>
         <input
           type="text"
-          className="text-gray-600 text-sm border-gray-300 w-80 h-8 bg-gray-100 rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
+          className="text-gray-600 text-sm border-gray-300 w-50 md:w-50 h-8 bg-gray-100 rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
           placeholder="Room number"
           onChange={(e) => onRoomChange(e.target.value)}
         />
         <div className="relative">
-          <div className="absolute inset-y-0 end-121 top-2 flex items-center pe-8.5 pointer-events-none">
+          <div className="absolute inset-y-0 end-37 md:end-121 top-2 flex items-center pe-8.5 pointer-events-none">
             <FontAwesomeIcon icon={faClock} className="w-4 h-4 text-gray-600" />{" "}
           </div>
           <input

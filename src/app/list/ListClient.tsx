@@ -470,7 +470,7 @@ export default function ListClient() {
                     idx_excursion={item.Idx_excursion}
                     // image={`https://picsum.photos/800/600?random=${index}`}
                     image={`${host_img}/media/${item.code_exc}/TN_400_${item.Gbr}`}
-                    title={capitalizeWords(item.Name_excursion)}
+                    title={capitalizeWords(item.Name_excursion).toUpperCase()}
                     sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                     price={item.PriceFrom ?? 0}
                     currency={item.Currency ?? "Rp"}
@@ -511,11 +511,11 @@ export default function ListClient() {
                 {apply != 0 && (
                   <>
                     <img
-                      src="/images/error/empty.svg"
+                      src="/images/error/empty.jpg"
                       alt=""
                       className="w-50 md:w-100 h-auto"
                     />
-                    <p className="text-2xl">Opps Not Found!</p>
+                    <p className="text-2xl">Activities not found</p>
                   </>
                 )}
               </div>
