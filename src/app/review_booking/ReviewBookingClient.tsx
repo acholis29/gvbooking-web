@@ -17,6 +17,8 @@ import { log } from "node:console";
 
 // Toast
 import toast from "react-hot-toast";
+// Form Libraries
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 
 type ReviewBookingItem = {
   idx_comp: string;
@@ -30,6 +32,20 @@ type ReviewBookingItem = {
 };
 
 export default function ReviewBookingClient() {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    control,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data: any) => {
+    console.log("Data submit:", data);
+    toast.success("Success");
+  };
+
   // Currency
   const { currency, setCurrency } = useCurrency();
   // Language
@@ -310,154 +326,153 @@ export default function ReviewBookingClient() {
       <h1 className="text-gray-500 px-6 pt-6 text-2xl font-bold">
         REVIEW BOOKING
       </h1>
-      <section className="flex flex-col md:flex-row p-6 bg-white gap-1">
-        {/* Konten Kiri */}
-        <div className="md:w-full text-gray-700">
-          <ReviewBookingCard
-            key={1}
-            idx_comp={"asas"}
-            idx_excursion={"asas"}
-            image={
-              dataProduct != null && dataProduct.msg.product_details.length > 0
-                ? dataProduct.msg.product_details[0].picture
-                : "/images/error/loading.gif"
-            }
-            title={dataProduct?.msg.product_details[0].excursion_name ?? "-"}
-            sub_title_1={sub_excursion_name ?? ""}
-            sub_title_2={`Pickup : ${pickup_name}`}
-            sub_title_3={`Room : ${room}`}
-            pickup_time_from={pickup_time_from ?? ""}
-            adult={adult ?? ""}
-            child={child.count ?? ""}
-            infant={infant ?? ""}
-            onRoomChange={(val) => {
-              setRoomNumber(val);
-              // atau simpan ke state
-            }}
-            onTimeChange={(val) => {
-              setTimePickup(val);
-            }}
-          />
-          {/* Table Surgery */}
-          {dataSurcharge.length > 0 && (
-            <div className="relative overflow-x-auto shadow-md sm:rounded-l md:max-w-3xl">
-              <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">
-                      # Surcharge
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Price
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {dataSurcharge.map((items, index) => {
-                    return (
-                      <tr key={index} className="bg-white hover:bg-gray-100">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-wrap"
-                        >
-                          <input
-                            id={`surcharge-${index}`}
-                            type="checkbox"
-                            defaultChecked={
-                              items.mandatory.toLocaleLowerCase() == "true"
-                                ? true
-                                : false
-                            } // atau false
-                            onChange={(e) =>
-                              handleCheckboxChange(
-                                e.target.checked,
-                                Number(items.price),
-                                items
-                              )
-                            }
-                            className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
-                            disabled={
-                              items.mandatory.toLowerCase() === "true"
-                                ? true
-                                : false
-                            }
-                          />
-                          <label
-                            htmlFor={`surcharge-${index}`}
-                            className="w-full py-4 ms-2 text-sm font-medium text-gray-900"
-                          >
-                            {items.surcharge_name}
-                          </label>
-                        </th>
-                        <td className="px-6 py-4">
-                          {items.currency} {items.price_in_format}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          {/* Text Area Note */}
-          <div className="md:max-w-3xl my-3">
-            <label
-              htmlFor="message"
-              className="block mb-2 text-sm text-gray-500 font-semibold"
-            >
-              Special Note
-            </label>
-            <textarea
-              id="message"
-              rows={4}
-              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300 focus:ring-gray-500 focus:border-gray-500 shadow-md"
-              placeholder="Write your note here..."
-              onChange={(e) => {
-                setSpecialNote(e.target.value);
-              }}
-            ></textarea>
-          </div>
-
-          <div className="md:max-w-3xl flex h-20 w-full bg-gray-200 mt-15 rounded-sm shadow-md">
-            <div className="basis-[60%] flex flex-col items-start justify-center pl-3">
-              {/* Kolom 1 (60%) */}
-              <p className="font-semibold text-gray-700">Total</p>
-              <p className="font-bold text-gray-800">
-                {currency} {formatToIDR(total)}
-              </p>
-            </div>
-            <div className="basis-[40%] flex items-center justify-center">
-              {/* Kolom 2 (40%) */}
-              {!isLoadingSurcharge && (
-                <button
-                  type="button"
-                  className="text-gray-700 font-bold  shadow-2xl bg-amber-400 w-full hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
-                  onClick={() => {
-                    toast.success("Add To Chart!");
-                    // Validasi
-                    console.log(`room number : ${roomNumber}`);
-                    console.log(`pickup time : ${timePickup}`);
-                    console.log(`surcharge : ${selectedSurcharge}`);
-                    console.log(`special note : ${specialNote}`);
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <section className="flex flex-col md:flex-row p-6 bg-white gap-1">
+          {/* Konten Kiri */}
+          <div className="md:w-full text-gray-700">
+            <Controller
+              name="roomNumber"
+              control={control}
+              defaultValue={"Lobby"}
+              rules={{ required: "Room number is required" }}
+              render={({ field }) => (
+                <ReviewBookingCard
+                  key={1}
+                  idx_comp={"asas"}
+                  idx_excursion={"asas"}
+                  image={
+                    dataProduct != null &&
+                    dataProduct.msg.product_details.length > 0
+                      ? dataProduct.msg.product_details[0].picture
+                      : "/images/error/loading.gif"
+                  }
+                  title={
+                    dataProduct?.msg.product_details[0].excursion_name ?? "-"
+                  }
+                  sub_title_1={sub_excursion_name ?? ""}
+                  sub_title_2={`Pickup : ${pickup_name}`}
+                  sub_title_3={`Room : ${room}`}
+                  pickup_time_from={pickup_time_from ?? ""}
+                  adult={adult ?? ""}
+                  child={child.count ?? ""}
+                  infant={infant ?? ""}
+                  // onRoomChange={(val) => {
+                  //   setRoomNumber(val);
+                  //   // atau simpan ke state
+                  // }}
+                  roomValue={field.value}
+                  onRoomChange={field.onChange}
+                  onTimeChange={(val) => {
+                    setTimePickup(val);
                   }}
-                >
-                  Add Cart
-                </button>
+                  errors={errors} // ✅ Tambah ini!
+                />
               )}
-            </div>
-            {/* <div className="basis-[20%]  flex items-center justify-center"> */}
-            {/* Kolom 3 (20%) */}
-            {/* <button
-                type="button"
-                className="text-white font-bold shadow-2xl bg-red-700 w-full hover:bg-red-800 focus:ring-4 focus:ring-red-300 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
+            />
+            {/* Table Surgery */}
+            {dataSurcharge.length > 0 && (
+              <div className="relative overflow-x-auto shadow-md sm:rounded-l md:max-w-3xl">
+                <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
+                    <tr>
+                      <th scope="col" className="px-6 py-3">
+                        # Surcharge
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Price
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dataSurcharge.map((items, index) => {
+                      return (
+                        <tr key={index} className="bg-white hover:bg-gray-100">
+                          <th
+                            scope="row"
+                            className="px-6 py-4 font-medium text-gray-900 whitespace-wrap"
+                          >
+                            <input
+                              id={`surcharge-${index}`}
+                              type="checkbox"
+                              defaultChecked={
+                                items.mandatory.toLocaleLowerCase() == "true"
+                                  ? true
+                                  : false
+                              } // atau false
+                              onChange={(e) =>
+                                handleCheckboxChange(
+                                  e.target.checked,
+                                  Number(items.price),
+                                  items
+                                )
+                              }
+                              className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
+                              disabled={
+                                items.mandatory.toLowerCase() === "true"
+                                  ? true
+                                  : false
+                              }
+                            />
+                            <label
+                              htmlFor={`surcharge-${index}`}
+                              className="w-full py-4 ms-2 text-sm font-medium text-gray-900"
+                            >
+                              {items.surcharge_name}
+                            </label>
+                          </th>
+                          <td className="px-6 py-4">
+                            {items.currency} {items.price_in_format}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Text Area Note */}
+            <div className="md:max-w-3xl my-3">
+              <label
+                htmlFor="message"
+                className="block mb-2 text-sm text-gray-500 font-semibold"
               >
-                Payment
-              </button>
-            </div> */}
+                Special Note
+              </label>
+              <textarea
+                id="message"
+                rows={4}
+                className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300 focus:ring-gray-500 focus:border-gray-500 shadow-md"
+                placeholder="Write your note here..."
+                onChange={(e) => {
+                  setSpecialNote(e.target.value);
+                }}
+              ></textarea>
+            </div>
+
+            <div className="md:max-w-3xl flex h-20 w-full bg-gray-200 mt-15 rounded-sm shadow-md">
+              <div className="basis-[60%] flex flex-col items-start justify-center pl-3">
+                {/* Kolom 1 (60%) */}
+                <p className="font-semibold text-gray-700">Total</p>
+                <p className="font-bold text-gray-800">
+                  {currency} {formatToIDR(total)}
+                </p>
+              </div>
+              <div className="basis-[40%] flex items-center justify-center">
+                {/* Kolom 2 (40%) */}
+                {!isLoadingSurcharge && (
+                  <button
+                    type="submit"
+                    className="text-gray-700 font-bold  shadow-2xl bg-amber-400 w-full hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
+                  >
+                    Add Cart
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </form>
     </div>
   );
 }

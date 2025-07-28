@@ -21,6 +21,8 @@ type ReviewBookingCardProps = {
   adult: string;
   child: string;
   infant: string;
+  roomValue?: string; // ✅ Tambahkan ini (optional)
+  errors?: any; // 👈 Tambahkan ini
   onRoomChange: (value: string) => void; // Ubah ini
   onTimeChange: (value: string) => void; // Ubah ini
 };
@@ -37,6 +39,8 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
   adult,
   child,
   infant,
+  roomValue,
+  errors,
   onRoomChange,
   onTimeChange,
 }) => {
@@ -74,11 +78,16 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
         </p>
         <input
           type="text"
-          defaultValue={"Lobby"}
           className="text-gray-600 text-sm border-gray-300 w-full h-8 bg-gray-100 rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
           placeholder="Room number (optional)..."
+          value={roomValue}
           onChange={(e) => onRoomChange(e.target.value)}
         />
+        {errors?.roomNumber && (
+          <span className="text-red-500 pl-3 italic text-xs">
+            {errors.roomNumber.message}
+          </span>
+        )}
         <div className="relative">
           <div className="absolute inset-y-0 end-20 md:end-48 top-2 flex items-center pe-3.5 pointer-events-none">
             <FontAwesomeIcon icon={faClock} className="w-4 h-4 text-gray-600" />{" "}
