@@ -66,6 +66,7 @@ export default function NavbarComponent() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All Destinations");
   const [isProfilDropdownOpen, setProfilDropdownOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const [menuSelected, setMenuSelected] = useState("");
   type CurrencyItem = {
@@ -198,6 +199,23 @@ export default function NavbarComponent() {
     setSelectedDate(new Date(date));
   }, [date]);
 
+  // Ukuran Mobile
+  useEffect(() => {
+    // Fungsi untuk update state berdasarkan lebar window
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768); // <768px dianggap mobile
+    };
+
+    // Cek pertama kali saat mount
+    handleResize();
+
+    // Tambahkan event listener
+    window.addEventListener("resize", handleResize);
+
+    // Bersihkan event listener saat unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <nav className="sticky top-0 z-50 bg-white">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -288,8 +306,8 @@ export default function NavbarComponent() {
               </div>
               {/* Button */}
               <div className="relative w-full">
-                {/* Select dropdown kamu */}
-                <NavbarClientAsyncSelect />
+                {/* Select dropdown Desktop */}
+                {isMobile == false && <NavbarClientAsyncSelect />}
 
                 {/* Tombol Kalender */}
                 <div
@@ -535,8 +553,7 @@ export default function NavbarComponent() {
               {/* Button */}
               <div className="relative w-full">
                 {/* Select dropdown kamu */}
-                <NavbarClientAsyncSelect />
-
+                {isMobile == true && <NavbarClientAsyncSelect />}
                 {/* Tombol Kalender */}
                 <div
                   onMouseEnter={() => {
