@@ -164,7 +164,7 @@ export default function DetailDestination() {
         <>
           <div className="max-w-screen-xl mx-auto px-4">
             <Breadcrumb
-              pageName="Detail Destination"
+              pageName="Activity"
               country={country || ""}
               state={state || ""}
               idx_comp={idx_comp || ""}

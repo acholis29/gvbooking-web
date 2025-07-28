@@ -8,7 +8,7 @@ export default function Custom404() {
 
         {/* Text */}
         <h1 className="text-3xl text-center font-bold text-gray-800 mb-2 mt-2">
-          404 - Halaman Tidak Ditemukan
+          404 - Page not found
         </h1>
 
         {/* Tombol kembali */}
@@ -16,7 +16,7 @@ export default function Custom404() {
           href="/"
           className="mt-4 inline-block bg-red-800 text-white px-6 py-2 rounded hover:bg-red-600 transition"
         >
-          Kembali ke Beranda
+          Back to Home
         </a>
       </div>
     </div>

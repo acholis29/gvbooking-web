@@ -20,6 +20,7 @@ import SkeletonImage from "@/components/SkeletonImage";
 import SkeletonCard from "@/components/SkeletonCard";
 // Host Imgae
 import { API_HOSTS } from "@/lib/apihost";
+import { POST } from "@/app/api/proxy/produk/route";
 
 type Props = {
   slug: string;
@@ -51,6 +52,9 @@ export default function DestinationClient({ slug }: Props) {
   const searchParams = useSearchParams();
   const idx_comp = searchParams.get("id"); //ini dari idx_comp_alias
   const country = searchParams.get("country"); //ini dari idx_comp_alias
+
+  const [isLoading, setIsLoading] = useState(true);
+  
   const host_img =
     country == "indonesia"
       ? API_HOSTS.img_indo
@@ -73,6 +77,8 @@ export default function DestinationClient({ slug }: Props) {
     RecomendedDestinationItem[]
   >([]);
 
+
+
   useEffect(() => {
     fetch(`/api/excursion/local_destination/${idx_comp}`, {
       cache: "no-store", // ⛔ jangan ambil dari cache
@@ -86,6 +92,9 @@ export default function DestinationClient({ slug }: Props) {
         setIsLoadingDest(false);
       });
   }, []);
+
+  
+
 
   useEffect(() => {
     fetch(`/api/excursion/attr/recomended?idxcomp=${idx_comp}`, {
@@ -146,11 +155,6 @@ export default function DestinationClient({ slug }: Props) {
       <div className="bg-gray-100 my-6 pb-6">
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
           <p className="text-red-gvi font-bold text-3xl">
-            {/* {" "}
-            <FontAwesomeIcon
-              icon={faHeart}
-              className="w-10 h-10 text-red-gvi 0 pl-2"
-            />{" "} */}
             Recomended
           </p>
         </section>
@@ -175,7 +179,7 @@ export default function DestinationClient({ slug }: Props) {
                 price={`${item.PriceFrom}`}
                 currency={item.Currency}
                 // link="/destination/detail/indonesia"
-                link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
+                link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country.toLowerCase()}&state=${item.State.toLowerCase()}&exc=${item.Idx_excursion}`}
               />
             ))
           ) : (
@@ -201,7 +205,7 @@ export default function DestinationClient({ slug }: Props) {
               icon={faCar}
               className="w-10 h-10 text-red-gvi 0 pl-2"
             />{" "} */}
-            Tour in {slug}
+            <span className="transform: uppercase;">Tour in {slug}</span> 
           </p>
         </section>
         <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">

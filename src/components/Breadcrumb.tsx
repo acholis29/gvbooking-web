@@ -119,10 +119,10 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
                 />
               </svg>
               <Link
-                href={`/destination/detail/${country}?id=${idx_comp}&country=${country}&state=${state}&exc=${idx_excursion}`}
+                href={`/destination/detail/${country}?id=${idx_comp}&country=${country.toLowerCase()}&state=${state.toLowerCase()}&exc=${idx_excursion}`}
                 className="ms-1 uppercase text-xs md:text-sm font-medium text-gray-500 md:ms-2"
               >
-                DETAIL DESTINATION
+                Activity
               </Link>
             </div>
           </li>

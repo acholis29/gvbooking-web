@@ -138,7 +138,7 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
         </div>
       </div>
 
-      <div className="hidden md:flex flex-row w-full p-2 leading-normal my-auto">
+      {/* <div className="flex flex-row w-full p-2 leading-normal my-auto">
         <div className="">
           {adult != "" && (
             <div className="text-xs md:text-md font-semibold text-gray-700 mb-2">
@@ -173,7 +173,7 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
             </div>
           )}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
