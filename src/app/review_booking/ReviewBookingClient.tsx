@@ -2,7 +2,14 @@
 import { useEffect, useState } from "react";
 import SkeletonCardHorizontal from "@/components/SkeletonCardHorizontal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInbox } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBaby,
+  faBell,
+  faChild,
+  faInbox,
+  faQuestion,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import Breadcrumb from "@/components/Breadcrumb";
 import ReviewBookingCard from "@/components/ReviewBookingCard";
 
@@ -251,6 +258,7 @@ export default function ReviewBookingClient() {
         if (contentType.includes("application/json")) {
           const json = await res.json();
           setDataSurcharge(json.msg.price_of_surcharge);
+          setDataChargeType(json.msg.price_of_charge_type);
           hitungTotal(
             json.msg.price_of_charge_type,
             json.msg.price_of_surcharge
@@ -369,13 +377,97 @@ export default function ReviewBookingClient() {
                 />
               )}
             />
+
+            {/* Table Charge Type */}
+
+            {dataChargeType.length > 0 && (
+              <div className="relative overflow-x-auto shadow-md sm:rounded-l md:max-w-3xl mb-3">
+                <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
+                    <tr>
+                      <th scope="col" className="px-6 py-3 md:w-lg">
+                        # Traveller
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Price
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dataChargeType.map((item, index) => {
+                      return (
+                        <tr
+                          key={`chargeType-${index}`}
+                          className="bg-white hover:bg-gray-100 text-xs md:text-sm"
+                        >
+                          <td
+                            scope="row"
+                            className="px-6 py-4 font-medium text-gray-900 whitespace-wrap"
+                          >
+                            {item.charge_type == "A" ? (
+                              <FontAwesomeIcon
+                                icon={faUser}
+                                className="w-10 h-10 text-gray-500"
+                                size="sm"
+                              />
+                            ) : item.charge_type == "C" ? (
+                              <FontAwesomeIcon
+                                icon={faChild}
+                                className="w-10 h-10 text-gray-500"
+                                size="lg"
+                              />
+                            ) : item.charge_type == "I" ? (
+                              <FontAwesomeIcon
+                                icon={faBaby}
+                                className="w-10 h-10 text-gray-500"
+                                size="lg"
+                              />
+                            ) : item.charge_type == "S" ? (
+                              <FontAwesomeIcon
+                                icon={faBell}
+                                className="w-10 h-10 text-gray-500"
+                                size="sm"
+                              />
+                            ) : (
+                              <FontAwesomeIcon
+                                icon={faQuestion}
+                                className="w-10 h-10 text-gray-500"
+                                size="sm"
+                              />
+                            )}
+                            {item.pax}{" "}
+                            {item.charge_type == "A"
+                              ? "Adult"
+                              : item.charge_type == "C"
+                              ? "Child"
+                              : item.charge_type == "I"
+                              ? "Infant"
+                              : item.charge_type == "S"
+                              ? "Service"
+                              : "Undifined"}
+                          </td>
+                          <td
+                            scope="row"
+                            className="px-6 py-4 font-medium text-gray-900 whitespace-wrap"
+                          >
+                            {item.sale_currency}{" "}
+                            {item.sale_rates_total_in_format}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
             {/* Table Surgery */}
             {dataSurcharge.length > 0 && (
               <div className="relative overflow-x-auto shadow-md sm:rounded-l md:max-w-3xl">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
                     <tr>
-                      <th scope="col" className="px-6 py-3">
+                      <th scope="col" className="px-6 py-3 md:w-lg">
                         # Surcharge
                       </th>
                       <th scope="col" className="px-6 py-3">
@@ -415,12 +507,12 @@ export default function ReviewBookingClient() {
                             />
                             <label
                               htmlFor={`surcharge-${index}`}
-                              className="w-full py-4 ms-2 text-sm font-medium text-gray-900"
+                              className="w-full py-4 ms-2 text-xs md:text-sm font-medium text-gray-900"
                             >
                               {items.surcharge_name}
                             </label>
                           </th>
-                          <td className="px-6 py-4">
+                          <td className="px-6 py-4 text-xs md:text-sm text-nowrap">
                             {items.currency} {items.price_in_format}
                           </td>
                         </tr>
