@@ -79,7 +79,7 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
         <input
           type="text"
           className="text-gray-600 text-sm border-gray-300 w-full h-8 bg-gray-100 rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
-          placeholder="Room number (optional)..."
+          placeholder="Room number ..."
           value={roomValue}
           onChange={(e) => onRoomChange(e.target.value)}
         />

@@ -1,12 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import SkeletonCardHorizontal from "@/components/SkeletonCardHorizontal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBaby,
   faBell,
   faChild,
-  faInbox,
   faQuestion,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -26,6 +24,7 @@ import { log } from "node:console";
 import toast from "react-hot-toast";
 // Form Libraries
 import { useForm, Controller, useFieldArray } from "react-hook-form";
+import SkeletonTable from "@/components/SkeletonTable";
 
 type ReviewBookingItem = {
   idx_comp: string;
@@ -378,148 +377,161 @@ export default function ReviewBookingClient() {
               )}
             />
 
-            {/* Table Charge Type */}
-
-            {dataChargeType.length > 0 && (
-              <div className="relative overflow-x-auto shadow-md sm:rounded-l md:max-w-3xl mb-3">
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
-                    <tr>
-                      <th scope="col" className="px-6 py-3 md:w-lg">
-                        # Traveller
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Price
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dataChargeType.map((item, index) => {
-                      return (
-                        <tr
-                          key={`chargeType-${index}`}
-                          className="bg-white hover:bg-gray-100 text-xs md:text-sm"
-                        >
-                          <td
-                            scope="row"
-                            className="px-6 py-4 font-medium text-gray-900 whitespace-wrap"
-                          >
-                            {item.charge_type == "A" ? (
-                              <FontAwesomeIcon
-                                icon={faUser}
-                                className="w-10 h-10 text-gray-500"
-                                size="sm"
-                              />
-                            ) : item.charge_type == "C" ? (
-                              <FontAwesomeIcon
-                                icon={faChild}
-                                className="w-10 h-10 text-gray-500"
-                                size="lg"
-                              />
-                            ) : item.charge_type == "I" ? (
-                              <FontAwesomeIcon
-                                icon={faBaby}
-                                className="w-10 h-10 text-gray-500"
-                                size="lg"
-                              />
-                            ) : item.charge_type == "S" ? (
-                              <FontAwesomeIcon
-                                icon={faBell}
-                                className="w-10 h-10 text-gray-500"
-                                size="sm"
-                              />
-                            ) : (
-                              <FontAwesomeIcon
-                                icon={faQuestion}
-                                className="w-10 h-10 text-gray-500"
-                                size="sm"
-                              />
-                            )}
-                            {item.pax}{" "}
-                            {item.charge_type == "A"
-                              ? "Adult"
-                              : item.charge_type == "C"
-                              ? "Child"
-                              : item.charge_type == "I"
-                              ? "Infant"
-                              : item.charge_type == "S"
-                              ? "Service"
-                              : "Undifined"}
-                          </td>
-                          <td
-                            scope="row"
-                            className="px-6 py-4 font-medium text-gray-900 whitespace-wrap"
-                          >
-                            {item.sale_currency}{" "}
-                            {item.sale_rates_total_in_format}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            {/* Table Surgery */}
-            {dataSurcharge.length > 0 && (
-              <div className="relative overflow-x-auto shadow-md sm:rounded-l md:max-w-3xl">
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
-                    <tr>
-                      <th scope="col" className="px-6 py-3 md:w-lg">
-                        # Surcharge
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Price
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dataSurcharge.map((items, index) => {
-                      return (
-                        <tr key={index} className="bg-white hover:bg-gray-100">
-                          <th
-                            scope="row"
-                            className="px-6 py-4 font-medium text-gray-900 whitespace-wrap"
-                          >
-                            <input
-                              id={`surcharge-${index}`}
-                              type="checkbox"
-                              defaultChecked={
-                                items.mandatory.toLocaleLowerCase() == "true"
-                                  ? true
-                                  : false
-                              } // atau false
-                              onChange={(e) =>
-                                handleCheckboxChange(
-                                  e.target.checked,
-                                  Number(items.price),
-                                  items
-                                )
-                              }
-                              className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
-                              disabled={
-                                items.mandatory.toLowerCase() === "true"
-                                  ? true
-                                  : false
-                              }
-                            />
-                            <label
-                              htmlFor={`surcharge-${index}`}
-                              className="w-full py-4 ms-2 text-xs md:text-sm font-medium text-gray-900"
-                            >
-                              {items.surcharge_name}
-                            </label>
+            {!isLoadingSurcharge ? (
+              <>
+                {/* Table Charge Type */}
+                {dataChargeType.length > 0 && (
+                  <div className="relative overflow-x-auto shadow-md sm:rounded-l md:max-w-3xl mb-3">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                      <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
+                        <tr>
+                          <th scope="col" className="px-6 py-3 md:w-lg">
+                            # Traveller
                           </th>
-                          <td className="px-6 py-4 text-xs md:text-sm text-nowrap">
-                            {items.currency} {items.price_in_format}
-                          </td>
+                          <th scope="col" className="px-6 py-3">
+                            Price
+                          </th>
                         </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                      </thead>
+                      <tbody>
+                        {dataChargeType.map((item, index) => {
+                          return (
+                            <tr
+                              key={`chargeType-${index}`}
+                              className="bg-white hover:bg-gray-100 text-xs md:text-sm"
+                            >
+                              <td
+                                scope="row"
+                                className="px-6 py-4 font-medium text-gray-900 whitespace-wrap"
+                              >
+                                {item.charge_type == "A" ? (
+                                  <FontAwesomeIcon
+                                    icon={faUser}
+                                    className="w-10 h-10 text-gray-500"
+                                    size="sm"
+                                  />
+                                ) : item.charge_type == "C" ? (
+                                  <FontAwesomeIcon
+                                    icon={faChild}
+                                    className="w-10 h-10 text-gray-500"
+                                    size="lg"
+                                  />
+                                ) : item.charge_type == "I" ? (
+                                  <FontAwesomeIcon
+                                    icon={faBaby}
+                                    className="w-10 h-10 text-gray-500"
+                                    size="lg"
+                                  />
+                                ) : item.charge_type == "S" ? (
+                                  <FontAwesomeIcon
+                                    icon={faBell}
+                                    className="w-10 h-10 text-gray-500"
+                                    size="sm"
+                                  />
+                                ) : (
+                                  <FontAwesomeIcon
+                                    icon={faQuestion}
+                                    className="w-10 h-10 text-gray-500"
+                                    size="sm"
+                                  />
+                                )}
+                                {item.pax}{" "}
+                                {item.charge_type == "A"
+                                  ? "Adult"
+                                  : item.charge_type == "C"
+                                  ? "Child"
+                                  : item.charge_type == "I"
+                                  ? "Infant"
+                                  : item.charge_type == "S"
+                                  ? "Service"
+                                  : "Undifined"}
+                              </td>
+                              <td
+                                scope="row"
+                                className="px-6 py-4 font-medium text-gray-900 whitespace-wrap"
+                              >
+                                {item.sale_currency}{" "}
+                                {item.sale_rates_total_in_format}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                {/* Table Surgery */}
+                {dataSurcharge.length > 0 && (
+                  <div className="relative overflow-x-auto shadow-md sm:rounded-l md:max-w-3xl">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                      <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
+                        <tr>
+                          <th scope="col" className="px-6 py-3 md:w-lg">
+                            # Surcharge
+                          </th>
+                          <th scope="col" className="px-6 py-3">
+                            Price
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {dataSurcharge.map((items, index) => {
+                          return (
+                            <tr
+                              key={index}
+                              className="bg-white hover:bg-gray-100"
+                            >
+                              <th
+                                scope="row"
+                                className="px-6 py-4 font-medium text-gray-900 whitespace-wrap"
+                              >
+                                <input
+                                  id={`surcharge-${index}`}
+                                  type="checkbox"
+                                  defaultChecked={
+                                    items.mandatory.toLocaleLowerCase() ==
+                                    "true"
+                                      ? true
+                                      : false
+                                  } // atau false
+                                  onChange={(e) =>
+                                    handleCheckboxChange(
+                                      e.target.checked,
+                                      Number(items.price),
+                                      items
+                                    )
+                                  }
+                                  className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
+                                  disabled={
+                                    items.mandatory.toLowerCase() === "true"
+                                      ? true
+                                      : false
+                                  }
+                                />
+                                <label
+                                  htmlFor={`surcharge-${index}`}
+                                  className="w-full py-4 ms-2 text-xs md:text-sm font-medium text-gray-900"
+                                >
+                                  {items.surcharge_name}
+                                </label>
+                              </th>
+                              <td className="px-6 py-4 text-xs md:text-sm text-nowrap">
+                                {items.currency} {items.price_in_format}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </>
+            ) : (
+              // <p>SKELETON</p>
+              <div className="md:max-w-3xl">
+                <SkeletonTable />
+                <SkeletonTable />
               </div>
             )}
 
