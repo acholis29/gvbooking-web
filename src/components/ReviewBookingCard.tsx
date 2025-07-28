@@ -50,7 +50,7 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
   }, [pickup_time_from]);
 
   return (
-    <div className="relative flex flex-row items-start bg-white border border-gray-200 rounded-lg shadow-sm md:max-w-3xl hover:bg-gray-100 mb-3">
+    <div className="relative w-full flex flex-row items-start bg-white border border-gray-200 rounded-lg shadow-sm md:max-w-3xl hover:bg-gray-100 mb-3">
       <img
         className="w-30 h-35 p-2 object-cover rounded-2xl"
         src={image}
@@ -72,14 +72,51 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
         <p className="text-xs md:text-md font-semibold text-gray-700">
           {sub_title_2}
         </p>
+
+        <div className="pt-3 block md:hidden">
+          {adult != "" && (
+            <div className="text-xs md:text-md font-semibold text-gray-700 mb-2">
+              <FontAwesomeIcon
+                icon={faUsers}
+                className="w-4 h-4 text-gray-600"
+              />{" "}
+              <div className="px-2 inline-block w-13">Adult</div>x{" "}
+              <span className="ml-2">{adult}</span>
+            </div>
+          )}
+
+          {child != "" && (
+            <div className="text-xs md:text-md font-semibold text-gray-700 mb-2">
+              <FontAwesomeIcon
+                icon={faUsers}
+                className="w-4 h-4 text-gray-600"
+              />{" "}
+              <div className="px-2 inline-block w-13">Child</div>x{" "}
+              <span className="ml-2">{child}</span>
+            </div>
+          )}
+
+          {infant != "" && (
+            <div className="text-xs md:text-md font-semibold text-gray-700 mb-2">
+              <FontAwesomeIcon
+                icon={faUsers}
+                className="w-4 h-4 text-gray-600"
+              />{" "}
+              <div className="px-2 inline-block w-13">Infant</div>x{" "}
+              <span className="ml-2">{infant}</span>
+            </div>
+          )}
+        </div>
+
         <input
           type="text"
-          className="text-gray-600 text-sm border-gray-300 w-80 h-8 bg-gray-100 rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
+          defaultValue={"Lobby"}
+          className="text-gray-600 text-sm border-gray-300 w-full h-8 bg-gray-100 rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
           placeholder="Room number (optional)..."
           onChange={(e) => onRoomChange(e.target.value)}
         />
         <div className="relative">
-          <div className="absolute inset-y-0 end-50 top-2 flex items-center pe-3.5 pointer-events-none">
+          <div className="absolute inset-y-0 end-20 md:end-48 top-2 flex items-center pe-3.5 pointer-events-none">
             <FontAwesomeIcon icon={faClock} className="w-4 h-4 text-gray-600" />{" "}
           </div>
           <input
@@ -101,7 +138,7 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
         </div>
       </div>
 
-      <div className="flex flex-row w-full p-2 leading-normal my-auto">
+      <div className="hidden md:flex flex-row w-full p-2 leading-normal my-auto">
         <div className="">
           {adult != "" && (
             <div className="text-xs md:text-md font-semibold text-gray-700 mb-2">

@@ -252,6 +252,10 @@ export default function ReviewBookingClient() {
     fetchDataGuideSurcharge();
   }, [reviewBookingObj]);
 
+  useEffect(() => {
+    setTimePickup(pickup_time_from ?? "");
+  }, [reviewBookingObj]); // dependency array kosong -> hanya jalan sekali
+
   function hitungTotal(
     ChargeType: PriceOfChargeType[],
     Surcharge: PriceOfSurcharge[]
@@ -354,7 +358,7 @@ export default function ReviewBookingClient() {
                       <tr key={index} className="bg-white hover:bg-gray-100">
                         <th
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-wrap"
                         >
                           <input
                             id={`surcharge-${index}`}
@@ -431,6 +435,11 @@ export default function ReviewBookingClient() {
                   className="text-gray-700 font-bold  shadow-2xl bg-amber-400 w-full hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
                   onClick={() => {
                     toast.success("Add To Chart!");
+                    // Validasi
+                    console.log(`room number : ${roomNumber}`);
+                    console.log(`pickup time : ${timePickup}`);
+                    console.log(`surcharge : ${selectedSurcharge}`);
+                    console.log(`special note : ${specialNote}`);
                   }}
                 >
                   Add Cart

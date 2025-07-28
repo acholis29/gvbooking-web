@@ -25,11 +25,11 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
 }) => {
   return (
     <nav className="flex pl-4" aria-label="Breadcrumb">
-      <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+      <ol className="flex flex-wrap items-center gap-x-1 gap-y-1 md:gap-x-2 rtl:space-x-reverse">
         <li className="inline-flex items-center">
           <Link
             href="/"
-            className="inline-flex uppercase items-center text-sm font-medium text-gray-700 hover:text-red-500"
+            className="inline-flex uppercase items-center text-xs md:text-sm  font-medium text-gray-700 hover:text-red-500"
           >
             <svg
               className="w-3 h-3 me-2.5"
@@ -64,7 +64,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
               </svg>
               <Link
                 href={`/destination/${country}?id=${idx_comp}&country=${country}`}
-                className="ms-1 uppercase text-sm font-medium text-gray-500 md:ms-2"
+                className="ms-1 uppercase text-xs md:text-sm font-medium text-gray-500 md:ms-2"
               >
                 {country}
               </Link>
@@ -92,7 +92,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
               </svg>
               <Link
                 href={`/list?id=${idx_comp}&country=${country}&state=${state}`}
-                className="ms-1 uppercase text-sm font-medium text-gray-500 md:ms-2"
+                className="ms-1 uppercase text-xs md:text-sm font-medium text-gray-500 md:ms-2"
               >
                 {state}
               </Link>
@@ -120,7 +120,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
               </svg>
               <Link
                 href={`/destination/detail/${country}?id=${idx_comp}&country=${country}&state=${state}&exc=${idx_excursion}`}
-                className="ms-1 uppercase text-sm font-medium text-gray-500 md:ms-2"
+                className="ms-1 uppercase text-xs md:text-sm font-medium text-gray-500 md:ms-2"
               >
                 DETAIL DESTINATION
               </Link>
@@ -146,7 +146,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
                   d="m1 9 4-4-4-4"
                 />
               </svg>
-              <span className="ms-1 uppercase text-sm font-medium text-gray-500 md:ms-2">
+              <span className="ms-1 uppercase text-xs md:text-sm font-medium text-gray-500 md:ms-2">
                 {pageName}
               </span>
             </div>
