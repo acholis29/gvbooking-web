@@ -72,42 +72,6 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
         <p className="text-xs md:text-md font-semibold text-gray-700">
           {sub_title_2}
         </p>
-
-        <div className="pt-3 block md:hidden">
-          {adult != "" && (
-            <div className="text-xs md:text-md font-semibold text-gray-700 mb-2">
-              <FontAwesomeIcon
-                icon={faUsers}
-                className="w-4 h-4 text-gray-600"
-              />{" "}
-              <div className="px-2 inline-block w-13">Adult</div>x{" "}
-              <span className="ml-2">{adult}</span>
-            </div>
-          )}
-
-          {child != "" && (
-            <div className="text-xs md:text-md font-semibold text-gray-700 mb-2">
-              <FontAwesomeIcon
-                icon={faUsers}
-                className="w-4 h-4 text-gray-600"
-              />{" "}
-              <div className="px-2 inline-block w-13">Child</div>x{" "}
-              <span className="ml-2">{child}</span>
-            </div>
-          )}
-
-          {infant != "" && (
-            <div className="text-xs md:text-md font-semibold text-gray-700 mb-2">
-              <FontAwesomeIcon
-                icon={faUsers}
-                className="w-4 h-4 text-gray-600"
-              />{" "}
-              <div className="px-2 inline-block w-13">Infant</div>x{" "}
-              <span className="ml-2">{infant}</span>
-            </div>
-          )}
-        </div>
-
         <input
           type="text"
           defaultValue={"Lobby"}
@@ -137,7 +101,7 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
           />
         </div>
       </div>
-
+      <div className="hidden md:flex flex-row w-full p-2 leading-normal my-auto"></div>
       {/* <div className="flex flex-row w-full p-2 leading-normal my-auto">
         <div className="">
           {adult != "" && (
