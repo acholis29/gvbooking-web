@@ -58,7 +58,7 @@ export default function NavbarClientAsyncSelect(props: any) {
     if (homePage) {
       try {
         const res = await fetch(
-          "/api/excursion/attr/recomended", // gunakan '' untuk mendapatkan semua rekomendasi
+          `/api/excursion/attr/search?keyword=${inputValue}`, // gunakan '' untuk mendapatkan semua rekomendasi
           {
             cache: "no-store", // ⛔ jangan ambil dari cache
           }
@@ -80,8 +80,8 @@ export default function NavbarClientAsyncSelect(props: any) {
       } catch (error) {}
     } else {
       let fetchedOptions = [];
-      if(!idx_comp) return [];
-      
+      if (!idx_comp) return [];
+
       const formBody = new URLSearchParams({
         shared_key:
           idx_comp != "" ? idx_comp : "4D340942-88D3-44DD-A52C-EAF00EACADE8",
@@ -106,7 +106,7 @@ export default function NavbarClientAsyncSelect(props: any) {
 
         const json = await res.json();
 
-         fetchedOptions = json.msg.map((item: any) => ({
+        fetchedOptions = json.msg.map((item: any) => ({
           value: item.excursion_id,
           label: item.search_name,
           country: item.location_country,
