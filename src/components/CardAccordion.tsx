@@ -1,15 +1,7 @@
 // components/CardAccordion.tsx
 import React, { useState } from "react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionPanel,
-  AccordionTitle,
-} from "flowbite-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArrowAltCircleDown,
-  faCalendar,
   faCalendarDays,
   faChevronDown,
   faEdit,
@@ -30,7 +22,14 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
 }) => {
   const [isOpenAccordion, setAccordion] = useState(false);
   return (
-    <div className="relative md:max-w-3xl mb-4">
+    <div
+      className="relative md:max-w-3xl mb-4"
+      onClick={() => {
+        // aksi untuk toggle accordion
+        console.log("toggle accordion");
+        setAccordion(!isOpenAccordion);
+      }}
+    >
       {/* Tombol pojok kanan atas */}
       <button
         className="absolute top-2 right-2 z-10  text-white text-sm px-1 py-1 rounded hover:bg-gray-100"
