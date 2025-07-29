@@ -1,5 +1,27 @@
 "use client";
+// Hooks
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+// Component
+import Breadcrumb from "@/components/Breadcrumb";
+import ReviewBookingCard from "@/components/ReviewBookingCard";
+// Host
+import { API_HOSTS } from "@/lib/apihost";
+// Context Global
+import { useCurrency } from "@/context/CurrencyContext";
+import { useLanguage } from "@/context/LanguageContext";
+import { useDate } from "@/context/DateContext";
+import { useReviewBooking } from "@/context/ReviewBookingContext";
+import { useCartApi } from "@/context/CartApiContext";
+// Helper
+import { acis_qty_age, formatToIDR } from "@/helper/helper";
+// Logs
+import { log } from "node:console";
+// Toast
+import toast from "react-hot-toast";
+// Form Libraries
+import { useForm, Controller, useFieldArray } from "react-hook-form";
+import SkeletonTable from "@/components/SkeletonTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBaby,
@@ -8,23 +30,6 @@ import {
   faQuestion,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import Breadcrumb from "@/components/Breadcrumb";
-import ReviewBookingCard from "@/components/ReviewBookingCard";
-
-import { API_HOSTS } from "@/lib/apihost";
-// Context Global
-import { useCurrency } from "@/context/CurrencyContext";
-import { useLanguage } from "@/context/LanguageContext";
-import { useDate } from "@/context/DateContext";
-import { useReviewBooking } from "@/context/ReviewBookingContext";
-import { acis_qty_age, formatToIDR } from "@/helper/helper";
-import { log } from "node:console";
-
-// Toast
-import toast from "react-hot-toast";
-// Form Libraries
-import { useForm, Controller, useFieldArray } from "react-hook-form";
-import SkeletonTable from "@/components/SkeletonTable";
 
 type ReviewBookingItem = {
   idx_comp: string;
@@ -49,9 +54,69 @@ export default function ReviewBookingClient() {
 
   const onSubmit = (data: any) => {
     console.log("Data submit:", data);
-    toast.success("Success");
+    // toast.success("Success");
+
+    const PostDataCart = async () => {
+      setIsLoading(true); // mulai loading
+      const formBody = new URLSearchParams({
+        shared_key: "4D340942-88D3-44DD-A52C-EAF00EACADE8", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
+        xml: "false",
+        id_master_file: "eee9a3a6cfae456b9467420029f54de6",
+        language_code: "DE",
+        voucher_number: "250759791",
+        id_transaction: "",
+        id_excursion: "3A4D09DA-0F15-4F96-B9DE-337D808C43E0", // Examp : "03208A45-4A41-4E1B-A597-20525C090E52"
+        id_excursion_sub: "",
+        id_agent: "AF228762-345C-47B9-BDB8-19B94FB7A02D",
+        id_contract: "543662F5-0BC9-4198-8076-54440FBDDF38",
+        id_market: "4AD24FF1-2F16-47DB-BBC8-D2E5395773EB",
+        id_supplier: "155D1088-BC9C-D85A-E9BC-96778772AC0F",
+        id_pickup_area: "12EBA6A1-533A-4875-B0A7-CA6362370FF3",
+        pickup_point: "LOBBY",
+        pickup_date: "2025-08-07",
+        pickup_time: "05:45",
+        remark: "",
+        input_item:
+          "A|3|0|89.15|131D05DB-BF0C-4C02-9CD7-07F09C279645|0|21B359FC-F9DB-40BE-A4EF-9EAD51DA160E|19185|89.15|0,C|1|11|89.15|131D05DB-BF0C-4C02-9CD7-07F09C279645|0|21B359FC-F9DB-40BE-A4EF-9EAD51DA160E|19185|89.15|0,C|1|11|89.15|131D05DB-BF0C-4C02-9CD7-07F09C279645|0|21B359FC-F9DB-40BE-A4EF-9EAD51DA160E|19185|89.15|0,I|1|1|89.15|131D05DB-BF0C-4C02-9CD7-07F09C279645|0|21B359FC-F9DB-40BE-A4EF-9EAD51DA160E|19185|89.15|0,I|1|1|89.15|131D05DB-BF0C-4C02-9CD7-07F09C279645|0|21B359FC-F9DB-40BE-A4EF-9EAD51DA160E|19185|89.15|0,S|1|0|89.15|131D05DB-BF0C-4C02-9CD7-07F09C279645|1918500|21B359FC-F9DB-40BE-A4EF-9EAD51DA160E|19185|89.15|1918500",
+        input_surcharge: "DB7DA528-58C7-4C11-96C6-571125744413|134295",
+      });
+
+      try {
+        const res = await fetch(
+          `${API_HOSTS.host1}/excursion.asmx/v2_cart_save`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formBody.toString(),
+          }
+        );
+
+        const contentType = res.headers.get("content-type") || "";
+
+        if (contentType.includes("application/json")) {
+          const json = await res.json();
+          console.log(json);
+          // set data cart api disini
+          saveCartApi(json.msg);
+          toast.success("success boss");
+          // redirect ke cart page
+          router.push("/cart");
+        }
+      } catch (err: any) {
+        setError(err.message || "Error");
+        console.error("Fetch error:", err);
+      } finally {
+        setIsLoading(false); // selesai loading
+      }
+    };
+    PostDataCart();
   };
 
+  const router = useRouter();
+  // Hooks Customs
+  const { saveCartApi } = useCartApi();
   // Currency
   const { currency, setCurrency } = useCurrency();
   // Language

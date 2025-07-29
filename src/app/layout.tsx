@@ -15,6 +15,7 @@ import Navbar from "@/components/Navbar";
 import FooterComponent from "@/components/Footer";
 // State Global / Context
 import { CartProvider } from "@/context/CartContext";
+import { CartApiProvider } from "@/context/CartApiContext";
 import { WishProvider } from "@/context/WishContext";
 import { CurrencyProvider } from "@/context/CurrencyContext";
 import { ModalProvider } from "@/context/ModalContext";
@@ -53,23 +54,25 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CartProvider>
-          <WishProvider>
-            <CurrencyProvider>
-              <ModalProvider>
-                <LanguageProvider>
-                  <DateProvider>
-                    <ReviewBookingProvider>
-                      <Navbar />
-                      {children}
-                      <Toaster position="top-center" />
-                      {/* Footer */}
-                      <FooterComponent />
-                    </ReviewBookingProvider>
-                  </DateProvider>
-                </LanguageProvider>
-              </ModalProvider>
-            </CurrencyProvider>
-          </WishProvider>
+          <CartApiProvider>
+            <WishProvider>
+              <CurrencyProvider>
+                <ModalProvider>
+                  <LanguageProvider>
+                    <DateProvider>
+                      <ReviewBookingProvider>
+                        <Navbar />
+                        {children}
+                        <Toaster position="top-center" />
+                        {/* Footer */}
+                        <FooterComponent />
+                      </ReviewBookingProvider>
+                    </DateProvider>
+                  </LanguageProvider>
+                </ModalProvider>
+              </CurrencyProvider>
+            </WishProvider>
+          </CartApiProvider>
         </CartProvider>
       </body>
     </html>
