@@ -67,9 +67,17 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
       />
 
       <div className="flex flex-col w-full p-2 leading-normal">
-        <h5 className="mb-2 text-sm md:text-lg font-bold tracking-tight text-gray-900">
-          {title}
-        </h5>
+        {title == "-" ? (
+          <div role="status" className="max-w-sm animate-pulse">
+            <div className="h-3.5 bg-gray-200 rounded-full w-48 mb-4"></div>
+            <span className="sr-only">Loading...</span>
+          </div>
+        ) : (
+          <h5 className="mb-2 text-sm md:text-lg font-bold tracking-tight text-gray-900">
+            {title}
+          </h5>
+        )}
+
         <p className="text-xs md:text-md font-semibold text-gray-700">
           {sub_title_1}
         </p>

@@ -66,7 +66,9 @@ export function acis_qty_age(adult: string, child: string, infant: string): stri
     _infant = `I|${infant}|0`;
   }
 
-  return `${_adult}${_child}${_infant}`;
+  // Gabungkan semua dan hapus koma terakhir jika ada
+  let result = `${_adult}${_child}${_infant}`.replace(/,$/, "");
+  return result;
 }
 
 

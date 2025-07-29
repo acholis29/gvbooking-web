@@ -240,6 +240,8 @@ export default function ReviewBookingClient() {
         acis_qty_age: acis, // A|1|0,C|1|11,C|1|11
       });
 
+      console.log(formBody);
+
       try {
         const res = await fetch(
           `${API_HOSTS.host1}/excursion.asmx/v2_product_price`,
@@ -258,6 +260,7 @@ export default function ReviewBookingClient() {
           const json = await res.json();
           setDataSurcharge(json.msg.price_of_surcharge);
           setDataChargeType(json.msg.price_of_charge_type);
+          console.log(json.msg.price_of_charge_type);
           hitungTotal(
             json.msg.price_of_charge_type,
             json.msg.price_of_surcharge
