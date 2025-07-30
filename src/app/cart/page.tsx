@@ -89,7 +89,7 @@ export default function Cart() {
     // Cart Page
     <div className="max-w-screen-xl mx-auto">
       <Breadcrumb pageName="Cart" />
-      <section className="flex flex-col p-6 bg-white gap-1">
+      <section className="flex flex-col py-6 md:p-6 bg-white gap-1">
         {ListCart.map((item, index) => {
           return <CardAccordion key={`cardAccordion-${index}`} item={item} />;
         })}
