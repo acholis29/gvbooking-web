@@ -91,7 +91,7 @@ export default function Cart() {
       <Breadcrumb pageName="Cart" />
       <section className="flex flex-col p-6 bg-white gap-1">
         {ListCart.map((item, index) => {
-          return <CardAccordion key={`cardAccordion-${index}`} />;
+          return <CardAccordion key={`cardAccordion-${index}`} item={item} />;
         })}
       </section>
     </div>

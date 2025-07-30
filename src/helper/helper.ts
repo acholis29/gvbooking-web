@@ -71,5 +71,17 @@ export function acis_qty_age(adult: string, child: string, infant: string): stri
   return result;
 }
 
+// Format Day Sunday, 30 July 2025
+export function format_date(dateString: string): string {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('en-US', {
+    weekday: 'long',
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+}
+
+
 
 

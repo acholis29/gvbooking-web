@@ -8,18 +8,74 @@ import {
   faTrash,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
+import { format_date, capitalizeFirst } from "@/helper/helper";
+import { API_HOSTS } from "@/lib/apihost";
 
-type CardAccordionProps = {
-  bgColor?: string;
-  textColor?: string;
-  title?: string;
+type DetailPax = {
+  charge_type: string;
+  quantity: string;
+  age: string;
+  currency: string;
+  price_per_item: string;
+  price_total: string;
 };
 
-const CardAccordion: React.FC<CardAccordionProps> = ({
-  bgColor = "bg-gray-500",
-  textColor = "text-white",
-  title = "Badge",
-}) => {
+type DetailSurcharge = {
+  surcharge: string;
+  currency: string;
+  price_total: string;
+};
+
+type CartApiItem = {
+  master_file_id: string;
+  transaction_id: string;
+  market_id: string;
+  client_id: string;
+  company_id: string;
+  supplier_id: string;
+  voucher_number: string;
+  excursion_id: string;
+  excursion_sub_id: string;
+  excursion_name: string;
+  pickup_date: string;
+  pickup_time: string;
+  location_id: string;
+  location_name: string;
+  location_detail: string;
+  pax_adult: number;
+  pax_child: number;
+  pax_infant: number;
+  pax_total: number;
+  currency_id: string;
+  currency: string;
+  price: string;
+  price_in_format: string;
+  priceori: string;
+  priceori_in_format: string;
+  disc: string;
+  disc_in_format: string;
+  promo_value: string;
+  currency_local_id: string;
+  currency_local: string;
+  price_local: string;
+  price_local_in_format: string;
+  remark_to_internal: string;
+  remark_to_supplier: string;
+  picture: string;
+  picture_small: string;
+  create_by: string;
+  create_date: string;
+  modified_by: string;
+  modified_date: string;
+  detail_pax: DetailPax[];
+  detail_surcharge: DetailSurcharge[];
+};
+
+type Props = {
+  item: CartApiItem; // Ganti `any` dengan tipe yang sesuai jika ada
+};
+
+const CardAccordion: React.FC<Props> = ({ item }) => {
   const [isOpenAccordion, setAccordion] = useState(false);
   return (
     <div
@@ -49,12 +105,12 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
         <div className="flex items-center flex-row">
           <img
             className="object-cover w-full rounded-tl-sm h-96 md:h-auto md:w-48"
-            src="/images/destination/indonesia.jpg"
+            src={`${API_HOSTS.img_indo}/${item.picture}`}
             alt=""
           />
           <div className="flex flex-col justify-between p-4 leading-normal">
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">
-              NUSA PENIDAS OUTKUTSE
+              {item.excursion_name ?? "-"}
             </h5>
             <div className="flex flex-row"></div>
             <p className="mb-3 font-normal text-gray-700 ">
@@ -66,15 +122,21 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
         <div className="flex flex-row space-x-4 w-full bg-gray-100">
           <div className="basis-1/4 grow p-4 text-left">
             <p className="text-black text-sm font-bold">SUB TOTAL</p>
-            <p className="text-red-700 text-sm font-semibold">IDR 2.000.000</p>
+            <p className="text-red-700 text-sm font-semibold">
+              {item.currency} {item.price_in_format}
+            </p>
           </div>
           <div className="basis-3/8 grow p-4 text-left">
             <p className="text-black text-sm font-bold">DISC</p>
-            <p className="text-red-700 text-sm font-semibold">3.00</p>
+            <p className="text-red-700 text-sm font-semibold">
+              {item.disc_in_format}
+            </p>
           </div>
           <div className="basis-3/8 grow p-4 text-left">
             <p className="text-black text-sm font-bold">TOTAL</p>
-            <p className="text-red-700 text-sm font-semibold">2.000.000</p>
+            <p className="text-red-700 text-sm font-semibold">
+              {item.currency} {item.price_in_format}
+            </p>
           </div>
         </div>
         <div
@@ -89,13 +151,19 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
           </div>
           <div className="w-[95%] p-4  text-left">
             <p className="text-black text-xs font-bold">Pickup date</p>
-            <p className="text-black text-xs">Sunday, 30 July 2025</p>
+            <p className="text-black text-xs">
+              {format_date(item.pickup_date)}
+            </p>
             <hr className="my-2 border border-gray-400 opacity-50" />
-            <p className="text-black text-xs font-bold">Adult</p>
-            <p className="text-black text-xs">1 Adult</p>
+            <p className="text-black text-xs font-bold">Hotel</p>
+            <p className="text-black text-xs">
+              {capitalizeFirst(item.location_name)}
+            </p>
             <hr className="my-2 border border-gray-400 opacity-50" />
             <p className="text-black text-xs font-bold">Room Number</p>
-            <p className="text-black text-xs">1 Child</p>
+            <p className="text-black text-xs">
+              {capitalizeFirst(item.location_detail)}
+            </p>
             <hr className="my-2 border border-gray-400 opacity-50" />
           </div>
         </div>
@@ -111,18 +179,34 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
           </div>
           <div className="w-[95%] p-4  text-left">
             <p className="text-black text-xs font-bold">Traveler</p>
-            <p className="text-black text-xs font-bold">1 Person</p>
+            <p className="text-black text-xs font-bold">
+              {item.pax_total} Person
+            </p>
             <hr className="my-2 border border-gray-400 opacity-50" />
-            <div className="flex flex-row justify-between">
-              <p className="text-black text-xs">1 Adult</p>
-              <p className="text-black text-xs font-bold">IDR 0.00</p>
-            </div>
-            <hr className="my-2 border border-gray-400 opacity-50" />
-            <div className="flex flex-row justify-between">
-              <p className="text-black text-xs">1 Service</p>
-              <p className="text-black text-xs font-bold">IDR 2.000.000.00</p>
-            </div>
-            <hr className="my-2 border border-gray-400 opacity-50" />
+            {item.detail_pax.map((item, index) => {
+              return (
+                <>
+                  <div className="flex flex-row justify-between">
+                    <p className="text-black text-xs">
+                      {item.quantity}{" "}
+                      {item.charge_type == "A"
+                        ? "Adult"
+                        : item.charge_type == "C"
+                        ? "Child"
+                        : item.charge_type == "I"
+                        ? "Infant"
+                        : item.charge_type == "S"
+                        ? "Service"
+                        : "Undifined"}
+                    </p>
+                    <p className="text-black text-xs font-bold">
+                      {item.currency} {item.price_total}
+                    </p>
+                  </div>
+                  <hr className="my-2 border border-gray-400 opacity-50" />
+                </>
+              );
+            })}
           </div>
         </div>
         <div
