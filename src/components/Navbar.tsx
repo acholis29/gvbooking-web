@@ -69,11 +69,12 @@ export default function NavbarComponent() {
   const [isMobile, setIsMobile] = useState(false);
 
   const [menuSelected, setMenuSelected] = useState("");
-  type CurrencyItem = {
-    Currency: string;
-  };
 
-  const [currencyMaster, setCurrencyMaster] = useState<CurrencyItem[]>([]);
+  // tidak dipakai karna sudah pakai global
+  // type CurrencyItem = {
+  //   Currency: string;
+  // };
+  // const [currencyMaster, setCurrencyMaster] = useState<CurrencyItem[]>([]);
 
   // tidak dipakai karna sudah pakai global
   // type LanguageItem = {
@@ -101,7 +102,8 @@ export default function NavbarComponent() {
   // Wish Counter
   const { wishCount } = useWish();
   // Currency
-  const { currency, setCurrency } = useCurrency();
+  const { currency, setCurrency, masterCurrency, setMasterCurrency } =
+    useCurrency();
   // Language
   const { language, setLanguage, masterLanguage, setMasterLanguage } =
     useLanguage();
@@ -147,7 +149,7 @@ export default function NavbarComponent() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setCurrencyMaster(data);
+        setMasterCurrency(data);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -602,7 +604,8 @@ export default function NavbarComponent() {
       {/* Modal */}
       {menuSelected == "Currency" && (
         <ModalComponent title="Currency" icon={faMoneyCheckDollar}>
-          <CurrencyContent currencies={currencyMaster} />
+          {/* <CurrencyContent currencies={currencyMaster} /> */}
+          <CurrencyContent currencies={masterCurrency} />
         </ModalComponent>
       )}
 

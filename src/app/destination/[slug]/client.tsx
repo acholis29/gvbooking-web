@@ -23,6 +23,8 @@ import { API_HOSTS } from "@/lib/apihost";
 import { POST } from "@/app/api/proxy/produk/route";
 // Global Context
 import { useLanguage } from "@/context/LanguageContext";
+import { useCurrency } from "@/context/CurrencyContext";
+import { useAgent } from "@/context/AgentContext";
 
 type Props = {
   slug: string;
@@ -79,7 +81,9 @@ export default function DestinationClient({ slug }: Props) {
     RecomendedDestinationItem[]
   >([]);
 
-  const { masterLanguage, setMasterLanguage } = useLanguage();
+  const { setLanguage, setMasterLanguage } = useLanguage();
+  const { setCurrency, setMasterCurrency } = useCurrency();
+  const { agent, setAgent } = useAgent();
 
   // First Load API Mobile Initial
   useEffect(() => {
@@ -147,8 +151,15 @@ export default function DestinationClient({ slug }: Props) {
         const languageList = json.msg.company_language.map((item: any) => ({
           MSLanguage: item.language_code,
         }));
+        const currencyList = json.msg.company_currency.map((item: any) => ({
+          Currency: item.currency_code,
+        }));
         // Set dari api v2_product_search_initialize
         setMasterLanguage(languageList);
+        setLanguage(param.default_language);
+        setMasterCurrency(currencyList);
+        setCurrency(param.default_currency);
+        setAgent(json.msg.resource.agent_id);
         // proses hasil dari fetch kedua di sini
       } catch (err: any) {
         console.error("Fetch kedua error:", err);

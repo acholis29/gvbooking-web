@@ -22,6 +22,7 @@ import { ModalProvider } from "@/context/ModalContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { DateProvider } from "@/context/DateContext";
 import { ReviewBookingProvider } from "@/context/ReviewBookingContext";
+import { AgentProvider } from "@/context/AgentContext";
 // Toast
 import { Toaster } from "react-hot-toast";
 
@@ -61,11 +62,13 @@ export default function RootLayout({
                   <LanguageProvider>
                     <DateProvider>
                       <ReviewBookingProvider>
-                        <Navbar />
-                        {children}
-                        <Toaster position="top-center" />
-                        {/* Footer */}
-                        <FooterComponent />
+                        <AgentProvider>
+                          <Navbar />
+                          {children}
+                          <Toaster position="top-center" />
+                          {/* Footer */}
+                          <FooterComponent />
+                        </AgentProvider>
                       </ReviewBookingProvider>
                     </DateProvider>
                   </LanguageProvider>
