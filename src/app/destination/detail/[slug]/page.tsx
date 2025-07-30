@@ -253,15 +253,17 @@ export default function DetailDestination() {
                 </div>
                 {dataProduct && dataProduct.msg.product_subs.length > 0 && (
                   <>
-                    {dataProduct.msg.product_subs.map((item, index) => (
-                      <ProductSub
-                        key={index}
-                        item={item}
-                        idx_comp={idx_comp ?? ""}
-                        country={toLowerCaseAll(country ?? "")}
-                        state={toLowerCaseAll(state ?? "")}
-                      />
-                    ))}
+                    {dataProduct.msg.product_subs.map((item, index) => {
+                      return (
+                        <ProductSub
+                          key={index}
+                          item={item}
+                          idx_comp={idx_comp ?? ""}
+                          country={toLowerCaseAll(country ?? "")}
+                          state={toLowerCaseAll(state ?? "")}
+                        />
+                      );
+                    })}
                   </>
                 )}
 
