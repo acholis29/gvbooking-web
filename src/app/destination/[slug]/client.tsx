@@ -21,6 +21,8 @@ import SkeletonCard from "@/components/SkeletonCard";
 // Host Imgae
 import { API_HOSTS } from "@/lib/apihost";
 import { POST } from "@/app/api/proxy/produk/route";
+// Global Context
+import { useLanguage } from "@/context/LanguageContext";
 
 type Props = {
   slug: string;
@@ -54,7 +56,7 @@ export default function DestinationClient({ slug }: Props) {
   const country = searchParams.get("country"); //ini dari idx_comp_alias
 
   const [isLoading, setIsLoading] = useState(true);
-  
+
   const host_img =
     country == "indonesia"
       ? API_HOSTS.img_indo
@@ -77,7 +79,84 @@ export default function DestinationClient({ slug }: Props) {
     RecomendedDestinationItem[]
   >([]);
 
+  const { masterLanguage, setMasterLanguage } = useLanguage();
 
+  // First Load API Mobile Initial
+  useEffect(() => {
+    const fetchDataInitial = async () => {
+      setIsLoading(true); // mulai loading
+      const formBody = new URLSearchParams({
+        shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
+        xml: "false",
+      });
+
+      try {
+        const res = await fetch(
+          `${API_HOSTS.host1}/excursion.asmx/v2_initialize`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formBody.toString(),
+          }
+        );
+
+        const contentType = res.headers.get("content-type") || "";
+
+        if (contentType.includes("application/json")) {
+          const json = await res.json();
+          console.log(json);
+          fetchSecondDataInitial(json.msg);
+        }
+      } catch (err: any) {
+        // setError(err.message || "Error");
+        console.error("Fetch error:", err);
+      } finally {
+        // setIsLoading(false); // selesai loading
+      }
+    };
+
+    const fetchSecondDataInitial = async (param: any) => {
+      try {
+        const formBody = new URLSearchParams({
+          shared_key: idx_comp ?? "",
+          xml: "false",
+          keyword: "",
+          date: "",
+          code_of_language: param.default_language,
+          code_of_currency: param.default_currency,
+          promo_code: param.default_rep_code,
+          email: "",
+          mobile: "",
+        });
+
+        const res = await fetch(
+          `${API_HOSTS.host1}/excursion.asmx/v2_product_search_initialize`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formBody.toString(),
+          }
+        );
+
+        const json = await res.json();
+        console.log("Response 2:", json.msg);
+        const languageList = json.msg.company_language.map((item: any) => ({
+          MSLanguage: item.language_code,
+        }));
+        // Set dari api v2_product_search_initialize
+        setMasterLanguage(languageList);
+        // proses hasil dari fetch kedua di sini
+      } catch (err: any) {
+        console.error("Fetch kedua error:", err);
+      }
+    };
+
+    fetchDataInitial();
+  }, []);
 
   useEffect(() => {
     fetch(`/api/excursion/local_destination/${idx_comp}`, {
@@ -92,9 +171,6 @@ export default function DestinationClient({ slug }: Props) {
         setIsLoadingDest(false);
       });
   }, []);
-
-  
-
 
   useEffect(() => {
     fetch(`/api/excursion/attr/recomended?idxcomp=${idx_comp}`, {
@@ -154,9 +230,7 @@ export default function DestinationClient({ slug }: Props) {
       {/* Section Favorite Tour */}
       <div className="bg-gray-100 my-6 pb-6">
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
-          <p className="text-red-gvi font-bold text-3xl">
-            Recomended
-          </p>
+          <p className="text-red-gvi font-bold text-3xl">Recomended</p>
         </section>
         <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
           {isLoadingRecom ? (
@@ -179,7 +253,11 @@ export default function DestinationClient({ slug }: Props) {
                 price={`${item.PriceFrom}`}
                 currency={item.Currency}
                 // link="/destination/detail/indonesia"
-                link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country.toLowerCase()}&state=${item.State.toLowerCase()}&exc=${item.Idx_excursion}`}
+                link={`/destination/detail/${item.Country}?id=${
+                  item.idx_comp
+                }&country=${item.Country.toLowerCase()}&state=${item.State.toLowerCase()}&exc=${
+                  item.Idx_excursion
+                }`}
               />
             ))
           ) : (
@@ -205,7 +283,7 @@ export default function DestinationClient({ slug }: Props) {
               icon={faCar}
               className="w-10 h-10 text-red-gvi 0 pl-2"
             />{" "} */}
-            <span className="transform: uppercase;">Tour in {slug}</span> 
+            <span className="transform: uppercase;">Tour in {slug}</span>
           </p>
         </section>
         <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">

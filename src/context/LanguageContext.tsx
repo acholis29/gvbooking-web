@@ -3,10 +3,16 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
+type masterLanguage = {
+  MSLanguage: string;
+};
+
 // Tipe data untuk context
 type LanguageContextType = {
   language: string;
   setLanguage: (value: string) => void;
+  masterLanguage: masterLanguage[];
+  setMasterLanguage: (value: masterLanguage[]) => void;
 };
 
 // Inisialisasi context
@@ -17,9 +23,15 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 // Provider
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguage] = useState("EN"); // default misalnya IDR
+  const [masterLanguage, setMasterLanguage] = useState<masterLanguage[]>([
+    { MSLanguage: "EN" },
+    { MSLanguage: "DE" },
+  ]);
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage }}>
+    <LanguageContext.Provider
+      value={{ language, setLanguage, masterLanguage, setMasterLanguage }}
+    >
       {children}
     </LanguageContext.Provider>
   );

@@ -75,11 +75,11 @@ export default function NavbarComponent() {
 
   const [currencyMaster, setCurrencyMaster] = useState<CurrencyItem[]>([]);
 
-  type LanguageItem = {
-    MSLanguage: string;
-  };
-
-  const [languageMaster, setLanguageMaster] = useState<LanguageItem[]>([]);
+  // tidak dipakai karna sudah pakai global
+  // type LanguageItem = {
+  //   MSLanguage: string;
+  // };
+  // const [languageMaster, setLanguageMaster] = useState<LanguageItem[]>([]);
 
   type CountryItem = {
     country: string;
@@ -103,7 +103,8 @@ export default function NavbarComponent() {
   // Currency
   const { currency, setCurrency } = useCurrency();
   // Language
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, masterLanguage, setMasterLanguage } =
+    useLanguage();
   // Date
   const { date, setDate } = useDate();
   // Review Booking
@@ -145,6 +146,7 @@ export default function NavbarComponent() {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         setCurrencyMaster(data);
       })
       .catch((err) => console.error(err));
@@ -156,7 +158,10 @@ export default function NavbarComponent() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setLanguageMaster(data);
+        setMasterLanguage(data);
+      })
+      .finally(() => {
+        console.log(masterLanguage);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -603,7 +608,8 @@ export default function NavbarComponent() {
 
       {menuSelected == "Language" && (
         <ModalComponent title="Language" icon={faGlobe}>
-          <LanguageContent languages={languageMaster} />
+          {/* <LanguageContent languages={languageMaster} /> */}
+          <LanguageContent languages={masterLanguage} />
         </ModalComponent>
       )}
     </nav>
