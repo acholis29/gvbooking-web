@@ -27,6 +27,7 @@ import {
   faChevronDown,
   faDollarSign,
   faEuro,
+  faGear,
   faGlobe,
   faHeart,
   faMoneyCheckDollar,
@@ -89,13 +90,13 @@ export default function NavbarComponent() {
   const [countryMaster, setCountryMaster] = useState<CountryItem[]>([]);
 
   const pathname = usePathname();
-  const hideSearch = ["/cart", "/wishlist", "/review_booking"].some((route) =>
-    pathname.startsWith(route)
+  const hideSearch = ["/cart", "/wishlist", "/review_booking", "/profile"].some(
+    (route) => pathname.startsWith(route)
   );
 
   const hideCurrency = pathname === "/" || pathname === "/home";
 
-  const menu_profil = ["Sign In", "Currency", "Language"];
+  const menu_profil = ["Options", "Sign In", "Currency", "Language"];
 
   // Cart Counter
   const { cartCount } = useCart();
@@ -408,8 +409,12 @@ export default function NavbarComponent() {
                           key={index}
                           className="flex items-center hover:bg-gray-100"
                           onClick={() => {
-                            setMenuSelected(`${item}`);
-                            openModal(); // ⬅️ Ini akan memunculkan modal
+                            if (item == "Profile") {
+                              router.push("/profile");
+                            } else {
+                              setMenuSelected(`${item}`);
+                              openModal(); // ⬅️ Ini akan memunculkan modal
+                            }
                           }}
                         >
                           <div className="ml-4 w-5 text-center">
@@ -419,6 +424,8 @@ export default function NavbarComponent() {
                                   ? faRightToBracket
                                   : item === "Currency"
                                   ? faDollarSign
+                                  : item === "Options"
+                                  ? faGear
                                   : faGlobe
                               }
                               className="text-lg text-gray-500 shrink-0"

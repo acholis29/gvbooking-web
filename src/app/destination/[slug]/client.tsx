@@ -24,7 +24,7 @@ import { POST } from "@/app/api/proxy/produk/route";
 // Global Context
 import { useLanguage } from "@/context/LanguageContext";
 import { useCurrency } from "@/context/CurrencyContext";
-import { useAgent } from "@/context/AgentContext";
+import { useInitial } from "@/context/InitialContext";
 
 type Props = {
   slug: string;
@@ -83,7 +83,7 @@ export default function DestinationClient({ slug }: Props) {
 
   const { setLanguage, setMasterLanguage } = useLanguage();
   const { setCurrency, setMasterCurrency } = useCurrency();
-  const { agent, setAgent } = useAgent();
+  const { agent, setAgent, repCode, setRepCode } = useInitial();
 
   // First Load API Mobile Initial
   useEffect(() => {
@@ -112,6 +112,7 @@ export default function DestinationClient({ slug }: Props) {
           const json = await res.json();
           console.log(json);
           fetchSecondDataInitial(json.msg);
+          setRepCode(json.msg.default_rep_code); //R-BC
         }
       } catch (err: any) {
         // setError(err.message || "Error");
