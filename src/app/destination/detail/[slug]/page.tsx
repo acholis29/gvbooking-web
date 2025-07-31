@@ -231,15 +231,14 @@ export default function DetailDestination() {
         setMasterCurrency(currencyList);
         setCurrency(param.default_currency);
         setAgent(json.msg.resource.agent_id);
-        alert(json.msg.resource.agent_id);
 
         // proses hasil dari fetch kedua di sini
       } catch (err: any) {
         console.error("Fetch kedua error:", err);
       }
-
-      fetchDataInitial();
     };
+
+    fetchDataInitial();
   }, []);
   const maximum_pax =
     dataProduct != null && dataProduct.msg.product_subs.length > 0
