@@ -11,6 +11,7 @@ import { API_HOSTS } from "@/lib/apihost";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDate } from "@/context/DateContext";
+import { useInitial } from "@/context/InitialContext";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -44,11 +45,15 @@ export default function DetailDestination() {
   const [selectedProductSub, setSelectedProductSubOpen] = useState("");
 
   // Currency
-  const { currency, setCurrency } = useCurrency();
+  const { currency, setCurrency, masterCurrency, setMasterCurrency } =
+    useCurrency();
   // Language
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, masterLanguage, setMasterLanguage } =
+    useLanguage();
   // Date Global
   const { date, setDate } = useDate();
+  // Initial Global (AgentId dan RepCode)
+  const { agent, setAgent, repCode, setRepCode } = useInitial();
 
   type ProductDetail = {
     excursion_name: string;
@@ -152,6 +157,90 @@ export default function DetailDestination() {
     setSelectedDate(new Date(date));
   }, [date]);
 
+  // Cek Initial Agent dan Repcode
+  useEffect(() => {
+    // Load ulang initial jika agent kosong
+    const fetchDataInitial = async () => {
+      setIsLoading(true); // mulai loading
+      const formBody = new URLSearchParams({
+        shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
+        xml: "false",
+      });
+
+      try {
+        const res = await fetch(
+          `${API_HOSTS.host1}/excursion.asmx/v2_initialize`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formBody.toString(),
+          }
+        );
+
+        const contentType = res.headers.get("content-type") || "";
+
+        if (contentType.includes("application/json")) {
+          const json = await res.json();
+          console.log(json);
+          fetchSecondDataInitial(json.msg);
+          setRepCode(json.msg.default_rep_code); //R-BC
+        }
+      } catch (err: any) {
+        console.error("Fetch error:", err);
+      }
+    };
+
+    const fetchSecondDataInitial = async (param: any) => {
+      try {
+        const formBody = new URLSearchParams({
+          shared_key: idx_comp ?? "",
+          xml: "false",
+          keyword: "",
+          date: "",
+          code_of_language: param.default_language,
+          code_of_currency: param.default_currency,
+          promo_code: param.default_rep_code,
+          email: "",
+          mobile: "",
+        });
+
+        const res = await fetch(
+          `${API_HOSTS.host1}/excursion.asmx/v2_product_search_initialize`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formBody.toString(),
+          }
+        );
+
+        const json = await res.json();
+        console.log("Response 2:", json.msg);
+        const languageList = json.msg.company_language.map((item: any) => ({
+          MSLanguage: item.language_code,
+        }));
+        const currencyList = json.msg.company_currency.map((item: any) => ({
+          Currency: item.currency_code,
+        }));
+        // Set dari api v2_product_search_initialize
+        setMasterLanguage(languageList);
+        setLanguage(param.default_language);
+        setMasterCurrency(currencyList);
+        setCurrency(param.default_currency);
+        setAgent(json.msg.resource.agent_id);
+        alert(json.msg.resource.agent_id);
+
+        // proses hasil dari fetch kedua di sini
+      } catch (err: any) {
+        console.error("Fetch kedua error:", err);
+      }
+
+      fetchDataInitial();
+    };
+  }, []);
   const maximum_pax =
     dataProduct != null && dataProduct.msg.product_subs.length > 0
       ? parseInt(dataProduct.msg.product_subs[0].maximum_pax)

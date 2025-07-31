@@ -162,6 +162,7 @@ export default function DestinationClient({ slug }: Props) {
         setCurrency(param.default_currency);
         setAgent(json.msg.resource.agent_id);
         // proses hasil dari fetch kedua di sini
+        alert(json.msg.resource.agent_id);
       } catch (err: any) {
         console.error("Fetch kedua error:", err);
       }

@@ -10,6 +10,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useDate } from "@/context/DateContext";
 import { useReviewBooking } from "@/context/ReviewBookingContext";
 import { useProfile } from "@/context/ProfileContext";
+import { useInitial } from "@/context/InitialContext";
 // Next Image
 import Image from "next/image";
 // Drawer
@@ -115,6 +116,8 @@ export default function NavbarComponent() {
   const { reviewBookingObj, setReviewBookingObj } = useReviewBooking();
   // Profile
   const { profile, setProfile } = useProfile();
+  // Initial
+  const { agent, setAgent, repCode, setRepCode } = useInitial();
 
   // Timeout Delay
   let timeout: NodeJS.Timeout;
