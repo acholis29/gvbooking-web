@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import { useDate } from "@/context/DateContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useReviewBooking } from "@/context/ReviewBookingContext";
+import { useInitial } from "@/context/InitialContext";
 // Redirect
 import { useRouter } from "next/navigation";
 
@@ -83,6 +84,8 @@ const ProductSub: React.FC<ProductSubProps> = ({
   const { currency, setCurrency } = useCurrency();
   // Review Booking Global
   const { reviewBookingObj, setReviewBookingObj } = useReviewBooking();
+  // Inital Global
+  const { agent, repCode } = useInitial();
   const {
     register,
     handleSubmit,
@@ -110,6 +113,8 @@ const ProductSub: React.FC<ProductSubProps> = ({
         adult: "0",
         child: "0",
         infant: "0",
+        agent_id: "",
+        rep_code: "",
       });
 
       const paramsBooking = {
@@ -126,6 +131,8 @@ const ProductSub: React.FC<ProductSubProps> = ({
         adult: data.Adult ?? "0",
         child: data.Child ?? "0",
         infant: data.Infant ?? "0",
+        agent_id: agent,
+        rep_code: repCode,
       };
       setReviewBookingObj(paramsBooking);
       sessionStorage.setItem(

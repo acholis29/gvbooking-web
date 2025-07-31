@@ -15,6 +15,8 @@ type ReviewBooking = {
   infant: string;
   state: string;
   country: string;
+  agent_id: string;
+  rep_code: string;
 };
 
 type ReviewBookingContextType = {
