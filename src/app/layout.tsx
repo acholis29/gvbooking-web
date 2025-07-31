@@ -23,6 +23,7 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import { DateProvider } from "@/context/DateContext";
 import { ReviewBookingProvider } from "@/context/ReviewBookingContext";
 import { InitialProvider } from "@/context/InitialContext";
+import { ProfileProvider } from "@/context/ProfileContext copy";
 // Toast
 import { Toaster } from "react-hot-toast";
 
@@ -63,11 +64,13 @@ export default function RootLayout({
                     <DateProvider>
                       <ReviewBookingProvider>
                         <InitialProvider>
-                          <Navbar />
-                          {children}
-                          <Toaster position="top-center" />
-                          {/* Footer */}
-                          <FooterComponent />
+                          <ProfileProvider>
+                            <Navbar />
+                            {children}
+                            <Toaster position="top-center" />
+                            {/* Footer */}
+                            <FooterComponent />
+                          </ProfileProvider>
                         </InitialProvider>
                       </ReviewBookingProvider>
                     </DateProvider>

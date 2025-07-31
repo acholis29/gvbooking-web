@@ -1,6 +1,11 @@
 "use client";
 import Breadcrumb from "@/components/Breadcrumb";
+import { parse } from "path";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+// Context Global
+import { useProfile } from "@/context/ProfileContext copy";
 
 export default function Profile() {
   type FormData = {
@@ -10,6 +15,8 @@ export default function Profile() {
     email: string;
   };
 
+  const { profile, setProfile } = useProfile();
+
   const {
     register,
     handleSubmit,
@@ -17,8 +24,13 @@ export default function Profile() {
   } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
+    // Simpan ke localStorage
+    localStorage.setItem("profileData", JSON.stringify(data));
+    setProfile(data);
+    toast.success("Save Profile");
   };
+
+  useEffect(() => {}, [profile]);
 
   // Cart Page
   return (
@@ -44,6 +56,7 @@ export default function Profile() {
                     })}
                     type="text"
                     id="first-name"
+                    defaultValue={profile.firstname}
                     className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="first name"
                     required
@@ -67,6 +80,7 @@ export default function Profile() {
                     })}
                     type="text"
                     id="last-name"
+                    defaultValue={profile.lastname}
                     className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="last name"
                     required
@@ -90,6 +104,7 @@ export default function Profile() {
                     {...register("phone")}
                     type="number"
                     id="phone"
+                    defaultValue={profile.phone}
                     className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="phone number (optional)"
                   />
@@ -107,6 +122,7 @@ export default function Profile() {
                     })}
                     type="email"
                     id="email"
+                    defaultValue={profile.email}
                     className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="name@flowbite.com"
                     required

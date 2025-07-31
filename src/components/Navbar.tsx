@@ -9,6 +9,7 @@ import { useModal } from "@/context/ModalContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDate } from "@/context/DateContext";
 import { useReviewBooking } from "@/context/ReviewBookingContext";
+import { useProfile } from "@/context/ProfileContext copy";
 // Next Image
 import Image from "next/image";
 // Drawer
@@ -112,6 +113,8 @@ export default function NavbarComponent() {
   const { date, setDate } = useDate();
   // Review Booking
   const { reviewBookingObj, setReviewBookingObj } = useReviewBooking();
+  // Profile
+  const { profile, setProfile } = useProfile();
 
   // Timeout Delay
   let timeout: NodeJS.Timeout;
@@ -194,6 +197,12 @@ export default function NavbarComponent() {
     const savedReviewBooking = sessionStorage.getItem("paramsReviewBooking");
     if (savedReviewBooking) {
       setReviewBookingObj(JSON.parse(savedReviewBooking));
+    }
+
+    const savedProfile = localStorage.getItem("profileData");
+    if (savedProfile) {
+      const parsedData = JSON.parse(savedProfile);
+      setProfile(parsedData);
     }
   }, []);
 
@@ -409,7 +418,7 @@ export default function NavbarComponent() {
                           key={index}
                           className="flex items-center hover:bg-gray-100"
                           onClick={() => {
-                            if (item == "Profile") {
+                            if (item == "Options") {
                               router.push("/profile");
                             } else {
                               setMenuSelected(`${item}`);
