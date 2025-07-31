@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 // Context Global
-import { useProfile } from "@/context/ProfileContext copy";
+import { useProfile } from "@/context/ProfileContext";
 
 export default function Profile() {
   type FormData = {

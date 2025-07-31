@@ -23,7 +23,7 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import { DateProvider } from "@/context/DateContext";
 import { ReviewBookingProvider } from "@/context/ReviewBookingContext";
 import { InitialProvider } from "@/context/InitialContext";
-import { ProfileProvider } from "@/context/ProfileContext copy";
+import { ProfileProvider } from "@/context/ProfileContext";
 // Toast
 import { Toaster } from "react-hot-toast";
 

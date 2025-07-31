@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 // Component
 import Breadcrumb from "@/components/Breadcrumb";
 import ReviewBookingCard from "@/components/ReviewBookingCard";
+import ModalComponent from "@/components/ModalComponent";
 // Host
 import { API_HOSTS } from "@/lib/apihost";
 // Context Global
@@ -13,6 +14,8 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useDate } from "@/context/DateContext";
 import { useReviewBooking } from "@/context/ReviewBookingContext";
 import { useCartApi } from "@/context/CartApiContext";
+import { useProfile } from "@/context/ProfileContext";
+import { useModal } from "@/context/ModalContext";
 // Helper
 import { acis_qty_age, formatToIDR } from "@/helper/helper";
 // Logs
@@ -20,13 +23,14 @@ import { log } from "node:console";
 // Toast
 import toast from "react-hot-toast";
 // Form Libraries
-import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { useForm, Controller, useFieldArray, Form } from "react-hook-form";
 import SkeletonTable from "@/components/SkeletonTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBaby,
   faBell,
   faChild,
+  faGlobe,
   faQuestion,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -54,6 +58,10 @@ export default function ReviewBookingClient() {
   const { date, setDate } = useDate();
   // Review Booking Global
   const { reviewBookingObj, setReviewBookingObj } = useReviewBooking();
+  // Profile Global
+  const { profile, setProfile } = useProfile();
+  // Modal
+  const { openModal } = useModal();
 
   const idx_comp = reviewBookingObj?.idx_comp; //ini dari idx_comp_alias
   const idx_excursion = reviewBookingObj?.exc_id; //ini dari idx_excursion
@@ -162,6 +170,7 @@ export default function ReviewBookingClient() {
   const [isLoadingSurcharge, setIsLoadingSurcharge] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState<number>(0);
+  const [isModalProfileOpen, setModalProfileOpen] = useState(true);
   // State Form
   const [roomNumber, setRoomNumber] = useState<string>("");
   const [selectedSurcharge, setSelectedSurcharge] = useState<
@@ -327,6 +336,12 @@ export default function ReviewBookingClient() {
   } = useForm();
 
   const onSubmit = (data: any) => {
+    if (profile.email == "") {
+      setModalProfileOpen(true);
+      openModal();
+      return null;
+    }
+
     console.log("Data submit:", data);
     // toast.success("Success");
 
@@ -644,6 +659,140 @@ export default function ReviewBookingClient() {
           </div>
         </section>
       </form>
+
+      {/* Modal Profile */}
+      {isModalProfileOpen && (
+        <ModalComponent title="Update Profile" icon={faUser}>
+          <ProfileContent />
+        </ModalComponent>
+      )}
     </div>
   );
 }
+
+const ProfileContent = () => {
+  const { closeModal } = useModal();
+
+  type FormData = {
+    firstname: string;
+    lastname: string;
+    phone: string;
+    email: string;
+  };
+
+  const { profile, setProfile } = useProfile();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
+
+  const onSubmit = (data: FormData) => {
+    // Simpan ke localStorage
+    localStorage.setItem("profileData", JSON.stringify(data));
+    setProfile(data);
+    toast.success("Save Profile");
+    closeModal();
+  };
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="flex flex-row mb-2 p-2 md:p-0">
+        <div className="w-[100%] rounded-sm">
+          <div className="mb-3">
+            <label
+              htmlFor="firstname"
+              className="block mb-2 text-sm font-semibold text-gray-700"
+            >
+              First Name
+            </label>
+            <input
+              {...register("firstname", {
+                required: "First name is required",
+              })}
+              type="text"
+              id="firstname"
+              defaultValue={profile.firstname}
+              className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="First Name"
+              required
+            />
+            {errors.firstname && (
+              <p className="text-red-500">{errors.firstname.message}</p>
+            )}
+          </div>
+          <div className="mb-3">
+            <label
+              htmlFor="lastname"
+              className="block mb-2 text-sm font-semibold text-gray-700"
+            >
+              Last Name
+            </label>
+            <input
+              {...register("lastname", {
+                required: "Last name is required",
+              })}
+              type="text"
+              id="lastname"
+              defaultValue={profile.lastname}
+              className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="Last Name"
+              required
+            />
+            {errors.lastname && (
+              <p className="text-red-500">{errors.lastname.message}</p>
+            )}
+          </div>
+          <div className="mb-3">
+            <label
+              htmlFor="phone"
+              className="block mb-2 text-sm font-semibold text-gray-700"
+            >
+              Phone Number
+            </label>
+            <input
+              {...register("phone")}
+              type="number"
+              id="phone"
+              defaultValue={profile.phone}
+              className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="Phone Number"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="email"
+              className="block mb-2 text-sm font-semibold text-gray-700"
+            >
+              Email
+            </label>
+            <input
+              {...register("email", {
+                required: "email is required",
+              })}
+              type="email"
+              id="email"
+              defaultValue={profile.email}
+              className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="Email"
+              required
+            />
+            {errors.email && (
+              <p className="text-red-500">{errors.email.message}</p>
+            )}
+          </div>
+          {/* Apply */}
+          <div className="mb-3">
+            <button
+              type="submit"
+              className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-lg text-sm px-5 py-2.5 text-center w-full"
+            >
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  );
+};

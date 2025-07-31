@@ -9,7 +9,7 @@ import { useModal } from "@/context/ModalContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDate } from "@/context/DateContext";
 import { useReviewBooking } from "@/context/ReviewBookingContext";
-import { useProfile } from "@/context/ProfileContext copy";
+import { useProfile } from "@/context/ProfileContext";
 // Next Image
 import Image from "next/image";
 // Drawer
@@ -402,7 +402,7 @@ export default function NavbarComponent() {
                   icon={faUser}
                   className="text-2xl text-gray-500 hover:text-red-500"
                 />
-                <span className="text-xs text-gray-500 mt-1">PROFIL</span>
+                <span className="text-xs text-gray-500 mt-1">PROFILE</span>
               </div>
 
               {isProfilDropdownOpen && (
