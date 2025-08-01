@@ -231,6 +231,8 @@ export default function DetailDestination() {
         setMasterCurrency(currencyList);
         setCurrency(param.default_currency);
         setAgent(json.msg.resource.agent_id);
+        localStorage.setItem("language", param.default_language); // simpan ke localStorage
+        localStorage.setItem("currency", param.default_currency); // simpan ke localStorage
 
         // proses hasil dari fetch kedua di sini
       } catch (err: any) {

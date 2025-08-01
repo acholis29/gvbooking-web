@@ -22,7 +22,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 
 // Provider
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useState("EN"); // default misalnya IDR
+  const [language, setLanguage] = useState("DE"); // default misalnya DE
   const [masterLanguage, setMasterLanguage] = useState<masterLanguage[]>([
     { MSLanguage: "EN" },
     { MSLanguage: "DE" },

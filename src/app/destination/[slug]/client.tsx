@@ -162,6 +162,8 @@ export default function DestinationClient({ slug }: Props) {
         setCurrency(param.default_currency);
         setAgent(json.msg.resource.agent_id);
         // proses hasil dari fetch kedua di sini
+        localStorage.setItem("language", param.default_language); // simpan ke localStorage
+        localStorage.setItem("currency", param.default_currency); // simpan ke localStorage
       } catch (err: any) {
         console.error("Fetch kedua error:", err);
       }

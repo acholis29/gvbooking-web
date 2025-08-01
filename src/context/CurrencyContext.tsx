@@ -22,7 +22,7 @@ const CurrencyContext = createContext<CurrencyContextType | undefined>(
 
 // Provider
 export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
-  const [currency, setCurrency] = useState("USD"); // default misalnya USD
+  const [currency, setCurrency] = useState("EUR"); // default misalnya EUR
   const [masterCurrency, setMasterCurrency] = useState<masterCurrency[]>([
     { Currency: "USD" },
     { Currency: "EUR" },
