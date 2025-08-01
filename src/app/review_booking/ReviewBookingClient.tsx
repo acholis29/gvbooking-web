@@ -189,6 +189,8 @@ export default function ReviewBookingClient() {
   const [marketId, setMarketId] = useState<string>("");
   const [supplierId, setSupplierId] = useState<string>("");
   const [contractId, setContractId] = useState<string>("");
+  const [inputItem, setInputItem] = useState<string>("");
+  const [inputSurcharge, setInputSurcharge] = useState<string>("");
 
   // Detail Tour / Produk Detail
   useEffect(() => {
@@ -287,6 +289,8 @@ export default function ReviewBookingClient() {
             json.msg.price_of_charge_type,
             json.msg.price_of_surcharge
           );
+          concatInputItem(json.msg.price_of_charge_type);
+          concatInputSurcharge(json.msg.price_of_surcharge);
         }
       } catch (err: any) {
         setError(err.message || "Error");
@@ -329,15 +333,62 @@ export default function ReviewBookingClient() {
     return total;
   }
 
+  function concatInputItem(ChargeType: PriceOfChargeType[]): string {
+    let inputItem = "";
+    if (ChargeType.length > 0) {
+      for (let i = 0; i < ChargeType.length; i++) {
+        inputItem += ChargeType[i].charge_type + "|";
+        inputItem += ChargeType[i].pax + "|";
+        inputItem += ChargeType[i].age + "|";
+        inputItem += ChargeType[i].buy_rates + "|";
+        inputItem += ChargeType[i].buy_currency_id + "|";
+        inputItem += ChargeType[i].raw_exchange_rates + "|";
+        inputItem += ChargeType[i].buy_rates_total + "|";
+        inputItem += ChargeType[i].sale_rates_total + ",";
+      }
+      inputItem = inputItem.slice(0, -1); // hapus koma terakhir
+    }
+    setInputItem(inputItem);
+    return inputItem;
+  }
+
+  function concatInputSurcharge(Surcharge: PriceOfSurcharge[]): string {
+    let inputSurcharge = "";
+    if (Surcharge.length > 0) {
+      for (let j = 0; j < Surcharge.length; j++) {
+        if (Surcharge[j].mandatory.toLocaleLowerCase() == "true") {
+          inputSurcharge += Surcharge[j].surcharge_id + "|";
+          inputSurcharge += Surcharge[j].price + "|,";
+        }
+      }
+      inputSurcharge = inputSurcharge.slice(0, -1);
+      setInputSurcharge(inputSurcharge);
+    }
+    return inputSurcharge;
+  }
+
   const handleCheckboxChange = (checked: boolean, price: number, data: any) => {
     if (checked) {
       setTotal((prev) => prev + price);
+      // Tambah string set input surcharge
+      setInputSurcharge((prev) => {
+        const newItem = `${data.surcharge_id}|${data.price}`;
+        if (!prev.includes(newItem)) {
+          return prev ? `${prev},${newItem}` : newItem;
+        }
+        return prev;
+      });
 
       // Tambah data ke selectedSurcharge jika belum ada
       setSelectedSurcharge((prev) => [...prev, data]);
     } else {
       setTotal((prev) => prev - price);
-
+      // Hapus string set input surcharge
+      setInputSurcharge((prev) => {
+        const toRemove = `${data.surcharge_id}|${data.price}`;
+        const parts = prev.split(",").filter((item) => item !== toRemove);
+        return parts.join(",");
+      });
       // Hapus data dari selectedSurcharge (berdasarkan ID atau properti unik lainnya)
       setSelectedSurcharge((prev) =>
         prev.filter((item) => item.surcharge_id !== data.surcharge_id)
@@ -384,40 +435,39 @@ export default function ReviewBookingClient() {
         pickup_date: date ?? "", // 2025-08-01
         pickup_time: timePickup ?? "", //05:45
         remark: "",
-        input_item:
-          "A|3|0|89.15|131D05DB-BF0C-4C02-9CD7-07F09C279645|0|21B359FC-F9DB-40BE-A4EF-9EAD51DA160E|19185|89.15|0,C|1|11|89.15|131D05DB-BF0C-4C02-9CD7-07F09C279645|0|21B359FC-F9DB-40BE-A4EF-9EAD51DA160E|19185|89.15|0,C|1|11|89.15|131D05DB-BF0C-4C02-9CD7-07F09C279645|0|21B359FC-F9DB-40BE-A4EF-9EAD51DA160E|19185|89.15|0,I|1|1|89.15|131D05DB-BF0C-4C02-9CD7-07F09C279645|0|21B359FC-F9DB-40BE-A4EF-9EAD51DA160E|19185|89.15|0,I|1|1|89.15|131D05DB-BF0C-4C02-9CD7-07F09C279645|0|21B359FC-F9DB-40BE-A4EF-9EAD51DA160E|19185|89.15|0,S|1|0|89.15|131D05DB-BF0C-4C02-9CD7-07F09C279645|1918500|21B359FC-F9DB-40BE-A4EF-9EAD51DA160E|19185|89.15|1918500",
-        input_surcharge: "DB7DA528-58C7-4C11-96C6-571125744413|134295",
+        input_item: inputItem ?? "", // surcharge_id|price,
+        input_surcharge: inputSurcharge ?? "", // "DB7DA528-58C7-4C11-96C6-571125744413|134295"
       });
-      console.log(formBody.toString());
-      // try {
-      //   const res = await fetch(
-      //     `${API_HOSTS.host1}/excursion.asmx/v2_cart_save`,
-      //     {
-      //       method: "POST",
-      //       headers: {
-      //         "Content-Type": "application/x-www-form-urlencoded",
-      //       },
-      //       body: formBody.toString(),
-      //     }
-      //   );
 
-      //   const contentType = res.headers.get("content-type") || "";
+      try {
+        const res = await fetch(
+          `${API_HOSTS.host1}/excursion.asmx/v2_cart_save`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formBody.toString(),
+          }
+        );
 
-      //   if (contentType.includes("application/json")) {
-      //     const json = await res.json();
-      //     console.log(json);
-      //     // set data cart api disini
-      //     saveCartApi(json.msg);
-      //     toast.success("success boss");
-      //     // redirect ke cart page
-      //     router.push("/cart");
-      //   }
-      // } catch (err: any) {
-      //   setError(err.message || "Error");
-      //   console.error("Fetch error:", err);
-      // } finally {
-      //   setIsLoading(false); // selesai loading
-      // }
+        const contentType = res.headers.get("content-type") || "";
+
+        if (contentType.includes("application/json")) {
+          const json = await res.json();
+          console.log(json);
+          // set data cart api disini
+          saveCartApi(json.msg);
+          toast.success("success boss");
+          // redirect ke cart page
+          router.push("/cart");
+        }
+      } catch (err: any) {
+        setError(err.message || "Error");
+        console.error("Fetch error:", err);
+      } finally {
+        setIsLoading(false); // selesai loading
+      }
     };
     PostDataCart();
   };
