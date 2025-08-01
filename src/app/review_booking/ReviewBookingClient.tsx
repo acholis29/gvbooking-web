@@ -222,7 +222,7 @@ export default function ReviewBookingClient() {
     };
 
     fetchData();
-  }, [reviewBookingObj]);
+  }, [reviewBookingObj, currency, language]);
 
   // Charge type & Guide Surcharge
   useEffect(() => {
@@ -281,11 +281,11 @@ export default function ReviewBookingClient() {
     };
 
     fetchDataGuideSurcharge();
-  }, [reviewBookingObj]);
+  }, [reviewBookingObj, currency, language]);
 
   useEffect(() => {
     setTimePickup(pickup_time_from ?? "");
-  }, [reviewBookingObj]); // dependency array kosong -> hanya jalan sekali
+  }, [reviewBookingObj, currency, language]); // dependency array kosong -> hanya jalan sekali
 
   function hitungTotal(
     ChargeType: PriceOfChargeType[],
@@ -643,7 +643,7 @@ export default function ReviewBookingClient() {
                 {/* Kolom 1 (60%) */}
                 <p className="font-semibold text-gray-700">Total</p>
                 <p className="font-bold text-gray-800">
-                  {currency} {formatToIDR(total)}
+                  {currency} {total.toLocaleString()}
                 </p>
               </div>
               <div className="basis-[40%] flex items-center justify-center">
