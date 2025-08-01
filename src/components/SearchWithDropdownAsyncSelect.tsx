@@ -42,7 +42,7 @@ export default function SearchWithDropdownAsyncSelect(props: any) {
   const loadOptions = async (inputValue: string) => {
     const formBody = new URLSearchParams({
       shared_key:
-        idx_comp != "" ? idx_comp : "4D340942-88D3-44DD-A52C-EAF00EACADE8",
+        idx_comp != "" ? idx_comp : "4D340942-88D3-44DD-A52C-EAF00EACADE8", //default indonesia
       xml: "false",
       date: "2025-07-15",
       code_of_language: "DE",

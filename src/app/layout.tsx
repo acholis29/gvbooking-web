@@ -25,6 +25,7 @@ import { ReviewBookingProvider } from "@/context/ReviewBookingContext";
 import { InitialProvider } from "@/context/InitialContext";
 import { ProfileProvider } from "@/context/ProfileContext";
 import { SelectModalProvider } from "@/context/SelectModalContext";
+import { SeasonProvider } from "@/context/SeasonContext";
 // Toast
 import { Toaster } from "react-hot-toast";
 
@@ -67,11 +68,13 @@ export default function RootLayout({
                         <InitialProvider>
                           <ProfileProvider>
                             <SelectModalProvider>
-                              <Navbar />
-                              {children}
-                              <Toaster position="top-center" />
-                              {/* Footer */}
-                              <FooterComponent />
+                              <SeasonProvider>
+                                <Navbar />
+                                {children}
+                                <Toaster position="top-center" />
+                                {/* Footer */}
+                                <FooterComponent />
+                              </SeasonProvider>
                             </SelectModalProvider>
                           </ProfileProvider>
                         </InitialProvider>
