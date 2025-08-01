@@ -462,7 +462,7 @@ export default function ReviewBookingClient() {
           saveCartApi(json.msg);
           toast.success("success boss");
           // redirect ke cart page
-          router.push("/cart");
+          router.replace("/cart");
         }
       } catch (err: any) {
         setError(err.message || "Error");
