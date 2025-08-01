@@ -25,6 +25,8 @@ import { POST } from "@/app/api/proxy/produk/route";
 import { useLanguage } from "@/context/LanguageContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useInitial } from "@/context/InitialContext";
+import { useProfile } from "@/context/ProfileContext";
+import { useDate } from "@/context/DateContext";
 
 type Props = {
   slug: string;
@@ -84,6 +86,8 @@ export default function DestinationClient({ slug }: Props) {
   const { setLanguage, setMasterLanguage } = useLanguage();
   const { setCurrency, setMasterCurrency } = useCurrency();
   const { agent, setAgent, repCode, setRepCode } = useInitial();
+  const { profile } = useProfile();
+  const { date } = useDate();
 
   // First Load API Mobile Initial
   useEffect(() => {
@@ -127,13 +131,13 @@ export default function DestinationClient({ slug }: Props) {
         const formBody = new URLSearchParams({
           shared_key: idx_comp ?? "",
           xml: "false",
-          keyword: "",
-          date: "",
+          keyword: `|${profile.email}`,
+          date: date ?? "",
           code_of_language: param.default_language,
           code_of_currency: param.default_currency,
           promo_code: param.default_rep_code,
-          email: "",
-          mobile: "",
+          email: profile.email ?? "",
+          mobile: profile.phone ?? "",
         });
 
         const res = await fetch(

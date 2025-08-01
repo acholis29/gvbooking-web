@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 // Context State Global
 import { useCart } from "@/context/CartContext";
+import { useCartApi } from "@/context/CartApiContext";
 import { useWish } from "@/context/WishContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useModal } from "@/context/ModalContext";
@@ -102,6 +103,8 @@ export default function NavbarComponent() {
 
   // Cart Counter
   const { cartCount } = useCart();
+  // Cart API Counter
+  const { cartApiCount } = useCartApi();
   // Wish Counter
   const { wishCount } = useWish();
   // Currency
@@ -383,7 +386,7 @@ export default function NavbarComponent() {
               icon={faShoppingCart}
               label="CART"
               link="/cart"
-              badgeCount={cartCount}
+              badgeCount={cartApiCount}
             />
             {/* Profile */}
             {/* <IconItem icon={faUser} label="PROFILE" /> */}

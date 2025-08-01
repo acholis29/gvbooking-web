@@ -12,6 +12,8 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDate } from "@/context/DateContext";
 import { useInitial } from "@/context/InitialContext";
+import { useProfile } from "@/context/ProfileContext";
+import { useCartApi } from "@/context/CartApiContext";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -54,6 +56,10 @@ export default function DetailDestination() {
   const { date, setDate } = useDate();
   // Initial Global (AgentId dan RepCode)
   const { agent, setAgent, repCode, setRepCode } = useInitial();
+  // Profil
+  const { profile } = useProfile();
+  // Cart API
+  const { saveCartApi } = useCartApi();
 
   type ProductDetail = {
     excursion_name: string;
@@ -197,13 +203,13 @@ export default function DetailDestination() {
         const formBody = new URLSearchParams({
           shared_key: idx_comp ?? "",
           xml: "false",
-          keyword: "",
-          date: "",
+          keyword: `|${profile.email}`,
+          date: date,
           code_of_language: param.default_language,
           code_of_currency: param.default_currency,
           promo_code: param.default_rep_code,
-          email: "",
-          mobile: "",
+          email: profile.email ?? "",
+          mobile: profile.phone ?? "",
         });
 
         const res = await fetch(
@@ -233,6 +239,7 @@ export default function DetailDestination() {
         setAgent(json.msg.resource.agent_id);
         localStorage.setItem("language", param.default_language); // simpan ke localStorage
         localStorage.setItem("currency", param.default_currency); // simpan ke localStorage
+        // saveCartApi(json.msg.cart_item);
 
         // proses hasil dari fetch kedua di sini
       } catch (err: any) {
