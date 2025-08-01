@@ -342,6 +342,8 @@ export default function ReviewBookingClient() {
         inputItem += ChargeType[i].age + "|";
         inputItem += ChargeType[i].buy_rates + "|";
         inputItem += ChargeType[i].buy_currency_id + "|";
+        inputItem += ChargeType[i].sale_rates + "|";
+        inputItem += ChargeType[i].sale_currency_id + "|";
         inputItem += ChargeType[i].raw_exchange_rates + "|";
         inputItem += ChargeType[i].buy_rates_total + "|";
         inputItem += ChargeType[i].sale_rates_total + ",";
@@ -358,7 +360,7 @@ export default function ReviewBookingClient() {
       for (let j = 0; j < Surcharge.length; j++) {
         if (Surcharge[j].mandatory.toLocaleLowerCase() == "true") {
           inputSurcharge += Surcharge[j].surcharge_id + "|";
-          inputSurcharge += Surcharge[j].price + "|,";
+          inputSurcharge += Surcharge[j].price + ",";
         }
       }
       inputSurcharge = inputSurcharge.slice(0, -1);
