@@ -16,6 +16,7 @@ import { useReviewBooking } from "@/context/ReviewBookingContext";
 import { useCartApi } from "@/context/CartApiContext";
 import { useProfile } from "@/context/ProfileContext";
 import { useModal } from "@/context/ModalContext";
+import { useSelectModal } from "@/context/SelectModalContext";
 // Helper
 import { acis_qty_age, formatToIDR } from "@/helper/helper";
 // Logs
@@ -62,6 +63,8 @@ export default function ReviewBookingClient() {
   const { profile, setProfile } = useProfile();
   // Modal
   const { openModal } = useModal();
+  // Select Modal
+  const { selectModal, setSelectModal } = useSelectModal();
 
   const idx_comp = reviewBookingObj?.idx_comp; //ini dari idx_comp_alias
   const idx_excursion = reviewBookingObj?.exc_id; //ini dari idx_excursion
@@ -170,7 +173,6 @@ export default function ReviewBookingClient() {
   const [isLoadingSurcharge, setIsLoadingSurcharge] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState<number>(0);
-  const [isModalProfileOpen, setModalProfileOpen] = useState(true);
   // State Form
   const [roomNumber, setRoomNumber] = useState<string>("");
   const [selectedSurcharge, setSelectedSurcharge] = useState<
@@ -337,7 +339,7 @@ export default function ReviewBookingClient() {
 
   const onSubmit = (data: any) => {
     if (profile.email == "") {
-      setModalProfileOpen(true);
+      setSelectModal("Profil");
       openModal();
       return null;
     }
@@ -661,7 +663,7 @@ export default function ReviewBookingClient() {
       </form>
 
       {/* Modal Profile */}
-      {isModalProfileOpen && (
+      {selectModal == "Profil" && (
         <ModalComponent title="Update Profile" icon={faUser}>
           <ProfileContent />
         </ModalComponent>

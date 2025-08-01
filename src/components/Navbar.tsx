@@ -11,6 +11,7 @@ import { useDate } from "@/context/DateContext";
 import { useReviewBooking } from "@/context/ReviewBookingContext";
 import { useProfile } from "@/context/ProfileContext";
 import { useInitial } from "@/context/InitialContext";
+import { useSelectModal } from "@/context/SelectModalContext";
 // Next Image
 import Image from "next/image";
 // Drawer
@@ -70,8 +71,7 @@ export default function NavbarComponent() {
   const [selectedCategory, setSelectedCategory] = useState("All Destinations");
   const [isProfilDropdownOpen, setProfilDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
-  const [menuSelected, setMenuSelected] = useState("");
+  const { selectModal, setSelectModal } = useSelectModal();
 
   // tidak dipakai karna sudah pakai global
   // type CurrencyItem = {
@@ -424,7 +424,7 @@ export default function NavbarComponent() {
                             if (item == "Options") {
                               router.push("/profile");
                             } else {
-                              setMenuSelected(`${item}`);
+                              setSelectModal(`${item}`);
                               openModal(); // ⬅️ Ini akan memunculkan modal
                             }
                           }}
@@ -621,14 +621,14 @@ export default function NavbarComponent() {
       </div>
 
       {/* Modal */}
-      {menuSelected == "Currency" && (
+      {selectModal == "Currency" && (
         <ModalComponent title="Currency" icon={faMoneyCheckDollar}>
           {/* <CurrencyContent currencies={currencyMaster} /> */}
           <CurrencyContent currencies={masterCurrency} />
         </ModalComponent>
       )}
 
-      {menuSelected == "Language" && (
+      {selectModal == "Language" && (
         <ModalComponent title="Language" icon={faGlobe}>
           {/* <LanguageContent languages={languageMaster} /> */}
           <LanguageContent languages={masterLanguage} />
