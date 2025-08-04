@@ -95,11 +95,98 @@ export default function Cart() {
     // Cart Page
     <div className="max-w-screen-xl mx-auto">
       <Breadcrumb pageName="Cart" />
-      <section className="flex flex-col py-6 md:p-6 bg-white gap-1">
-        {ListCart.map((item, index) => {
-          return <CardAccordion key={`cardAccordion-${index}`} item={item} />;
-        })}
-      </section>
+      <div className="flex flex-col md:flex-row">
+        {/* Kontent Kiri */}
+        <div className="w-[100%] md:w-[60%]">
+          {" "}
+          <section className="flex flex-col py-6 md:p-6 bg-white gap-1">
+            {ListCart.map((item, index) => {
+              return (
+                <CardAccordion key={`cardAccordion-${index}`} item={item} />
+              );
+            })}
+          </section>
+        </div>
+        {/* Kontent Kanan */}
+        <div className="w-[100%] md:w-[40%] p-6">
+          {/* Desktop */}
+          <div className="hidden md:block max-w-xl p-6 bg-gray-100 border border-gray-200 rounded-lg shadow-sm ">
+            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+              Order Summary
+            </h5>
+
+            <div className="flex flex-col mt-6">
+              <div className="flex flex-row justify-between mb-2">
+                <p className="text-sm text-gray-700 ">Aristocat Katamaran</p>
+                <p className="text-sm text-gray-700">EUR 20</p>
+              </div>
+              <div className="flex flex-row justify-between mb-2">
+                <p className="text-sm text-gray-700 ">Aristocat Katamaran</p>
+                <p className="text-sm text-gray-700">EUR 20</p>
+              </div>
+            </div>
+            <hr className="my-2 border border-gray-400 opacity-50" />
+            <div className="flex flex-row justify-between mb-2">
+              <p className="text-sm text-gray-700 font-bold">Subtotal</p>
+              <p className="text-sm text-gray-700 font-semibold">EUR 40</p>
+            </div>
+            <hr className="my-2 border border-gray-400 opacity-50" />
+            <div className="flex flex-row justify-between mb-2">
+              <p className="text-sm text-gray-700 font-semibold">Disc</p>
+              <p className="text-sm text-gray-700 font-semibold">EUR 5</p>
+            </div>
+            <hr className="my-2 border border-gray-400 opacity-50" />
+            <div className="flex flex-row justify-between mb-2">
+              <p className="text-gray-700 font-semibold">Grand Total</p>
+              <p className="text-gray-700 font-semibold">EUR 35</p>
+            </div>
+            <button
+              type="button"
+              className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+            >
+              Payment
+            </button>
+          </div>
+          {/* Mobile */}
+          <div className="block md:hidden max-w-xl p-6 bg-gray-100 border border-gray-200 rounded-lg shadow-sm ">
+            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+              Order Summary
+            </h5>
+
+            <div className="flex flex-col mt-6">
+              <div className="flex flex-row justify-between mb-2">
+                <p className="text-sm text-gray-700 ">Aristocat Katamaran</p>
+                <p className="text-sm text-gray-700">EUR 20</p>
+              </div>
+              <div className="flex flex-row justify-between mb-2">
+                <p className="text-sm text-gray-700 ">Aristocat Katamaran</p>
+                <p className="text-sm text-gray-700">EUR 20</p>
+              </div>
+            </div>
+            <hr className="my-2 border border-gray-400 opacity-50" />
+            <div className="flex flex-row justify-between mb-2">
+              <p className="text-sm text-gray-700 font-bold">Subtotal</p>
+              <p className="text-sm text-gray-700 font-semibold">EUR 40</p>
+            </div>
+            <hr className="my-2 border border-gray-400 opacity-50" />
+            <div className="flex flex-row justify-between mb-2">
+              <p className="text-sm text-gray-700 font-semibold">Disc</p>
+              <p className="text-sm text-gray-700 font-semibold">EUR 5</p>
+            </div>
+            <hr className="my-2 border border-gray-400 opacity-50" />
+            <div className="flex flex-row justify-between mb-2">
+              <p className="text-gray-700 font-semibold">Grand Total</p>
+              <p className="text-gray-700 font-semibold">EUR 35</p>
+            </div>
+            <button
+              type="button"
+              className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+            >
+              Payment
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

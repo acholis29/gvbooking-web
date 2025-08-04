@@ -211,7 +211,7 @@ export default function DetailDestination() {
           email: profile.email ?? "",
           mobile: profile.phone ?? "",
         });
-
+        console.log(formBody.toString());
         const res = await fetch(
           `${API_HOSTS.host1}/excursion.asmx/v2_product_search_initialize`,
           {
@@ -224,8 +224,8 @@ export default function DetailDestination() {
         );
 
         const json = await res.json();
-        // console.log("Response 2:", json.msg);
-        // console.log("Cart Item :", json.msg.cart_item);
+        console.log("Response 2:", json.msg);
+        console.log("Cart Item :", json.msg.cart_item);
         const languageList = json.msg.company_language.map((item: any) => ({
           MSLanguage: item.language_code,
         }));
