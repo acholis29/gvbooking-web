@@ -224,8 +224,8 @@ export default function DetailDestination() {
         );
 
         const json = await res.json();
-        console.log("Response 2:", json.msg);
-        console.log("Cart Item :", json.msg.cart_item);
+        // console.log("Response 2:", json.msg);
+        // console.log("Cart Item :", json.msg.cart_item);
         const languageList = json.msg.company_language.map((item: any) => ({
           MSLanguage: item.language_code,
         }));
@@ -240,7 +240,7 @@ export default function DetailDestination() {
         setAgent(json.msg.resource.agent_id);
         localStorage.setItem("language", param.default_language); // simpan ke localStorage
         localStorage.setItem("currency", param.default_currency); // simpan ke localStorage
-        // saveCartApi(json.msg.cart_item);
+        saveCartApi(json.msg.cart_item);
 
         // proses hasil dari fetch kedua di sini
       } catch (err: any) {
