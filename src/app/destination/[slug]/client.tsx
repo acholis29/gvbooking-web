@@ -27,6 +27,7 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { useInitial } from "@/context/InitialContext";
 import { useProfile } from "@/context/ProfileContext";
 import { useDate } from "@/context/DateContext";
+import { useCartApi } from "@/context/CartApiContext";
 
 type Props = {
   slug: string;
@@ -88,6 +89,8 @@ export default function DestinationClient({ slug }: Props) {
   const { agent, setAgent, repCode, setRepCode } = useInitial();
   const { profile } = useProfile();
   const { date } = useDate();
+  // Cart API
+  const { saveCartApi } = useCartApi();
 
   // First Load API Mobile Initial
   useEffect(() => {
@@ -168,13 +171,15 @@ export default function DestinationClient({ slug }: Props) {
         // proses hasil dari fetch kedua di sini
         localStorage.setItem("language", param.default_language); // simpan ke localStorage
         localStorage.setItem("currency", param.default_currency); // simpan ke localStorage
+        saveCartApi(json.msg.cart_item);
       } catch (err: any) {
         console.error("Fetch kedua error:", err);
       }
     };
-
-    fetchDataInitial();
-  }, []);
+    if (date != "") {
+      fetchDataInitial();
+    }
+  }, [date]);
 
   useEffect(() => {
     fetch(`/api/excursion/local_destination/${idx_comp}`, {
