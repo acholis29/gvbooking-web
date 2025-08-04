@@ -145,6 +145,7 @@ export default function NavbarComponent() {
     const formattedDate = e.toISOString().split("T")[0];
     // Date Global
     setDate(formattedDate); // hasil: 2025-07-17
+    localStorage.setItem("booking_date", formattedDate);
   };
 
   const handleClick = (e: any) => {
@@ -210,15 +211,20 @@ export default function NavbarComponent() {
       const parsedData = JSON.parse(savedProfile);
       setProfile(parsedData);
     }
+
+    const savedDate = localStorage.getItem("booking_date");
+    if (savedDate) {
+      setDate(savedDate);
+    } else {
+      const today = new Date();
+      const formatted = today.toISOString().split("T")[0]; // hasil: '2025-07-18'
+      setDate(formatted);
+      localStorage.setItem("booking_date", formatted);
+    }
   }, []);
 
   useEffect(() => {
-    const today = new Date();
-    const formatted = today.toISOString().split("T")[0]; // hasil: '2025-07-18'
-    setDate(formatted);
-  }, []);
-
-  useEffect(() => {
+    // Set Date Picker Pada
     setSelectedDate(new Date(date));
   }, [date]);
 

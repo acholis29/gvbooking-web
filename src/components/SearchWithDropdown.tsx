@@ -63,6 +63,7 @@ const Search: React.FC<SearchProps> = ({
     const formattedDate = e.toISOString().split("T")[0];
     // Date Global
     setDate(formattedDate); // hasil: 2025-07-17
+    localStorage.setItem("booking_date", formattedDate);
   };
 
   useEffect(() => {

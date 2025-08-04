@@ -225,6 +225,7 @@ export default function DetailDestination() {
 
         const json = await res.json();
         console.log("Response 2:", json.msg);
+        console.log("Cart Item :", json.msg.cart_item);
         const languageList = json.msg.company_language.map((item: any) => ({
           MSLanguage: item.language_code,
         }));
@@ -247,8 +248,10 @@ export default function DetailDestination() {
       }
     };
 
-    fetchDataInitial();
-  }, []);
+    if (date != "") {
+      fetchDataInitial();
+    }
+  }, [date]);
   const maximum_pax =
     dataProduct != null && dataProduct.msg.product_subs.length > 0
       ? parseInt(dataProduct.msg.product_subs[0].maximum_pax)
@@ -334,6 +337,7 @@ export default function DetailDestination() {
                           // Format ke yyyy-mm-dd dan simpan di context
                           const formatted = date.toISOString().split("T")[0];
                           setDate(formatted);
+                          localStorage.setItem("booking_date", formatted);
                         }
                       }}
                       minDate={new Date()}
