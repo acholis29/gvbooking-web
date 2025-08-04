@@ -1,11 +1,16 @@
 "use client";
+// Hooks
 import { useEffect, useState } from "react";
-import HorizontalCard from "@/components/HorizontalCard";
-import SkeletonCardHorizontal from "@/components/SkeletonCardHorizontal";
+// Library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInbox } from "@fortawesome/free-solid-svg-icons";
+// component
 import Breadcrumb from "@/components/Breadcrumb";
 import CardAccordion from "@/components/CardAccordion";
+import HorizontalCard from "@/components/HorizontalCard";
+import SkeletonCardHorizontal from "@/components/SkeletonCardHorizontal";
+// Context global
+import { useCartApi } from "@/context/CartApiContext";
 
 type DetailPax = {
   charge_type: string;
@@ -73,10 +78,11 @@ export default function Cart() {
 
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
+  const { cartApiItems } = useCartApi();
 
   useEffect(() => {
     loadCart();
-  }, []); // tetap kosong, agar hanya dijalankan sekali saat mount
+  }, [cartApiItems]); // tetap kosong, agar hanya dijalankan sekali saat mount
 
   function loadCart() {
     const cart = JSON.parse(localStorage.getItem("cart_api") || "[]");

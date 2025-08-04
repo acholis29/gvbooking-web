@@ -1,5 +1,7 @@
 // components/CardAccordion.tsx
-import React, { useState } from "react";
+// Hooks
+import React, { useEffect, useState } from "react";
+// Library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
@@ -8,8 +10,13 @@ import {
   faTrash,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
+// Helper
 import { format_date, capitalizeFirst } from "@/helper/helper";
 import { API_HOSTS } from "@/lib/apihost";
+// Library
+import toast from "react-hot-toast";
+// Context Global
+import { useCartApi } from "@/context/CartApiContext";
 
 type DetailPax = {
   charge_type: string;
@@ -77,6 +84,58 @@ type Props = {
 
 const CardAccordion: React.FC<Props> = ({ item }) => {
   const [isOpenAccordion, setAccordion] = useState(false);
+  const { saveCartApi } = useCartApi();
+  const [isRemoving, setIsRemoving] = useState(false);
+
+  const removeItemCart = async () => {
+    const formBody = new URLSearchParams({
+      shared_key: item.company_id, // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
+      xml: "false",
+      id_master_file: item.master_file_id,
+      language_code: "EN",
+      id_transaction: item.transaction_id,
+    });
+
+    try {
+      const res = await fetch(
+        `${API_HOSTS.host1}/excursion.asmx/v2_cart_remove`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: formBody.toString(),
+        }
+      );
+
+      const contentType = res.headers.get("content-type") || "";
+
+      if (contentType.includes("application/json")) {
+        const json = await res.json();
+        console.log(json);
+        saveCartApi(json.msg);
+        toast.success("Cart Removed");
+
+        // Reload Ulang Cart
+      }
+    } catch (err: any) {
+      console.error("Fetch error:", err);
+    } finally {
+      setIsRemoving(false);
+    }
+  };
+
+  const handleRemove = () => {
+    if (isRemoving) {
+      toast.success("Pleases Wait");
+      return; // cegah klik ganda
+    }
+
+    setIsRemoving(true); // ⏳ mulai loading
+    // aksi hapus di sini
+    removeItemCart();
+  };
+
   return (
     <div className="relative md:max-w-3xl mb-4">
       {/* Tombol pojok kanan atas */}
@@ -103,9 +162,9 @@ const CardAccordion: React.FC<Props> = ({ item }) => {
             setAccordion(!isOpenAccordion);
           }}
         >
-          <div className=" w-[100%] md:w-48 h-auto p-2 md:p-0">
+          <div className=" w-[100%] md:w-48 h-auto p-2">
             <img
-              className="object-cover rounded-sm md:rounded-tl-sm h-auto w-48"
+              className="object-cover rounded-sm md:rounded-tl-sm h-auto md:w-48"
               src={`${API_HOSTS.img_indo}/${item.picture}`}
               alt=""
             />
@@ -155,7 +214,7 @@ const CardAccordion: React.FC<Props> = ({ item }) => {
           <div className="w-[95%] p-4  text-left">
             <p className="text-black text-xs font-bold">Pickup date</p>
             <p className="text-black text-xs">
-              {format_date(item.pickup_date)}
+              {format_date(item.pickup_date)} | {item.pickup_time} (Local Time)
             </p>
             <hr className="my-2 border border-gray-400 opacity-50" />
             <p className="text-black text-xs font-bold">Hotel</p>
@@ -217,7 +276,10 @@ const CardAccordion: React.FC<Props> = ({ item }) => {
         >
           <div className="w-[5%] py-4  text-left"></div>
           <div className="w-[95%] p-4  flex flex-row justify-start items-center gap-3">
-            <a href="#" className="flex flex-row items-center gap-2 group">
+            <div
+              className="flex flex-row items-center gap-2 group cursor-pointer"
+              onClick={handleRemove}
+            >
               <FontAwesomeIcon
                 icon={faTrash}
                 className="w-5 h-5 text-gray-500 group-hover:text-red-700"
@@ -226,7 +288,7 @@ const CardAccordion: React.FC<Props> = ({ item }) => {
               <p className="text-gray-600 text-sm group-hover:text-red-700">
                 Remove
               </p>
-            </a>
+            </div>
             <a href="#" className="flex flex-row items-center gap-2 group">
               <FontAwesomeIcon
                 icon={faEdit}
