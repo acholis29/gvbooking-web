@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 // Context Global
 import { useProfile } from "@/context/ProfileContext";
+import { useCartApi } from "@/context/CartApiContext";
 
 export default function Profile() {
   type FormData = {
@@ -16,6 +17,7 @@ export default function Profile() {
   };
 
   const { profile, setProfile } = useProfile();
+  const { saveCartApi } = useCartApi();
 
   const {
     register,
@@ -25,9 +27,13 @@ export default function Profile() {
 
   const onSubmit = (data: FormData) => {
     // Simpan ke localStorage
+    if (profile.email != data.email) {
+      saveCartApi([]);
+    }
+
     localStorage.setItem("profileData", JSON.stringify(data));
     setProfile(data);
-    toast.success("Save Profile");
+    toast.success("Success Update Profile");
   };
 
   useEffect(() => {}, [profile]);

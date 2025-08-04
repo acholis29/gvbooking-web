@@ -460,7 +460,7 @@ export default function ReviewBookingClient() {
           console.log(json);
           // set data cart api disini
           saveCartApi(json.msg);
-          toast.success("success boss");
+          toast.success("Success add to cart");
           // redirect ke cart page
           router.replace("/cart");
         }
