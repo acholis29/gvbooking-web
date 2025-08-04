@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 // Library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInbox } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faInbox } from "@fortawesome/free-solid-svg-icons";
 // component
 import Breadcrumb from "@/components/Breadcrumb";
 import CardAccordion from "@/components/CardAccordion";
@@ -79,6 +79,7 @@ export default function Cart() {
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
   const { cartApiItems } = useCartApi();
+  const [isOpenAccordion, setAccordion] = useState(false);
 
   useEffect(() => {
     loadCart();
@@ -105,10 +106,11 @@ export default function Cart() {
                 <CardAccordion key={`cardAccordion-${index}`} item={item} />
               );
             })}
+            <div className="block md:hidden mt-100"></div>
           </section>
         </div>
         {/* Kontent Kanan */}
-        <div className="w-[100%] md:w-[40%] p-6">
+        <div className="w-[100%] md:w-[40%] md:p-6">
           {/* Desktop */}
           <div className="hidden md:block max-w-xl p-6 bg-gray-100 border border-gray-200 rounded-lg shadow-sm ">
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
@@ -148,22 +150,46 @@ export default function Cart() {
             </button>
           </div>
           {/* Mobile */}
-          <div className="block md:hidden max-w-xl p-6 bg-gray-100 border border-gray-200 rounded-lg shadow-sm ">
-            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
-              Order Summary
-            </h5>
-
-            <div className="flex flex-col mt-6">
-              <div className="flex flex-row justify-between mb-2">
-                <p className="text-sm text-gray-700 ">Aristocat Katamaran</p>
-                <p className="text-sm text-gray-700">EUR 20</p>
-              </div>
-              <div className="flex flex-row justify-between mb-2">
-                <p className="text-sm text-gray-700 ">Aristocat Katamaran</p>
-                <p className="text-sm text-gray-700">EUR 20</p>
-              </div>
+          <div className="block md:hidden max-w-xl p-6 fixed bottom-0 left-0 w-full z-50 bg-gray-100 border border-gray-200 rounded-lg shadow-sm ">
+            <div
+              className="flex flex-row justify-between mb-2"
+              onClick={() => {
+                setAccordion(!isOpenAccordion);
+              }}
+            >
+              <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                Order Summary
+              </h5>
+              <h5>
+                <FontAwesomeIcon
+                  icon={faChevronDown}
+                  className="w-10 h-10 text-gray-500"
+                  size="lg"
+                />
+              </h5>
             </div>
-            <hr className="my-2 border border-gray-400 opacity-50" />
+
+            {isOpenAccordion && (
+              <>
+                {" "}
+                <div className="flex flex-col mt-6">
+                  <div className="flex flex-row justify-between mb-2">
+                    <p className="text-sm text-gray-700 ">
+                      Aristocat Katamaran
+                    </p>
+                    <p className="text-sm text-gray-700">EUR 20</p>
+                  </div>
+                  <div className="flex flex-row justify-between mb-2">
+                    <p className="text-sm text-gray-700 ">
+                      Aristocat Katamaran
+                    </p>
+                    <p className="text-sm text-gray-700">EUR 20</p>
+                  </div>
+                </div>
+                <hr className="my-2 border border-gray-400 opacity-50" />
+              </>
+            )}
+
             <div className="flex flex-row justify-between mb-2">
               <p className="text-sm text-gray-700 font-bold">Subtotal</p>
               <p className="text-sm text-gray-700 font-semibold">EUR 40</p>

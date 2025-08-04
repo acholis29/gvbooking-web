@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
   faChevronDown,
+  faChevronUp,
   faEdit,
   faTrash,
   faUsers,
@@ -147,11 +148,19 @@ const CardAccordion: React.FC<Props> = ({ item }) => {
           setAccordion(!isOpenAccordion);
         }}
       >
-        <FontAwesomeIcon
-          icon={faChevronDown}
-          className="w-10 h-10 text-gray-500"
-          size="lg"
-        />
+        {isOpenAccordion ? (
+          <FontAwesomeIcon
+            icon={faChevronUp}
+            className="w-10 h-10 text-gray-500"
+            size="lg"
+          />
+        ) : (
+          <FontAwesomeIcon
+            icon={faChevronDown}
+            className="w-10 h-10 text-gray-500"
+            size="lg"
+          />
+        )}
       </button>
       <div className="flex flex-col items-center bg-white border border-gray-200 md:rounded-lg shadow-sm hover:bg-gray-50">
         <div
@@ -181,13 +190,19 @@ const CardAccordion: React.FC<Props> = ({ item }) => {
           </div>
         </div>
         <div className="flex flex-row w-full bg-gray-100">
+          <div className="w-[3%] grow p-4 text-left">
+            <input
+              type="checkbox"
+              className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
+            />
+          </div>
           <div className="w-[40%] grow p-4 text-left">
             <p className="text-black text-sm font-bold">SUB TOTAL</p>
             <p className="text-red-700 text-sm font-semibold">
               {item.currency} {item.price_in_format}
             </p>
           </div>
-          <div className="w-[20%] grow p-4 text-left">
+          <div className="w-[15%] grow p-4 text-left">
             <p className="text-black text-sm font-bold">DISC</p>
             <p className="text-red-700 text-sm font-semibold">
               {item.disc_in_format}
