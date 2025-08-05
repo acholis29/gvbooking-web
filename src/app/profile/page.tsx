@@ -158,7 +158,6 @@ export default function Profile() {
                   id="destination"
                   className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   placeholder="Destination"
-                  required
                 />
               </div>
               <div className="mb-5">
@@ -173,7 +172,6 @@ export default function Profile() {
                   id="currency"
                   className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   placeholder="Currency"
-                  required
                 />
               </div>
               <div className="mb-5">
@@ -188,7 +186,6 @@ export default function Profile() {
                   id="language"
                   className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                   placeholder="Language"
-                  required
                 />
               </div>
             </div>

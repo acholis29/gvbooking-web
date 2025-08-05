@@ -832,7 +832,6 @@ const ProfileContent = () => {
               defaultValue={profile.phone}
               className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               placeholder="Phone Number"
-              required
             />
           </div>
           <div className="mb-4">
