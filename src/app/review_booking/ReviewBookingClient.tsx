@@ -774,7 +774,7 @@ export default function ReviewBookingClient() {
                 </div>
                 {!isLoadingSurcharge && (
                   <button
-                    type="button"
+                    type="submit"
                     className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
                   >
                     Add Cart
@@ -809,7 +809,7 @@ export default function ReviewBookingClient() {
                 </div>
                 {!isLoadingSurcharge && (
                   <button
-                    type="button"
+                    type="submit"
                     className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
                   >
                     Add Cart

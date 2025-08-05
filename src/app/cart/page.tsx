@@ -12,7 +12,7 @@ import SkeletonCardHorizontal from "@/components/SkeletonCardHorizontal";
 // Context global
 import { useCartApi } from "@/context/CartApiContext";
 // Helper
-import { formatRibuan, capitalizeWords } from "@/helper/helper";
+import { formatRibuan, capitalizeWords, truncateText } from "@/helper/helper";
 type DetailPax = {
   charge_type: string;
   quantity: string;
@@ -185,7 +185,7 @@ export default function Cart() {
                       className="flex flex-row justify-between mb-2"
                     >
                       <p className="text-sm text-gray-700 ">
-                        {capitalizeWords(item.excursion_name)}
+                        {truncateText(capitalizeWords(item.excursion_name), 45)}
                       </p>
                       <p className="text-sm text-gray-700 font-semibold">
                         {item.currency} {item.price_in_format}
@@ -252,7 +252,10 @@ export default function Cart() {
                         className="flex flex-row justify-between mb-2"
                       >
                         <p className="text-sm text-gray-700 ">
-                          {capitalizeWords(item.excursion_name)}
+                          {truncateText(
+                            capitalizeWords(item.excursion_name),
+                            30
+                          )}
                         </p>
                         <p className="text-sm text-gray-700 font-semibold">
                           {item.currency} {item.price_in_format}
