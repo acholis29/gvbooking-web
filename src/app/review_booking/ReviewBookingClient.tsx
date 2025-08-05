@@ -194,6 +194,7 @@ export default function ReviewBookingClient() {
   const [contractId, setContractId] = useState<string>("");
   const [inputItem, setInputItem] = useState<string>("");
   const [inputSurcharge, setInputSurcharge] = useState<string>("");
+  const [isMobile, setIsMobile] = useState(false);
 
   // Detail Tour / Produk Detail
   useEffect(() => {
@@ -477,6 +478,17 @@ export default function ReviewBookingClient() {
     PostDataCart();
   };
 
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile(); // initial
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   return (
     // Cart Page
     <div className="max-w-screen-xl mx-auto">
@@ -711,17 +723,20 @@ export default function ReviewBookingClient() {
               ></textarea>
             </div>
 
-            <div className="md:max-w-3xl flex h-20 w-full bg-gray-200 mt-15 rounded-sm shadow-md">
-              <div className="basis-[60%] flex flex-col items-start justify-center pl-3">
-                {/* Kolom 1 (60%) */}
-                <p className="font-semibold text-gray-700">Total</p>
+            {/* Div Bantu */}
+            <div className="block md:hidden h-96 w-full "></div>
+
+            {/* <div className="md:max-w-3xl flex h-20 w-full bg-gray-200 mt-15 rounded-sm shadow-md">
+              <div className="basis-[60%] flex flex-col items-start justify-center pl-3"> */}
+            {/* Kolom 1 (60%) */}
+            {/* <p className="font-semibold text-gray-700">Total</p>
                 <p className="font-bold text-gray-800">
                   {currency} {total.toLocaleString()}
                 </p>
               </div>
-              <div className="basis-[40%] flex items-center justify-center">
-                {/* Kolom 2 (40%) */}
-                {!isLoadingSurcharge && (
+              <div className="basis-[40%] flex items-center justify-center"> */}
+            {/* Kolom 2 (40%) */}
+            {/* {!isLoadingSurcharge && (
                   <button
                     type="submit"
                     className="text-gray-700 font-bold  shadow-2xl bg-amber-400 w-full hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
@@ -729,9 +744,80 @@ export default function ReviewBookingClient() {
                     Add Cart
                   </button>
                 )}
+              </div> */}
+            {/* </div> */}
+          </div>
+
+          {/* Konten kanan */}
+          {!isMobile && (
+            <div className="md:w-[50%] h-auto">
+              <div className="hidden md:block max-w-xl p-6 bg-gray-100 border border-gray-200 rounded-lg shadow-sm ">
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                  Review Booking Summary
+                </h5>
+                <div className="flex flex-row justify-between mt-6 mb-2">
+                  <p className="text-sm text-gray-700 font-bold">Subtotal</p>
+                  <p className="text-sm text-gray-700 font-semibold">0</p>
+                </div>
+                <hr className="my-2 border border-gray-400 opacity-50" />
+                <div className="flex flex-row justify-between mb-2">
+                  <p className="text-sm text-gray-700 font-semibold">Disc</p>
+                  <p className="text-sm text-gray-700 font-semibold">0</p>
+                </div>
+                <hr className="my-2 border border-gray-400 opacity-50" />
+                <div className="flex flex-row justify-between mb-2">
+                  <p className="text-gray-700 font-semibold">Grand Total</p>
+                  <p className="text-gray-700 font-semibold">
+                    {" "}
+                    {currency} {total.toLocaleString()}
+                  </p>
+                </div>
+                {!isLoadingSurcharge && (
+                  <button
+                    type="button"
+                    className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+                  >
+                    Add Cart
+                  </button>
+                )}
               </div>
             </div>
-          </div>
+          )}
+
+          {isMobile && (
+            <div className="md:w-[50%] h-auto fixed bottom-0 left-0 w-full z-50">
+              <div className=" max-w-xl p-6 bg-gray-100 border border-gray-200 rounded-lg shadow-sm ">
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                  Review Booking Summary
+                </h5>
+                <div className="flex flex-row justify-between mt-6 mb-2">
+                  <p className="text-sm text-gray-700 font-bold">Subtotal</p>
+                  <p className="text-sm text-gray-700 font-semibold">0</p>
+                </div>
+                <hr className="my-2 border border-gray-400 opacity-50" />
+                <div className="flex flex-row justify-between mb-2">
+                  <p className="text-sm text-gray-700 font-semibold">Disc</p>
+                  <p className="text-sm text-gray-700 font-semibold">0</p>
+                </div>
+                <hr className="my-2 border border-gray-400 opacity-50" />
+                <div className="flex flex-row justify-between mb-2">
+                  <p className="text-gray-700 font-semibold">Grand Total</p>
+                  <p className="text-gray-700 font-semibold">
+                    {" "}
+                    {currency} {total.toLocaleString()}
+                  </p>
+                </div>
+                {!isLoadingSurcharge && (
+                  <button
+                    type="button"
+                    className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+                  >
+                    Add Cart
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </section>
       </form>
 

@@ -47,7 +47,9 @@ export default function FooterComponent() {
 
   const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
-  const hideSearch = pathname.startsWith("/cart") && isMobile;
+  const hideSearch =
+    pathname.startsWith("/cart") ||
+    (pathname.startsWith("/review_booking") && isMobile);
 
   useEffect(() => {
     const handleResize = () => {
