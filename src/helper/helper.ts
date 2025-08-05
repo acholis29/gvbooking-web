@@ -82,6 +82,11 @@ export function format_date(dateString: string): string {
   }).format(date);
 }
 
+export function formatRibuan(num: number) {
+  if (typeof num !== "number") return num;
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
 
 
 

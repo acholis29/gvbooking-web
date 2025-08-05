@@ -11,7 +11,8 @@ import HorizontalCard from "@/components/HorizontalCard";
 import SkeletonCardHorizontal from "@/components/SkeletonCardHorizontal";
 // Context global
 import { useCartApi } from "@/context/CartApiContext";
-
+// Helper
+import { formatRibuan, capitalizeWords } from "@/helper/helper";
 type DetailPax = {
   charge_type: string;
   quantity: string;
@@ -75,11 +76,14 @@ type CartApiItem = {
 export default function Cart() {
   // State Data Detail Destination
   const [ListCart, setCart] = useState<CartApiItem[]>([]);
+  const [ChekedCart, setCheckedCart] = useState<CartApiItem[]>([]);
 
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
   const { cartApiItems } = useCartApi();
   const [isOpenAccordion, setAccordion] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [subtotalSummeryOrder, setSubtotalSummeryOrder] = useState(0);
 
   useEffect(() => {
     loadCart();
@@ -92,6 +96,51 @@ export default function Cart() {
     setIsLoading(false);
   }
 
+  function handleOnChangeCard(item: CartApiItem, checked: boolean) {
+    console.log("====CART CHANGE====");
+    console.log("Cheked :", checked);
+    console.log(item);
+
+    if (checked) {
+      // Tambahkan jika belum ada
+      setCheckedCart((prev) => {
+        // Hindari duplikat
+        if (!prev.find((i) => i.transaction_id === item.transaction_id)) {
+          return [...prev, item];
+        }
+        return prev;
+      });
+    } else {
+      // Hapus dari CheckedCart
+      setCheckedCart((prev) =>
+        prev.filter((i) => i.transaction_id !== item.transaction_id)
+      );
+    }
+  }
+
+  function hitungSubtotalSummeryOrder(items: CartApiItem[]) {
+    let subTotal = 0;
+    items.map((item, index) => {
+      subTotal += parseInt(item.price);
+    });
+    setSubtotalSummeryOrder(subTotal);
+  }
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile(); // initial
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    hitungSubtotalSummeryOrder(ChekedCart);
+  }, [ChekedCart]);
+
   return (
     // Cart Page
     <div className="max-w-screen-xl mx-auto">
@@ -103,7 +152,11 @@ export default function Cart() {
           <section className="flex flex-col py-6 md:p-6 bg-white gap-1">
             {ListCart.map((item, index) => {
               return (
-                <CardAccordion key={`cardAccordion-${index}`} item={item} />
+                <CardAccordion
+                  key={`cardAccordion-${index}`}
+                  item={item}
+                  onChangeCard={handleOnChangeCard}
+                />
               );
             })}
             <div className="block md:hidden mt-100"></div>
@@ -112,105 +165,127 @@ export default function Cart() {
         {/* Kontent Kanan */}
         <div className="w-[100%] md:w-[40%] md:p-6">
           {/* Desktop */}
-          <div className="hidden md:block max-w-xl p-6 bg-gray-100 border border-gray-200 rounded-lg shadow-sm ">
-            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
-              Order Summary
-            </h5>
-
-            <div className="flex flex-col mt-6">
-              <div className="flex flex-row justify-between mb-2">
-                <p className="text-sm text-gray-700 ">Aristocat Katamaran</p>
-                <p className="text-sm text-gray-700">EUR 20</p>
-              </div>
-              <div className="flex flex-row justify-between mb-2">
-                <p className="text-sm text-gray-700 ">Aristocat Katamaran</p>
-                <p className="text-sm text-gray-700">EUR 20</p>
-              </div>
-            </div>
-            <hr className="my-2 border border-gray-400 opacity-50" />
-            <div className="flex flex-row justify-between mb-2">
-              <p className="text-sm text-gray-700 font-bold">Subtotal</p>
-              <p className="text-sm text-gray-700 font-semibold">EUR 40</p>
-            </div>
-            <hr className="my-2 border border-gray-400 opacity-50" />
-            <div className="flex flex-row justify-between mb-2">
-              <p className="text-sm text-gray-700 font-semibold">Disc</p>
-              <p className="text-sm text-gray-700 font-semibold">EUR 5</p>
-            </div>
-            <hr className="my-2 border border-gray-400 opacity-50" />
-            <div className="flex flex-row justify-between mb-2">
-              <p className="text-gray-700 font-semibold">Grand Total</p>
-              <p className="text-gray-700 font-semibold">EUR 35</p>
-            </div>
-            <button
-              type="button"
-              className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
-            >
-              Payment
-            </button>
-          </div>
-          {/* Mobile */}
-          <div className="block md:hidden max-w-xl p-6 fixed bottom-0 left-0 w-full z-50 bg-gray-100 border border-gray-200 rounded-lg shadow-sm ">
-            <div
-              className="flex flex-row justify-between mb-2"
-              onClick={() => {
-                setAccordion(!isOpenAccordion);
-              }}
-            >
+          {!isMobile && (
+            <div className="hidden md:block max-w-xl p-6 bg-gray-100 border border-gray-200 rounded-lg shadow-sm ">
               <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
                 Order Summary
               </h5>
-              <h5>
-                <FontAwesomeIcon
-                  icon={faChevronDown}
-                  className="w-10 h-10 text-gray-500"
-                  size="lg"
-                />
-              </h5>
-            </div>
 
-            {isOpenAccordion && (
-              <>
-                {" "}
-                <div className="flex flex-col mt-6">
-                  <div className="flex flex-row justify-between mb-2">
-                    <p className="text-sm text-gray-700 ">
-                      Aristocat Katamaran
-                    </p>
-                    <p className="text-sm text-gray-700">EUR 20</p>
-                  </div>
-                  <div className="flex flex-row justify-between mb-2">
-                    <p className="text-sm text-gray-700 ">
-                      Aristocat Katamaran
-                    </p>
-                    <p className="text-sm text-gray-700">EUR 20</p>
-                  </div>
-                </div>
-                <hr className="my-2 border border-gray-400 opacity-50" />
-              </>
-            )}
+              <div className="flex flex-col mt-6">
+                {ChekedCart.map((item, index) => {
+                  return (
+                    <div
+                      key={`chekedCart-${index}`}
+                      className="flex flex-row justify-between mb-2"
+                    >
+                      <p className="text-sm text-gray-700 ">
+                        {capitalizeWords(item.excursion_name)}
+                      </p>
+                      <p className="text-sm text-gray-700 font-semibold">
+                        {item.currency} {item.price_in_format}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+              <hr className="my-2 border border-gray-400 opacity-50" />
+              <div className="flex flex-row justify-between mb-2">
+                <p className="text-sm text-gray-700 font-bold">Subtotal</p>
+                <p className="text-sm text-gray-700 font-semibold">
+                  {formatRibuan(subtotalSummeryOrder)}
+                </p>
+              </div>
+              <hr className="my-2 border border-gray-400 opacity-50" />
+              <div className="flex flex-row justify-between mb-2">
+                <p className="text-sm text-gray-700 font-semibold">Disc</p>
+                <p className="text-sm text-gray-700 font-semibold">0</p>
+              </div>
+              <hr className="my-2 border border-gray-400 opacity-50" />
+              <div className="flex flex-row justify-between mb-2">
+                <p className="text-gray-700 font-semibold">Grand Total</p>
+                <p className="text-gray-700 font-semibold">
+                  {formatRibuan(subtotalSummeryOrder)}
+                </p>
+              </div>
+              <button
+                type="button"
+                className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+              >
+                Payment
+              </button>
+            </div>
+          )}
 
-            <div className="flex flex-row justify-between mb-2">
-              <p className="text-sm text-gray-700 font-bold">Subtotal</p>
-              <p className="text-sm text-gray-700 font-semibold">EUR 40</p>
+          {/* Mobile */}
+          {isMobile && (
+            <div className="block md:hidden max-w-xl p-6 fixed bottom-0 left-0 w-full z-50 bg-gray-100 border border-gray-200 rounded-lg shadow-sm ">
+              <div
+                className="flex flex-row justify-between mb-2"
+                onClick={() => {
+                  setAccordion(!isOpenAccordion);
+                }}
+              >
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                  Order Summary
+                </h5>
+                <h5>
+                  <FontAwesomeIcon
+                    icon={faChevronDown}
+                    className="w-10 h-10 text-gray-500"
+                    size="lg"
+                  />
+                </h5>
+              </div>
+
+              {isOpenAccordion && (
+                <>
+                  {ChekedCart.map((item, index) => {
+                    return (
+                      <div
+                        key={`chekedCart-${index}`}
+                        className="flex flex-row justify-between mb-2"
+                      >
+                        <p className="text-sm text-gray-700 ">
+                          {capitalizeWords(item.excursion_name)}
+                        </p>
+                        <p className="text-sm text-gray-700 font-semibold">
+                          {item.currency} {item.price_in_format}
+                        </p>
+                      </div>
+                    );
+                  })}
+                  <hr className="my-2 border border-gray-400 opacity-50" />
+                </>
+              )}
+
+              <div className="flex flex-row justify-between mb-2">
+                <p className="text-sm text-gray-700 font-bold">Subtotal</p>
+                <p className="text-sm text-gray-700 font-semibold">
+                  {" "}
+                  {formatRibuan(subtotalSummeryOrder)}
+                </p>
+              </div>
+              <hr className="my-2 border border-gray-400 opacity-50" />
+              <div className="flex flex-row justify-between mb-2">
+                <p className="text-sm text-gray-700 font-semibold">Disc</p>
+                <p className="text-sm text-gray-700 font-semibold">0</p>
+              </div>
+              <hr className="my-2 border border-gray-400 opacity-50" />
+              <div className="flex flex-row justify-between mb-2">
+                <p className="text-gray-700 font-semibold">Grand Total</p>
+                <p className="text-gray-700 font-semibold">
+                  {" "}
+                  {formatRibuan(subtotalSummeryOrder)}
+                </p>
+              </div>
+              <button
+                type="button"
+                className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+              >
+                Payment
+              </button>
             </div>
-            <hr className="my-2 border border-gray-400 opacity-50" />
-            <div className="flex flex-row justify-between mb-2">
-              <p className="text-sm text-gray-700 font-semibold">Disc</p>
-              <p className="text-sm text-gray-700 font-semibold">EUR 5</p>
-            </div>
-            <hr className="my-2 border border-gray-400 opacity-50" />
-            <div className="flex flex-row justify-between mb-2">
-              <p className="text-gray-700 font-semibold">Grand Total</p>
-              <p className="text-gray-700 font-semibold">EUR 35</p>
-            </div>
-            <button
-              type="button"
-              className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
-            >
-              Payment
-            </button>
-          </div>
+          )}
         </div>
       </div>
     </div>

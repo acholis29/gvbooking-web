@@ -81,9 +81,10 @@ type CartApiItem = {
 
 type Props = {
   item: CartApiItem; // Ganti `any` dengan tipe yang sesuai jika ada
+  onChangeCard: (item: CartApiItem, checked: boolean) => void;
 };
 
-const CardAccordion: React.FC<Props> = ({ item }) => {
+const CardAccordion: React.FC<Props> = ({ item, onChangeCard }) => {
   const [isOpenAccordion, setAccordion] = useState(false);
   const { saveCartApi } = useCartApi();
   const [isRemoving, setIsRemoving] = useState(false);
@@ -194,6 +195,12 @@ const CardAccordion: React.FC<Props> = ({ item }) => {
             <input
               type="checkbox"
               className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
+              value={item.transaction_id}
+              onChange={(e) => {
+                const checked = e.target.checked;
+                console.log("Checkbox is:", checked ? "Checked" : "Unchecked");
+                onChangeCard(item, checked);
+              }}
             />
           </div>
           <div className="w-[40%] grow p-4 text-left">
