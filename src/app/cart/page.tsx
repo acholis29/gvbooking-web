@@ -141,6 +141,12 @@ export default function Cart() {
     hitungSubtotalSummeryOrder(ChekedCart);
   }, [ChekedCart]);
 
+  useEffect(() => {
+    ListCart.map((items, index) => {
+      handleOnChangeCard(items, true);
+    });
+  }, [ListCart]);
+
   return (
     // Cart Page
     <div className="max-w-screen-xl mx-auto">

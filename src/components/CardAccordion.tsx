@@ -201,6 +201,7 @@ const CardAccordion: React.FC<Props> = ({ item, onChangeCard }) => {
                 console.log("Checkbox is:", checked ? "Checked" : "Unchecked");
                 onChangeCard(item, checked);
               }}
+              defaultChecked={true} // ✅ hanya untuk default
             />
           </div>
           <div className="w-[40%] grow p-4 text-left">
