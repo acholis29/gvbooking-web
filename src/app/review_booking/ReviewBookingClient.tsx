@@ -36,6 +36,7 @@ import {
   faQuestion,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { useInitial } from "@/context/InitialContext";
 
 type ReviewBookingItem = {
   idx_comp: string;
@@ -69,6 +70,8 @@ export default function ReviewBookingClient() {
   // Session Id
   const { voucherNumber, setVoucherNumber, masterFileId, setMasterFileId } =
     useSeason();
+  // Profile Initial dan Resource initial
+  const { resourceInitial, profileInitial } = useInitial();
 
   const idx_comp = reviewBookingObj?.idx_comp; //ini dari idx_comp_alias
   const idx_excursion = reviewBookingObj?.exc_id; //ini dari idx_excursion
@@ -422,7 +425,7 @@ export default function ReviewBookingClient() {
       const formBody = new URLSearchParams({
         shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8" IDX_COMP INDONESIA
         xml: "false",
-        id_master_file: masterFileId ?? "", // Examp : "eee9a3a6cfae456b9467420029f54de6"
+        id_master_file: profileInitial[0].idx_mf ?? "",
         language_code: language,
         voucher_number: voucherNumber, // Examp : "250759791"
         id_transaction: "",
@@ -473,6 +476,7 @@ export default function ReviewBookingClient() {
     };
     PostDataCart();
   };
+
   return (
     // Cart Page
     <div className="max-w-screen-xl mx-auto">

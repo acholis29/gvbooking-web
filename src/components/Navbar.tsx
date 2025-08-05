@@ -120,7 +120,14 @@ export default function NavbarComponent() {
   // Profile
   const { profile, setProfile } = useProfile();
   // Initial
-  const { agent, setAgent, repCode, setRepCode } = useInitial();
+  const {
+    agent,
+    setAgent,
+    repCode,
+    setRepCode,
+    setResourceInitial,
+    setProfileInitial,
+  } = useInitial();
 
   // Timeout Delay
   let timeout: NodeJS.Timeout;
@@ -220,6 +227,18 @@ export default function NavbarComponent() {
       const formatted = today.toISOString().split("T")[0]; // hasil: '2025-07-18'
       setDate(formatted);
       localStorage.setItem("booking_date", formatted);
+    }
+
+    const savedResourceInitial = localStorage.getItem("resource_initial");
+    if (savedResourceInitial) {
+      const parsedData = JSON.parse(savedResourceInitial);
+      setResourceInitial(parsedData);
+    }
+
+    const savedProfileInitial = localStorage.getItem("profile_initial");
+    if (savedProfileInitial) {
+      const parsedData = JSON.parse(savedProfileInitial);
+      setProfileInitial(parsedData);
     }
   }, []);
 

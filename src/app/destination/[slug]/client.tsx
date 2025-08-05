@@ -86,7 +86,16 @@ export default function DestinationClient({ slug }: Props) {
 
   const { setLanguage, setMasterLanguage } = useLanguage();
   const { setCurrency, setMasterCurrency } = useCurrency();
-  const { agent, setAgent, repCode, setRepCode } = useInitial();
+  const {
+    agent,
+    setAgent,
+    repCode,
+    setRepCode,
+    resourceInitial,
+    setResourceInitial,
+    profileInitial,
+    setProfileInitial,
+  } = useInitial();
   const { profile } = useProfile();
   const { date } = useDate();
   // Cart API
@@ -168,9 +177,19 @@ export default function DestinationClient({ slug }: Props) {
         setMasterCurrency(currencyList);
         setCurrency(param.default_currency);
         setAgent(json.msg.resource.agent_id);
+        setResourceInitial(json.msg.resource);
+        setProfileInitial(json.msg.profile);
         // proses hasil dari fetch kedua di sini
         localStorage.setItem("language", param.default_language); // simpan ke localStorage
         localStorage.setItem("currency", param.default_currency); // simpan ke localStorage
+        localStorage.setItem(
+          "resource_initial",
+          JSON.stringify(json.msg.resource)
+        );
+        localStorage.setItem(
+          "profile_initial",
+          JSON.stringify(json.msg.profile)
+        );
         saveCartApi(json.msg.cart_item);
       } catch (err: any) {
         console.error("Fetch kedua error:", err);

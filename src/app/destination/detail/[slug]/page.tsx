@@ -55,7 +55,16 @@ export default function DetailDestination() {
   // Date Global
   const { date, setDate } = useDate();
   // Initial Global (AgentId dan RepCode)
-  const { agent, setAgent, repCode, setRepCode } = useInitial();
+  const {
+    agent,
+    setAgent,
+    repCode,
+    setRepCode,
+    resourceInitial,
+    setResourceInitial,
+    profileInitial,
+    setProfileInitial,
+  } = useInitial();
   // Profil
   const { profile } = useProfile();
   // Cart API
@@ -238,8 +247,18 @@ export default function DetailDestination() {
         setMasterCurrency(currencyList);
         setCurrency(param.default_currency);
         setAgent(json.msg.resource.agent_id);
+        setResourceInitial(json.msg.resource);
+        setProfileInitial(json.msg.profile);
         localStorage.setItem("language", param.default_language); // simpan ke localStorage
         localStorage.setItem("currency", param.default_currency); // simpan ke localStorage
+        localStorage.setItem(
+          "resource_initial",
+          JSON.stringify(json.msg.resource)
+        );
+        localStorage.setItem(
+          "profile_initial",
+          JSON.stringify(json.msg.profile)
+        );
         saveCartApi(json.msg.cart_item);
 
         // proses hasil dari fetch kedua di sini
