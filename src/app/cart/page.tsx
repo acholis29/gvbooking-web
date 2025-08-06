@@ -118,6 +118,13 @@ export default function Cart() {
     }
   }
 
+  function handleOnRemoveCard(item: CartApiItem) {
+    console.log("==REMOVE==");
+    console.log(item);
+    handleOnChangeCard(item, false);
+    // Hapus Dari List Dan ChekedList
+  }
+
   function hitungSubtotalSummeryOrder(items: CartApiItem[]) {
     let subTotal = 0;
     items.map((item, index) => {
@@ -161,7 +168,8 @@ export default function Cart() {
                 <CardAccordion
                   key={`cardAccordion-${index}`}
                   item={item}
-                  onChangeCard={handleOnChangeCard}
+                  onChangeCart={handleOnChangeCard}
+                  onRemoveCart={handleOnRemoveCard}
                 />
               );
             })}

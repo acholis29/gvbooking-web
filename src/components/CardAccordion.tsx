@@ -81,10 +81,15 @@ type CartApiItem = {
 
 type Props = {
   item: CartApiItem; // Ganti `any` dengan tipe yang sesuai jika ada
-  onChangeCard: (item: CartApiItem, checked: boolean) => void;
+  onChangeCart: (item: CartApiItem, checked: boolean) => void;
+  onRemoveCart: (item: CartApiItem) => void;
 };
 
-const CardAccordion: React.FC<Props> = ({ item, onChangeCard }) => {
+const CardAccordion: React.FC<Props> = ({
+  item,
+  onChangeCart,
+  onRemoveCart,
+}) => {
   const [isOpenAccordion, setAccordion] = useState(false);
   const { saveCartApi } = useCartApi();
   const [isRemoving, setIsRemoving] = useState(false);
@@ -118,6 +123,7 @@ const CardAccordion: React.FC<Props> = ({ item, onChangeCard }) => {
         saveCartApi(json.msg);
         toast.success("Cart Removed");
 
+        onRemoveCart(item);
         // Reload Ulang Cart
       }
     } catch (err: any) {
@@ -199,7 +205,7 @@ const CardAccordion: React.FC<Props> = ({ item, onChangeCard }) => {
               onChange={(e) => {
                 const checked = e.target.checked;
                 console.log("Checkbox is:", checked ? "Checked" : "Unchecked");
-                onChangeCard(item, checked);
+                onChangeCart(item, checked);
               }}
               defaultChecked={true} // ✅ hanya untuk default
             />

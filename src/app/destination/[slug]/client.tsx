@@ -175,13 +175,27 @@ export default function DestinationClient({ slug }: Props) {
         setMasterLanguage(languageList);
         setLanguage(param.default_language);
         setMasterCurrency(currencyList);
-        setCurrency(param.default_currency);
+        let presentCurrency = localStorage.getItem("currency") ?? "";
+        if (presentCurrency == "") {
+          setCurrency(param.default_currency);
+          localStorage.setItem("currency", param.default_currency); // simpan ke localStorage
+        } else {
+          const isPresentCurrency = currencyList.some(
+            (item: any) => item.Currency === presentCurrency
+          );
+          if (isPresentCurrency) {
+            setCurrency(presentCurrency);
+            localStorage.setItem("currency", presentCurrency); // simpan ke localStorage
+          } else {
+            setCurrency(param.default_currency);
+            localStorage.setItem("currency", param.default_currency); // simpan ke localStorage
+          }
+        }
         setAgent(json.msg.resource.agent_id);
         setResourceInitial(json.msg.resource);
         setProfileInitial(json.msg.profile);
         // proses hasil dari fetch kedua di sini
         localStorage.setItem("language", param.default_language); // simpan ke localStorage
-        localStorage.setItem("currency", param.default_currency); // simpan ke localStorage
         localStorage.setItem(
           "resource_initial",
           JSON.stringify(json.msg.resource)
