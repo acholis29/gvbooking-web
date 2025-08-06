@@ -12,6 +12,9 @@ import HorizontalCard from "@/components/HorizontalCard";
 import SkeletonCardHorizontal from "@/components/SkeletonCardHorizontal";
 // Context global
 import { useCartApi } from "@/context/CartApiContext";
+import { useInitial } from "@/context/InitialContext";
+import { useProfile } from "@/context/ProfileContext";
+
 // Helper
 import {
   formatRibuan,
@@ -92,6 +95,9 @@ export default function Cart() {
   const [isMobile, setIsMobile] = useState(false);
   const [subtotalSummeryOrder, setSubtotalSummeryOrder] = useState(0);
   const [discTotalSummerOrder, setDiscTotalSummerOrder] = useState(0);
+  // Context global
+  const { profileInitial, resourceInitial } = useInitial();
+  const { profile } = useProfile();
 
   useEffect(() => {
     loadCart();
@@ -146,15 +152,16 @@ export default function Cart() {
 
   async function handlePaymentGateway() {
     try {
+      let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
       const formBody = new URLSearchParams({
-        IDMF: "eee9a3a6cfae456b9467420029f54de6",
-        VOUCHER: "250759791",
-        NAME: "Test Test",
-        FIRST_NAME: "Test",
-        LAST_NAME: "Test",
-        EMAIL: "vvbgg@cfgg.com",
-        MOBILEPHONE: "081547602128",
-        AMOUNT: "3734393.1701",
+        IDMF: profileInitial[0].idx_mf, //dari idx_mf profil "eee9a3a6cfae456b9467420029f54de6"
+        VOUCHER: profileInitial[0].voucher, //dari voucher profil "250759791"
+        NAME: `${profile.firstname} ${profile.lastname}`,
+        FIRST_NAME: profile.firstname,
+        LAST_NAME: profile.lastname,
+        EMAIL: profileInitial[0].email,
+        MOBILEPHONE: profile.phone,
+        AMOUNT: grandtotal.toString(),
         PASSPORT: "",
         forurl: "excursion.govacation-indonesia.com",
         stsapp: "appsv2",
@@ -164,16 +171,14 @@ export default function Cart() {
         intl: "gvi",
       });
 
-      const response = await fetch(
-        "https://internetpaygate.com/mIPGDetail.aspx",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: formBody.toString(),
-        }
-      );
+      // "https://internetpaygate.com/mIPGDetail.aspx"
+      const response = await fetch(resourceInitial.url_payment, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formBody.toString(),
+      });
 
       if (!response.ok) throw new Error("Payment failed");
 
