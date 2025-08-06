@@ -1,6 +1,7 @@
 "use client";
 // Hooks
 import { useEffect, useState } from "react";
+import { redirect, useRouter } from "next/navigation";
 // Library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faInbox } from "@fortawesome/free-solid-svg-icons";
@@ -12,7 +13,12 @@ import SkeletonCardHorizontal from "@/components/SkeletonCardHorizontal";
 // Context global
 import { useCartApi } from "@/context/CartApiContext";
 // Helper
-import { formatRibuan, capitalizeWords, truncateText } from "@/helper/helper";
+import {
+  formatRibuan,
+  capitalizeWords,
+  truncateText,
+  formatRibuanInternational,
+} from "@/helper/helper";
 type DetailPax = {
   charge_type: string;
   quantity: string;
@@ -74,6 +80,7 @@ type CartApiItem = {
 };
 
 export default function Cart() {
+  const router = useRouter(); // ✅ ini sekarang valid
   // State Data Detail Destination
   const [ListCart, setCart] = useState<CartApiItem[]>([]);
   const [ChekedCart, setCheckedCart] = useState<CartApiItem[]>([]);
@@ -84,6 +91,7 @@ export default function Cart() {
   const [isOpenAccordion, setAccordion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [subtotalSummeryOrder, setSubtotalSummeryOrder] = useState(0);
+  const [discTotalSummerOrder, setDiscTotalSummerOrder] = useState(0);
 
   useEffect(() => {
     loadCart();
@@ -127,10 +135,13 @@ export default function Cart() {
 
   function hitungSubtotalSummeryOrder(items: CartApiItem[]) {
     let subTotal = 0;
+    let discTotal = 0;
     items.map((item, index) => {
-      subTotal += parseInt(item.price);
+      subTotal += parseInt(item.price_local);
+      discTotal += parseInt(item.disc);
     });
     setSubtotalSummeryOrder(subTotal);
+    setDiscTotalSummerOrder(discTotal);
   }
 
   useEffect(() => {
@@ -154,6 +165,13 @@ export default function Cart() {
     });
   }, [ListCart]);
 
+  useEffect(() => {
+    if (!isLoading && ListCart.length === 0) {
+      router.replace("/home");
+    }
+  }, [isLoading, ListCart]);
+
+  if (!isLoading && ListCart.length === 0) return null;
   return (
     // Cart Page
     <div className="max-w-screen-xl mx-auto">
@@ -196,7 +214,8 @@ export default function Cart() {
                         {truncateText(capitalizeWords(item.excursion_name), 45)}
                       </p>
                       <p className="text-sm text-gray-700 font-semibold">
-                        {item.currency} {item.price_in_format}
+                        {/* {item.currency} {item.price_in_format} */}
+                        {item.currency_local} {item.price_local_in_format}
                       </p>
                     </div>
                   );
@@ -206,19 +225,23 @@ export default function Cart() {
               <div className="flex flex-row justify-between mb-2">
                 <p className="text-sm text-gray-700 font-bold">Subtotal</p>
                 <p className="text-sm text-gray-700 font-semibold">
-                  {formatRibuan(subtotalSummeryOrder)}
+                  {formatRibuanInternational(subtotalSummeryOrder)}
                 </p>
               </div>
               <hr className="my-2 border border-gray-400 opacity-50" />
               <div className="flex flex-row justify-between mb-2">
                 <p className="text-sm text-gray-700 font-semibold">Disc</p>
-                <p className="text-sm text-gray-700 font-semibold">0</p>
+                <p className="text-sm text-gray-700 font-semibold">
+                  {formatRibuanInternational(discTotalSummerOrder)}
+                </p>
               </div>
               <hr className="my-2 border border-gray-400 opacity-50" />
               <div className="flex flex-row justify-between mb-2">
                 <p className="text-gray-700 font-semibold">Grand Total</p>
                 <p className="text-gray-700 font-semibold">
-                  {formatRibuan(subtotalSummeryOrder)}
+                  {formatRibuanInternational(
+                    subtotalSummeryOrder - discTotalSummerOrder
+                  )}
                 </p>
               </div>
               <button

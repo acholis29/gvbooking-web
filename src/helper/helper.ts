@@ -87,6 +87,12 @@ export function formatRibuan(num: number) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
+export function formatRibuanInternational(num: number): string {
+  if (typeof num !== "number") return String(num);
+  return num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+
 
 
 

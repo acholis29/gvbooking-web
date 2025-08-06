@@ -61,6 +61,7 @@ type CartApiItem = {
   priceori: string;
   priceori_in_format: string;
   disc: string;
+  // disc_in_format: string;
   disc_in_format: string;
   promo_value: string;
   currency_local_id: string;
@@ -213,7 +214,8 @@ const CardAccordion: React.FC<Props> = ({
           <div className="w-[40%] grow p-4 text-left">
             <p className="text-black text-sm font-bold">SUB TOTAL</p>
             <p className="text-red-700 text-sm font-semibold">
-              {item.currency} {item.price_in_format}
+              {/* {item.currency} {item.price_in_format} */}
+              {item.currency_local} {item.price_local_in_format}
             </p>
           </div>
           <div className="w-[15%] grow p-4 text-left">
@@ -225,7 +227,7 @@ const CardAccordion: React.FC<Props> = ({
           <div className="w-[40%] grow p-4 text-left">
             <p className="text-black text-sm font-bold">TOTAL</p>
             <p className="text-red-700 text-sm font-semibold">
-              {item.currency} {item.price_in_format}
+              {item.currency_local} {item.price_local_in_format}
             </p>
           </div>
         </div>
