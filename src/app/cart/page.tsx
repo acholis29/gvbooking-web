@@ -144,6 +144,60 @@ export default function Cart() {
     setDiscTotalSummerOrder(discTotal);
   }
 
+  async function handlePaymentGateway() {
+    try {
+      const formBody = new URLSearchParams({
+        IDMF: "eee9a3a6cfae456b9467420029f54de6",
+        VOUCHER: "250759791",
+        NAME: "Test Test",
+        FIRST_NAME: "Test",
+        LAST_NAME: "Test",
+        EMAIL: "vvbgg@cfgg.com",
+        MOBILEPHONE: "081547602128",
+        AMOUNT: "3734393.1701",
+        PASSPORT: "",
+        forurl: "excursion.govacation-indonesia.com",
+        stsapp: "appsv2",
+        statusapp: "",
+        In: "DE",
+        pay_provider: "docu",
+        intl: "gvi",
+      });
+
+      const response = await fetch(
+        "https://internetpaygate.com/mIPGDetail.aspx",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: formBody.toString(),
+        }
+      );
+
+      if (!response.ok) throw new Error("Payment failed");
+
+      // const result = await response.json();
+      const html = await response.text();
+      console.log("Payment page HTML:", html);
+
+      // Jika mau render HTML ini di iframe atau window baru:
+
+      const newWindow = window.open("", "_blank");
+
+      if (newWindow && newWindow.document) {
+        newWindow.document.open();
+        newWindow.document.write(html);
+        newWindow.document.close();
+      } else {
+        console.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert("Payment gagal. Silakan coba lagi.");
+    }
+  }
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -246,6 +300,7 @@ export default function Cart() {
               </div>
               <button
                 type="button"
+                onClick={handlePaymentGateway}
                 className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
               >
                 Payment
@@ -320,6 +375,7 @@ export default function Cart() {
               </div>
               <button
                 type="button"
+                onClick={handlePaymentGateway}
                 className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
               >
                 Payment
