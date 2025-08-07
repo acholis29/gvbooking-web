@@ -345,7 +345,7 @@ const CardAccordion: React.FC<Props> = ({
               </p>
             </div>
             <div
-              className="flex flex-row items-center gap-2 group"
+              className="flex flex-row items-center gap-2 group cursor-pointer"
               onClick={handleChange}
             >
               <FontAwesomeIcon

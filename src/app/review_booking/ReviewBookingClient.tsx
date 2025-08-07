@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Breadcrumb from "@/components/Breadcrumb";
 import ReviewBookingCard from "@/components/ReviewBookingCard";
 import ModalComponent from "@/components/ModalComponent";
+import Spinner from "@/components/Spinner";
 // Host
 import { API_HOSTS } from "@/lib/apihost";
 // Context Global
@@ -179,7 +180,8 @@ export default function ReviewBookingClient() {
   const [dataProduct, setDataProduct] = useState<ProductResponse | null>(null);
   const [dataSurcharge, setDataSurcharge] = useState<PriceOfSurcharge[]>([]);
   const [dataChargeType, setDataChargeType] = useState<PriceOfChargeType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingSurcharge, setIsLoadingSurcharge] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState<number>(0);
@@ -201,7 +203,6 @@ export default function ReviewBookingClient() {
   useEffect(() => {
     if (!idx_comp || !idx_excursion) return;
     const fetchData = async () => {
-      setIsLoading(true); // mulai loading
       const formBody = new URLSearchParams({
         shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
         xml: "false",
@@ -232,8 +233,6 @@ export default function ReviewBookingClient() {
       } catch (err: any) {
         setError(err.message || "Error");
         console.error("Fetch error:", err);
-      } finally {
-        setIsLoading(false); // selesai loading
       }
     };
 
@@ -244,7 +243,6 @@ export default function ReviewBookingClient() {
   useEffect(() => {
     if (!idx_comp || !idx_excursion) return;
     const fetchDataGuideSurcharge = async () => {
-      setIsLoading(true); // mulai loading
       setIsLoadingSurcharge(true); // mulai loading surcharge
       const formBody = new URLSearchParams({
         shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
@@ -302,7 +300,6 @@ export default function ReviewBookingClient() {
         console.error("Fetch error:", err);
       } finally {
         setIsLoadingSurcharge(false); // selesai loading
-        setIsLoading(false); // selesai loading
       }
     };
 
@@ -435,6 +432,8 @@ export default function ReviewBookingClient() {
     } catch (err: any) {
       console.error("Fetch error:", err);
     } finally {
+      setIsLoading(false);
+      setIsSubmitting(false);
       router.replace("/cart");
     }
   };
@@ -450,12 +449,18 @@ export default function ReviewBookingClient() {
 
   const onSubmit = (data: any) => {
     console.log("Data submit:", data);
+    if (isSubmitting) {
+      toast.success("Please Wait");
+      return null;
+    }
+
     if (profile.email == "") {
       setSelectModal("Profil");
       openModal();
       return null;
     }
 
+    setIsSubmitting(true);
     // toast.success("Success");
 
     const PostDataCart = async () => {
@@ -511,12 +516,13 @@ export default function ReviewBookingClient() {
         setError(err.message || "Error");
         console.error("Fetch error:", err);
       } finally {
-        setIsLoading(false); // selesai loading
         if (transaction_id != "") {
           // Remove Cart Lama Yang Change
           removeItemCart();
         } else {
           // redirect ke cart page
+          setIsSubmitting(false);
+          setIsLoading(false); // selesai loading
           router.replace("/cart");
         }
       }
@@ -823,7 +829,7 @@ export default function ReviewBookingClient() {
                     type="submit"
                     className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
                   >
-                    Add Cart
+                    {isLoading && <Spinner />} Add Cart
                   </button>
                 )}
               </div>
@@ -858,7 +864,7 @@ export default function ReviewBookingClient() {
                     type="submit"
                     className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
                   >
-                    Add Cart
+                    {isLoading && <Spinner />} Add Cart
                   </button>
                 )}
               </div>

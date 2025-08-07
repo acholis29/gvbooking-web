@@ -22,6 +22,8 @@ import {
   truncateText,
   formatRibuanInternational,
 } from "@/helper/helper";
+import toast from "react-hot-toast";
+import Spinner from "@/components/Spinner";
 type DetailPax = {
   charge_type: string;
   quantity: string;
@@ -93,6 +95,7 @@ export default function Cart() {
   const { cartApiItems } = useCartApi();
   const [isOpenAccordion, setAccordion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [subtotalSummeryOrder, setSubtotalSummeryOrder] = useState(0);
   const [discTotalSummerOrder, setDiscTotalSummerOrder] = useState(0);
   // Context global
@@ -151,6 +154,12 @@ export default function Cart() {
   }
 
   async function handlePaymentGateway() {
+    if (isSubmitting) {
+      toast.success("Please Wait");
+      return null;
+    }
+
+    setIsSubmitting(true);
     try {
       let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
       const formBody = new URLSearchParams({
@@ -200,6 +209,8 @@ export default function Cart() {
     } catch (error) {
       console.error("Payment error:", error);
       alert("Payment gagal. Silakan coba lagi.");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -308,7 +319,7 @@ export default function Cart() {
                 onClick={handlePaymentGateway}
                 className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
               >
-                Payment
+                {isSubmitting && <Spinner />} Payment
               </button>
             </div>
           )}
@@ -383,7 +394,7 @@ export default function Cart() {
                 onClick={handlePaymentGateway}
                 className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
               >
-                Payment
+                {isSubmitting && <Spinner />} Payment
               </button>
             </div>
           )}
