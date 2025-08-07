@@ -40,6 +40,7 @@ type ProductSubProps = {
   country?: string;
   state?: string;
   idx_comp?: string;
+  transaction_id?: string;
 };
 
 type ChargeTypeProps = {
@@ -56,6 +57,7 @@ const ProductSub: React.FC<ProductSubProps> = ({
   country,
   state,
   idx_comp,
+  transaction_id,
 }) => {
   // Redirect
   const router = useRouter();
@@ -115,6 +117,7 @@ const ProductSub: React.FC<ProductSubProps> = ({
         infant: "0",
         agent_id: "",
         rep_code: "",
+        transaction_id: "",
       });
 
       const paramsBooking = {
@@ -133,6 +136,7 @@ const ProductSub: React.FC<ProductSubProps> = ({
         infant: data.Infant ?? "0",
         agent_id: agent,
         rep_code: repCode,
+        transaction_id: transaction_id ?? "",
       };
       setReviewBookingObj(paramsBooking);
       sessionStorage.setItem(

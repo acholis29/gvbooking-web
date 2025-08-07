@@ -39,6 +39,7 @@ export default function DetailDestination() {
   const idx_excursion = searchParams.get("exc"); //ini dari idx_excursion
   const country = searchParams.get("country");
   const state = searchParams.get("state");
+  const transaction_id = searchParams.get("transaction_id");
 
   const [isDropdownPersonOpen, setDropdownPersonOpen] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState("");
@@ -393,6 +394,7 @@ export default function DetailDestination() {
                           key={index}
                           item={item}
                           idx_comp={idx_comp ?? ""}
+                          transaction_id={transaction_id ?? ""} //ada isinya jika user change cart
                           country={toLowerCaseAll(country ?? "")}
                           state={toLowerCaseAll(state ?? "")}
                         />

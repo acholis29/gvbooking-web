@@ -18,6 +18,7 @@ import { useProfile } from "@/context/ProfileContext";
 import { useModal } from "@/context/ModalContext";
 import { useSelectModal } from "@/context/SelectModalContext";
 import { useSeason } from "@/context/SeasonContext";
+import { useInitial } from "@/context/InitialContext";
 // Helper
 import { acis_qty_age, formatToIDR } from "@/helper/helper";
 // Logs
@@ -36,7 +37,6 @@ import {
   faQuestion,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { useInitial } from "@/context/InitialContext";
 
 type ReviewBookingItem = {
   idx_comp: string;
@@ -93,6 +93,7 @@ export default function ReviewBookingClient() {
   );
   const agentId = reviewBookingObj?.agent_id;
   const repCode = reviewBookingObj?.rep_code;
+  const transaction_id = reviewBookingObj?.transaction_id;
 
   type ProductDetail = {
     excursion_name: string;
@@ -402,6 +403,42 @@ export default function ReviewBookingClient() {
     }
   };
 
+  const removeItemCart = async () => {
+    const formBody = new URLSearchParams({
+      shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
+      xml: "false",
+      id_master_file: profileInitial[0].idx_mf ?? "",
+      language_code: "EN",
+      id_transaction: transaction_id ?? "",
+    });
+
+    try {
+      const res = await fetch(
+        `${API_HOSTS.host1}/excursion.asmx/v2_cart_remove`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: formBody.toString(),
+        }
+      );
+
+      const contentType = res.headers.get("content-type") || "";
+
+      if (contentType.includes("application/json")) {
+        const json = await res.json();
+        console.log(json);
+        saveCartApi(json.msg);
+        toast.success("Cart Old Removed");
+      }
+    } catch (err: any) {
+      console.error("Fetch error:", err);
+    } finally {
+      router.replace("/cart");
+    }
+  };
+
   const {
     register,
     handleSubmit,
@@ -461,18 +498,27 @@ export default function ReviewBookingClient() {
 
         if (contentType.includes("application/json")) {
           const json = await res.json();
+          //RESPONSE ADD TO CART
+          console.log("+++++ FORM BODY +++++");
+          console.log(formBody.toString());
+          console.log("+++++ RESPONSE ADD TO CART ++++++");
           console.log(json);
           // set data cart api disini
           saveCartApi(json.msg);
           toast.success("Success add to cart");
-          // redirect ke cart page
-          router.replace("/cart");
         }
       } catch (err: any) {
         setError(err.message || "Error");
         console.error("Fetch error:", err);
       } finally {
         setIsLoading(false); // selesai loading
+        if (transaction_id != "") {
+          // Remove Cart Lama Yang Change
+          removeItemCart();
+        } else {
+          // redirect ke cart page
+          router.replace("/cart");
+        }
       }
     };
     PostDataCart();

@@ -18,6 +18,7 @@ import { API_HOSTS } from "@/lib/apihost";
 import toast from "react-hot-toast";
 // Context Global
 import { useCartApi } from "@/context/CartApiContext";
+import { useRouter } from "next/navigation";
 
 type DetailPax = {
   charge_type: string;
@@ -94,6 +95,7 @@ const CardAccordion: React.FC<Props> = ({
   const [isOpenAccordion, setAccordion] = useState(false);
   const { saveCartApi } = useCartApi();
   const [isRemoving, setIsRemoving] = useState(false);
+  const router = useRouter();
 
   const removeItemCart = async () => {
     const formBody = new URLSearchParams({
@@ -143,6 +145,28 @@ const CardAccordion: React.FC<Props> = ({
     setIsRemoving(true); // ⏳ mulai loading
     // aksi hapus di sini
     removeItemCart();
+  };
+
+  const handleChange = async () => {
+    // Ambil idx_excursion
+    // Cari Country dan Statenya
+    const res = await fetch(
+      `/api/excursion/attr/search-excursion?keyword=${item.excursion_id}`,
+      {
+        cache: "no-store", // ⛔ jangan ambil dari cache
+      }
+    );
+
+    const json = await res.json();
+    console.log(json);
+    if (json.length > 0) {
+      // Redirect Ke Detail Product Sambil Bawa trancation_id lama untuk dihapus dari cart jika berhasil
+      router.push(
+        `/destination/detail/${json[0].Country}?id=${json[0].idx_comp}&country=${json[0].Country}&state=${json[0].State}&exc=${json[0].Idx_excursion}&transaction_id=${item.transaction_id}`
+      );
+    } else {
+      toast.error("Sorry, there is someting wrong!");
+    }
   };
 
   return (
@@ -320,7 +344,10 @@ const CardAccordion: React.FC<Props> = ({
                 Remove
               </p>
             </div>
-            <a href="#" className="flex flex-row items-center gap-2 group">
+            <div
+              className="flex flex-row items-center gap-2 group"
+              onClick={handleChange}
+            >
               <FontAwesomeIcon
                 icon={faEdit}
                 className="w-5 h-5 text-gray-500 group-hover:text-red-700"
@@ -329,7 +356,7 @@ const CardAccordion: React.FC<Props> = ({
               <p className="text-gray-600 text-sm group-hover:text-red-700">
                 Change
               </p>
-            </a>
+            </div>
           </div>
         </div>
       </div>

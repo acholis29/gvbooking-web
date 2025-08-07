@@ -20,6 +20,8 @@ export async function GET(
       case 'search':
         ssql = `api_MSExcursion_List_search '${keyword}'`;
         break;
+      case 'search-excursion':
+        ssql = `select * from dbo.MSExcursion where Idx_excursion = '${keyword}'`;
       default:
         console.log("Invalid day of the week.");
     }
