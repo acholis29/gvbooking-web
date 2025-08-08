@@ -470,7 +470,7 @@ export default function ReviewBookingClient() {
         xml: "false",
         id_master_file: profileInitial[0].idx_mf ?? "",
         language_code: language,
-        voucher_number: voucherNumber, // Examp : "250759791"
+        voucher_number: profileInitial[0].voucher, // Examp : "250759791"
         id_transaction: "",
         id_excursion: idx_excursion ?? "", // Examp : "3A4D09DA-0F15-4F96-B9DE-337D808C43E0"
         id_excursion_sub: idx_excursion_sub ?? "",
