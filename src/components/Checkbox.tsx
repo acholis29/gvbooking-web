@@ -3,16 +3,18 @@ import React from "react";
 type CheckboxProps = {
   title?: string;
   checked?: boolean;
-  onChange?: (checked: boolean, title: string) => void;
+  value?: string;
+  onChange?: (checked: boolean, title: string, value: string) => void;
 };
 
 const Checkbox: React.FC<CheckboxProps> = ({
   title = "Checkbox",
   checked = false,
+  value = "",
   onChange,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange?.(e.target.checked, title);
+    onChange?.(e.target.checked, title, value);
   };
 
   return (
@@ -20,7 +22,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
       <input
         id={`checkbox-${title}`}
         type="checkbox"
-        checked={checked}
+        // checked={checked}
         onChange={handleChange}
         className="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-red-500 focus:ring-2"
       />

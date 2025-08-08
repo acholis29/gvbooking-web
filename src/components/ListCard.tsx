@@ -146,7 +146,7 @@ const ListCard: React.FC<ListCardProps> = ({
               />
             </span>
           </span>
-          <button
+          {/* <button
             onClick={() => {
               addToCart(data);
               toast.success("Add to cart!");
@@ -155,7 +155,7 @@ const ListCard: React.FC<ListCardProps> = ({
           >
             <FontAwesomeIcon icon={faCartPlus} className="w-4 h-4 text-white" />{" "}
             <span className="md:hidden">Add</span>
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useState } from "react";
-// Component
 import Badge from "@/components/Badge";
 import Chips from "@/components/Chips";
 import Range from "@/components/Range";
@@ -9,13 +8,9 @@ import Checkbox from "@/components/Checkbox";
 import Search from "@/components/Search";
 import SearchWithDropdown from "@/components/SearchWithDropdown";
 import ListCard from "@/components/ListCard";
-import SkeletonCard from "@/components/SkeletonCard";
-import ListCardMobile from "@/components/ListCardMobile";
-import SkeletonCardList from "@/components/SkeletonCardList";
-import ModalBottomSheet from "@/components/ModalBottomSheet";
 // Params Query
 import { useSearchParams } from "next/navigation";
-// Library
+import SkeletonCard from "@/components/SkeletonCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronDown,
@@ -29,35 +24,48 @@ import {
   faCancel,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
+
 import { Dropdown, DropdownItem } from "flowbite-react";
 // Helper
 import { capitalizeWords } from "@/helper/helper"; // sesuaikan path
 // Global State
 import { useWish } from "@/context/WishContext";
 import { useCurrency } from "@/context/CurrencyContext";
-import { useLanguage } from "@/context/LanguageContext";
-// Host Image
+// Host Imgae
 import { API_HOSTS } from "@/lib/apihost";
+import ListCardMobile from "@/components/ListCardMobile";
+import SkeletonCardList from "@/components/SkeletonCardList";
+// BottomSheet
+import ModalBottomSheet from "@/components/ModalBottomSheet";
 
-type DestinationItemApi = {
-  excursion_id: string;
-  excursion_code: string;
-  excursion_name: string;
-  location_country: string;
-  location_state: string;
-  holiday_type_id: string;
-  holiday_type: string;
-  holiday_duration_id: string;
-  holiday_duration: string;
-  picture: string;
-  currency_id: string;
-  currency: string;
-  price_in_raw: string; // bisa juga number jika ingin parsing
-  price_in_format: string;
-  price_of_lowest: string; // bisa juga number jika ingin parsing
-  page_count: string; // bisa juga number jika ingin parsing
-  page_item_count: string; // bisa juga number jika ingin parsing
+type DestinationItem = {
+  idx_comp: string;
+  Idx_excursion: string;
+  code_exc: string;
+  Country: string;
+  State: string;
+  Name_excursion: string;
+  Duration_Type: string;
+  Holiday_Type: string;
+  Currency: string;
+  PriceFrom: string;
+  Gbr: string;
 };
+
+const holidayTypes = [
+  "ADVENTURE",
+  "BEACH",
+  "CULTURE AND HISTORY",
+  "MOUNTAIN",
+  "NATURE",
+  "PRIVATE",
+  "SPECIAL ADDRESS",
+  "SPORT",
+  "SUN AND SEA",
+  "TOUR",
+  "TRANSFER",
+  "WELLNESS FOR BODY AND SOUL",
+];
 
 type WishItem = {
   idx_comp: string;
@@ -68,9 +76,9 @@ type WishItem = {
   currency?: string;
 };
 
-type HolidayTypeApi = {
-  holiday_type_id: string;
+type HolidayType = {
   holiday_type: string;
+  qty: number;
 };
 
 export default function ListClient() {
@@ -94,15 +102,14 @@ export default function ListClient() {
   const { wishItems } = useWish();
   // Curency
   const { currency } = useCurrency();
-  // Language
-  const { language } = useLanguage();
 
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
 
-  const [DetailDestinationApi, setDetailDestinationApi] = useState<
-    DestinationItemApi[]
-  >([]);
+  // State Data Detail Destination
+  const [DetailDestination, setDetailDestination] = useState<DestinationItem[]>(
+    []
+  );
 
   // State Data State Dari Dropdown Search
   const [state, setState] = useState<string | null>(
@@ -111,10 +118,11 @@ export default function ListClient() {
 
   // State Data Badge Dari Dropdown Search
   const [BadgeState, setBadgeState] = useState<string[]>([]);
-  // State Master Holiday State API
-  const [masterHolidayApi, setMasterHolidayApi] = useState<HolidayTypeApi[]>(
-    []
-  );
+
+  // State Data Holiday Checkbox Yang Sudah Concat | To String
+  const [holidayState, setHolidayState] = useState("");
+  // State Master Holiday State
+  const [masterHoliday, setMasterHoliday] = useState<HolidayType[]>([]);
 
   // State Data Range Price
   const [price, setPrice] = useState<number>(10000000);
@@ -125,8 +133,8 @@ export default function ListClient() {
   // State Data Sorting Dropdown
   const [selectedSorting, setSelectedSorting] = useState("Sorting");
 
-  // State Data Checkbox Single
-  const [selectedTypesById, setSelectedTypesById] = useState<string>("");
+  // State Data Checkbox Array
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 
   // State Data WistList
   const [ListWist, setWish] = useState<WishItem[]>([]);
@@ -143,104 +151,53 @@ export default function ListClient() {
   };
 
   // Function Hanlde Checkbox
-  const handleCheckboxChange = (
-    checked: boolean,
-    title: string,
-    value: string
-  ) => {
+  const handleCheckboxChange = (checked: boolean, title: string) => {
     if (checked) {
-      setSelectedTypesById(value);
+      setSelectedTypes((prev) => [...prev, title]);
     } else {
-      setSelectedTypesById("");
+      setSelectedTypes((prev) => prev.filter((t) => t !== title));
     }
   };
 
   // Function Handle Apply Filter Desktop
   const handleApply = () => {
+    const result = selectedTypes.join("|");
+    setHolidayState(result);
     setApply(apply + 1); // untuk trigger apply filter
   };
 
   // Function Handle Apply Filter Mobile
   const handleApplyMobile = (keyword: string) => {
+    setHolidayState(keyword);
     setApply(apply + 1); // untuk trigger apply filter
   };
 
   useEffect(() => {
-    const formBody = new URLSearchParams({
-      shared_key: "4D340942-88D3-44DD-A52C-EAF00EACADE8",
-      xml: "false",
-      keyword: "5BFD4F38-7BB4-40AB-BF0C-1B88F999BA5B", // id area bali
-      date_from: "2025-08-07",
-      date_to: "2025-08-21",
-      code_of_language: language,
-      code_of_currency: currency,
-      page_set_item: "10000",
-      page_set_position: "1",
-      id_holiday_type: selectedTypesById,
-      id_holiday_duration: "",
-      price_from: "0",
-      price_to: "0",
-      order_by_NP: "P",
-      order_by_01: "0",
-      promo_code: "R-BC",
-    });
-
-    fetch("https://api.govacation.biz/excursion.asmx/v2_product_explore", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formBody.toString(),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("HTTP error " + res.status);
-        return res.json();
-      })
+    fetch(
+      `/api/excursion/local_destination/detail?idx-comp-alias=${idx_comp}&state=${state}&holiday-type=${holidayState}&price-min=0&price-max=${price}`,
+      {
+        cache: "no-store", // ⛔ jangan ambil dari cache
+      }
+    )
+      .then((res) => res.json())
       .then((data) => {
-        setDetailDestinationApi(data.msg.product_list);
+        setDetailDestination(data);
       })
-      .catch((err) => console.error("Error:", err))
+      .catch((err) => console.error(err))
       .finally(() => {
         setIsLoading(false); // ✅ Loading selesai
       });
-  }, [language, currency, apply]);
+  }, [state, holidayState, apply, JSON.stringify(wishItems)]);
 
-  // Holiday Tipe Master API
   useEffect(() => {
-    const formBody = new URLSearchParams({
-      shared_key: "4D340942-88D3-44DD-A52C-EAF00EACADE8",
-      xml: "false",
-      keyword: "5BFD4F38-7BB4-40AB-BF0C-1B88F999BA5B", // id area bali
-      date_from: "2025-08-07",
-      date_to: "2025-08-21",
-      code_of_language: language,
-      code_of_currency: currency,
-      page_set_item: "10000",
-      page_set_position: "1",
-      id_holiday_type: selectedTypesById,
-      id_holiday_duration: "",
-      price_from: "0",
-      price_to: "0",
-      order_by_NP: "P",
-      order_by_01: "0",
-      promo_code: "R-BC",
-    });
-
-    fetch("https://api.govacation.biz/excursion.asmx/v2_product_explore", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formBody.toString(),
+    fetch(`/api/excursion/holiday_type?idx-comp-alias=${idx_comp}`, {
+      cache: "no-store", // ⛔ jangan ambil dari cache
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("HTTP error " + res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
-        setMasterHolidayApi(data.msg.holiday_type);
+        setMasterHoliday(data);
       })
-      .catch((err) => console.error("Error:", err))
+      .catch((err) => console.error(err))
       .finally(() => {
         setIsLoading(false); // ✅ Loading selesai
       });
@@ -355,12 +312,12 @@ export default function ListClient() {
           <div className="flex flex-row gap-3 md:flex-col">
             <div>
               <p className="text-sm mb-2 font-semibold">Holiday Type</p>
-              {masterHolidayApi.map((item) => (
+              {masterHoliday.map((item) => (
                 <Checkbox
                   key={item.holiday_type}
                   title={item.holiday_type}
+                  checked={selectedTypes.includes(item.holiday_type)}
                   onChange={handleCheckboxChange}
-                  value={item.holiday_type_id}
                 />
               ))}
             </div>
@@ -388,7 +345,7 @@ export default function ListClient() {
               className="w-5 h-5 text-gray-500"
             />
           </div>
-          {masterHolidayApi.map((item) => (
+          {masterHoliday.map((item) => (
             <div
               key={`mobileHoliday-${item.holiday_type}`}
               className={`w-auto h-10  border-gray-500  ${
@@ -424,8 +381,23 @@ export default function ListClient() {
           {/* Baris Search dan Badge */}
           <div className="hidden md:flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             {/* Search akan full width di HP */}
-            <div className="w-xl"></div>
+            <div className="w-xl">
+              {/* <Search /> */}
+              {/* <SearchWithDropdown
+                country={capitalizedCountry ?? ""}
+                idx_comp={idx_comp ?? ""}
+                onChange={setState}
+                state={state ?? ""}
+              /> */}
+            </div>
 
+            {/* Badge akan di bawah search di HP, dan di samping saat md */}
+            {/* <div className="flex flex-wrap gap-1">
+              <Badge title="New" />
+              <Badge title="Price Ascending" />
+              <Badge title="Price Descending" />
+              <Badge title="Rating" />
+            </div> */}
             <div className="w-50 flex justify-end">
               <Dropdown
                 dismissOnClick={true}
@@ -479,7 +451,7 @@ export default function ListClient() {
             </div>
           </div>
 
-          {/* Baris Card Baru */}
+          {/* Baris Card */}
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 py-4">
             {isLoading ? (
               <>
@@ -488,24 +460,24 @@ export default function ListClient() {
                 <SkeletonCardList />
                 <SkeletonCardList />
               </>
-            ) : DetailDestinationApi.length > 0 ? (
-              DetailDestinationApi.map((item, index) =>
+            ) : DetailDestination.length > 0 ? (
+              DetailDestination.map((item, index) =>
                 isMobile ? (
                   // Mobile layout
                   <ListCardMobile
                     key={`ListCardMobile-${index}`}
-                    idx_comp={idx_comp ?? ""}
-                    idx_excursion={item.excursion_id}
+                    idx_comp={item.idx_comp}
+                    idx_excursion={item.Idx_excursion}
                     // image={`https://picsum.photos/800/600?random=${index}`}
-                    image={`${host_img}/${item.picture}`}
-                    title={capitalizeWords(item.excursion_name).toUpperCase()}
-                    sub_title={`${item.holiday_type} • ${item.holiday_duration} | ${item.location_state}, ${item.location_country}`.toUpperCase()}
-                    price={item.price_in_format ?? 0}
-                    currency={item.currency ?? "Rp"}
-                    link={`/destination/detail/${country}?id=${idx_comp}&country=${country}&state=${state}&exc=${item.excursion_id}`}
+                    image={`${host_img}/media/${item.code_exc}/TN_400_${item.Gbr}`}
+                    title={capitalizeWords(item.Name_excursion).toUpperCase()}
+                    sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
+                    price={item.PriceFrom ?? 0}
+                    currency={item.Currency ?? "Rp"}
+                    link={`/destination/detail/${country}?id=${idx_comp}&country=${country}&state=${state}&exc=${item.Idx_excursion}`}
                     colorWish={
                       ListWist.some(
-                        (wish) => wish.idx_excursion === item.excursion_id
+                        (wish) => wish.idx_excursion === item.Idx_excursion
                       )
                         ? true
                         : false
@@ -515,18 +487,18 @@ export default function ListClient() {
                   // Desktop Layout
                   <ListCard
                     key={`ListCard-${index}`}
-                    idx_comp={idx_comp ?? ""}
-                    idx_excursion={item.excursion_id}
+                    idx_comp={item.idx_comp}
+                    idx_excursion={item.Idx_excursion}
                     // image={`https://picsum.photos/800/600?random=${index}`}
-                    image={`${host_img}/${item.picture}`}
-                    title={item.excursion_name}
-                    sub_title={`${item.holiday_type} • ${item.holiday_duration} | ${item.location_state}, ${item.location_country}`.toUpperCase()}
-                    price={item.price_in_format ?? 0}
-                    currency={item.currency ?? "Rp"}
-                    link={`/destination/detail/${country}?id=${idx_comp}&country=${country}&state=${state}&exc=${item.excursion_id}`}
+                    image={`${host_img}/media/${item.code_exc}/TN_400_${item.Gbr}`}
+                    title={item.Name_excursion}
+                    sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
+                    price={item.PriceFrom ?? 0}
+                    currency={item.Currency ?? "Rp"}
+                    link={`/destination/detail/${country}?id=${idx_comp}&country=${country}&state=${state}&exc=${item.Idx_excursion}`}
                     colorWish={
                       ListWist.some(
-                        (wish) => wish.idx_excursion === item.excursion_id
+                        (wish) => wish.idx_excursion === item.Idx_excursion
                       )
                         ? true
                         : false
