@@ -55,6 +55,20 @@ type RecomendedDestinationItem = {
   code_exc: string;
 };
 
+type RecomendedDestinationApiItem = {
+  excursion_id: string;
+  excursion_code: string;
+  excursion_name: string;
+  location_state: string;
+  location_country: string;
+  picture: string;
+  currency_id: string;
+  currency: string;
+  price_in_raw: string;
+  price_in_format: string;
+  cmd: string;
+};
+
 export default function DestinationClient({ slug }: Props) {
   const searchParams = useSearchParams();
   const idx_comp = searchParams.get("id"); //ini dari idx_comp_alias
@@ -79,9 +93,14 @@ export default function DestinationClient({ slug }: Props) {
   >([]);
 
   const [isLoadingRecom, setIsLoadingRecom] = useState(true);
+  const [isLoadingRecomApi, setIsLoadingRecomApi] = useState(true);
 
   const [recomdedDestination, setRecomendedDestination] = useState<
     RecomendedDestinationItem[]
+  >([]);
+
+  const [recomdedDestinationApi, setRecomendedDestinationApi] = useState<
+    RecomendedDestinationApiItem[]
   >([]);
 
   const { setLanguage, setMasterLanguage } = useLanguage();
@@ -139,6 +158,7 @@ export default function DestinationClient({ slug }: Props) {
     };
 
     const fetchSecondDataInitial = async (param: any) => {
+      setIsLoadingRecomApi(true);
       try {
         const formBody = new URLSearchParams({
           shared_key: idx_comp ?? "",
@@ -174,6 +194,8 @@ export default function DestinationClient({ slug }: Props) {
         // Set dari api v2_product_search_initialize
         setMasterLanguage(languageList);
         setLanguage(param.default_language);
+        // set recomendation api
+        setRecomendedDestinationApi(json.msg.product_search_recommendation);
         setMasterCurrency(currencyList);
         let presentCurrency = localStorage.getItem("currency") ?? "";
         if (presentCurrency == "") {
@@ -207,6 +229,8 @@ export default function DestinationClient({ slug }: Props) {
         saveCartApi(json.msg.cart_item);
       } catch (err: any) {
         console.error("Fetch kedua error:", err);
+      } finally {
+        setIsLoadingRecomApi(false);
       }
     };
     if (date != "") {
@@ -283,8 +307,55 @@ export default function DestinationClient({ slug }: Props) {
         )}
       </section>
 
-      {/* Section Favorite Tour */}
+      {/* Section Recomended Tour Dari API Inisialize*/}
       <div className="bg-gray-100 my-6 pb-6">
+        <section className="py-6 px-4 max-w-screen-xl mx-auto">
+          <p className="text-red-gvi font-bold text-3xl">Recomended</p>
+        </section>
+        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
+          {isLoadingRecomApi ? (
+            <>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </>
+          ) : recomdedDestinationApi.length > 0 ? (
+            recomdedDestinationApi.map((item, index) => (
+              <EcommersCard
+                key={index}
+                idx_comp={idx_comp ?? ""}
+                idx_excursion={item.excursion_id}
+                // image={`https://picsum.photos/800/600?random=${index}`}
+                image={`${host_img}/${item.picture}`}
+                title={`${item.location_state}, ${item.excursion_name}`}
+                sub_title={`${item.location_state}, ${item.location_country}`.toUpperCase()}
+                price={`${item.price_in_format}`}
+                currency={item.currency}
+                // link="/destination/detail/indonesia"
+                link={`/destination/detail/${
+                  item.location_country
+                }?id=${idx_comp}&country=${item.location_country.toLowerCase()}&state=${item.location_state.toLowerCase()}&exc=${
+                  item.excursion_id
+                }`}
+              />
+            ))
+          ) : (
+            <p className="col-span-4 text-gray-500 text-center">
+              <FontAwesomeIcon
+                icon={faInbox}
+                className="w-10 h-10 text-red-gvi 0 pl-2"
+              />{" "}
+              Recomended is empty.
+            </p>
+          )}
+        </section>
+
+        {/* Last Your Search */}
+      </div>
+
+      {/* Section Recomended Tour Dari Database Pak Anang */}
+      {/* <div className="bg-gray-100 my-6 pb-6">
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
           <p className="text-red-gvi font-bold text-3xl">Recomended</p>
         </section>
@@ -326,9 +397,7 @@ export default function DestinationClient({ slug }: Props) {
             </p>
           )}
         </section>
-
-        {/* Last Your Search */}
-      </div>
+      </div> */}
 
       {/* Section Last Your Search */}
       <div className="bg-white my-6 pb-6">
