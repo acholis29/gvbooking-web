@@ -180,7 +180,7 @@ const CardAccordion: React.FC<Props> = ({
     <div className="relative md:max-w-3xl mb-4">
       {/* Tombol pojok kanan atas */}
       <button
-        className="absolute top-2 right-2 z-10  text-white text-sm px-1 py-1 rounded hover:bg-gray-100"
+        className="absolute top-2 right-2 z-10  text-white text-sm px-1 py-1 rounded hover:bg-gray-100 cursor-pointer"
         onClick={() => {
           // aksi untuk toggle accordion
           console.log("toggle accordion");
@@ -201,7 +201,7 @@ const CardAccordion: React.FC<Props> = ({
           />
         )}
       </button>
-      <div className="flex flex-col items-center bg-white border border-gray-200 md:rounded-lg shadow-sm hover:bg-gray-50">
+      <div className="flex flex-col items-start bg-white border border-gray-200 md:rounded-lg shadow-sm hover:bg-gray-50">
         <div
           className="flex items-start flex-row"
           onClick={() => {
@@ -210,7 +210,7 @@ const CardAccordion: React.FC<Props> = ({
             setAccordion(!isOpenAccordion);
           }}
         >
-          <div className=" w-[100%] md:w-48 h-auto p-2">
+          <div className=" w-[100%] max-w-36 md:w-48 h-auto p-2">
             <img
               className="object-cover rounded-sm md:rounded-tl-sm h-auto md:w-48"
               src={`${API_HOSTS.img_indo}/${item.picture}`}
@@ -218,7 +218,7 @@ const CardAccordion: React.FC<Props> = ({
             />
           </div>
           <div className="flex flex-col justify-between px-3 pt-2 leading-normal">
-            <h5 className="mb-2 text-md md:text-xl pr-7 font-bold tracking-tight text-gray-900 flex-wrap">
+            <h5 className="mb-2 text-md md:text-xl pr-7 font-bold tracking-tight text-gray-900 flex-wrap cursor-pointer">
               {item.excursion_name ?? "-"}
             </h5>
             <div className="flex flex-row"></div>
