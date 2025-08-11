@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 // Context Global
 import { useCartApi } from "@/context/CartApiContext";
 import { useRouter } from "next/navigation";
+import Spinner from "@/components/Spinner";
 
 type DetailPax = {
   charge_type: string;
@@ -98,6 +99,7 @@ const CardAccordion: React.FC<Props> = ({
   const router = useRouter();
 
   const removeItemCart = async () => {
+    setIsRemoving(true);
     const formBody = new URLSearchParams({
       shared_key: item.company_id, // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
       xml: "false",
@@ -148,6 +150,11 @@ const CardAccordion: React.FC<Props> = ({
   };
 
   const handleChange = async () => {
+    //
+    if (isRemoving) {
+      toast.success("Pleases Wait remove finish!");
+      return; // cegah klik ganda
+    }
     // Ambil idx_excursion
     // Cari Country dan Statenya
     const res = await fetch(
@@ -216,8 +223,7 @@ const CardAccordion: React.FC<Props> = ({
             </h5>
             <div className="flex flex-row"></div>
             <p className="mb-3 text-xs md:text-md text-gray-700">
-              Here are the biggest enterprise technology acquisitions of 2021 so
-              far, in reverse chronological order.
+              Description ...
             </p>
           </div>
         </div>
@@ -335,11 +341,15 @@ const CardAccordion: React.FC<Props> = ({
               className="flex flex-row items-center gap-2 group cursor-pointer"
               onClick={handleRemove}
             >
-              <FontAwesomeIcon
-                icon={faTrash}
-                className="w-5 h-5 text-gray-500 group-hover:text-red-700"
-                size="sm"
-              />
+              {isRemoving ? (
+                <Spinner />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faTrash}
+                  className="w-5 h-5 text-gray-500 group-hover:text-red-700"
+                  size="sm"
+                />
+              )}
               <p className="text-gray-600 text-sm group-hover:text-red-700">
                 Remove
               </p>

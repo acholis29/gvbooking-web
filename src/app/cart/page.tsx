@@ -92,6 +92,7 @@ export default function Cart() {
 
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
+  const [isRemove, setIsRemove] = useState(true);
   const { cartApiItems } = useCartApi();
   const [isOpenAccordion, setAccordion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -113,7 +114,7 @@ export default function Cart() {
     setIsLoading(false);
   }
 
-  function handleOnChangeCard(item: CartApiItem, checked: boolean) {
+  async function handleOnChangeCard(item: CartApiItem, checked: boolean) {
     console.log("====CART CHANGE====");
     console.log("Cheked :", checked);
     console.log(item);
@@ -135,10 +136,12 @@ export default function Cart() {
     }
   }
 
-  function handleOnRemoveCard(item: CartApiItem) {
+  async function handleOnRemoveCard(item: CartApiItem) {
     console.log("==REMOVE==");
     console.log(item);
-    handleOnChangeCard(item, false);
+    setIsRemove(true);
+    await handleOnChangeCard(item, false);
+    setIsRemove(false);
     // Hapus Dari List Dan ChekedList
   }
 
@@ -156,6 +159,11 @@ export default function Cart() {
   async function handlePaymentGateway() {
     if (isSubmitting) {
       toast.success("Please Wait");
+      return null;
+    }
+
+    if (isRemove) {
+      toast.success("Please Wait Remove Finished!");
       return null;
     }
 
