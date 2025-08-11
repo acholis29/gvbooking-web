@@ -103,8 +103,8 @@ export default function DestinationClient({ slug }: Props) {
     RecomendedDestinationApiItem[]
   >([]);
 
-  const { setLanguage, setMasterLanguage } = useLanguage();
-  const { setCurrency, setMasterCurrency } = useCurrency();
+  const { setLanguage, setMasterLanguage, language } = useLanguage();
+  const { setCurrency, setMasterCurrency, currency } = useCurrency();
   const {
     agent,
     setAgent,
@@ -165,8 +165,8 @@ export default function DestinationClient({ slug }: Props) {
           xml: "false",
           keyword: `|${profile.email}`,
           date: date ?? "",
-          code_of_language: param.default_language,
-          code_of_currency: param.default_currency,
+          code_of_language: language ?? param.default_language,
+          code_of_currency: currency ?? param.default_currency,
           promo_code: param.default_rep_code,
           email: profile.email ?? "",
           mobile: profile.phone ?? "",
@@ -236,7 +236,7 @@ export default function DestinationClient({ slug }: Props) {
     if (date != "") {
       fetchDataInitial();
     }
-  }, [date]);
+  }, [date, language, currency]);
 
   useEffect(() => {
     fetch(`/api/excursion/local_destination/${idx_comp}`, {
