@@ -100,6 +100,10 @@ export default function ListClient() {
 
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
+  // Is Loading Holiday
+  const [isLoadHoliday, setIsLoadHoliday] = useState(true);
+  // Is Loading List
+  const [isLoadList, setIsLoadList] = useState(true);
 
   const [DetailDestinationApi, setDetailDestinationApi] = useState<
     DestinationItemApi[]
@@ -167,6 +171,7 @@ export default function ListClient() {
   };
 
   useEffect(() => {
+    setIsLoadList(true);
     const formBody = new URLSearchParams({
       shared_key: "4D340942-88D3-44DD-A52C-EAF00EACADE8",
       xml: "false",
@@ -202,12 +207,13 @@ export default function ListClient() {
       })
       .catch((err) => console.error("Error:", err))
       .finally(() => {
-        setIsLoading(false); // ✅ Loading selesai
+        setIsLoadList(false); // ✅ Loading selesai
       });
   }, [language, currency, apply]);
 
   // Holiday Tipe Master API
   useEffect(() => {
+    setIsLoadHoliday(true);
     const formBody = new URLSearchParams({
       shared_key: "4D340942-88D3-44DD-A52C-EAF00EACADE8",
       xml: "false",
@@ -243,7 +249,7 @@ export default function ListClient() {
       })
       .catch((err) => console.error("Error:", err))
       .finally(() => {
-        setIsLoading(false); // ✅ Loading selesai
+        setIsLoadHoliday(false);
       });
   }, []);
 
@@ -356,19 +362,46 @@ export default function ListClient() {
           <div className="flex flex-row gap-3 md:flex-col">
             <div>
               <p className="text-sm mb-2 font-semibold">Holiday Type</p>
-              <Radio
-                title={"ALL TYPE"}
-                onChange={handleCheckboxChange}
-                value={""}
-              />
-              {masterHolidayApi.map((item) => (
-                <Radio
-                  key={item.holiday_type}
-                  title={item.holiday_type}
-                  onChange={handleCheckboxChange}
-                  value={item.holiday_type_id}
-                />
-              ))}
+              {isLoadHoliday ? (
+                <>
+                  <div
+                    role="status"
+                    className="animate-pulse flex items-center gap-3 mb-2"
+                  >
+                    <div className="w-4 h-4 bg-gray-300 rounded"></div>
+
+                    <div className="h-2.5 w-24 bg-gray-300 rounded-full"></div>
+
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                  <div
+                    role="status"
+                    className="animate-pulse flex items-center gap-3 mb-2"
+                  >
+                    <div className="w-4 h-4 bg-gray-300 rounded"></div>
+
+                    <div className="h-2.5 w-24 bg-gray-300 rounded-full"></div>
+
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Radio
+                    title={"ALL TYPE"}
+                    onChange={handleCheckboxChange}
+                    value={""}
+                  />
+                  {masterHolidayApi.map((item) => (
+                    <Radio
+                      key={item.holiday_type}
+                      title={item.holiday_type}
+                      onChange={handleCheckboxChange}
+                      value={item.holiday_type_id}
+                    />
+                  ))}
+                </>
+              )}
             </div>
           </div>
           <button
@@ -385,76 +418,117 @@ export default function ListClient() {
         </div>
         {/* Kontent Kiri Mobile */}
         <div className="flex flex-row gap-2 md:hidden h-15 items-center px-2 overflow-x-auto sticky top-31 z-30 bg-white">
-          <div
-            className="w-10 h-10 border-1 border-gray-500 rounded-lg text-center align-middle flex items-center justify-center p-2"
-            onClick={() => setOpenBottomSheet(true)}
-          >
-            <FontAwesomeIcon
-              icon={faSliders}
-              className="w-5 h-5 text-gray-500"
-            />
-          </div>
           {/* Filter Mobile */}
-          <div
-            key={`mobileHoliday-all-type`}
-            className={`w-auto h-10  border-gray-500  ${
-              "ALL TYPE" == SelectBadgeFilterMobile
-                ? "bg-gray-200 border-2"
-                : "border-1"
-            }  rounded-lg text-center align-middle flex items-center justify-center p-2 whitespace-nowrap`}
-            onClick={() => {
-              if ("ALL TYPE" == SelectBadgeFilterMobile) {
-                setSelectBadgeFilterMobile("");
-                handleApplyMobile();
-              } else {
-                setSelectBadgeFilterMobile("ALL TYPE");
-                setSelectedTypesById("");
-                handleApplyMobile();
-              }
-            }}
-          >
-            <p className="text-sm text-gray-500">
-              {capitalizeWords("ALL TYPE")}
-            </p>
+          {isLoadHoliday ? (
+            <>
+              {/* Skeleton Badge */}
+              <div
+                role="status"
+                className="animate-pulse w-auto h-10 px-4 rounded-lg bg-gray-300 flex items-center gap-2"
+              >
+                <div className="h-2.5 w-16 bg-gray-200 rounded-full"></div>
 
-            {"ALL TYPE" == SelectBadgeFilterMobile && (
-              <FontAwesomeIcon
-                icon={faXmark}
-                className="w-5 h-5 text-red-600"
-              />
-            )}
-          </div>
-          {masterHolidayApi.map((item) => (
-            <div
-              key={`mobileHoliday-${item.holiday_type}`}
-              className={`w-auto h-10  border-gray-500  ${
-                item.holiday_type == SelectBadgeFilterMobile
-                  ? "bg-gray-200 border-2"
-                  : "border-1"
-              }  rounded-lg text-center align-middle flex items-center justify-center p-2 whitespace-nowrap`}
-              onClick={() => {
-                if (item.holiday_type == SelectBadgeFilterMobile) {
-                  setSelectBadgeFilterMobile("");
-                  handleApplyMobile();
-                } else {
-                  setSelectBadgeFilterMobile(item.holiday_type);
-                  setSelectedTypesById(item.holiday_type_id);
-                  handleApplyMobile();
-                }
-              }}
-            >
-              <p className="text-sm text-gray-500">
-                {capitalizeWords(item.holiday_type)}
-              </p>
+                <div className="w-5 h-5 bg-gray-200 rounded-full"></div>
 
-              {item.holiday_type == SelectBadgeFilterMobile && (
+                <span className="sr-only">Loading...</span>
+              </div>
+
+              <div
+                role="status"
+                className="animate-pulse w-auto h-10 px-4 rounded-lg bg-gray-300 flex items-center gap-2"
+              >
+                <div className="h-2.5 w-16 bg-gray-200 rounded-full"></div>
+
+                <div className="w-5 h-5 bg-gray-200 rounded-full"></div>
+
+                <span className="sr-only">Loading...</span>
+              </div>
+
+              <div
+                role="status"
+                className="animate-pulse w-auto h-10 px-4 rounded-lg bg-gray-300 flex items-center gap-2"
+              >
+                <div className="h-2.5 w-16 bg-gray-200 rounded-full"></div>
+
+                <div className="w-5 h-5 bg-gray-200 rounded-full"></div>
+
+                <span className="sr-only">Loading...</span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div
+                className="w-10 h-10 border-1 border-gray-500 rounded-lg text-center align-middle flex items-center justify-center p-2"
+                onClick={() => setOpenBottomSheet(true)}
+              >
                 <FontAwesomeIcon
-                  icon={faXmark}
-                  className="w-5 h-5 text-red-600"
+                  icon={faSliders}
+                  className="w-5 h-5 text-gray-500"
                 />
-              )}
-            </div>
-          ))}
+              </div>
+
+              <div
+                key={`mobileHoliday-all-type`}
+                className={`w-auto h-10  border-gray-500  ${
+                  "ALL TYPE" == SelectBadgeFilterMobile
+                    ? "bg-gray-200 border-2"
+                    : "border-1"
+                }  rounded-lg text-center align-middle flex items-center justify-center p-2 whitespace-nowrap`}
+                onClick={() => {
+                  if ("ALL TYPE" == SelectBadgeFilterMobile) {
+                    setSelectBadgeFilterMobile("");
+                    handleApplyMobile();
+                  } else {
+                    setSelectBadgeFilterMobile("ALL TYPE");
+                    setSelectedTypesById("");
+                    handleApplyMobile();
+                  }
+                }}
+              >
+                <p className="text-sm text-gray-500">
+                  {capitalizeWords("ALL TYPE")}
+                </p>
+
+                {"ALL TYPE" == SelectBadgeFilterMobile && (
+                  <FontAwesomeIcon
+                    icon={faXmark}
+                    className="w-5 h-5 text-red-600"
+                  />
+                )}
+              </div>
+              {masterHolidayApi.map((item) => (
+                <div
+                  key={`mobileHoliday-${item.holiday_type}`}
+                  className={`w-auto h-10  border-gray-500  ${
+                    item.holiday_type == SelectBadgeFilterMobile
+                      ? "bg-gray-200 border-2"
+                      : "border-1"
+                  }  rounded-lg text-center align-middle flex items-center justify-center p-2 whitespace-nowrap`}
+                  onClick={() => {
+                    if (item.holiday_type == SelectBadgeFilterMobile) {
+                      setSelectBadgeFilterMobile("");
+                      handleApplyMobile();
+                    } else {
+                      setSelectBadgeFilterMobile(item.holiday_type);
+                      setSelectedTypesById(item.holiday_type_id);
+                      handleApplyMobile();
+                    }
+                  }}
+                >
+                  <p className="text-sm text-gray-500">
+                    {capitalizeWords(item.holiday_type)}
+                  </p>
+
+                  {item.holiday_type == SelectBadgeFilterMobile && (
+                    <FontAwesomeIcon
+                      icon={faXmark}
+                      className="w-5 h-5 text-red-600"
+                    />
+                  )}
+                </div>
+              ))}
+            </>
+          )}
         </div>
         {/* Konten Kanan */}
         <div className="w-full md:w-5/6  md:px-6 pb-6 text-black">
@@ -518,7 +592,7 @@ export default function ListClient() {
 
           {/* Baris Card Baru */}
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 py-4">
-            {isLoading ? (
+            {isLoadList ? (
               <>
                 <SkeletonCardList />
                 <SkeletonCardList />
