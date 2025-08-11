@@ -222,27 +222,25 @@ export default function NavbarComponent() {
 
     const savedDate = localStorage.getItem("booking_date");
     const today = new Date();
-    const formattedToday = today.toISOString().split("T")[0];
-
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const formattedTomorrow = tomorrow.toISOString().split("T")[0];
     if (savedDate) {
       const saved = new Date(savedDate);
-
-      // hapus jam supaya perbandingan hanya tanggal
       saved.setHours(0, 0, 0, 0);
-      today.setHours(0, 0, 0, 0);
 
-      if (saved < today) {
-        // kalau tanggalnya kemarin atau lebih lama → set ke today
-        setDate(formattedToday);
-        localStorage.setItem("booking_date", formattedToday);
+      if (saved <= today) {
+        // Kalau saved date kemarin atau hari ini → pakai tomorrow
+        setDate(formattedTomorrow);
+        localStorage.setItem("booking_date", formattedTomorrow);
       } else {
-        // kalau hari ini atau lebih → pakai savedDate
+        // Kalau besok atau lebih → pakai savedDate
         setDate(savedDate);
       }
     } else {
-      // kalau belum ada di localStorage → set ke today
-      setDate(formattedToday);
-      localStorage.setItem("booking_date", formattedToday);
+      // Kalau belum ada di localStorage → set ke tomorrow
+      setDate(formattedTomorrow);
+      localStorage.setItem("booking_date", formattedTomorrow);
     }
 
     const savedResourceInitial = localStorage.getItem("resource_initial");
@@ -400,7 +398,11 @@ export default function NavbarComponent() {
                       <DatePicker
                         selected={selectedDate}
                         onChange={handleChange}
-                        minDate={new Date()}
+                        minDate={(() => {
+                          const tomorrow = new Date();
+                          tomorrow.setDate(tomorrow.getDate() + 1);
+                          return tomorrow;
+                        })()}
                         inline
                         className="p-2"
                       />

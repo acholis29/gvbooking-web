@@ -376,7 +376,11 @@ export default function DetailDestination() {
                           localStorage.setItem("booking_date", formatted);
                         }
                       }}
-                      minDate={new Date()}
+                      minDate={(() => {
+                        const tomorrow = new Date();
+                        tomorrow.setDate(tomorrow.getDate() + 1);
+                        return tomorrow;
+                      })()}
                       excludeDates={disabledDates}
                       className="bg-gray-100 font-semibold p-2 rounded-2xl w-full shadow-sm focus:outline-none focus:ring-0 border-0"
                       wrapperClassName="w-full md:w-auto"

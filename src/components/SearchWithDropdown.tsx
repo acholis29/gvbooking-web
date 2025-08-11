@@ -182,7 +182,11 @@ const Search: React.FC<SearchProps> = ({
                 <DatePicker
                   selected={selectedDate}
                   onChange={handleChange}
-                  minDate={new Date()}
+                  minDate={(() => {
+                    const tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    return tomorrow;
+                  })()}
                   inline
                   className="p-2"
                 />
