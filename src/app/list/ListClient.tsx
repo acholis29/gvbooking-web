@@ -36,6 +36,7 @@ import { capitalizeWords } from "@/helper/helper"; // sesuaikan path
 import { useWish } from "@/context/WishContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { useDate } from "@/context/DateContext";
 // Host Image
 import { API_HOSTS } from "@/lib/apihost";
 import Radio from "@/components/Radio";
@@ -97,6 +98,8 @@ export default function ListClient() {
   const { currency } = useCurrency();
   // Language
   const { language } = useLanguage();
+  // Date
+  const { date } = useDate();
 
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
@@ -173,11 +176,11 @@ export default function ListClient() {
   useEffect(() => {
     setIsLoadList(true);
     const formBody = new URLSearchParams({
-      shared_key: "4D340942-88D3-44DD-A52C-EAF00EACADE8",
+      shared_key: idx_comp ?? "",
       xml: "false",
-      keyword: "5BFD4F38-7BB4-40AB-BF0C-1B88F999BA5B", // id area bali
-      date_from: "2025-08-07",
-      date_to: "2025-08-21",
+      keyword: "", // id area bali 5BFD4F38-7BB4-40AB-BF0C-1B88F999BA5B
+      date_from: date,
+      date_to: date,
       code_of_language: language,
       code_of_currency: currency,
       page_set_item: "10000",
@@ -215,11 +218,11 @@ export default function ListClient() {
   useEffect(() => {
     setIsLoadHoliday(true);
     const formBody = new URLSearchParams({
-      shared_key: "4D340942-88D3-44DD-A52C-EAF00EACADE8",
+      shared_key: idx_comp ?? "",
       xml: "false",
-      keyword: "5BFD4F38-7BB4-40AB-BF0C-1B88F999BA5B", // id area bali
-      date_from: "2025-08-07",
-      date_to: "2025-08-21",
+      keyword: "", // id area bali 5BFD4F38-7BB4-40AB-BF0C-1B88F999BA5B
+      date_from: date,
+      date_to: date,
       code_of_language: language,
       code_of_currency: currency,
       page_set_item: "10000",

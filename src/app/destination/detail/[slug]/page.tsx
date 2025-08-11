@@ -160,6 +160,7 @@ export default function DetailDestination() {
         }
       } catch (err: any) {
         setError(err.message || "Error");
+        setIsLoading(false);
         console.error("Fetch error:", err);
       } finally {
         setIsLoading(false); // selesai loading
@@ -177,7 +178,6 @@ export default function DetailDestination() {
   useEffect(() => {
     // Load ulang initial jika agent kosong
     const fetchDataInitial = async () => {
-      setIsLoading(true); // mulai loading
       const formBody = new URLSearchParams({
         shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
         xml: "false",
@@ -203,9 +203,7 @@ export default function DetailDestination() {
           fetchSecondDataInitial(json.msg);
           setRepCode(json.msg.default_rep_code); //R-BC
         }
-        setIsLoading(false); // mulai loading
       } catch (err: any) {
-        setIsLoading(false); // mulai loading
         console.error("Fetch error:", err);
       }
     };
@@ -295,8 +293,7 @@ export default function DetailDestination() {
 
   return (
     <>
-      {isLoading && <SkeletonDetailProduk />}
-      {!isLoading && (
+      {!isLoading ? (
         <>
           <div className="max-w-screen-xl mx-auto px-4">
             <Breadcrumb
@@ -484,6 +481,10 @@ export default function DetailDestination() {
               </div>
             </div>
           </div>
+        </>
+      ) : (
+        <>
+          <SkeletonDetailProduk />
         </>
       )}
     </>
