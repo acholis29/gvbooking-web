@@ -98,6 +98,7 @@ export default function NavbarComponent() {
   );
 
   const hideCurrency = pathname === "/" || pathname === "/home";
+  const hideCartIcon = pathname === "/" || pathname === "/home";
 
   const menu_profil = ["Options", "Sign In", "Currency", "Language"];
 
@@ -422,12 +423,15 @@ export default function NavbarComponent() {
               link="/wishlist"
               badgeCount={wishCount}
             />
-            <IconItemCartWish
-              icon={faShoppingCart}
-              label="CART"
-              link="/cart"
-              badgeCount={cartApiCount}
-            />
+            {!hideCartIcon && (
+              <IconItemCartWish
+                icon={faShoppingCart}
+                label="CART"
+                link="/cart"
+                badgeCount={cartApiCount}
+              />
+            )}
+
             {/* Profile */}
             {/* <IconItem icon={faUser} label="PROFILE" /> */}
             <div

@@ -245,7 +245,7 @@ export default function Cart() {
 
   useEffect(() => {
     if (!isLoading && ListCart.length === 0) {
-      router.replace("/home");
+      router.back();
       toast.success("Cart is empty");
     }
   }, [isLoading, ListCart]);
