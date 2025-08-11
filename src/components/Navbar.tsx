@@ -220,13 +220,28 @@ export default function NavbarComponent() {
     }
 
     const savedDate = localStorage.getItem("booking_date");
+    const today = new Date();
+    const formattedToday = today.toISOString().split("T")[0];
+
     if (savedDate) {
-      setDate(savedDate);
+      const saved = new Date(savedDate);
+
+      // hapus jam supaya perbandingan hanya tanggal
+      saved.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+
+      if (saved < today) {
+        // kalau tanggalnya kemarin atau lebih lama → set ke today
+        setDate(formattedToday);
+        localStorage.setItem("booking_date", formattedToday);
+      } else {
+        // kalau hari ini atau lebih → pakai savedDate
+        setDate(savedDate);
+      }
     } else {
-      const today = new Date();
-      const formatted = today.toISOString().split("T")[0]; // hasil: '2025-07-18'
-      setDate(formatted);
-      localStorage.setItem("booking_date", formatted);
+      // kalau belum ada di localStorage → set ke today
+      setDate(formattedToday);
+      localStorage.setItem("booking_date", formattedToday);
     }
 
     const savedResourceInitial = localStorage.getItem("resource_initial");
