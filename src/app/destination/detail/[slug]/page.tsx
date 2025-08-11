@@ -203,7 +203,9 @@ export default function DetailDestination() {
           fetchSecondDataInitial(json.msg);
           setRepCode(json.msg.default_rep_code); //R-BC
         }
+        setIsLoading(false); // mulai loading
       } catch (err: any) {
+        setIsLoading(false); // mulai loading
         console.error("Fetch error:", err);
       }
     };
