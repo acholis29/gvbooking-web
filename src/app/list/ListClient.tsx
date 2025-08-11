@@ -38,6 +38,7 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { useLanguage } from "@/context/LanguageContext";
 // Host Image
 import { API_HOSTS } from "@/lib/apihost";
+import Radio from "@/components/Radio";
 
 type DestinationItemApi = {
   excursion_id: string;
@@ -161,7 +162,7 @@ export default function ListClient() {
   };
 
   // Function Handle Apply Filter Mobile
-  const handleApplyMobile = (keyword: string) => {
+  const handleApplyMobile = () => {
     setApply(apply + 1); // untuk trigger apply filter
   };
 
@@ -355,8 +356,13 @@ export default function ListClient() {
           <div className="flex flex-row gap-3 md:flex-col">
             <div>
               <p className="text-sm mb-2 font-semibold">Holiday Type</p>
+              <Radio
+                title={"ALL TYPE"}
+                onChange={handleCheckboxChange}
+                value={""}
+              />
               {masterHolidayApi.map((item) => (
-                <Checkbox
+                <Radio
                   key={item.holiday_type}
                   title={item.holiday_type}
                   onChange={handleCheckboxChange}
@@ -388,6 +394,36 @@ export default function ListClient() {
               className="w-5 h-5 text-gray-500"
             />
           </div>
+          {/* Filter Mobile */}
+          <div
+            key={`mobileHoliday-all-type`}
+            className={`w-auto h-10  border-gray-500  ${
+              "ALL TYPE" == SelectBadgeFilterMobile
+                ? "bg-gray-200 border-2"
+                : "border-1"
+            }  rounded-lg text-center align-middle flex items-center justify-center p-2 whitespace-nowrap`}
+            onClick={() => {
+              if ("ALL TYPE" == SelectBadgeFilterMobile) {
+                setSelectBadgeFilterMobile("");
+                handleApplyMobile();
+              } else {
+                setSelectBadgeFilterMobile("ALL TYPE");
+                setSelectedTypesById("");
+                handleApplyMobile();
+              }
+            }}
+          >
+            <p className="text-sm text-gray-500">
+              {capitalizeWords("ALL TYPE")}
+            </p>
+
+            {"ALL TYPE" == SelectBadgeFilterMobile && (
+              <FontAwesomeIcon
+                icon={faXmark}
+                className="w-5 h-5 text-red-600"
+              />
+            )}
+          </div>
           {masterHolidayApi.map((item) => (
             <div
               key={`mobileHoliday-${item.holiday_type}`}
@@ -398,11 +434,12 @@ export default function ListClient() {
               }  rounded-lg text-center align-middle flex items-center justify-center p-2 whitespace-nowrap`}
               onClick={() => {
                 if (item.holiday_type == SelectBadgeFilterMobile) {
-                  handleApplyMobile("");
                   setSelectBadgeFilterMobile("");
+                  handleApplyMobile();
                 } else {
-                  handleApplyMobile(item.holiday_type);
                   setSelectBadgeFilterMobile(item.holiday_type);
+                  setSelectedTypesById(item.holiday_type_id);
+                  handleApplyMobile();
                 }
               }}
             >
