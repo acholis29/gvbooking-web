@@ -96,10 +96,12 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
             {errors.roomNumber.message}
           </span>
         )}
-        <div className="relative">
-          <div className="absolute inset-y-0 end-20 md:end-48 top-2 flex items-center pe-3.5 pointer-events-none">
-            <FontAwesomeIcon icon={faClock} className="w-4 h-4 text-gray-600" />{" "}
+        <div className="relative inline-block">
+          {/* Ikon Jam */}
+          <div className="absolute inset-y-0 left-22 top-2 flex items-center pointer-events-none">
+            <FontAwesomeIcon icon={faClock} className="w-4 h-4 text-gray-600" />
           </div>
+          {/* Input time */}
           <input
             type="time"
             id="time"
