@@ -81,6 +81,7 @@ export default function ListClient() {
   const idx_comp = searchParams.get("id"); //dari idx_comp_alias
   const country = searchParams.get("country");
   const state_ = searchParams.get("state");
+  const idx_state = searchParams.get("id-state");
   const capitalizedCountry = capitalizeWords(country ?? "");
   const host_img =
     country?.toLocaleLowerCase() == "indonesia"
@@ -178,7 +179,7 @@ export default function ListClient() {
     const formBody = new URLSearchParams({
       shared_key: idx_comp ?? "",
       xml: "false",
-      keyword: "", // id area bali 5BFD4F38-7BB4-40AB-BF0C-1B88F999BA5B
+      keyword: idx_state ?? "", // id area bali 5BFD4F38-7BB4-40AB-BF0C-1B88F999BA5B
       date_from: date,
       date_to: date,
       code_of_language: language,
@@ -220,7 +221,7 @@ export default function ListClient() {
     const formBody = new URLSearchParams({
       shared_key: idx_comp ?? "",
       xml: "false",
-      keyword: "", // id area bali 5BFD4F38-7BB4-40AB-BF0C-1B88F999BA5B
+      keyword: idx_state ?? "", // id area bali 5BFD4F38-7BB4-40AB-BF0C-1B88F999BA5B
       date_from: date,
       date_to: date,
       code_of_language: language,

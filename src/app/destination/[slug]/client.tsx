@@ -37,6 +37,7 @@ type LocalDestinationItem = {
   idx_comp: string;
   Country: string;
   State: string;
+  idx_state: string;
   Name_excursion: string;
   qty: string;
 };
@@ -245,6 +246,7 @@ export default function DestinationClient({ slug }: Props) {
       .then((res) => res.json())
       .then((data) => {
         setLocalDestination(data);
+        console.log(data);
       })
       .catch((err) => console.error(err))
       .finally(() => {
@@ -294,7 +296,7 @@ export default function DestinationClient({ slug }: Props) {
               image={`/images/destination/${slug}.jpg`}
               title={`${item.State}`}
               activities={item.qty}
-              link={`/list?id=${idx_comp}&country=${country}&state=${item.State}`}
+              link={`/list?id=${idx_comp}&country=${country}&state=${item.State}&id-state=${item.idx_state}`}
             />
           ))
         ) : (
