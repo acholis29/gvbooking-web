@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
 // Library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faInbox } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faChevronUp,
+  faInbox,
+} from "@fortawesome/free-solid-svg-icons";
 // component
 import Breadcrumb from "@/components/Breadcrumb";
 import CardAccordion from "@/components/CardAccordion";
@@ -346,11 +350,19 @@ export default function Cart() {
                   Order Summary
                 </h5>
                 <h5>
-                  <FontAwesomeIcon
-                    icon={faChevronDown}
-                    className="w-10 h-10 text-gray-500"
-                    size="lg"
-                  />
+                  {isOpenAccordion ? (
+                    <FontAwesomeIcon
+                      icon={faChevronUp}
+                      className="w-10 h-10 text-gray-500"
+                      size="lg"
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
+                      className="w-10 h-10 text-gray-500"
+                      size="lg"
+                    />
+                  )}
                 </h5>
               </div>
 
@@ -369,7 +381,8 @@ export default function Cart() {
                           )}
                         </p>
                         <p className="text-sm text-gray-700 font-semibold">
-                          {item.currency} {item.price_in_format}
+                          {/* {item.currency} {item.price_in_format} */}
+                          {item.currency_local} {item.price_local_in_format}
                         </p>
                       </div>
                     );
@@ -382,20 +395,25 @@ export default function Cart() {
                 <p className="text-sm text-gray-700 font-bold">Subtotal</p>
                 <p className="text-sm text-gray-700 font-semibold">
                   {" "}
-                  {formatRibuan(subtotalSummeryOrder)}
+                  {formatRibuanInternational(subtotalSummeryOrder)}
                 </p>
               </div>
               <hr className="my-2 border border-gray-400 opacity-50" />
               <div className="flex flex-row justify-between mb-2">
                 <p className="text-sm text-gray-700 font-semibold">Disc</p>
-                <p className="text-sm text-gray-700 font-semibold">0</p>
+                <p className="text-sm text-gray-700 font-semibold">
+                  {" "}
+                  {formatRibuanInternational(discTotalSummerOrder)}
+                </p>
               </div>
               <hr className="my-2 border border-gray-400 opacity-50" />
               <div className="flex flex-row justify-between mb-2">
                 <p className="text-gray-700 font-semibold">Grand Total</p>
                 <p className="text-gray-700 font-semibold">
                   {" "}
-                  {formatRibuan(subtotalSummeryOrder)}
+                  {formatRibuanInternational(
+                    subtotalSummeryOrder - discTotalSummerOrder
+                  )}
                 </p>
               </div>
               <button
