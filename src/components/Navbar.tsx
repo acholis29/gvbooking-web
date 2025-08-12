@@ -44,12 +44,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 // Link Href
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 // Modal Component
 import ModalComponent from "./ModalComponent";
 import { API_HOSTS } from "@/lib/apihost";
 // Redirect
 import { useRouter } from "next/navigation";
-import { toLowerCaseAll } from "@/helper/helper";
+import { capitalizeFirst, toLowerCaseAll } from "@/helper/helper";
 // Select Autocomplate
 import AsyncSelect from "react-select/async";
 import { components } from "react-select";
@@ -277,6 +278,17 @@ export default function NavbarComponent() {
     // Bersihkan event listener saat unmount
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Handle Select Country Di Navbar
+  const searchParams = useSearchParams();
+  const country = searchParams.get("country") ?? ""; //ini dari idx_comp_alias
+  useEffect(() => {
+    if (country == "") {
+      setSelectedCategory("All Destinations");
+    } else {
+      setSelectedCategory(capitalizeFirst(country));
+    }
+  }, [country]);
 
   return (
     <nav className="sticky top-0 z-50 bg-white">
