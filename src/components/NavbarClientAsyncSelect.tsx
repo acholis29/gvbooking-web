@@ -37,7 +37,9 @@ export default function NavbarClientAsyncSelect(props: any) {
     value: string;
     label: string;
     country?: string;
+    country_id?: string;
     state?: string;
+    state_id?: string;
     data?: any;
     icon?: any;
   };
@@ -105,12 +107,14 @@ export default function NavbarClientAsyncSelect(props: any) {
         );
 
         const json = await res.json();
-
+        console.log(json.msg);
         fetchedOptions = json.msg.map((item: any) => ({
           value: item.excursion_id,
           label: item.search_name,
           country: item.location_country,
+          country_id: item.location_country_id,
           state: item.location_state,
+          state_id: item.location_state_id,
           data: item,
           icon:
             item.category == "Country"
@@ -183,8 +187,10 @@ export default function NavbarClientAsyncSelect(props: any) {
           }
         } else {
           const country = selectedOption?.data.location_country;
+          const country_id = selectedOption?.data.location_country_id;
           const idx_comp_alias = idx_comp;
           const state = selectedOption?.data.location_state;
+          const state_id = selectedOption?.data.location_state_id;
           const excursion_id = selectedOption?.data.excursion_id;
           // Data untuk ke detail masih salah
           if (selectedOption) {
@@ -196,7 +202,7 @@ export default function NavbarClientAsyncSelect(props: any) {
               router.push(
                 `/list?id=${idx_comp}&country=${toLowerCaseAll(
                   country
-                )}&state=${state}`
+                )}&state=${state}&id-state=${state_id}`
               );
             }
           }

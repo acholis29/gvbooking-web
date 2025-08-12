@@ -213,7 +213,7 @@ export default function ListClient() {
       .finally(() => {
         setIsLoadList(false); // ✅ Loading selesai
       });
-  }, [language, currency, apply]);
+  }, [language, currency, apply, idx_state]);
 
   // Holiday Tipe Master API
   useEffect(() => {
