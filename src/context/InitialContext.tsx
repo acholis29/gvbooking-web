@@ -9,6 +9,23 @@ import React, {
   useEffect,
 } from "react";
 
+type coreType = {
+  app_name: string;
+  intl: string;
+  name: string;
+  country: string;
+  countryCode: string;
+  idx_comp: string;
+  idx_comp_alias: string;
+  url_img_team: string;
+  url_img: string;
+  phone_code: string;
+  def_curr: string;
+  payontour: string;
+  min_daypayontour: string;
+  status: string;
+};
+
 type resourceType = {
   url_bo: string;
   url_fo: string;
@@ -38,6 +55,8 @@ type InitialContextType = {
   setResourceInitial: (value: resourceType) => void;
   profileInitial: profileType[];
   setProfileInitial: (value: profileType[]) => void;
+  coreInitial: coreType[];
+  setCoreInitial: (value: coreType[]) => void;
 };
 
 // Inisialisasi context
@@ -68,6 +87,25 @@ export const InitialProvider = ({ children }: { children: ReactNode }) => {
     },
   ]);
 
+  const [coreInitial, setCoreInitial] = useState<coreType[]>([
+    {
+      app_name: "",
+      intl: "",
+      name: "",
+      country: "",
+      countryCode: "",
+      idx_comp: "",
+      idx_comp_alias: "",
+      url_img_team: "",
+      url_img: "",
+      phone_code: "",
+      def_curr: "",
+      payontour: "",
+      min_daypayontour: "",
+      status: "",
+    },
+  ]);
+
   return (
     <InitialContext.Provider
       value={{
@@ -79,6 +117,8 @@ export const InitialProvider = ({ children }: { children: ReactNode }) => {
         setResourceInitial,
         profileInitial,
         setProfileInitial,
+        coreInitial,
+        setCoreInitial,
       }}
     >
       {children}

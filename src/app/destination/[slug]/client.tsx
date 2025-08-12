@@ -28,6 +28,7 @@ import { useInitial } from "@/context/InitialContext";
 import { useProfile } from "@/context/ProfileContext";
 import { useDate } from "@/context/DateContext";
 import { useCartApi } from "@/context/CartApiContext";
+import { getCountryImageUrl, getHostImageUrl } from "@/helper/helper";
 
 type Props = {
   slug: string;
@@ -77,16 +78,16 @@ export default function DestinationClient({ slug }: Props) {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const host_img =
-    country == "indonesia"
-      ? API_HOSTS.img_indo
-      : country == "thailand"
-      ? API_HOSTS.img_thai
-      : country == "vietnam"
-      ? API_HOSTS.img_viet
-      : country == "cambodia"
-      ? API_HOSTS.img_camb
-      : "";
+  // const host_img =
+  //   country == "indonesia"
+  //     ? API_HOSTS.img_indo
+  //     : country == "thailand"
+  //     ? API_HOSTS.img_thai
+  //     : country == "vietnam"
+  //     ? API_HOSTS.img_viet
+  //     : country == "cambodia"
+  //     ? API_HOSTS.img_camb
+  //     : "";
 
   const [isLoadingDest, setIsLoadingDest] = useState(true);
   const [localDestination, setLocalDestination] = useState<
@@ -115,11 +116,15 @@ export default function DestinationClient({ slug }: Props) {
     setResourceInitial,
     profileInitial,
     setProfileInitial,
+    coreInitial,
   } = useInitial();
   const { profile } = useProfile();
   const { date } = useDate();
   // Cart API
   const { saveCartApi } = useCartApi();
+
+  // host sesuai country
+  const host_img = getHostImageUrl(coreInitial, idx_comp ?? "");
 
   // First Load API Mobile Initial
   useEffect(() => {
@@ -422,21 +427,33 @@ export default function DestinationClient({ slug }: Props) {
               <SkeletonCard />
             </>
           ) : recomdedDestination.length > 0 ? (
-            recomdedDestination.map((item, index) => (
-              <EcommersCard
-                key={index}
-                idx_comp={item.idx_comp}
-                idx_excursion={item.Idx_excursion}
-                // image={`https://picsum.photos/800/600?random=${index}`}
-                image={`${host_img}/media/${item.code_exc}/TN_400_${item.Gbr}`}
-                title={`${item.State}, ${item.Name_excursion}`}
-                sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
-                price={`${item.PriceFrom}`}
-                currency={item.Currency}
-                // link="/destination/detail/indonesia"
-                link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
-              />
-            ))
+            recomdedDestination.map((item, index) => {
+              let imgUrl = "/images/icon/android-chrome-512x512.png";
+              if (item.Gbr != "") {
+                imgUrl =
+                  getCountryImageUrl(
+                    coreInitial,
+                    item.idx_comp,
+                    `media/${item.code_exc}/TN_400_${item.Gbr}`
+                  ) ?? "/images/icon/android-chrome-512x512.png";
+              }
+              return (
+                <EcommersCard
+                  key={index}
+                  idx_comp={item.idx_comp}
+                  idx_excursion={item.Idx_excursion}
+                  // image={`https://picsum.photos/800/600?random=${index}`}
+                  // image={`${host_img}/media/${item.code_exc}/TN_400_${item.Gbr}`}
+                  image={imgUrl}
+                  title={`${item.State}, ${item.Name_excursion}`}
+                  sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
+                  price={`${item.PriceFrom}`}
+                  currency={item.Currency}
+                  // link="/destination/detail/indonesia"
+                  link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
+                />
+              );
+            })
           ) : (
             <p className="col-span-4 text-gray-500 text-center">
               <FontAwesomeIcon

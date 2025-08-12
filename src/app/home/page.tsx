@@ -22,6 +22,8 @@ import SkeletonImage from "@/components/SkeletonImage";
 import { log } from "console";
 import SkeletonCard from "@/components/SkeletonCard";
 import { API_HOSTS } from "@/lib/apihost";
+import { useInitial } from "@/context/InitialContext";
+import { getCountryImageUrl } from "@/helper/helper";
 
 export default function Home() {
   type DestinationItem = {
@@ -61,6 +63,7 @@ export default function Home() {
     code_exc: string;
   };
 
+  const { coreInitial } = useInitial();
   // State Data WistList
   const [ListWist, setWish] = useState<WishItem[]>([]);
 
@@ -215,21 +218,34 @@ export default function Home() {
               <SkeletonCard />
             </>
           ) : recomdedDestination.length > 0 ? (
-            recomdedDestination.map((item, index) => (
-              <EcommersCard
-                key={index}
-                idx_comp={item.idx_comp}
-                idx_excursion={item.Idx_excursion}
-                // image={`https://picsum.photos/800/600?random=${index}`}
-                image={`https://bo.govacation.biz/media/${item.code_exc}/TN_400_${item.Gbr}`}
-                title={`${item.State}, ${item.Name_excursion}`}
-                sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
-                price={`${item.PriceFrom}`}
-                currency={item.Currency}
-                // link="/destination/detail/indonesia"
-                link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
-              />
-            ))
+            recomdedDestination.map((item, index) => {
+              let imgUrl = "/images/icon/android-chrome-512x512.png";
+              if (item.Gbr != "") {
+                imgUrl =
+                  getCountryImageUrl(
+                    coreInitial,
+                    item.idx_comp,
+                    `media/${item.code_exc}/TN_400_${item.Gbr}`
+                  ) ?? "/images/icon/android-chrome-512x512.png";
+              }
+
+              return (
+                <EcommersCard
+                  key={index}
+                  idx_comp={item.idx_comp}
+                  idx_excursion={item.Idx_excursion}
+                  // image={`https://picsum.photos/800/600?random=${index}`}
+                  // image={`https://bo.govacation.biz/media/${item.code_exc}/TN_400_${item.Gbr}`}
+                  image={imgUrl}
+                  title={`${item.State}, ${item.Name_excursion}`}
+                  sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
+                  price={`${item.PriceFrom}`}
+                  currency={item.Currency}
+                  // link="/destination/detail/indonesia"
+                  link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
+                />
+              );
+            })
           ) : (
             <p className="col-span-4 text-gray-500 text-center">
               <FontAwesomeIcon
@@ -285,21 +301,33 @@ export default function Home() {
               <SkeletonCard />
             </>
           ) : recomdedDestination.length > 0 ? (
-            recomdedDestination.map((item, index) => (
-              <EcommersCard
-                key={index}
-                idx_comp={item.idx_comp}
-                idx_excursion={item.Idx_excursion}
-                // image={`https://picsum.photos/800/600?random=${index}`}
-                image={`https://bo.govacation.biz/media/${item.code_exc}/TN_400_${item.Gbr}`}
-                title={`${item.State}, ${item.Name_excursion}`}
-                sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
-                price={`${item.PriceFrom}`}
-                currency={item.Currency}
-                // link="/destination/detail/indonesia"
-                link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
-              />
-            ))
+            recomdedDestination.map((item, index) => {
+              let imgUrl = "/images/icon/android-chrome-512x512.png";
+              if (item.Gbr != "") {
+                imgUrl =
+                  getCountryImageUrl(
+                    coreInitial,
+                    item.idx_comp,
+                    `media/${item.code_exc}/TN_400_${item.Gbr}`
+                  ) ?? "/images/icon/android-chrome-512x512.png";
+              }
+              return (
+                <EcommersCard
+                  key={index}
+                  idx_comp={item.idx_comp}
+                  idx_excursion={item.Idx_excursion}
+                  // image={`https://picsum.photos/800/600?random=${index}`}
+                  // image={`https://bo.govacation.biz/media/${item.code_exc}/TN_400_${item.Gbr}`}
+                  image={imgUrl}
+                  title={`${item.State}, ${item.Name_excursion}`}
+                  sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
+                  price={`${item.PriceFrom}`}
+                  currency={item.Currency}
+                  // link="/destination/detail/indonesia"
+                  link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
+                />
+              );
+            })
           ) : (
             <p className="col-span-4 text-gray-500 text-center">
               <FontAwesomeIcon

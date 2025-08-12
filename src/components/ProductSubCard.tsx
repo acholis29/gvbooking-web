@@ -19,6 +19,7 @@ import { useReviewBooking } from "@/context/ReviewBookingContext";
 import { useInitial } from "@/context/InitialContext";
 // Redirect
 import { useRouter } from "next/navigation";
+import { getHostImageUrl } from "@/helper/helper";
 
 type ProductSub = {
   excursion_id: string;
@@ -62,16 +63,16 @@ const ProductSub: React.FC<ProductSubProps> = ({
   // Redirect
   const router = useRouter();
 
-  const host_img =
-    country == "indonesia"
-      ? API_HOSTS.img_indo
-      : country == "thailand"
-      ? API_HOSTS.img_thai
-      : country == "vietnam"
-      ? API_HOSTS.img_viet
-      : country == "cambodia"
-      ? API_HOSTS.img_camb
-      : "";
+  // const host_img =
+  //   country == "indonesia"
+  //     ? API_HOSTS.img_indo
+  //     : country == "thailand"
+  //     ? API_HOSTS.img_thai
+  //     : country == "vietnam"
+  //     ? API_HOSTS.img_viet
+  //     : country == "cambodia"
+  //     ? API_HOSTS.img_camb
+  //     : "";
 
   const [isLoading, setIsLoading] = useState(true);
   const [dataChargeType, setDataChargeType] = useState<ChargeTypeProps[]>([]);
@@ -87,7 +88,11 @@ const ProductSub: React.FC<ProductSubProps> = ({
   // Review Booking Global
   const { reviewBookingObj, setReviewBookingObj } = useReviewBooking();
   // Inital Global
-  const { agent, repCode } = useInitial();
+  const { agent, repCode, coreInitial } = useInitial();
+
+  // host sesuai country
+  const host_img = getHostImageUrl(coreInitial, idx_comp ?? "");
+
   const {
     register,
     handleSubmit,

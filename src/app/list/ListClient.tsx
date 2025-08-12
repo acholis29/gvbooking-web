@@ -31,12 +31,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Dropdown, DropdownItem } from "flowbite-react";
 // Helper
-import { capitalizeWords } from "@/helper/helper"; // sesuaikan path
+import { capitalizeWords, getHostImageUrl } from "@/helper/helper"; // sesuaikan path
 // Global State
 import { useWish } from "@/context/WishContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDate } from "@/context/DateContext";
+import { useInitial } from "@/context/InitialContext";
 // Host Image
 import { API_HOSTS } from "@/lib/apihost";
 import Radio from "@/components/Radio";
@@ -84,16 +85,17 @@ export default function ListClient() {
   const idx_state =
     searchParams.get("id-state") == "null" ? "" : searchParams.get("id-state");
   const capitalizedCountry = capitalizeWords(country ?? "");
-  const host_img =
-    country?.toLocaleLowerCase() == "indonesia"
-      ? API_HOSTS.img_indo
-      : country?.toLocaleLowerCase() == "thailand"
-      ? API_HOSTS.img_thai
-      : country?.toLocaleLowerCase() == "vietnam"
-      ? API_HOSTS.img_viet
-      : country?.toLocaleLowerCase() == "cambodia"
-      ? API_HOSTS.img_camb
-      : "";
+  // const host_img =
+  //   country?.toLocaleLowerCase() == "indonesia"
+  //     ? API_HOSTS.img_indo
+  //     : country?.toLocaleLowerCase() == "thailand"
+  //     ? API_HOSTS.img_thai
+  //     : country?.toLocaleLowerCase() == "vietnam"
+  //     ? API_HOSTS.img_viet
+  //     : country?.toLocaleLowerCase() == "cambodia"
+  //     ? API_HOSTS.img_camb
+  //     : "";
+
   // Wish Counter
   const { wishItems } = useWish();
   // Curency
@@ -102,6 +104,10 @@ export default function ListClient() {
   const { language } = useLanguage();
   // Date
   const { date } = useDate();
+  // Initial
+  const { coreInitial } = useInitial();
+  // host sesuai country
+  const host_img = getHostImageUrl(coreInitial, idx_comp ?? "");
 
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);

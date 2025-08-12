@@ -129,6 +129,7 @@ export default function NavbarComponent() {
     setRepCode,
     setResourceInitial,
     setProfileInitial,
+    setCoreInitial,
   } = useInitial();
 
   // Timeout Delay
@@ -195,6 +196,7 @@ export default function NavbarComponent() {
       .then((res) => res.json())
       .then((data) => {
         setCountryMaster(data); // ✅ langsung set array-nya
+        setCoreInitial(data);
       })
       .catch((err) => console.error(err));
   }, []);

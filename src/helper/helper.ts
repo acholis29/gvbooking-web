@@ -82,15 +82,39 @@ export function format_date(dateString: string): string {
   }).format(date);
 }
 
+// Format ribuan
 export function formatRibuan(num: number) {
   if (typeof num !== "number") return num;
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
+// Format ribuan international
 export function formatRibuanInternational(num: number): string {
   if (typeof num !== "number") return String(num);
   return num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
+
+// Get url image di recomendation
+export const getCountryImageUrl = (
+  coreInitial: any[],
+  idx_comp: string,
+  path: string
+): string | null => {
+  const found = coreInitial.find((item) => item.idx_comp === idx_comp);
+  if (!found || !path) return null;
+  return `${found.url_img}/${path}`;
+};
+
+// Get Host Image Saja
+export const getHostImageUrl = (
+  coreInitial: any[],
+  idx_comp: string,
+): string | null => {
+  const found = coreInitial.find((item) => item.idx_comp === idx_comp);
+  if (!found) return null;
+  return `${found.url_img}`;
+};
+
 
 
 
