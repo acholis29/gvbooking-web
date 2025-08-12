@@ -234,7 +234,7 @@ export default function DrawerComponent({
                   Wishlist
                 </span>
                 {wishCount > 0 && (
-                  <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white-800 bg-red-gvi rounded-full">
+                  <span className="inline-flex items-center text-white justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white-800 bg-red-gvi rounded-full">
                     {wishCount}
                   </span>
                 )}

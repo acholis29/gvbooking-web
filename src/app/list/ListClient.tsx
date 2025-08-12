@@ -81,7 +81,8 @@ export default function ListClient() {
   const idx_comp = searchParams.get("id"); //dari idx_comp_alias
   const country = searchParams.get("country");
   const state_ = searchParams.get("state");
-  const idx_state = searchParams.get("id-state");
+  const idx_state =
+    searchParams.get("id-state") == "null" ? "" : searchParams.get("id-state");
   const capitalizedCountry = capitalizeWords(country ?? "");
   const host_img =
     country?.toLocaleLowerCase() == "indonesia"
