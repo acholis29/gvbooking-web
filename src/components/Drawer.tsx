@@ -16,6 +16,7 @@ import {
   faClose,
   faDollar,
   faEuro,
+  faGear,
   faGlobe,
   faHeart,
   faMoneyCheckDollar,
@@ -25,7 +26,7 @@ import {
   faUsd,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalComponent from "./ModalComponent";
 import { usePathname } from "next/navigation";
 
@@ -40,6 +41,12 @@ export default function DrawerComponent({
   const { cartCount } = useCart();
   const { cartApiCount } = useCartApi();
   const { wishCount } = useWish();
+  // Currency
+  const { currency, setCurrency, masterCurrency, setMasterCurrency } =
+    useCurrency();
+  // Language
+  const { language, setLanguage, masterLanguage, setMasterLanguage } =
+    useLanguage();
 
   const [isDropdownProfilOpen, setDropdownProfilOpen] = useState(false);
   // Modal
@@ -47,6 +54,33 @@ export default function DrawerComponent({
   const [menuSelected, setMenuSelected] = useState("");
   const pathname = usePathname();
   const hideCartIcon = pathname === "/" || pathname === "/home";
+
+  useEffect(() => {
+    fetch("/api/currency", {
+      cache: "no-store", // ⛔ jangan ambil dari cache
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setMasterCurrency(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/language", {
+      cache: "no-store", // ⛔ jangan ambil dari cache
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setMasterLanguage(data);
+      })
+      .finally(() => {
+        console.log(masterLanguage);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     <>
       <div
@@ -109,7 +143,7 @@ export default function DrawerComponent({
               >
                 <li>
                   <a
-                    href="#"
+                    href="/profile"
                     onClick={() => {
                       openModal(); // ⬅️ Ini akan memunculkan modal
                       setMenuSelected(`SignIn`);
@@ -117,10 +151,10 @@ export default function DrawerComponent({
                     className="flex items-center w-full p-2 text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 "
                   >
                     <FontAwesomeIcon
-                      icon={faSign}
+                      icon={faGear}
                       className="w-5 h-5 text-sm text-gray-400"
                     />{" "}
-                    Sign In
+                    Options
                   </a>
                 </li>
                 <li>
@@ -231,105 +265,180 @@ export default function DrawerComponent({
       {/* Modal */}
       {menuSelected == "Currency" && (
         <ModalComponent title="Currency" icon={faMoneyCheckDollar}>
-          <CurrencyContent />
+          {/* <CurrencyContent /> */}
+          <CurrencyContent currencies={masterCurrency} />
         </ModalComponent>
       )}
 
       {menuSelected == "Language" && (
         <ModalComponent title="Language" icon={faMoneyCheckDollar}>
-          <LanguageContent />
+          {/* <LanguageContent /> */}
+          <LanguageContent languages={masterLanguage} />
         </ModalComponent>
       )}
     </>
   );
 }
 
-const CurrencyContent = () => {
-  // const { closeModal } = useModal();
-  const { currency, setCurrency } = useCurrency();
+// const CurrencyContent = () => {
+//   // const { closeModal } = useModal();
+//   const { currency, setCurrency } = useCurrency();
 
+//   return (
+//     <ul className="space-y-3 list-none">
+//       <li
+//         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
+//         onClick={() => {
+//           setCurrency("IDR");
+//         }}
+//       >
+//         IDR - INDONESIA{" "}
+//         <FontAwesomeIcon
+//           icon={faRupiahSign}
+//           className="text-lg text-gray-500"
+//         />
+//         {currency == "IDR" && (
+//           <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+//         )}
+//       </li>
+//       <li
+//         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
+//         onClick={() => {
+//           setCurrency("USD");
+//         }}
+//       >
+//         USD - UNITED STATE{" "}
+//         <FontAwesomeIcon icon={faUsd} className="text-lg text-gray-500" />
+//         {currency == "USD" && (
+//           <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+//         )}
+//       </li>
+//       <li
+//         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
+//         onClick={() => {
+//           setCurrency("EUR");
+//         }}
+//       >
+//         EUR - EUROPE{" "}
+//         <FontAwesomeIcon icon={faEuro} className="text-lg text-gray-500" />
+//         {currency == "EUR" && (
+//           <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+//         )}
+//       </li>
+//     </ul>
+//   );
+// };
+
+const CurrencyContent = ({
+  currencies = [],
+}: {
+  currencies: { Currency: string }[];
+}) => {
+  const { closeModal } = useModal();
+  const { currency, setCurrency } = useCurrency();
   return (
     <ul className="space-y-3 list-none">
-      <li
-        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={() => {
-          setCurrency("IDR");
-        }}
-      >
-        IDR - INDONESIA{" "}
-        <FontAwesomeIcon
-          icon={faRupiahSign}
-          className="text-lg text-gray-500"
-        />
-        {currency == "IDR" && (
-          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-        )}
-      </li>
-      <li
-        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={() => {
-          setCurrency("USD");
-        }}
-      >
-        USD - UNITED STATE{" "}
-        <FontAwesomeIcon icon={faUsd} className="text-lg text-gray-500" />
-        {currency == "USD" && (
-          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-        )}
-      </li>
-      <li
-        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={() => {
-          setCurrency("EUR");
-        }}
-      >
-        EUR - EUROPE{" "}
-        <FontAwesomeIcon icon={faEuro} className="text-lg text-gray-500" />
-        {currency == "EUR" && (
-          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-        )}
-      </li>
+      {currencies.map((item, index) => (
+        <li
+          key={index}
+          className={`${
+            currency === item.Currency ? "bg-gray-200" : ""
+          } text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer`}
+          onClick={() => {
+            setCurrency(item.Currency);
+            localStorage.setItem("currency", item.Currency); // simpan ke localStorage
+            closeModal();
+          }}
+        >
+          <div className="flex justify-between items-center">
+            <span>{item.Currency}</span>
+            {currency === item.Currency && (
+              <FontAwesomeIcon
+                icon={faCheck}
+                className="text-lg text-green-500"
+              />
+            )}
+          </div>
+        </li>
+      ))}
     </ul>
   );
 };
 
-const LanguageContent = () => {
+// const LanguageContent = () => {
+//   const { language, setLanguage } = useLanguage();
+//   return (
+//     <ul className="space-y-3 list-none">
+//       <li
+//         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
+//         onClick={() => {
+//           setLanguage("EN");
+//         }}
+//       >
+//         EN - English{" "}
+//         {language == "EN" && (
+//           <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+//         )}
+//       </li>
+//       <li
+//         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
+//         onClick={() => {
+//           setLanguage("ED");
+//         }}
+//       >
+//         ED - Germany{" "}
+//         {language == "ED" && (
+//           <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+//         )}
+//       </li>
+//       <li
+//         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
+//         onClick={() => {
+//           setLanguage("ID");
+//         }}
+//       >
+//         ID - Indonesia{" "}
+//         {language == "ID" && (
+//           <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
+//         )}
+//       </li>
+//     </ul>
+//   );
+// };
+
+const LanguageContent = ({
+  languages = [],
+}: {
+  languages: { MSLanguage: string }[];
+}) => {
+  const { closeModal } = useModal();
   const { language, setLanguage } = useLanguage();
+
   return (
     <ul className="space-y-3 list-none">
-      <li
-        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={() => {
-          setLanguage("EN");
-        }}
-      >
-        EN - English{" "}
-        {language == "EN" && (
-          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-        )}
-      </li>
-      <li
-        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={() => {
-          setLanguage("ED");
-        }}
-      >
-        ED - Germany{" "}
-        {language == "ED" && (
-          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-        )}
-      </li>
-      <li
-        className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-        onClick={() => {
-          setLanguage("ID");
-        }}
-      >
-        ID - Indonesia{" "}
-        {language == "ID" && (
-          <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-        )}
-      </li>
+      {languages.map((item, index) => (
+        <li
+          key={index}
+          className={`${
+            language === item.MSLanguage ? "bg-gray-200" : ""
+          } text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer`}
+          onClick={() => {
+            setLanguage(item.MSLanguage);
+            localStorage.setItem("language", item.MSLanguage); // simpan ke localStorage
+            closeModal();
+          }}
+        >
+          <div className="flex justify-between items-center">
+            <span>{item.MSLanguage}</span>
+            {language === item.MSLanguage && (
+              <FontAwesomeIcon
+                icon={faCheck}
+                className="text-lg text-green-500"
+              />
+            )}
+          </div>
+        </li>
+      ))}
     </ul>
   );
 };
