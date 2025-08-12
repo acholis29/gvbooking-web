@@ -96,7 +96,7 @@ export default function Cart() {
 
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
-  const [isRemove, setIsRemove] = useState(true);
+  const [isRemove, setIsRemove] = useState(false);
   const { cartApiItems } = useCartApi();
   const [isOpenAccordion, setAccordion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
