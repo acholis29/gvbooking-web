@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 // Context State Global
 import { useCart } from "@/context/CartContext";
+import { useCartApi } from "@/context/CartApiContext";
 import { useWish } from "@/context/WishContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useModal } from "@/context/ModalContext";
@@ -26,6 +27,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import ModalComponent from "./ModalComponent";
+import { usePathname } from "next/navigation";
+
 export default function DrawerComponent({
   isOpen,
   onClose,
@@ -35,12 +38,15 @@ export default function DrawerComponent({
 }) {
   // Cart Counter
   const { cartCount } = useCart();
+  const { cartApiCount } = useCartApi();
   const { wishCount } = useWish();
 
   const [isDropdownProfilOpen, setDropdownProfilOpen] = useState(false);
   // Modal
   const { openModal } = useModal();
   const [menuSelected, setMenuSelected] = useState("");
+  const pathname = usePathname();
+  const hideCartIcon = pathname === "/" || pathname === "/home";
   return (
     <>
       <div
@@ -151,30 +157,32 @@ export default function DrawerComponent({
                 </li>
               </ul>
             </li>
-
-            <li>
-              <Link
-                href="/cart"
-                className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
-                onClick={() => {
-                  const drawer = document.getElementById("drawer-navigation");
-                  if (drawer) drawer.classList.add("-translate-x-full");
-                }}
-              >
-                <FontAwesomeIcon
-                  icon={faShoppingCart}
-                  className="w-5 h-5 text-lg text-gray-400"
-                />
-                <span className="flex-1 ms-3 text-gray-500 whitespace-nowrap">
-                  Cart
-                </span>
-                {cartCount > 0 && (
-                  <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white-800 bg-red-gvi rounded-full">
-                    {cartCount}
+            {!hideCartIcon && (
+              <li>
+                <Link
+                  href="/cart"
+                  className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+                  onClick={() => {
+                    const drawer = document.getElementById("drawer-navigation");
+                    if (drawer) drawer.classList.add("-translate-x-full");
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faShoppingCart}
+                    className="w-5 h-5 text-lg text-gray-400"
+                  />
+                  <span className="flex-1 ms-3 text-gray-500 whitespace-nowrap">
+                    Cart
                   </span>
-                )}
-              </Link>
-            </li>
+                  {cartApiCount > 0 && (
+                    <span className="inline-flex items-center text-white justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white-800 bg-red-gvi rounded-full">
+                      {cartApiCount}
+                    </span>
+                  )}
+                </Link>
+              </li>
+            )}
+
             <li>
               <Link
                 href="/wishlist"
