@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 // Library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Swal from "sweetalert2";
 import {
   faCalendarDays,
   faChevronDown,
@@ -143,13 +144,27 @@ const CardAccordion: React.FC<Props> = ({
 
   const handleRemove = () => {
     if (isRemoving) {
-      toast.success("Pleases Wait");
-      return; // cegah klik ganda
+      toast.success("Please wait");
+      return; // prevent double click
     }
 
-    setIsRemoving(true); // ⏳ mulai loading
-    // aksi hapus di sini
-    removeItemCart();
+    Swal.fire({
+      title: "Are you sure you want to delete?",
+      text: "This action cannot be undone!",
+      icon: "warning",
+      iconColor: "#d33", // red
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33", // red
+      cancelButtonColor: "#6c757d", // gray
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setIsRemoving(true); //  start loading
+        // delete action here
+        await removeItemCart();
+      }
+    });
   };
 
   const handleChange = async () => {
