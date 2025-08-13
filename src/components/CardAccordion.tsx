@@ -7,6 +7,7 @@ import {
   faCalendarDays,
   faChevronDown,
   faChevronUp,
+  faClock,
   faEdit,
   faTrash,
   faUsers,
@@ -238,7 +239,8 @@ const CardAccordion: React.FC<Props> = ({
             </h5>
             <div className="flex flex-row"></div>
             <p className="mb-3 text-xs md:text-md text-gray-700">
-              Description ...
+              {item.location_name} | {item.pickup_time}
+              {/* <FontAwesomeIcon icon={faClock} className="w-4 h-4 ml-1" /> */}
             </p>
           </div>
         </div>
