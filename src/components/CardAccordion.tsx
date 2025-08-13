@@ -12,7 +12,7 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 // Helper
-import { format_date, capitalizeFirst } from "@/helper/helper";
+import { format_date, capitalizeFirst, getHostImageUrl } from "@/helper/helper";
 import { API_HOSTS } from "@/lib/apihost";
 // Library
 import toast from "react-hot-toast";
@@ -20,6 +20,7 @@ import toast from "react-hot-toast";
 import { useCartApi } from "@/context/CartApiContext";
 import { useRouter } from "next/navigation";
 import Spinner from "@/components/Spinner";
+import { useInitial } from "@/context/InitialContext";
 
 type DetailPax = {
   charge_type: string;
@@ -97,6 +98,7 @@ const CardAccordion: React.FC<Props> = ({
   const { saveCartApi } = useCartApi();
   const [isRemoving, setIsRemoving] = useState(false);
   const router = useRouter();
+  const { coreInitial } = useInitial();
 
   const removeItemCart = async () => {
     setIsRemoving(true);
@@ -176,6 +178,14 @@ const CardAccordion: React.FC<Props> = ({
     }
   };
 
+  function handleImage() {
+    let host = getHostImageUrl(coreInitial, item.company_id);
+    if (host) {
+      return `${host}/${item.picture}`;
+    } else {
+      return "/images/error/loading.gif";
+    }
+  }
   return (
     <div className="relative md:max-w-3xl mb-4">
       {/* Tombol pojok kanan atas */}
@@ -213,8 +223,13 @@ const CardAccordion: React.FC<Props> = ({
           <div className=" w-[100%] max-w-36 md:w-48 h-auto p-2">
             <img
               className="object-cover rounded-sm md:rounded-tl-sm h-auto md:w-48"
-              src={`${API_HOSTS.img_indo}/${item.picture}`}
-              alt=""
+              src={handleImage()}
+              alt="-"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.onerror = null;
+                target.src = "/images/icon/android-chrome-512x512.png";
+              }}
             />
           </div>
           <div className="flex flex-col justify-between px-3 pt-2 leading-normal">
