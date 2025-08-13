@@ -705,7 +705,42 @@ export default function ListClient() {
             >
               <div className="text-center">
                 <h2 className="text-lg font-bold mb-2">Filter</h2>
-                <p>Isi Filter Disini</p>
+                {/* <p>Isi Filter Disini</p> */}
+                <div className="flex items-center mb-4">
+                  <input
+                    id="default-radio-1"
+                    type="radio"
+                    value="price asc"
+                    name="filter"
+                    checked={selectedSorting === "price asc"}
+                    onChange={(e) => setSelectedSorting(e.target.value)}
+                    className="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
+                  />
+                  <label
+                    htmlFor="default-radio-1"
+                    className="ms-2 text-sm font-medium text-gray-900 "
+                  >
+                    Price Asc
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    id="default-radio-2"
+                    type="radio"
+                    value="price desc"
+                    name="filter"
+                    checked={selectedSorting === "price desc"}
+                    onChange={(e) => setSelectedSorting(e.target.value)}
+                    className="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 focus:ring-2"
+                  />
+                  <label
+                    htmlFor="default-radio-2"
+                    className="ms-2 text-sm font-medium text-gray-900 "
+                  >
+                    Price Desc
+                  </label>
+                </div>
+
                 <button
                   onClick={() => setOpenBottomSheet(false)}
                   className="mt-4 bg-red-600 text-white px-4 py-2 rounded"
