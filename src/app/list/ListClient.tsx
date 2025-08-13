@@ -139,7 +139,9 @@ export default function ListClient() {
   const [apply, setApply] = useState<number>(0);
 
   // State Data Sorting Dropdown
-  const [selectedSorting, setSelectedSorting] = useState("Sorting");
+  const [selectedSorting, setSelectedSorting] = useState("price asc");
+  // dropdown sorting
+  const [isSortingOpen, setIsSortingOpen] = useState(false);
 
   // State Data Checkbox Single
   const [selectedTypesById, setSelectedTypesById] = useState<string>("");
@@ -153,10 +155,6 @@ export default function ListClient() {
 
   // State BottomSheet
   const [openBottomSheet, setOpenBottomSheet] = useState(false);
-
-  const handleSelect = (value: string) => {
-    setSelectedSorting(value);
-  };
 
   // Function Hanlde Checkbox
   const handleCheckboxChange = (
@@ -183,6 +181,7 @@ export default function ListClient() {
 
   useEffect(() => {
     setIsLoadList(true);
+    let sorting = selectedSorting == "price asc" ? "0" : "1";
     const formBody = new URLSearchParams({
       shared_key: idx_comp ?? "",
       xml: "false",
@@ -198,7 +197,7 @@ export default function ListClient() {
       price_from: "0",
       price_to: "0",
       order_by_NP: "P",
-      order_by_01: "0",
+      order_by_01: sorting,
       promo_code: "R-BC",
     });
 
@@ -220,7 +219,7 @@ export default function ListClient() {
       .finally(() => {
         setIsLoadList(false); // ✅ Loading selesai
       });
-  }, [language, currency, apply, idx_state]);
+  }, [language, currency, apply, idx_state, selectedSorting]);
 
   // Holiday Tipe Master API
   useEffect(() => {
@@ -328,6 +327,27 @@ export default function ListClient() {
     window.addEventListener("resize", handleResize);
 
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!event.target) return;
+      const dropdown = document.getElementById("dropdown");
+      const button = document.getElementById("dropdownDefaultButton");
+      if (
+        dropdown &&
+        !dropdown.contains(event.target as Node) &&
+        button &&
+        !button.contains(event.target as Node)
+      ) {
+        setIsSortingOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   return (
@@ -548,56 +568,64 @@ export default function ListClient() {
             {/* Search akan full width di HP */}
             <div className="w-xl"></div>
 
-            <div className="w-50 flex justify-end">
-              <Dropdown
-                dismissOnClick={true}
-                renderTrigger={() => (
-                  <button
-                    className="text-sm text-gray-600 bg-transparent border-none shadow-none 
-                 hover:bg-transparent focus:ring-0 focus:outline-none 
-                 dark:hover:bg-transparent dark:hover:text-inherit"
-                  >
-                    {selectedSorting}
-                    <span className="ml-2">
-                      <FontAwesomeIcon
-                        icon={faChevronDown}
-                        className="w-3 h-3 text-gray-600"
-                      />
-                    </span>
-                  </button>
-                )}
+            <div className="relative w-50 flex justify-end">
+              <button
+                id="dropdownDefaultButton"
+                className="text-gray-500 focus:ring-2 focus:outline-none focus:ring-red-300 
+               font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
+                type="button"
+                onClick={() => setIsSortingOpen(!isSortingOpen)}
               >
-                <DropdownItem
-                  onClick={() => handleSelect("Price Ascending")}
-                  className="justify-end"
+                Sorting{" "}
+                <svg
+                  className="w-2.5 h-2.5 ms-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
                 >
-                  Price Ascending
-                </DropdownItem>
-                <DropdownItem
-                  onClick={() => handleSelect("Price Descending")}
-                  className="justify-end"
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 4 4 4-4"
+                  />
+                </svg>
+              </button>
+
+              {isSortingOpen && (
+                <div
+                  id="dropdown"
+                  className="absolute right-0 top-full mt-2 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44"
                 >
-                  Price Descending
-                </DropdownItem>
-                <DropdownItem
-                  onClick={() => handleSelect("Low Price")}
-                  className="justify-end"
-                >
-                  Low Price
-                </DropdownItem>
-                <DropdownItem
-                  onClick={() => handleSelect("High Price")}
-                  className="justify-end"
-                >
-                  High Price
-                </DropdownItem>
-                <DropdownItem
-                  onClick={() => handleSelect("Sorting")}
-                  className="justify-end"
-                >
-                  Reset
-                </DropdownItem>
-              </Dropdown>
+                  <ul
+                    className="py-2 text-sm text-gray-700"
+                    aria-labelledby="dropdownDefaultButton"
+                  >
+                    <li className="cursor-pointer">
+                      <span
+                        className="block px-4 py-2 hover:bg-gray-100"
+                        onClick={() => {
+                          setSelectedSorting("price asc");
+                        }}
+                      >
+                        Price Ascending
+                      </span>
+                    </li>
+                    <li className="cursor-pointer">
+                      <span
+                        className="block px-4 py-2 hover:bg-gray-100"
+                        onClick={() => {
+                          setSelectedSorting("price desc");
+                        }}
+                      >
+                        Price Descending
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
 
