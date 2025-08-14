@@ -643,7 +643,7 @@ export default function NavbarComponent() {
               </div>
 
               {/* Button */}
-              <div className="relative w-full">
+              <div className="relative w-full border border-gray-300 bg-gray-100 rounded-tr-2xl rounded-br-2xl">
                 {/* Select dropdown kamu */}
                 {isMobile == true && <NavbarClientAsyncSelect />}
                 {/* Tombol Kalender */}
