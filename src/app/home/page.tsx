@@ -73,7 +73,10 @@ export default function Home() {
     RecomendedDestinationItem[]
   >([]);
 
+  const [LastSearch, setLastSearch] = useState<RecomendedDestinationItem[]>([]);
+
   const [isLoadingRecom, setIsLoadingRecom] = useState(true);
+  const [isLoadingLastSearch, setIsLoadingLastSearch] = useState(true);
 
   useEffect(() => {
     fetch(`${API_HOSTS.host1}/mobile/corev2.json`, {
@@ -124,6 +127,33 @@ export default function Home() {
       .catch((err) => console.error(err))
       .finally(() => {
         setIsLoadingRecom(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Ambil dari localStorage
+    let lastSearch = JSON.parse(localStorage.getItem("last-search") || "[]");
+    // Pastikan bentuknya array
+    if (!Array.isArray(lastSearch)) {
+      lastSearch = [lastSearch];
+    }
+    // Gabung jadi string dipisah koma
+    const joined = lastSearch.join(",");
+
+    console.log(joined);
+    fetch(
+      `/api/excursion/attr/last-search?exc_j=${joined}`, // gunakan '' untuk mendapatkan semua rekomendasi
+      {
+        cache: "no-store", // ⛔ jangan ambil dari cache
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setLastSearch(data);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => {
+        setIsLoadingLastSearch(false);
       });
   }, []);
 
@@ -263,45 +293,19 @@ export default function Home() {
       {/* Section Last Your Search */}
       <div className="bg-white my-6 pb-6">
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
-          <p className="text-red-gvi font-bold text-3xl">
-            {/* {" "}
-            <FontAwesomeIcon
-              icon={faSearch}
-              className="w-10 h-10 text-red-gvi 0 pl-2"
-            />{" "} */}
-            Last your search
-          </p>
+          <p className="text-red-gvi font-bold text-3xl">Last your search</p>
         </section>
-        {/* <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4  md:grid md:grid-cols-4">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <EcommersCard
-              key={index}
-              idx_comp={index.toString()}
-              idx_excursion={index.toString()}
-              image={`https://picsum.photos/800/600?random=${index}`}
-              title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-              sub_title="10 hours • Skip the line • Pickup availables"
-              price={"2000"}
-              currency="EUR"
-              link={`/destination/detail/indonesia`}
-              colorWish={
-                ListWist.some((wish) => wish.idx_excursion === index.toString())
-                  ? true
-                  : false
-              }
-            />
-          ))}
-        </section> */}
+
         <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
-          {isLoadingRecom ? (
+          {isLoadingLastSearch ? (
             <>
               <SkeletonCard />
               <SkeletonCard />
               <SkeletonCard />
               <SkeletonCard />
             </>
-          ) : recomdedDestination.length > 0 ? (
-            recomdedDestination.map((item, index) => {
+          ) : LastSearch.length > 0 ? (
+            LastSearch.map((item, index) => {
               let imgUrl = "/images/icon/android-chrome-512x512.png";
               if (item.Gbr != "") {
                 imgUrl =

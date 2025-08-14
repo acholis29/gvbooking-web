@@ -9,6 +9,7 @@ export async function GET(
   const act = (await params).act || ''; // Default to empty string if not provided
   const idx_comp = searchParams.get('idxcomp') || ''; // Default to empty string if not provided
   const keyword = searchParams.get('keyword') || '';
+  const excursion_join = searchParams.get('exc_j') || '';
   let ssql = ''; // Default to empty string if not provided
 
   try {
@@ -22,6 +23,8 @@ export async function GET(
         break;
       case 'search-excursion':
         ssql = `select * from dbo.MSExcursion where Idx_excursion = '${keyword}'`;
+      case 'last-search':
+        ssql = `api_MSExcursion_LastOpen '${excursion_join}'`;
       default:
         console.log("Invalid day of the week.");
     }
