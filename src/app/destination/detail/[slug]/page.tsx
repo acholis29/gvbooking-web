@@ -286,6 +286,31 @@ export default function DetailDestination() {
       fetchDataInitial();
     }
   }, [date]);
+
+  // Last search
+  useEffect(() => {
+    if (!idx_excursion) return;
+
+    // Ambil data lama
+    let stored: string[] = JSON.parse(
+      localStorage.getItem("last-search") || "[]"
+    );
+
+    // Hapus dulu kalau sudah ada (biar nggak dobel)
+    stored = stored.filter((item) => item !== idx_excursion);
+
+    // Masukkan di posisi paling depan
+    stored.unshift(idx_excursion);
+
+    // Batasi maksimal 5 item
+    if (stored.length > 5) {
+      stored = stored.slice(0, 5);
+    }
+
+    // Simpan lagi
+    localStorage.setItem("last-search", JSON.stringify(stored));
+  }, [idx_excursion]);
+
   const maximum_pax =
     dataProduct != null && dataProduct.msg.product_subs.length > 0
       ? parseInt(dataProduct.msg.product_subs[0].maximum_pax)
