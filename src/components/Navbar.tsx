@@ -74,6 +74,7 @@ export default function NavbarComponent() {
   const [isProfilDropdownOpen, setProfilDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { selectModal, setSelectModal } = useSelectModal();
+  const [isOnLoadSearch, SetIsOnloadSearch] = useState(false);
 
   // tidak dipakai karna sudah pakai global
   // type CurrencyItem = {
@@ -381,7 +382,9 @@ export default function NavbarComponent() {
                 )}
               </div>
               {/* Button */}
-              <div className="relative w-full">
+              <div
+                className={`relative w-full border border-gray-300 bg-gray-100 rounded-tr-2xl rounded-br-2xl`}
+              >
                 {/* Select dropdown Desktop */}
                 {isMobile == false && <NavbarClientAsyncSelect />}
 

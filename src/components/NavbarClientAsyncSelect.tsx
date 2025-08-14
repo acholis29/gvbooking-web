@@ -225,6 +225,7 @@ export default function NavbarClientAsyncSelect(props: any) {
           padding: "2px",
           backgroundColor: "#f3f4f6", // Tailwind: bg-gray-100
           // borderColor: "#d1d5db", // Tailwind: border-gray-300
+          border: "none", // bordernya sudah di parent
         }),
         singleValue: (base: any) => ({
           ...base,
