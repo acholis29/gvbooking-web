@@ -136,16 +136,18 @@ export default function Cart() {
   const { selectModal, setSelectModal } = useSelectModal();
 
   useEffect(() => {
-    fetch(`${resourceInitial.url_fo}/mobile/data.json`, {
-      cache: "no-store",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Payment Data:", data);
-        loadCart();
-        setPayment(data.payment); // ✅ langsung set array-nya
+    if (resourceInitial.url_fo != "") {
+      fetch(`${resourceInitial.url_fo}/mobile/data.json`, {
+        cache: "no-store",
       })
-      .catch((err) => console.error(err));
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Payment Data:", data);
+          setPayment(data.payment); // ✅ langsung set array-nya
+        })
+        .catch((err) => console.error(err));
+    }
+    loadCart();
   }, [cartApiItems]);
 
   function loadCart() {
@@ -219,7 +221,7 @@ export default function Cart() {
         stsapp: "appsv2",
         statusapp: "",
         In: "DE",
-        pay_provider: confPayment.provider ?? "", // contoh docu
+        pay_provider: confPayment.provider ?? "", // contoh docu, xendit, onepay
         intl: "gvi",
       });
 
