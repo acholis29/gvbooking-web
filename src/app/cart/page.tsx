@@ -1,19 +1,15 @@
 "use client";
 // Hooks
 import { useEffect, useState } from "react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 // Library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronDown,
-  faChevronUp,
-  faInbox,
-} from "@fortawesome/free-solid-svg-icons";
+import toast from "react-hot-toast";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 // component
 import Breadcrumb from "@/components/Breadcrumb";
 import CardAccordion from "@/components/CardAccordion";
-import HorizontalCard from "@/components/HorizontalCard";
-import SkeletonCardHorizontal from "@/components/SkeletonCardHorizontal";
+import Spinner from "@/components/Spinner";
 // Context global
 import { useCartApi } from "@/context/CartApiContext";
 import { useInitial } from "@/context/InitialContext";
@@ -21,13 +17,11 @@ import { useProfile } from "@/context/ProfileContext";
 
 // Helper
 import {
-  formatRibuan,
   capitalizeWords,
   truncateText,
   formatRibuanInternational,
 } from "@/helper/helper";
-import toast from "react-hot-toast";
-import Spinner from "@/components/Spinner";
+
 type DetailPax = {
   charge_type: string;
   quantity: string;
@@ -89,11 +83,10 @@ type CartApiItem = {
 };
 
 export default function Cart() {
-  const router = useRouter(); // ✅ ini sekarang valid
+  const router = useRouter();
   // State Data Detail Destination
   const [ListCart, setCart] = useState<CartApiItem[]>([]);
   const [ChekedCart, setCheckedCart] = useState<CartApiItem[]>([]);
-
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
   const [isRemove, setIsRemove] = useState(false);
@@ -107,22 +100,13 @@ export default function Cart() {
   const { profileInitial, resourceInitial } = useInitial();
   const { profile } = useProfile();
 
-  useEffect(() => {
-    loadCart();
-  }, [cartApiItems]); // tetap kosong, agar hanya dijalankan sekali saat mount
-
   function loadCart() {
     const cart = JSON.parse(localStorage.getItem("cart_api") || "[]");
-    console.log(cart);
     setCart(cart);
     setIsLoading(false);
   }
 
   async function handleOnChangeCard(item: CartApiItem, checked: boolean) {
-    console.log("====CART CHANGE====");
-    console.log("Cheked :", checked);
-    console.log(item);
-
     if (checked) {
       // Tambahkan jika belum ada
       setCheckedCart((prev) => {
@@ -141,8 +125,6 @@ export default function Cart() {
   }
 
   async function handleOnRemoveCard(item: CartApiItem) {
-    console.log("==REMOVE==");
-    console.log(item);
     setIsRemove(true);
     await handleOnChangeCard(item, false);
     setIsRemove(false);
@@ -152,7 +134,7 @@ export default function Cart() {
   function hitungSubtotalSummeryOrder(items: CartApiItem[]) {
     let subTotal = 0;
     let discTotal = 0;
-    items.map((item, index) => {
+    items.map((item) => {
       subTotal += parseInt(item.price_local);
       discTotal += parseInt(item.disc);
     });
@@ -205,10 +187,8 @@ export default function Cart() {
 
       // const result = await response.json();
       const html = await response.text();
-      console.log("Payment page HTML:", html);
 
       // Jika mau render HTML ini di iframe atau window baru:
-
       const newWindow = window.open("", "_blank");
 
       if (newWindow && newWindow.document) {
@@ -217,14 +197,19 @@ export default function Cart() {
         newWindow.document.close();
       } else {
         console.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
+        toast.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
       }
     } catch (error) {
       console.error("Payment error:", error);
-      alert("Payment gagal. Silakan coba lagi.");
+      toast.error("Payment gagal. Silakan coba lagi.");
     } finally {
       setIsSubmitting(false);
     }
   }
+
+  useEffect(() => {
+    loadCart();
+  }, [cartApiItems]); // tetap kosong, agar hanya dijalankan sekali saat mount
 
   useEffect(() => {
     const checkMobile = () => {
@@ -297,7 +282,6 @@ export default function Cart() {
                         {truncateText(capitalizeWords(item.excursion_name), 45)}
                       </p>
                       <p className="text-sm text-gray-700 font-semibold">
-                        {/* {item.currency} {item.price_in_format} */}
                         {item.currency_local} {item.price_local_in_format}
                       </p>
                     </div>
@@ -381,7 +365,6 @@ export default function Cart() {
                           )}
                         </p>
                         <p className="text-sm text-gray-700 font-semibold">
-                          {/* {item.currency} {item.price_in_format} */}
                           {item.currency_local} {item.price_local_in_format}
                         </p>
                       </div>
