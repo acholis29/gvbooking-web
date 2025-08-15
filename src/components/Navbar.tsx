@@ -284,7 +284,7 @@ export default function NavbarComponent() {
 
   // Handle Select Country Di Navbar
   const searchParams = useSearchParams();
-  const country = searchParams.get("country") ?? ""; //ini dari idx_comp_alias
+  const country = searchParams.get("country") ?? "";
   useEffect(() => {
     if (country == "") {
       setSelectedCategory("All Destinations");

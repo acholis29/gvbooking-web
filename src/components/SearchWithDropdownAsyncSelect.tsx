@@ -16,7 +16,7 @@ import { capitalizeWords, toLowerCaseAll } from "@/helper/helper";
 
 export default function SearchWithDropdownAsyncSelect(props: any) {
   const searchParams = useSearchParams();
-  const id = searchParams.get("id") ?? "home"; //ini dari idx_comp_alias
+  const id = searchParams.get("id") ?? "home"; //ini dari idx_comp
   const router = useRouter(); // ✅ ini sekarang valid
 
   const pathname = usePathname();
@@ -108,13 +108,13 @@ export default function SearchWithDropdownAsyncSelect(props: any) {
       onChange={(selectedOption) => {
         if (homePage) {
           const country = selectedOption?.data.Country;
-          const idx_comp_alias = selectedOption?.data.idx_comp;
+          const idx_comp_select = selectedOption?.data.idx_comp;
           const state = selectedOption?.data.State;
           const excursion_id = selectedOption?.data.Idx_excursion;
           if (selectedOption) {
             if (excursion_id) {
               router.push(
-                `/destination/detail/${country}?id=${idx_comp_alias}&country=${country}&state=${state}&exc=${excursion_id}`
+                `/destination/detail/${country}?id=${idx_comp_select}&country=${country}&state=${state}&exc=${excursion_id}`
               );
             } else {
               router.push(
@@ -126,14 +126,14 @@ export default function SearchWithDropdownAsyncSelect(props: any) {
           }
         } else {
           const country = selectedOption?.data.location_country;
-          const idx_comp_alias = idx_comp;
+          const _idx_comp = idx_comp;
           const state = selectedOption?.data.location_state;
           const excursion_id = selectedOption?.data.excursion_id;
           // Data untuk ke detail masih salah
           if (selectedOption) {
             if (excursion_id) {
               router.push(
-                `/destination/detail/${country}?id=${idx_comp_alias}&country=${country}&state=${state}&exc=${excursion_id}`
+                `/destination/detail/${country}?id=${_idx_comp}&country=${country}&state=${state}&exc=${excursion_id}`
               );
             } else {
               router.push(

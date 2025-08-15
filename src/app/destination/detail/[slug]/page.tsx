@@ -35,7 +35,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 
 export default function DetailDestination() {
   const searchParams = useSearchParams();
-  const idx_comp = searchParams.get("id"); //ini dari idx_comp_alias
+  const idx_comp = searchParams.get("id"); //ini dari idx_comp
   const idx_excursion = searchParams.get("exc"); //ini dari idx_excursion
   const country = searchParams.get("country");
   const state = searchParams.get("state");

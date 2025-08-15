@@ -79,7 +79,7 @@ type HolidayTypeApi = {
 export default function ListClient() {
   // Query Params
   const searchParams = useSearchParams();
-  const idx_comp = searchParams.get("id"); //dari idx_comp_alias
+  const idx_comp = searchParams.get("id"); //dari idx_comp
   const country = searchParams.get("country");
   const state_ = searchParams.get("state");
   const idx_state =

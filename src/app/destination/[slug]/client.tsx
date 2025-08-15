@@ -67,8 +67,8 @@ type RecomendedDestinationApiItem = {
 export default function DestinationClient({ slug }: Props) {
   // Parameter GET
   const searchParams = useSearchParams();
-  const idx_comp = searchParams.get("id"); //ini dari idx_comp_alias
-  const country = searchParams.get("country"); //ini dari idx_comp_alias
+  const idx_comp = searchParams.get("id"); //ini dari idx_comp
+  const country = searchParams.get("country");
 
   // State Local
   const [localDestination, setLocalDestination] = useState<
@@ -76,6 +76,7 @@ export default function DestinationClient({ slug }: Props) {
   >([]);
   const [isLoadingRecom, setIsLoadingRecom] = useState(true);
   const [isLoadingRecomApi, setIsLoadingRecomApi] = useState(true);
+  const [isLoadingLocalDest, setIsLoadingLocalDest] = useState(true);
   const [recomdedDestination, setRecomendedDestination] = useState<
     RecomendedDestinationItem[]
   >([]);
@@ -224,7 +225,10 @@ export default function DestinationClient({ slug }: Props) {
         setLocalDestination(data);
         console.log(data);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => {
+        setIsLoadingLocalDest(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -257,22 +261,35 @@ export default function DestinationClient({ slug }: Props) {
         </p>
       </section>
       <section className="max-w-screen-xl mx-auto flex gap-3 overflow-x-auto md:grid md:grid-cols-4 md:overflow-visible whitespace-nowrap flex-nowrap px-4">
-        {localDestination.length > 0 ? (
-          localDestination.map((item, index) => (
-            <DestinationCard
-              key={index}
-              image={`/images/destination/${slug}.jpg`}
-              title={`${item.State}`}
-              activities={item.qty}
-              link={`/list?id=${idx_comp}&country=${country}&state=${item.State}&id-state=${item.idx_state}`}
-            />
-          ))
-        ) : (
+        {isLoadingLocalDest ? (
           <>
             <SkeletonImage />
             <SkeletonImage />
             <SkeletonImage />
             <SkeletonImage />
+          </>
+        ) : (
+          <>
+            {" "}
+            {localDestination.length > 0 ? (
+              localDestination.map((item, index) => (
+                <DestinationCard
+                  key={index}
+                  image={`/images/destination/${slug}.jpg`}
+                  title={`${item.State}`}
+                  activities={item.qty}
+                  link={`/list?id=${idx_comp}&country=${country}&state=${item.State}&id-state=${item.idx_state}`}
+                />
+              ))
+            ) : (
+              <p className="col-span-4 text-gray-500 text-center">
+                <FontAwesomeIcon
+                  icon={faInbox}
+                  className="w-10 h-10 text-red-gvi 0 pl-2"
+                />{" "}
+                Local destination is empty.
+              </p>
+            )}
           </>
         )}
       </section>

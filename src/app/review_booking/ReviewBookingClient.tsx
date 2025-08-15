@@ -74,7 +74,7 @@ export default function ReviewBookingClient() {
   // Profile Initial dan Resource initial
   const { resourceInitial, profileInitial } = useInitial();
 
-  const idx_comp = reviewBookingObj?.idx_comp; //ini dari idx_comp_alias
+  const idx_comp = reviewBookingObj?.idx_comp; //ini dari idx_comp
   const idx_excursion = reviewBookingObj?.exc_id; //ini dari idx_excursion
   const idx_excursion_sub = reviewBookingObj?.sub_exc_id; //ini sub_excursion_id
   const pickup_id = reviewBookingObj?.pickup_id; //ini dari pickup id

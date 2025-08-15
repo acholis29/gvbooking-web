@@ -27,10 +27,19 @@ import { getCountryImageUrl } from "@/helper/helper";
 
 export default function Home() {
   type DestinationItem = {
-    idx_comp_alias: string;
-    name: string;
+    app_name: string;
     country: string;
     countryCode: string;
+    def_curr: string;
+    idx_comp: string;
+    idx_comp_alias: string;
+    intl: string;
+    min_daypayontour: number;
+    name: string;
+    payontour: boolean;
+    phone_code: string;
+    status: boolean;
+    url_img: string;
     url_img_team: string;
   };
 
@@ -178,19 +187,19 @@ export default function Home() {
         {destination.length > 0 ? (
           destination.map((item) => {
             const activity = activityCountry.find(
-              (ac) => ac.idx_comp === item.idx_comp_alias
+              (ac) => ac.idx_comp === item.idx_comp
             );
 
             return (
               <DestinationCard
-                key={item.idx_comp_alias}
+                key={item.idx_comp}
                 image={`/images/destination/${item.country.toLowerCase()}.jpg`}
                 title={item.country}
                 activities={`${activity?.qty ?? "0"}`}
                 link={`/destination/${item.country
                   .toLowerCase()
                   .replace(/\s+/g, "-")}?id=${
-                  item.idx_comp_alias
+                  item.idx_comp
                 }&country=${item.country.toLowerCase()}`}
               />
             );
@@ -208,37 +217,8 @@ export default function Home() {
       {/* Section Favorite Tour */}
       <div className="bg-gray-100 my-6 pb-6">
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
-          <p className="text-red-gvi font-bold text-3xl">
-            {/* {" "}
-            <FontAwesomeIcon
-              icon={faHeart}
-              className="w-10 h-10 text-red-gvi 0 pl-2"
-            />{" "} */}
-            Favorite Tours
-          </p>
+          <p className="text-red-gvi font-bold text-3xl">Favorite Tours</p>
         </section>
-        {/* <section className="max-w-screen-xl mx-auto flex gap-6 overflow-x-auto md:overflow-x-visible flex-nowrap md:flex-wrap px-4"> */}
-        {/* <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4  md:grid md:grid-cols-4">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <EcommersCard
-              key={index}
-              idx_comp={index.toString()}
-              idx_excursion={index.toString()}
-              image={`https://picsum.photos/800/600?random=${index}`}
-              title="Vegas: Grand Canyon, Hoover Dam, Skywalk Option, & Two Meals"
-              sub_title="10 hours • Skip the line • Pickup availables"
-              price={"2000"}
-              currency="EUR"
-              link={`/destination/detail/indonesia`}
-              colorWish={
-                ListWist.some((wish) => wish.idx_excursion === index.toString())
-                  ? true
-                  : false
-              }
-            />
-          ))}
-        </section> */}
-
         <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
           {isLoadingRecom ? (
             <>
@@ -293,7 +273,7 @@ export default function Home() {
       {/* Section Last Your Search */}
       <div className="bg-white my-6 pb-6">
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
-          <p className="text-red-gvi font-bold text-3xl">Last your search</p>
+          <p className="text-red-gvi font-bold text-3xl">Last view</p>
         </section>
 
         <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
@@ -338,7 +318,7 @@ export default function Home() {
                 icon={faInbox}
                 className="w-10 h-10 text-red-gvi 0 pl-2"
               />{" "}
-              Last your search is empty.
+              Last view is empty.
             </p>
           )}
         </section>
