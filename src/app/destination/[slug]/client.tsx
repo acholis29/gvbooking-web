@@ -1,26 +1,17 @@
 // import Image from "next/image";
 "use client";
-
+// Hooks
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+// Library
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInbox } from "@fortawesome/free-solid-svg-icons";
+// Component
 import JumbotronComponent from "@/components/Jumbotron";
 import DestinationCard from "@/components/DestinationCard";
 import EcommersCard from "@/components/EcommersCard";
-// Font Awesome
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBatteryEmpty,
-  faCar,
-  faHeart,
-  faInbox,
-  faMapLocationDot,
-} from "@fortawesome/free-solid-svg-icons";
-// Params Query
-import { useSearchParams } from "next/navigation";
 import SkeletonImage from "@/components/SkeletonImage";
 import SkeletonCard from "@/components/SkeletonCard";
-// Host Imgae
-import { API_HOSTS } from "@/lib/apihost";
-import { POST } from "@/app/api/proxy/produk/route";
 // Global Context
 import { useLanguage } from "@/context/LanguageContext";
 import { useCurrency } from "@/context/CurrencyContext";
@@ -28,7 +19,9 @@ import { useInitial } from "@/context/InitialContext";
 import { useProfile } from "@/context/ProfileContext";
 import { useDate } from "@/context/DateContext";
 import { useCartApi } from "@/context/CartApiContext";
+// Helper
 import { getCountryImageUrl, getHostImageUrl } from "@/helper/helper";
+import { API_HOSTS } from "@/lib/apihost";
 
 type Props = {
   slug: string;
@@ -72,56 +65,37 @@ type RecomendedDestinationApiItem = {
 };
 
 export default function DestinationClient({ slug }: Props) {
+  // Parameter GET
   const searchParams = useSearchParams();
   const idx_comp = searchParams.get("id"); //ini dari idx_comp_alias
   const country = searchParams.get("country"); //ini dari idx_comp_alias
 
-  const [isLoading, setIsLoading] = useState(true);
-
-  // const host_img =
-  //   country == "indonesia"
-  //     ? API_HOSTS.img_indo
-  //     : country == "thailand"
-  //     ? API_HOSTS.img_thai
-  //     : country == "vietnam"
-  //     ? API_HOSTS.img_viet
-  //     : country == "cambodia"
-  //     ? API_HOSTS.img_camb
-  //     : "";
-
-  const [isLoadingDest, setIsLoadingDest] = useState(true);
+  // State Local
   const [localDestination, setLocalDestination] = useState<
     LocalDestinationItem[]
   >([]);
-
   const [isLoadingRecom, setIsLoadingRecom] = useState(true);
   const [isLoadingRecomApi, setIsLoadingRecomApi] = useState(true);
-
   const [recomdedDestination, setRecomendedDestination] = useState<
     RecomendedDestinationItem[]
   >([]);
-
   const [recomdedDestinationApi, setRecomendedDestinationApi] = useState<
     RecomendedDestinationApiItem[]
   >([]);
 
+  //  State Global Context
   const { setLanguage, setMasterLanguage, language } = useLanguage();
   const { setCurrency, setMasterCurrency, currency } = useCurrency();
+  const { profile } = useProfile();
+  const { date } = useDate();
+  const { saveCartApi } = useCartApi();
   const {
-    agent,
     setAgent,
-    repCode,
     setRepCode,
-    resourceInitial,
     setResourceInitial,
-    profileInitial,
     setProfileInitial,
     coreInitial,
   } = useInitial();
-  const { profile } = useProfile();
-  const { date } = useDate();
-  // Cart API
-  const { saveCartApi } = useCartApi();
 
   // host sesuai country
   const host_img = getHostImageUrl(coreInitial, idx_comp ?? "");
@@ -129,7 +103,6 @@ export default function DestinationClient({ slug }: Props) {
   // First Load API Mobile Initial
   useEffect(() => {
     const fetchDataInitial = async () => {
-      setIsLoading(true); // mulai loading
       const formBody = new URLSearchParams({
         shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
         xml: "false",
@@ -158,8 +131,6 @@ export default function DestinationClient({ slug }: Props) {
       } catch (err: any) {
         // setError(err.message || "Error");
         console.error("Fetch error:", err);
-      } finally {
-        // setIsLoading(false); // selesai loading
       }
     };
 
@@ -253,10 +224,7 @@ export default function DestinationClient({ slug }: Props) {
         setLocalDestination(data);
         console.log(data);
       })
-      .catch((err) => console.error(err))
-      .finally(() => {
-        setIsLoadingDest(false);
-      });
+      .catch((err) => console.error(err));
   }, []);
 
   useEffect(() => {
@@ -285,11 +253,6 @@ export default function DestinationClient({ slug }: Props) {
       {/* Section Destination */}
       <section className="py-6 px-4 max-w-screen-xl mx-auto">
         <p className="text-red-gvi font-bold text-3xl mt-10">
-          {/* {" "}
-          <FontAwesomeIcon
-            icon={faMapLocationDot}
-            className="w-10 h-10 text-red-gvi 0 pl-2"
-          />{" "} */}
           Local Destinations :
         </p>
       </section>
@@ -333,8 +296,7 @@ export default function DestinationClient({ slug }: Props) {
                 key={index}
                 idx_comp={idx_comp ?? ""}
                 idx_excursion={item.excursion_id}
-                // image={`https://picsum.photos/800/600?random=${index}`}
-                image={`${host_img}/${item.picture}`}
+                image={`${host_img}/${item.picture}`} // image={`https://picsum.photos/800/600?random=${index}`}
                 title={`${item.location_state}, ${item.excursion_name}`}
                 sub_title={`${item.location_state}, ${item.location_country}`.toUpperCase()}
                 price={`${item.price_in_format}`}

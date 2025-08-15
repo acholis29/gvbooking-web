@@ -170,7 +170,7 @@ export default function Cart() {
         stsapp: "appsv2",
         statusapp: "",
         In: "DE",
-        pay_provider: "docu",
+        pay_provider: "docu", // one pay vietnam
         intl: "gvi",
       });
 
