@@ -1,15 +1,19 @@
 "use client";
 // Hooks
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 // Library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import toast from "react-hot-toast";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faChevronUp,
+  faInbox,
+} from "@fortawesome/free-solid-svg-icons";
 // component
 import Breadcrumb from "@/components/Breadcrumb";
 import CardAccordion from "@/components/CardAccordion";
-import Spinner from "@/components/Spinner";
+import HorizontalCard from "@/components/HorizontalCard";
+import SkeletonCardHorizontal from "@/components/SkeletonCardHorizontal";
 // Context global
 import { useCartApi } from "@/context/CartApiContext";
 import { useInitial } from "@/context/InitialContext";
@@ -17,11 +21,14 @@ import { useProfile } from "@/context/ProfileContext";
 
 // Helper
 import {
+  formatRibuan,
   capitalizeWords,
   truncateText,
   formatRibuanInternational,
 } from "@/helper/helper";
-
+import toast from "react-hot-toast";
+import Spinner from "@/components/Spinner";
+import { API_HOSTS } from "@/lib/apihost";
 type DetailPax = {
   charge_type: string;
   quantity: string;
@@ -82,11 +89,25 @@ type CartApiItem = {
   detail_surcharge: DetailSurcharge[];
 };
 
+type varPayment = {
+    apikey:string;
+    apikeysec:string;
+    domain:string;
+    min_daypayontour:number; 
+    payment_3ds:string; 
+    payment_site:string; 
+    payontour:string
+    provider:string;
+    sts:string;
+  };
+
+
 export default function Cart() {
-  const router = useRouter();
+  const router = useRouter(); // ✅ ini sekarang valid
   // State Data Detail Destination
   const [ListCart, setCart] = useState<CartApiItem[]>([]);
   const [ChekedCart, setCheckedCart] = useState<CartApiItem[]>([]);
+
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
   const [isRemove, setIsRemove] = useState(false);
@@ -96,17 +117,43 @@ export default function Cart() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [subtotalSummeryOrder, setSubtotalSummeryOrder] = useState(0);
   const [discTotalSummerOrder, setDiscTotalSummerOrder] = useState(0);
+  // const {setPayment} = useState<varPayment[]>([]);
+  const [confPayment, setPayment] = useState<varPayment[]>([]);
+
   // Context global
   const { profileInitial, resourceInitial } = useInitial();
   const { profile } = useProfile();
 
+  // useEffect(() => {
+    
+  // },[] ); // tetap kosong, agar hanya dijalankan sekali saat mount
+
+
+  useEffect(() => {
+    const s = JSON.parse(localStorage.getItem("resource_initial") || "[]");
+   console.log("resourceInitial", s);
+    fetch(`${s.url_fo}/mobile/data.json`, {
+      cache: "no-store", // ⛔ jangan ambil dari cache
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Payment Data:", data);
+        loadCart();        
+         setPayment(data.payment); // ✅ langsung set array-nya
+      })
+      .catch((err) => console.error(err));
+  }, [cartApiItems]);
+
+
   function loadCart() {
     const cart = JSON.parse(localStorage.getItem("cart_api") || "[]");
+    console.log(cart);
     setCart(cart);
     setIsLoading(false);
   }
 
   async function handleOnChangeCard(item: CartApiItem, checked: boolean) {
+ 
     if (checked) {
       // Tambahkan jika belum ada
       setCheckedCart((prev) => {
@@ -134,7 +181,7 @@ export default function Cart() {
   function hitungSubtotalSummeryOrder(items: CartApiItem[]) {
     let subTotal = 0;
     let discTotal = 0;
-    items.map((item) => {
+    items.map((item, index) => {
       subTotal += parseInt(item.price_local);
       discTotal += parseInt(item.disc);
     });
@@ -187,8 +234,10 @@ export default function Cart() {
 
       // const result = await response.json();
       const html = await response.text();
+      // console.log("Payment page HTML:", html);
 
       // Jika mau render HTML ini di iframe atau window baru:
+
       const newWindow = window.open("", "_blank");
 
       if (newWindow && newWindow.document) {
@@ -197,19 +246,14 @@ export default function Cart() {
         newWindow.document.close();
       } else {
         console.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
-        toast.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
       }
     } catch (error) {
       console.error("Payment error:", error);
-      toast.error("Payment gagal. Silakan coba lagi.");
+      alert("Payment gagal. Silakan coba lagi.");
     } finally {
       setIsSubmitting(false);
     }
   }
-
-  useEffect(() => {
-    loadCart();
-  }, [cartApiItems]); // tetap kosong, agar hanya dijalankan sekali saat mount
 
   useEffect(() => {
     const checkMobile = () => {
@@ -227,6 +271,7 @@ export default function Cart() {
   }, [ChekedCart]);
 
   useEffect(() => {
+    
     ListCart.map((items, index) => {
       handleOnChangeCard(items, true);
     });
@@ -282,6 +327,7 @@ export default function Cart() {
                         {truncateText(capitalizeWords(item.excursion_name), 45)}
                       </p>
                       <p className="text-sm text-gray-700 font-semibold">
+                        {/* {item.currency} {item.price_in_format} */}
                         {item.currency_local} {item.price_local_in_format}
                       </p>
                     </div>
@@ -365,6 +411,7 @@ export default function Cart() {
                           )}
                         </p>
                         <p className="text-sm text-gray-700 font-semibold">
+                          {/* {item.currency} {item.price_in_format} */}
                           {item.currency_local} {item.price_local_in_format}
                         </p>
                       </div>
