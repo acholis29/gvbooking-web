@@ -1,35 +1,21 @@
 "use client";
-
+// Hooks
 import { useEffect, useLayoutEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 // Component
-import Badge from "@/components/Badge";
 import Chips from "@/components/Chips";
-import Range from "@/components/Range";
-import Checkbox from "@/components/Checkbox";
-import Search from "@/components/Search";
-import SearchWithDropdown from "@/components/SearchWithDropdown";
 import ListCard from "@/components/ListCard";
-import SkeletonCard from "@/components/SkeletonCard";
 import ListCardMobile from "@/components/ListCardMobile";
 import SkeletonCardList from "@/components/SkeletonCardList";
 import ModalBottomSheet from "@/components/ModalBottomSheet";
-// Params Query
-import { useSearchParams } from "next/navigation";
+import Radio from "@/components/Radio";
 // Library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faChevronDown,
   faFilter,
-  faInbox,
-  faDollarSign,
-  faEur,
-  faRupiahSign,
-  faHeart,
   faSliders,
-  faCancel,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { Dropdown, DropdownItem } from "flowbite-react";
 // Helper
 import { capitalizeWords, getHostImageUrl } from "@/helper/helper"; // sesuaikan path
 // Global State
@@ -38,9 +24,6 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDate } from "@/context/DateContext";
 import { useInitial } from "@/context/InitialContext";
-// Host Image
-import { API_HOSTS } from "@/lib/apihost";
-import Radio from "@/components/Radio";
 
 type DestinationItemApi = {
   excursion_id: string;
@@ -85,19 +68,7 @@ export default function ListClient() {
   const idx_state =
     searchParams.get("id-state") == "null" ? "" : searchParams.get("id-state");
   const capitalizedCountry = capitalizeWords(country ?? "");
-  // const host_img =
-  //   country?.toLocaleLowerCase() == "indonesia"
-  //     ? API_HOSTS.img_indo
-  //     : country?.toLocaleLowerCase() == "thailand"
-  //     ? API_HOSTS.img_thai
-  //     : country?.toLocaleLowerCase() == "vietnam"
-  //     ? API_HOSTS.img_viet
-  //     : country?.toLocaleLowerCase() == "cambodia"
-  //     ? API_HOSTS.img_camb
-  //     : "";
 
-  // Wish Counter
-  const { wishItems } = useWish();
   // Curency
   const { currency } = useCurrency();
   // Language
