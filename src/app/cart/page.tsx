@@ -135,14 +135,9 @@ export default function Cart() {
   const { openModal } = useModal();
   const { selectModal, setSelectModal } = useSelectModal();
 
-  // !! WARNING ==========================================================
-  // Load Resource Initial Harus Di Cek Berdasarkan Country Item Cart
-  // Soalnya localstorage bisa berubah
   useEffect(() => {
-    const s = JSON.parse(localStorage.getItem("resource_initial") || "[]");
-    console.log("resourceInitial", s);
-    fetch(`${s.url_fo}/mobile/data.json`, {
-      cache: "no-store", // ⛔ jangan ambil dari cache
+    fetch(`${resourceInitial.url_fo}/mobile/data.json`, {
+      cache: "no-store",
     })
       .then((res) => res.json())
       .then((data) => {
@@ -224,7 +219,7 @@ export default function Cart() {
         stsapp: "appsv2",
         statusapp: "",
         In: "DE",
-        pay_provider: "docu", // one pay vietnam
+        pay_provider: confPayment.provider ?? "", // contoh docu
         intl: "gvi",
       });
 
