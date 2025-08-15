@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 // Library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faChevronUp,
+  faMoneyBill,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
 // component
 import Breadcrumb from "@/components/Breadcrumb";
@@ -20,6 +25,9 @@ import {
   truncateText,
   formatRibuanInternational,
 } from "@/helper/helper";
+import { useModal } from "@/context/ModalContext";
+import ModalComponent from "@/components/ModalComponent";
+import { useSelectModal } from "@/context/SelectModalContext";
 
 // Type Property
 type DetailPax = {
@@ -107,6 +115,7 @@ export default function Cart() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [subtotalSummeryOrder, setSubtotalSummeryOrder] = useState(0);
   const [discTotalSummerOrder, setDiscTotalSummerOrder] = useState(0);
+  const [paymentHtml, setPaymentHtml] = useState<string>("");
   const [confPayment, setPayment] = useState<varPayment>({
     apikey: "",
     apikeysec: "",
@@ -123,6 +132,8 @@ export default function Cart() {
   const { profileInitial, resourceInitial } = useInitial();
   const { profile } = useProfile();
   const { cartApiItems } = useCartApi();
+  const { openModal } = useModal();
+  const { selectModal, setSelectModal } = useSelectModal();
 
   // !! WARNING ==========================================================
   // Load Resource Initial Harus Di Cek Berdasarkan Country Item Cart
@@ -228,22 +239,29 @@ export default function Cart() {
 
       if (!response.ok) throw new Error("Payment failed");
 
-      // const result = await response.json();
+      // Response Html
       const html = await response.text();
 
       // Jika mau render HTML ini di iframe atau window baru:
-      const newWindow = window.open("", "_blank");
+      // Render New Tab
+      // const newWindow = window.open("", "_blank");
+      // if (newWindow && newWindow.document) {
+      //   newWindow.document.open();
+      //   newWindow.document.write(html);
+      //   newWindow.document.close();
+      // } else {
+      //   toast.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
+      //   console.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
+      // }
 
-      if (newWindow && newWindow.document) {
-        newWindow.document.open();
-        newWindow.document.write(html);
-        newWindow.document.close();
-      } else {
-        console.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
-      }
+      // Render Modal Iframe
+      // Simpan HTML di state untuk ditampilkan di iframe
+      setPaymentHtml(html);
+      setSelectModal("payment");
+      openModal();
     } catch (error) {
       console.error("Payment error:", error);
-      alert("Payment gagal. Silakan coba lagi.");
+      toast.error("Payment . Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -352,7 +370,7 @@ export default function Cart() {
               <button
                 type="button"
                 onClick={handlePaymentGateway}
-                className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+                className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer"
               >
                 {isSubmitting && <Spinner />} Payment
               </button>
@@ -440,7 +458,7 @@ export default function Cart() {
               <button
                 type="button"
                 onClick={handlePaymentGateway}
-                className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+                className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer"
               >
                 {isSubmitting && <Spinner />} Payment
               </button>
@@ -448,6 +466,27 @@ export default function Cart() {
           )}
         </div>
       </div>
+      {/* Modal Payment */}
+      {selectModal == "payment" && (
+        <ModalComponent
+          title="Payment"
+          icon={faMoneyBill}
+          size="5xl"
+          closeBackdrop={false}
+        >
+          {/* Tampilkan iframe kalau sudah ada HTML */}
+          {paymentHtml && (
+            <iframe
+              srcDoc={paymentHtml}
+              style={{
+                width: "100%",
+                height: "600px",
+                border: "none",
+              }}
+            />
+          )}
+        </ModalComponent>
+      )}
     </div>
   );
 }

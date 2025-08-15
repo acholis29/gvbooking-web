@@ -21,6 +21,8 @@ type ModalProps = {
   showFooter?: boolean;
   confirmText?: string;
   cancelText?: string;
+  size?: string;
+  closeBackdrop?: boolean;
   onConfirm?: () => void;
 };
 
@@ -33,11 +35,18 @@ const ModalComponent: React.FC<ModalProps> = ({
   showFooter = false,
   confirmText = "OK",
   cancelText = "Cancel",
+  size = "md",
   onConfirm,
+  closeBackdrop = true,
 }) => {
   const { open, closeModal } = useModal();
   return (
-    <Modal dismissible show={open} onClose={closeModal} size="md">
+    <Modal
+      dismissible={closeBackdrop}
+      show={open}
+      onClose={closeModal}
+      size={size}
+    >
       <ModalHeader className={`${bgColor} ${textColor}`}>
         <div className="flex items-center gap-2">
           {icon && <FontAwesomeIcon icon={icon} className={`text-white`} />}
