@@ -115,7 +115,7 @@ export default function Cart_old() {
         </div>
       )}
 
-      <CardAccordion />
+      {/* <CardAccordion /> */}
     </div>
   );
 }
