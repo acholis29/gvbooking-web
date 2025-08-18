@@ -48,16 +48,18 @@ const ProductSubOld: React.FC<ProductSubProps> = ({
   country,
   idx_comp,
 }) => {
-  const host_img =
-    country == "indonesia"
-      ? API_HOSTS.img_indo
-      : country == "thailand"
-      ? API_HOSTS.img_thai
-      : country == "vietnam"
-      ? API_HOSTS.img_viet
-      : country == "cambodia"
-      ? API_HOSTS.img_camb
-      : "";
+  // const host_img =
+  //   country == "indonesia"
+  //     ? API_HOSTS.img_indo
+  //     : country == "thailand"
+  //     ? API_HOSTS.img_thai
+  //     : country == "vietnam"
+  //     ? API_HOSTS.img_viet
+  //     : country == "cambodia"
+  //     ? API_HOSTS.img_camb
+  //     : "";
+
+  const host_img = "";
 
   const [isLoading, setIsLoading] = useState(true);
   const [dataChargeType, setDataChargeType] = useState<ChargeTypeProps[]>([]);
