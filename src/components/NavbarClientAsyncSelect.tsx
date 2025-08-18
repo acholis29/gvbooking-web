@@ -107,28 +107,31 @@ export default function NavbarClientAsyncSelect(props: any) {
         );
 
         const json = await res.json();
-        console.log(json.msg);
-        fetchedOptions = json.msg.map((item: any) => ({
-          value: item.excursion_id,
-          label: item.search_name,
-          country: item.location_country,
-          country_id: item.location_country_id,
-          state: item.location_state,
-          state_id: item.location_state_id,
-          data: item,
-          icon:
-            item.category == "Country"
-              ? faGlobe
-              : item.category == "Destination"
-              ? faMapMarked
-              : item.category == "Most Selling Excursion"
-              ? faSuitcaseRolling
-              : item.category == "Recommendation"
-              ? faCameraRetro
-              : faLocationDot,
-        }));
+        console.log(json);
 
-        setOptions(fetchedOptions);
+        if (json.error != "True") {
+          fetchedOptions = json.msg.map((item: any) => ({
+            value: item.excursion_id,
+            label: item.search_name,
+            country: item.location_country,
+            country_id: item.location_country_id,
+            state: item.location_state,
+            state_id: item.location_state_id,
+            data: item,
+            icon:
+              item.category == "Country"
+                ? faGlobe
+                : item.category == "Destination"
+                ? faMapMarked
+                : item.category == "Most Selling Excursion"
+                ? faSuitcaseRolling
+                : item.category == "Recommendation"
+                ? faCameraRetro
+                : faLocationDot,
+          }));
+
+          setOptions(fetchedOptions);
+        }
         return fetchedOptions;
       } catch (err) {
         console.error("Fetch error:", err);
