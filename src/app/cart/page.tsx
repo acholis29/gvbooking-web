@@ -102,6 +102,14 @@ type varPayment = {
   sts: string;
 };
 
+type varOnepayParam = {
+  virtualPaymentClientURL: string;
+  SECURE_SECRET: string;
+  vpc_Merchant: string;
+  vpc_AccessCode: string;
+  vpc_Currency: string;
+};
+
 export default function Cart() {
   const router = useRouter(); // ✅ ini sekarang valid
   // State Data Detail Destination
@@ -128,6 +136,14 @@ export default function Cart() {
     sts: "",
   });
 
+  const [onepayParam, setOnepayParam] = useState<varOnepayParam>({
+    virtualPaymentClientURL: "",
+    SECURE_SECRET: "",
+    vpc_Merchant: "",
+    vpc_AccessCode: "",
+    vpc_Currency: "",
+  });
+
   // Context global
   const { profileInitial, resourceInitial } = useInitial();
   const { profile } = useProfile();
@@ -144,6 +160,9 @@ export default function Cart() {
         .then((data) => {
           console.log("Payment Data:", data);
           setPayment(data.payment); // ✅ langsung set array-nya
+          if (data.onepay_param != null) {
+            setOnepayParam(data.onepay_param);
+          }
         })
         .catch((err) => console.error(err));
     }
@@ -224,6 +243,13 @@ export default function Cart() {
         pay_provider: confPayment.provider ?? "", // contoh docu, xendit, onepay
         intl: "gvi",
       });
+
+      if (confPayment.provider == "onepay1") {
+        // append semua key-value onepay_param
+        Object.entries(onepayParam).forEach(([key, value]) => {
+          formBody.append(key, value);
+        });
+      }
 
       // "https://internetpaygate.com/mIPGDetail.aspx"
       const response = await fetch(resourceInitial.url_payment, {
