@@ -88,16 +88,17 @@ export default function ListClient() {
   const country = searchParams.get("country");
   const state_ = searchParams.get("state");
   const capitalizedCountry = capitalizeWords(country ?? "");
-  const host_img =
-    country?.toLocaleLowerCase() == "indonesia"
-      ? API_HOSTS.img_indo
-      : country?.toLocaleLowerCase() == "thailand"
-      ? API_HOSTS.img_thai
-      : country?.toLocaleLowerCase() == "vietnam"
-      ? API_HOSTS.img_viet
-      : country?.toLocaleLowerCase() == "cambodia"
-      ? API_HOSTS.img_camb
-      : "";
+  // const host_img =
+  //   country?.toLocaleLowerCase() == "indonesia"
+  //     ? API_HOSTS.img_indo
+  //     : country?.toLocaleLowerCase() == "thailand"
+  //     ? API_HOSTS.img_thai
+  //     : country?.toLocaleLowerCase() == "vietnam"
+  //     ? API_HOSTS.img_viet
+  //     : country?.toLocaleLowerCase() == "cambodia"
+  //     ? API_HOSTS.img_camb
+  //     : "";
+  const host_img = "";
   // Wish Counter
   const { wishItems } = useWish();
   // Curency
