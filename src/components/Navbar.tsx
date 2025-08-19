@@ -1,6 +1,12 @@
 "use client";
-// State
-import React, { useState, useEffect, useRef } from "react";
+// Hooks
+import React, { useState, useEffect, Suspense } from "react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 // Context State Global
 import { useCart } from "@/context/CartContext";
 import { useCartApi } from "@/context/CartApiContext";
@@ -13,50 +19,35 @@ import { useReviewBooking } from "@/context/ReviewBookingContext";
 import { useProfile } from "@/context/ProfileContext";
 import { useInitial } from "@/context/InitialContext";
 import { useSelectModal } from "@/context/SelectModalContext";
-// Next Image
-import Image from "next/image";
-// Drawer
+
+// Component
 import DrawerComponent from "@/components/Drawer";
-// Path
-import { usePathname } from "next/navigation";
-// Font Awesome
+import ModalComponent from "./ModalComponent";
+
+// Library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
   faAngleRight,
   faBars,
-  faCalendar,
   faCalendarDays,
   faCheck,
   faChevronDown,
   faDollarSign,
-  faEuro,
   faGear,
   faGlobe,
   faHeart,
   faMoneyCheckDollar,
   faRightToBracket,
-  faRupiahSign,
-  faSearch,
   faShoppingCart,
-  faUsd,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-// Link Href
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-// Modal Component
-import ModalComponent from "./ModalComponent";
-import { API_HOSTS } from "@/lib/apihost";
-// Redirect
-import { useRouter } from "next/navigation";
-import { capitalizeFirst, toLowerCaseAll } from "@/helper/helper";
-// Select Autocomplate
-import AsyncSelect from "react-select/async";
-import { components } from "react-select";
-// Date Picker
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
+// Helper
+import { API_HOSTS } from "@/lib/apihost";
+import { capitalizeFirst, toLowerCaseAll } from "@/helper/helper";
 
 // Select Search Autocomplate Component
 import dynamic from "next/dynamic";
@@ -67,6 +58,24 @@ const NavbarClientAsyncSelect = dynamic(
   }
 );
 
+// Penggunaa UseParams Harus Pakai Suspanse
+function CountryWatcher({
+  setSelectedCategory,
+}: {
+  setSelectedCategory: (v: string) => void;
+}) {
+  const searchParams = useSearchParams();
+  const country = searchParams.get("country") ?? "";
+
+  useEffect(() => {
+    setSelectedCategory(
+      country ? capitalizeFirst(country) : "All Destinations"
+    );
+  }, [country, setSelectedCategory]);
+
+  return null;
+}
+
 export default function NavbarComponent() {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -74,19 +83,6 @@ export default function NavbarComponent() {
   const [isProfilDropdownOpen, setProfilDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { selectModal, setSelectModal } = useSelectModal();
-  const [isOnLoadSearch, SetIsOnloadSearch] = useState(false);
-
-  // tidak dipakai karna sudah pakai global
-  // type CurrencyItem = {
-  //   Currency: string;
-  // };
-  // const [currencyMaster, setCurrencyMaster] = useState<CurrencyItem[]>([]);
-
-  // tidak dipakai karna sudah pakai global
-  // type LanguageItem = {
-  //   MSLanguage: string;
-  // };
-  // const [languageMaster, setLanguageMaster] = useState<LanguageItem[]>([]);
 
   type CountryItem = {
     country: string;
@@ -281,17 +277,6 @@ export default function NavbarComponent() {
     // Bersihkan event listener saat unmount
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  // Handle Select Country Di Navbar
-  const searchParams = useSearchParams();
-  const country = searchParams.get("country") ?? "";
-  useEffect(() => {
-    if (country == "") {
-      setSelectedCategory("All Destinations");
-    } else {
-      setSelectedCategory(capitalizeFirst(country));
-    }
-  }, [country]);
 
   return (
     <nav className="sticky top-0 z-50 bg-white">
@@ -700,6 +685,11 @@ export default function NavbarComponent() {
           <LanguageContent languages={masterLanguage} />
         </ModalComponent>
       )}
+
+      {/* watcher param */}
+      <Suspense fallback={null}>
+        <CountryWatcher setSelectedCategory={setSelectedCategory} />
+      </Suspense>
     </nav>
   );
 }

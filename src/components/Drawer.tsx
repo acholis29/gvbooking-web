@@ -1,7 +1,24 @@
+"use client";
 // DrawerComponent.tsx
-// Font Awesome
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// Hooks
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
+// Library
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCheck,
+  faChevronDown,
+  faClose,
+  faDollar,
+  faGear,
+  faGlobe,
+  faHeart,
+  faMoneyCheckDollar,
+  faShoppingCart,
+  faSign,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 // Context State Global
 import { useCart } from "@/context/CartContext";
 import { useCartApi } from "@/context/CartApiContext";
@@ -9,26 +26,8 @@ import { useWish } from "@/context/WishContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useModal } from "@/context/ModalContext";
 import { useLanguage } from "@/context/LanguageContext";
-import {
-  faCheck,
-  faChevronDown,
-  faChevronLeft,
-  faClose,
-  faDollar,
-  faEuro,
-  faGear,
-  faGlobe,
-  faHeart,
-  faMoneyCheckDollar,
-  faRupiahSign,
-  faShoppingCart,
-  faSign,
-  faUsd,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+// Component
 import ModalComponent from "./ModalComponent";
-import { usePathname } from "next/navigation";
 
 export default function DrawerComponent({
   isOpen,
@@ -280,55 +279,6 @@ export default function DrawerComponent({
   );
 }
 
-// const CurrencyContent = () => {
-//   // const { closeModal } = useModal();
-//   const { currency, setCurrency } = useCurrency();
-
-//   return (
-//     <ul className="space-y-3 list-none">
-//       <li
-//         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-//         onClick={() => {
-//           setCurrency("IDR");
-//         }}
-//       >
-//         IDR - INDONESIA{" "}
-//         <FontAwesomeIcon
-//           icon={faRupiahSign}
-//           className="text-lg text-gray-500"
-//         />
-//         {currency == "IDR" && (
-//           <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-//         )}
-//       </li>
-//       <li
-//         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-//         onClick={() => {
-//           setCurrency("USD");
-//         }}
-//       >
-//         USD - UNITED STATE{" "}
-//         <FontAwesomeIcon icon={faUsd} className="text-lg text-gray-500" />
-//         {currency == "USD" && (
-//           <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-//         )}
-//       </li>
-//       <li
-//         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-//         onClick={() => {
-//           setCurrency("EUR");
-//         }}
-//       >
-//         EUR - EUROPE{" "}
-//         <FontAwesomeIcon icon={faEuro} className="text-lg text-gray-500" />
-//         {currency == "EUR" && (
-//           <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-//         )}
-//       </li>
-//     </ul>
-//   );
-// };
-
 const CurrencyContent = ({
   currencies = [],
 }: {
@@ -364,47 +314,6 @@ const CurrencyContent = ({
     </ul>
   );
 };
-
-// const LanguageContent = () => {
-//   const { language, setLanguage } = useLanguage();
-//   return (
-//     <ul className="space-y-3 list-none">
-//       <li
-//         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-//         onClick={() => {
-//           setLanguage("EN");
-//         }}
-//       >
-//         EN - English{" "}
-//         {language == "EN" && (
-//           <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-//         )}
-//       </li>
-//       <li
-//         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-//         onClick={() => {
-//           setLanguage("ED");
-//         }}
-//       >
-//         ED - Germany{" "}
-//         {language == "ED" && (
-//           <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-//         )}
-//       </li>
-//       <li
-//         className="text-base leading-relaxed text-gray-500 hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer"
-//         onClick={() => {
-//           setLanguage("ID");
-//         }}
-//       >
-//         ID - Indonesia{" "}
-//         {language == "ID" && (
-//           <FontAwesomeIcon icon={faCheck} className="text-lg text-green-500" />
-//         )}
-//       </li>
-//     </ul>
-//   );
-// };
 
 const LanguageContent = ({
   languages = [],
