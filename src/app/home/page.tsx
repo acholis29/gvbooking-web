@@ -94,6 +94,7 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) => {
         setDestination(data); // ✅ langsung set array-nya
+        console.log(data);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -187,7 +188,9 @@ export default function Home() {
         {destination.length > 0 ? (
           destination.map((item) => {
             const activity = activityCountry.find(
-              (ac) => ac.idx_comp === item.idx_comp
+              (ac) =>
+                ac.idx_comp === item.idx_comp ||
+                ac.idx_comp === item.idx_comp_alias
             );
 
             return (
