@@ -29,6 +29,7 @@ import {
 import { useModal } from "@/context/ModalContext";
 import ModalComponent from "@/components/ModalComponent";
 import { useSelectModal } from "@/context/SelectModalContext";
+import { API_HOSTS } from "@/lib/apihost";
 
 // Type Property
 type DetailPax = {
@@ -111,12 +112,30 @@ type varOnepayParam = {
   vpc_Currency: string;
 };
 
+type CoreV2Item = {
+  app_name: string;
+  country: string;
+  countryCode: string;
+  def_curr: string;
+  idx_comp: string;
+  idx_comp_alias: string;
+  intl: string;
+  min_daypayontour: number;
+  name: string;
+  payontour: boolean;
+  phone_code: string;
+  status: boolean;
+  url_img: string;
+  url_img_team: string;
+};
+
 export default function Cart() {
   const router = useRouter(); // ✅ ini sekarang valid
   // State Data Detail Destination
   const [ListCart, setCart] = useState<CartApiItem[]>([]);
   const [ChekedCart, setCheckedCart] = useState<CartApiItem[]>([]);
-  const {language}= useLanguage();
+  const [corev2, setCorev2] = useState<CoreV2Item[]>([]);
+  const { language } = useLanguage();
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
   const [isRemove, setIsRemove] = useState(false);
@@ -171,6 +190,18 @@ export default function Cart() {
     loadCart();
   }, [cartApiItems]);
 
+  useEffect(() => {
+    fetch(`${API_HOSTS.host1}/mobile/corev2.json`, {
+      cache: "no-store", // ⛔ jangan ambil dari cache
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setCorev2(data); // ✅ langsung set array-nya
+        console.log(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   function loadCart() {
     const cart = JSON.parse(localStorage.getItem("cart_api") || "[]");
     console.log(cart);
@@ -224,13 +255,21 @@ export default function Cart() {
       toast.success("Please Wait Remove Finished!");
       return null;
     }
-
+    const companyId = ListCart[0].company_id;
+    const result = corev2.find((item) => item.idx_comp === companyId);
     setIsSubmitting(true);
+    if (result?.payontour == false && confPayment.provider == "") {
+      // Payontour
+      await payontour();
+    } else {
+      // Payment gateway
+      await paymentGateway();
+    }
+  }
+
+  async function paymentGateway() {
     try {
       let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
-
-
-      
       const formBody = new URLSearchParams({
         IDMF: profileInitial[0].idx_mf, //dari idx_mf profil "eee9a3a6cfae456b9467420029f54de6"
         VOUCHER: profileInitial[0].voucher, //dari voucher profil "250759791"
@@ -241,7 +280,9 @@ export default function Cart() {
         MOBILEPHONE: profile.phone,
         AMOUNT: grandtotal.toString(),
         PASSPORT: "",
-        forurl: resourceInitial.url_b2c.replace(/(^\w+:|^)\/\//, '').replace(/\/$/, ''), //"excursion.govacation-indonesia.com",
+        forurl: resourceInitial.url_b2c
+          .replace(/(^\w+:|^)\/\//, "")
+          .replace(/\/$/, ""), //"excursion.govacation-indonesia.com",
         stsapp: resourceInitial.app_string, //"appsv2",
         statusapp: resourceInitial.app_demo,
         ln: language,
@@ -293,6 +334,11 @@ export default function Cart() {
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  async function payontour() {
+    alert("pay on tour");
+    setIsSubmitting(false);
   }
 
   useEffect(() => {
