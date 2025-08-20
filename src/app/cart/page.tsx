@@ -19,6 +19,7 @@ import Spinner from "@/components/Spinner";
 import { useCartApi } from "@/context/CartApiContext";
 import { useInitial } from "@/context/InitialContext";
 import { useProfile } from "@/context/ProfileContext";
+import { useLanguage } from "@/context/LanguageContext";
 // Helper
 import {
   capitalizeWords,
@@ -115,6 +116,7 @@ export default function Cart() {
   // State Data Detail Destination
   const [ListCart, setCart] = useState<CartApiItem[]>([]);
   const [ChekedCart, setCheckedCart] = useState<CartApiItem[]>([]);
+  const {language}= useLanguage();
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
   const [isRemove, setIsRemove] = useState(false);
@@ -226,6 +228,9 @@ export default function Cart() {
     setIsSubmitting(true);
     try {
       let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
+
+
+      
       const formBody = new URLSearchParams({
         IDMF: profileInitial[0].idx_mf, //dari idx_mf profil "eee9a3a6cfae456b9467420029f54de6"
         VOUCHER: profileInitial[0].voucher, //dari voucher profil "250759791"
@@ -236,15 +241,15 @@ export default function Cart() {
         MOBILEPHONE: profile.phone,
         AMOUNT: grandtotal.toString(),
         PASSPORT: "",
-        forurl: "excursion.govacation-indonesia.com",
-        stsapp: "appsv2",
-        statusapp: "",
-        In: "DE",
+        forurl: resourceInitial.url_b2c.replace(/(^\w+:|^)\/\//, '').replace(/\/$/, ''), //"excursion.govacation-indonesia.com",
+        stsapp: resourceInitial.app_string, //"appsv2",
+        statusapp: resourceInitial.app_demo,
+        ln: language,
         pay_provider: confPayment.provider ?? "", // contoh docu, xendit, onepay
-        intl: "gvi",
+        intl: resourceInitial.company_code ?? "", // contoh intl
       });
 
-      if (confPayment.provider == "onepay1") {
+      if (confPayment.provider == "onepay") {
         // append semua key-value onepay_param
         Object.entries(onepayParam).forEach(([key, value]) => {
           formBody.append(key, value);
