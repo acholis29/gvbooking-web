@@ -185,6 +185,8 @@ export default function ReviewBookingClient() {
   const [isLoadingSurcharge, setIsLoadingSurcharge] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState<number>(0);
+  const [total_surcharge, setTotalSurcharge] = useState<number>(0);
+  const [total_charge, setTotalCharge] = useState<number>(0);
   // State Form
   const [roomNumber, setRoomNumber] = useState<string>("");
   const [selectedSurcharge, setSelectedSurcharge] = useState<
@@ -315,9 +317,12 @@ export default function ReviewBookingClient() {
     Surcharge: PriceOfSurcharge[]
   ): number {
     let total = 0;
+    let total_surcharge = 0;
+    let total_charge = 0;
     if (ChargeType.length > 0) {
       for (let i = 0; i < ChargeType.length; i++) {
         total += parseInt(ChargeType[i].sale_rates_total);
+        total_charge += parseInt(ChargeType[i].sale_rates_total);
       }
     }
 
@@ -325,6 +330,7 @@ export default function ReviewBookingClient() {
       for (let j = 0; j < Surcharge.length; j++) {
         if (Surcharge[j].mandatory.toLocaleLowerCase() == "true") {
           total += parseInt(Surcharge[j].price);
+          total_surcharge += parseInt(Surcharge[j].price);
           // masukin data cheked
           setSelectedSurcharge((prev) => [...prev, Surcharge[j]]);
         }
@@ -332,6 +338,8 @@ export default function ReviewBookingClient() {
     }
 
     setTotal(total);
+    setTotalCharge(total_charge);
+    setTotalSurcharge(total_surcharge);
     return total;
   }
 
@@ -374,6 +382,7 @@ export default function ReviewBookingClient() {
   const handleCheckboxChange = (checked: boolean, price: number, data: any) => {
     if (checked) {
       setTotal((prev) => prev + price);
+      setTotalSurcharge((prev) => prev + price);
       // Tambah string set input surcharge
       setInputSurcharge((prev) => {
         const newItem = `${data.surcharge_id}|${data.price}`;
@@ -387,6 +396,7 @@ export default function ReviewBookingClient() {
       setSelectedSurcharge((prev) => [...prev, data]);
     } else {
       setTotal((prev) => prev - price);
+      setTotalSurcharge((prev) => prev - price);
       // Hapus string set input surcharge
       setInputSurcharge((prev) => {
         const toRemove = `${data.surcharge_id}|${data.price}`;
@@ -809,16 +819,39 @@ export default function ReviewBookingClient() {
                 </h5>
                 <div className="flex flex-row justify-between mt-6 mb-2">
                   <p className="text-sm text-gray-700 font-bold">Subtotal</p>
+                  <p className="text-sm text-gray-700 font-semibold">
+                    {" "}
+                    {currency} {total_charge.toLocaleString()}
+                  </p>
+                </div>
+                <hr className="my-2 border border-gray-400 opacity-50" />
+                <div className="flex flex-row justify-between mb-2">
+                  <p className="text-sm text-gray-700 font-bold">Surcharge</p>
+                  <p className="text-sm text-gray-700 font-semibold">
+                    {" "}
+                    {currency} {total_surcharge.toLocaleString()}
+                  </p>
+                </div>
+                <hr className="my-2 border border-gray-400 opacity-50" />
+                <div className="flex flex-row justify-between mb-2">
+                  <p className="text-sm text-gray-700 font-semibold">
+                    Discount
+                  </p>
                   <p className="text-sm text-gray-700 font-semibold">0</p>
                 </div>
                 <hr className="my-2 border border-gray-400 opacity-50" />
                 <div className="flex flex-row justify-between mb-2">
-                  <p className="text-sm text-gray-700 font-semibold">Disc</p>
-                  <p className="text-sm text-gray-700 font-semibold">0</p>
+                  <p className="text-sm text-gray-700 font-semibold">Total</p>
+                  <p className="text-sm text-gray-700 font-semibold">
+                    {" "}
+                    {currency} {total.toLocaleString()}
+                  </p>
                 </div>
                 <hr className="my-2 border border-gray-400 opacity-50" />
                 <div className="flex flex-row justify-between mb-2">
-                  <p className="text-gray-700 font-semibold">Grand Total</p>
+                  <p className="text-gray-700 font-semibold">
+                    Pay with local currency
+                  </p>
                   <p className="text-gray-700 font-semibold">
                     {" "}
                     {currency} {total.toLocaleString()}
@@ -844,16 +877,39 @@ export default function ReviewBookingClient() {
                 </h5>
                 <div className="flex flex-row justify-between mt-6 mb-2">
                   <p className="text-sm text-gray-700 font-bold">Subtotal</p>
+                  <p className="text-sm text-gray-700 font-semibold">
+                    {" "}
+                    {currency} {total_charge.toLocaleString()}
+                  </p>
+                </div>
+                <hr className="my-2 border border-gray-400 opacity-50" />
+                <div className="flex flex-row justify-between mb-2">
+                  <p className="text-sm text-gray-700 font-bold">Surcharge</p>
+                  <p className="text-sm text-gray-700 font-semibold">
+                    {" "}
+                    {currency} {total_surcharge.toLocaleString()}
+                  </p>
+                </div>
+                <hr className="my-2 border border-gray-400 opacity-50" />
+                <div className="flex flex-row justify-between mb-2">
+                  <p className="text-sm text-gray-700 font-semibold">
+                    Discount
+                  </p>
                   <p className="text-sm text-gray-700 font-semibold">0</p>
                 </div>
                 <hr className="my-2 border border-gray-400 opacity-50" />
                 <div className="flex flex-row justify-between mb-2">
-                  <p className="text-sm text-gray-700 font-semibold">Disc</p>
-                  <p className="text-sm text-gray-700 font-semibold">0</p>
+                  <p className="text-sm text-gray-700 font-semibold">Total</p>
+                  <p className="text-sm text-gray-700 font-semibold">
+                    {" "}
+                    {currency} {total.toLocaleString()}
+                  </p>
                 </div>
                 <hr className="my-2 border border-gray-400 opacity-50" />
                 <div className="flex flex-row justify-between mb-2">
-                  <p className="text-gray-700 font-semibold">Grand Total</p>
+                  <p className="text-gray-700 font-semibold">
+                    Pay with local currency
+                  </p>
                   <p className="text-gray-700 font-semibold">
                     {" "}
                     {currency} {total.toLocaleString()}
