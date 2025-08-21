@@ -129,12 +129,45 @@ type CoreV2Item = {
   url_img_team: string;
 };
 
+type IpLocation = {
+  status: string; // contoh: "success"
+  country: string; // contoh: "Indonesia"
+  countryCode: string; // contoh: "ID"
+  region: string; // contoh: "JK"
+  regionName: string; // contoh: "Jakarta"
+  city: string; // contoh: "Jakarta"
+  zip: string; // contoh: ""
+  lat: string; // contoh: -6.23366
+  lon: string; // contoh: 106.832
+  timezone: string; // contoh: "Asia/Jakarta"
+  isp: string; // contoh: "Neuviz"
+  org: string; // contoh: ""
+  as: string; // contoh: "AS18103 Neuviz Net"
+  query: string; // contoh: "203.128.80.46"
+};
+
 export default function Cart() {
   const router = useRouter(); // ✅ ini sekarang valid
   // State Data Detail Destination
   const [ListCart, setCart] = useState<CartApiItem[]>([]);
   const [ChekedCart, setCheckedCart] = useState<CartApiItem[]>([]);
   const [corev2, setCorev2] = useState<CoreV2Item[]>([]);
+  const [IpLocation, setIpLocation] = useState<IpLocation>({
+    status: "", // contoh: "success"
+    country: "", // contoh: "Indonesia"
+    countryCode: "", // contoh: "ID"
+    region: "", // contoh: "JK"
+    regionName: "", // contoh: "Jakarta"
+    city: "", // contoh: "Jakarta"
+    zip: "", // contoh: ""
+    lat: "", // contoh: -6.23366
+    lon: "", // contoh: 106.832
+    timezone: "", // contoh: "Asia/Jakarta"
+    isp: "", // contoh: "Neuviz"
+    org: "", // contoh: ""
+    as: "", // contoh: "AS18103 Neuviz Net"
+    query: "", // contoh: "203.128.80.46"
+  });
   const { language } = useLanguage();
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
@@ -197,6 +230,18 @@ export default function Cart() {
       .then((res) => res.json())
       .then((data) => {
         setCorev2(data); // ✅ langsung set array-nya
+        console.log(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    fetch(`/api/proxy/iplocation`, {
+      cache: "no-store", // ⛔ jangan ambil dari cache
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setIpLocation(data); // ✅ langsung set array-nya
         console.log(data);
       })
       .catch((err) => console.error(err));
@@ -338,6 +383,63 @@ export default function Cart() {
 
   async function payontour() {
     alert("pay on tour");
+
+    let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
+
+    const formBody = new URLSearchParams({
+      intl: resourceInitial.company_code ?? "", // contoh intl
+      pay_provider: confPayment.provider ?? "", // contoh docu, xendit, onepay
+      NAME: `${profile.firstname} ${profile.lastname}`,
+      FIRST_NAME: profile.firstname,
+      LAST_NAME: profile.lastname,
+      EMAIL: profileInitial[0].email,
+      PASSPORT: "",
+      MOBILEPHONE: profile.phone,
+      ln: language,
+      vpc_TicketNo: IpLocation.query, // 203.128.80.46
+    });
+
+    // Cek Excursion atau Hotel
+    let jenis = "exc";
+    if (jenis == "exc") {
+      formBody.append("IDMF", profileInitial[0].idx_mf);
+      formBody.append("VOUCHER", profileInitial[0].voucher);
+      formBody.append("AMOUNT", grandtotal.toString());
+      formBody.append(
+        "forurl",
+        resourceInitial.url_b2c.replace(/(^\w+:|^)\/\//, "").replace(/\/$/, "")
+      );
+      formBody.append("stsapp", resourceInitial.app_string);
+      formBody.append("statusapp", resourceInitial.app_demo);
+    }
+
+    if (jenis == "htl") {
+      formBody.append("IDMF", profileInitial[0].idx_mf);
+      formBody.append("VOUCHER", "HOTEL");
+      formBody.append("AMOUNT", grandtotal.toString());
+      formBody.append(
+        "forurl",
+        resourceInitial.url_bo.replace(/(^\w+:|^)\/\//, "").replace(/\/$/, "")
+      );
+      formBody.append("stsapp", resourceInitial.app_string);
+      formBody.append("statusapp", resourceInitial.app_demo);
+    }
+
+    let url = "https://internetpaygate.com/payontour.aspx";
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: formBody.toString(),
+    });
+
+    if (!response.ok) throw new Error("Payment failed");
+
+    // Response Html
+    const html = await response.text();
+    console.log(html);
+
     setIsSubmitting(false);
   }
 
