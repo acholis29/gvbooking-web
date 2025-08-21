@@ -290,7 +290,7 @@ export default function Cart() {
     setDiscTotalSummerOrder(discTotal);
   }
 
-  async function handlePaymentGateway() {
+  async function submitPayment() {
     if (isSubmitting) {
       toast.success("Please Wait");
       return null;
@@ -316,23 +316,16 @@ export default function Cart() {
     try {
       let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
       const formBody = new URLSearchParams({
-        IDMF: profileInitial[0].idx_mf, //dari idx_mf profil "eee9a3a6cfae456b9467420029f54de6"
-        VOUCHER: profileInitial[0].voucher, //dari voucher profil "250759791"
+        intl: resourceInitial.company_code ?? "", // contoh intl
+        pay_provider: confPayment.provider ?? "", // contoh docu, xendit, onepay
         NAME: `${profile.firstname} ${profile.lastname}`,
         FIRST_NAME: profile.firstname,
         LAST_NAME: profile.lastname,
         EMAIL: profileInitial[0].email,
-        MOBILEPHONE: profile.phone,
-        AMOUNT: grandtotal.toString(),
         PASSPORT: "",
-        forurl: resourceInitial.url_b2c
-          .replace(/(^\w+:|^)\/\//, "")
-          .replace(/\/$/, ""), //"excursion.govacation-indonesia.com",
-        stsapp: resourceInitial.app_string, //"appsv2",
-        statusapp: resourceInitial.app_demo,
+        MOBILEPHONE: profile.phone,
         ln: language,
-        pay_provider: confPayment.provider ?? "", // contoh docu, xendit, onepay
-        intl: resourceInitial.company_code ?? "", // contoh intl
+        vpc_TicketNo: IpLocation.query, // 203.128.80.46
       });
 
       if (confPayment.provider == "onepay") {
@@ -340,6 +333,35 @@ export default function Cart() {
         Object.entries(onepayParam).forEach(([key, value]) => {
           formBody.append(key, value);
         });
+      } else if (confPayment.provider == "xendit") {
+        formBody.append("pay_apikey", "");
+        formBody.append("pay_3ds", "");
+      }
+
+      // Cek Excursion atau Hotel
+      let jenis = "exc";
+      if (jenis == "exc") {
+        formBody.append("IDMF", profileInitial[0].idx_mf);
+        formBody.append("VOUCHER", profileInitial[0].voucher);
+        formBody.append("AMOUNT", grandtotal.toString());
+        formBody.append(
+          "forurl",
+          resourceInitial.url_b2c
+            .replace(/(^\w+:|^)\/\//, "")
+            .replace(/\/$/, "")
+        );
+        formBody.append("stsapp", resourceInitial.app_string);
+        formBody.append("statusapp", resourceInitial.app_demo);
+      } else if (jenis == "htl") {
+        formBody.append("IDMF", profileInitial[0].idx_mf);
+        formBody.append("VOUCHER", "HOTEL");
+        formBody.append("AMOUNT", grandtotal.toString());
+        formBody.append(
+          "forurl",
+          resourceInitial.url_bo.replace(/(^\w+:|^)\/\//, "").replace(/\/$/, "")
+        );
+        formBody.append("stsapp", resourceInitial.app_string);
+        formBody.append("statusapp", resourceInitial.app_demo);
       }
 
       // "https://internetpaygate.com/mIPGDetail.aspx"
@@ -383,9 +405,7 @@ export default function Cart() {
 
   async function payontour() {
     alert("pay on tour");
-
     let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
-
     const formBody = new URLSearchParams({
       intl: resourceInitial.company_code ?? "", // contoh intl
       pay_provider: confPayment.provider ?? "", // contoh docu, xendit, onepay
@@ -545,7 +565,7 @@ export default function Cart() {
               </div>
               <button
                 type="button"
-                onClick={handlePaymentGateway}
+                onClick={submitPayment}
                 className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer"
               >
                 {isSubmitting && <Spinner />} Payment
@@ -633,7 +653,7 @@ export default function Cart() {
               </div>
               <button
                 type="button"
-                onClick={handlePaymentGateway}
+                onClick={submitPayment}
                 className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer"
               >
                 {isSubmitting && <Spinner />} Payment
