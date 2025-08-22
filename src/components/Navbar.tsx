@@ -51,6 +51,7 @@ import { capitalizeFirst, toLowerCaseAll } from "@/helper/helper";
 
 // Select Search Autocomplate Component
 import dynamic from "next/dynamic";
+import toast from "react-hot-toast";
 const NavbarClientAsyncSelect = dynamic(
   () => import("@/components/NavbarClientAsyncSelect"),
   {
@@ -476,7 +477,16 @@ export default function NavbarComponent() {
                               router.push("/profile");
                             } else {
                               setSelectModal(`${item}`);
-                              openModal(); // ⬅️ Ini akan memunculkan modal
+                              if (item == "Currency" && cartApiCount > 0) {
+                                toast(
+                                  "Currency cannot be changed after transactions are added to the cart.",
+                                  {
+                                    icon: "⚠️", // warning emoji
+                                  }
+                                );
+                              } else {
+                                openModal(); // ⬅️ Ini akan memunculkan modal
+                              }
                             }
                           }}
                         >
