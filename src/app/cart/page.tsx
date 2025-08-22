@@ -199,6 +199,7 @@ export default function Cart() {
     vpc_Currency: "",
   });
 
+  const [buyCurrencyMF, setBuyCurrencyMF] = useState("");
   const [locaCurrencyMF, setLocalCurrencyMF] = useState("");
 
   // Context global
@@ -292,6 +293,7 @@ export default function Cart() {
       subTotalLocal += parseInt(item.price_local);
       if (index == 0) {
         setLocalCurrencyMF(item.currency_local);
+        setBuyCurrencyMF(item.currency);
       }
     });
     setSubtotalSummeryOrder(subTotal);
@@ -323,7 +325,8 @@ export default function Cart() {
 
   async function paymentGateway() {
     try {
-      let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
+      // let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
+      let grandtotal = subtotalSummeryOrderLocal; //idr
       const formBody = new URLSearchParams({
         intl: resourceInitial.company_code ?? "", // contoh intl
         pay_provider: confPayment.provider ?? "", // contoh docu, xendit, onepay
@@ -553,6 +556,7 @@ export default function Cart() {
               <div className="flex flex-row justify-between mb-2">
                 <p className="text-sm text-gray-700 font-bold">Subtotal</p>
                 <p className="text-sm text-gray-700 font-semibold">
+                  {buyCurrencyMF}{" "}
                   {formatRibuanInternational(subtotalSummeryOrder)}
                 </p>
               </div>
@@ -560,6 +564,7 @@ export default function Cart() {
               <div className="flex flex-row justify-between mb-2">
                 <p className="text-sm text-gray-700 font-semibold">Discount</p>
                 <p className="text-sm text-gray-700 font-semibold">
+                  {buyCurrencyMF}{" "}
                   {formatRibuanInternational(discTotalSummerOrder)}
                 </p>
               </div>
@@ -567,6 +572,7 @@ export default function Cart() {
               <div className="flex flex-row justify-between mb-2">
                 <p className="text-gray-700 font-semibold">Total</p>
                 <p className="text-gray-700 font-semibold">
+                  {buyCurrencyMF}{" "}
                   {formatRibuanInternational(
                     subtotalSummeryOrder - discTotalSummerOrder
                   )}
