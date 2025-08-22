@@ -460,7 +460,9 @@ export default function ReviewBookingClient() {
   const onSubmit = (data: any) => {
     console.log("Data submit:", data);
     if (isSubmitting) {
-      toast.success("Please Wait");
+      toast("Please wait...", {
+        icon: "⏳", // hourglass
+      });
       return null;
     }
 

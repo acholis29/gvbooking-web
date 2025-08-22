@@ -303,12 +303,17 @@ export default function Cart() {
 
   async function submitPayment() {
     if (isSubmitting) {
-      toast.success("Please Wait");
+      toast("Please wait...", {
+        icon: "⏳", // hourglass
+      });
       return null;
     }
 
     if (isRemove) {
       toast.success("Please Wait Remove Finished!");
+      toast("Please Wait Remove Finished!...", {
+        icon: "⏳", // hourglass
+      });
       return null;
     }
     const companyId = ListCart[0].company_id;

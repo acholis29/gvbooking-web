@@ -144,7 +144,9 @@ const CardAccordion: React.FC<Props> = ({
 
   const handleRemove = () => {
     if (isRemoving) {
-      toast.success("Please wait");
+      toast("Please wait...", {
+        icon: "⏳", // hourglass
+      });
       return; // prevent double click
     }
 
@@ -170,7 +172,9 @@ const CardAccordion: React.FC<Props> = ({
   const handleChange = async () => {
     //
     if (isRemoving) {
-      toast.success("Pleases Wait remove finish!");
+      toast("Please wait remove finish!...", {
+        icon: "⏳", // hourglass
+      });
       return; // cegah klik ganda
     }
     // Ambil idx_excursion
