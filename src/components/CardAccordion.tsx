@@ -276,8 +276,8 @@ const CardAccordion: React.FC<Props> = ({
           <div className="w-[40%] grow p-4 text-left">
             <p className="text-black text-sm font-bold">SUB TOTAL</p>
             <p className="text-red-700 text-sm font-semibold">
-              {/* {item.currency} {item.price_in_format} */}
-              {item.currency_local} {item.price_local_in_format}
+              {item.currency} {item.priceori_in_format}
+              {/* {item.currency_local} {item.price_local_in_format} */}
             </p>
           </div>
           <div className="w-[15%] grow p-4 text-left">
@@ -289,7 +289,8 @@ const CardAccordion: React.FC<Props> = ({
           <div className="w-[40%] grow p-4 text-left">
             <p className="text-black text-sm font-bold">TOTAL</p>
             <p className="text-red-700 text-sm font-semibold">
-              {item.currency_local} {item.price_local_in_format}
+              {item.currency} {item.price_in_format}
+              {/* {item.currency_local} {item.price_local_in_format} */}
             </p>
           </div>
         </div>

@@ -177,6 +177,7 @@ export default function Cart() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [subtotalSummeryOrder, setSubtotalSummeryOrder] = useState(0);
   const [discTotalSummerOrder, setDiscTotalSummerOrder] = useState(0);
+  const [subtotalSummeryOrderLocal, setSubtotalSummeryOrderLocal] = useState(0);
   const [paymentHtml, setPaymentHtml] = useState<string>("");
   const [confPayment, setPayment] = useState<varPayment>({
     apikey: "",
@@ -197,6 +198,8 @@ export default function Cart() {
     vpc_AccessCode: "",
     vpc_Currency: "",
   });
+
+  const [locaCurrencyMF, setLocalCurrencyMF] = useState("");
 
   // Context global
   const { profileInitial, resourceInitial } = useInitial();
@@ -282,12 +285,18 @@ export default function Cart() {
   function hitungSubtotalSummeryOrder(items: CartApiItem[]) {
     let subTotal = 0;
     let discTotal = 0;
+    let subTotalLocal = 0;
     items.map((item, index) => {
-      subTotal += parseInt(item.price_local);
+      subTotal += parseInt(item.priceori);
       discTotal += parseInt(item.disc);
+      subTotalLocal += parseInt(item.price_local);
+      if (index == 0) {
+        setLocalCurrencyMF(item.currency_local);
+      }
     });
     setSubtotalSummeryOrder(subTotal);
     setDiscTotalSummerOrder(discTotal);
+    setSubtotalSummeryOrderLocal(subTotalLocal);
   }
 
   async function submitPayment() {
@@ -334,8 +343,8 @@ export default function Cart() {
           formBody.append(key, value);
         });
       } else if (confPayment.provider == "xendit") {
-        formBody.append("pay_apikey", "");
-        formBody.append("pay_3ds", "");
+        formBody.append("pay_apikey", confPayment.apikey);
+        formBody.append("pay_3ds", confPayment.payment_3ds);
       }
 
       // Cek Excursion atau Hotel
@@ -445,7 +454,7 @@ export default function Cart() {
       formBody.append("statusapp", resourceInitial.app_demo);
     }
 
-    let url = "https://internetpaygate.com/payontour.aspx";
+    let url = `${confPayment.domain}/payontour.aspx`;
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -534,7 +543,7 @@ export default function Cart() {
                         {truncateText(capitalizeWords(item.excursion_name), 45)}
                       </p>
                       <p className="text-sm text-gray-700 font-semibold">
-                        {item.currency_local} {item.price_local_in_format}
+                        {item.currency} {item.priceori_in_format}
                       </p>
                     </div>
                   );
@@ -549,18 +558,28 @@ export default function Cart() {
               </div>
               <hr className="my-2 border border-gray-400 opacity-50" />
               <div className="flex flex-row justify-between mb-2">
-                <p className="text-sm text-gray-700 font-semibold">Disc</p>
+                <p className="text-sm text-gray-700 font-semibold">Discount</p>
                 <p className="text-sm text-gray-700 font-semibold">
                   {formatRibuanInternational(discTotalSummerOrder)}
                 </p>
               </div>
               <hr className="my-2 border border-gray-400 opacity-50" />
               <div className="flex flex-row justify-between mb-2">
-                <p className="text-gray-700 font-semibold">Grand Total</p>
+                <p className="text-gray-700 font-semibold">Total</p>
                 <p className="text-gray-700 font-semibold">
                   {formatRibuanInternational(
                     subtotalSummeryOrder - discTotalSummerOrder
                   )}
+                </p>
+              </div>
+              <hr className="my-2 border border-gray-400 opacity-50" />
+              <div className="flex flex-row justify-between mb-2">
+                <p className="text-gray-700 font-semibold">
+                  Pay with local currency
+                </p>
+                <p className="text-gray-700 font-semibold">
+                  {locaCurrencyMF}{" "}
+                  {formatRibuanInternational(subtotalSummeryOrderLocal)}
                 </p>
               </div>
               <button
