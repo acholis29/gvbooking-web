@@ -421,63 +421,70 @@ export default function Cart() {
   }
 
   async function payontour() {
-    alert("pay on tour");
-    let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
-    const formBody = new URLSearchParams({
-      intl: resourceInitial.company_code ?? "", // contoh intl
-      pay_provider: confPayment.provider ?? "", // contoh docu, xendit, onepay
-      NAME: `${profile.firstname} ${profile.lastname}`,
-      FIRST_NAME: profile.firstname,
-      LAST_NAME: profile.lastname,
-      EMAIL: profileInitial[0].email,
-      PASSPORT: "",
-      MOBILEPHONE: profile.phone,
-      ln: language,
-      vpc_TicketNo: IpLocation.query, // 203.128.80.46
-    });
+    try {
+      console.log("pay on tour");
+      let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
+      const formBody = new URLSearchParams({
+        intl: resourceInitial.company_code ?? "", // contoh intl
+        pay_provider: confPayment.provider ?? "", // contoh docu, xendit, onepay
+        NAME: `${profile.firstname} ${profile.lastname}`,
+        FIRST_NAME: profile.firstname,
+        LAST_NAME: profile.lastname,
+        EMAIL: profileInitial[0].email,
+        PASSPORT: "",
+        MOBILEPHONE: profile.phone,
+        ln: language,
+        vpc_TicketNo: IpLocation.query, // 203.128.80.46
+      });
 
-    // Cek Excursion atau Hotel
-    let jenis = "exc";
-    if (jenis == "exc") {
-      formBody.append("IDMF", profileInitial[0].idx_mf);
-      formBody.append("VOUCHER", profileInitial[0].voucher);
-      formBody.append("AMOUNT", grandtotal.toString());
-      formBody.append(
-        "forurl",
-        resourceInitial.url_b2c.replace(/(^\w+:|^)\/\//, "").replace(/\/$/, "")
-      );
-      formBody.append("stsapp", resourceInitial.app_string);
-      formBody.append("statusapp", resourceInitial.app_demo);
+      // Cek Excursion atau Hotel
+      let jenis = "exc";
+      if (jenis == "exc") {
+        formBody.append("IDMF", profileInitial[0].idx_mf);
+        formBody.append("VOUCHER", profileInitial[0].voucher);
+        formBody.append("AMOUNT", grandtotal.toString());
+        formBody.append(
+          "forurl",
+          resourceInitial.url_b2c
+            .replace(/(^\w+:|^)\/\//, "")
+            .replace(/\/$/, "")
+        );
+        formBody.append("stsapp", resourceInitial.app_string);
+        formBody.append("statusapp", resourceInitial.app_demo);
+      }
+
+      if (jenis == "htl") {
+        formBody.append("IDMF", profileInitial[0].idx_mf);
+        formBody.append("VOUCHER", "HOTEL");
+        formBody.append("AMOUNT", grandtotal.toString());
+        formBody.append(
+          "forurl",
+          resourceInitial.url_bo.replace(/(^\w+:|^)\/\//, "").replace(/\/$/, "")
+        );
+        formBody.append("stsapp", resourceInitial.app_string);
+        formBody.append("statusapp", resourceInitial.app_demo);
+      }
+
+      let url = `${confPayment.domain}payontour.aspx`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formBody.toString(),
+      });
+
+      if (!response.ok) throw new Error("Payment failed");
+
+      // Response Html
+      const html = await response.text();
+      console.log(html);
+    } catch (error) {
+      console.error("Payontour error:", error);
+      toast.error("payontour . Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    if (jenis == "htl") {
-      formBody.append("IDMF", profileInitial[0].idx_mf);
-      formBody.append("VOUCHER", "HOTEL");
-      formBody.append("AMOUNT", grandtotal.toString());
-      formBody.append(
-        "forurl",
-        resourceInitial.url_bo.replace(/(^\w+:|^)\/\//, "").replace(/\/$/, "")
-      );
-      formBody.append("stsapp", resourceInitial.app_string);
-      formBody.append("statusapp", resourceInitial.app_demo);
-    }
-
-    let url = `${confPayment.domain}/payontour.aspx`;
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formBody.toString(),
-    });
-
-    if (!response.ok) throw new Error("Payment failed");
-
-    // Response Html
-    const html = await response.text();
-    console.log(html);
-
-    setIsSubmitting(false);
   }
 
   useEffect(() => {
