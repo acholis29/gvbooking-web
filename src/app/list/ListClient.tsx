@@ -12,6 +12,7 @@ import Radio from "@/components/Radio";
 // Library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCheck,
   faFilter,
   faSliders,
   faXmark,
@@ -493,7 +494,8 @@ export default function ListClient() {
 
                 {"ALL TYPE" == SelectBadgeFilterMobile && (
                   <FontAwesomeIcon
-                    icon={faXmark}
+                    // icon={faXmark}
+                    icon={faCheck}
                     className="w-5 h-5 text-red-600"
                   />
                 )}
@@ -523,7 +525,8 @@ export default function ListClient() {
 
                   {item.holiday_type == SelectBadgeFilterMobile && (
                     <FontAwesomeIcon
-                      icon={faXmark}
+                      // icon={faXmark}
+                      icon={faCheck}
                       className="w-5 h-5 text-red-600"
                     />
                   )}
