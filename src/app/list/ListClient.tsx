@@ -460,6 +460,7 @@ export default function ListClient() {
             </>
           ) : (
             <>
+              {/* Button Bottom Sheet */}
               <div
                 className="w-10 h-10 border-1 border-gray-500 rounded-lg text-center align-middle flex items-center justify-center p-2"
                 onClick={() => setOpenBottomSheet(true)}
@@ -470,11 +471,12 @@ export default function ListClient() {
                 />
               </div>
 
+              {/* Button All Type */}
               <div
                 key={`mobileHoliday-all-type`}
                 className={`w-auto h-10  border-gray-500  ${
                   "ALL TYPE" == SelectBadgeFilterMobile
-                    ? "bg-gray-200 border-2"
+                    ? "bg-red-200 border-1 border-red-500"
                     : "border-1"
                 }  rounded-lg text-center align-middle flex items-center justify-center p-2 whitespace-nowrap`}
                 onClick={() => {
@@ -492,20 +494,21 @@ export default function ListClient() {
                   {capitalizeWords("ALL TYPE")}
                 </p>
 
-                {"ALL TYPE" == SelectBadgeFilterMobile && (
+                {/* {"ALL TYPE" == SelectBadgeFilterMobile && (
                   <FontAwesomeIcon
-                    // icon={faXmark}
                     icon={faCheck}
                     className="w-5 h-5 text-red-600"
                   />
-                )}
+                )} */}
               </div>
+
+              {/* Button Master Holiday Type */}
               {masterHolidayApi.map((item) => (
                 <div
                   key={`mobileHoliday-${item.holiday_type}`}
                   className={`w-auto h-10  border-gray-500  ${
                     item.holiday_type == SelectBadgeFilterMobile
-                      ? "bg-gray-200 border-2"
+                      ? "bg-red-200 border-1 border-red-500"
                       : "border-1"
                   }  rounded-lg text-center align-middle flex items-center justify-center p-2 whitespace-nowrap`}
                   onClick={() => {
@@ -523,13 +526,12 @@ export default function ListClient() {
                     {capitalizeWords(item.holiday_type)}
                   </p>
 
-                  {item.holiday_type == SelectBadgeFilterMobile && (
+                  {/* {item.holiday_type == SelectBadgeFilterMobile && (
                     <FontAwesomeIcon
-                      // icon={faXmark}
                       icon={faCheck}
                       className="w-5 h-5 text-red-600"
                     />
-                  )}
+                  )} */}
                 </div>
               ))}
             </>
