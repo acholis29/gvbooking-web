@@ -11,6 +11,7 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 // component
 import Breadcrumb from "@/components/Breadcrumb";
 import CardAccordion from "@/components/CardAccordion";
@@ -391,7 +392,7 @@ export default function Cart() {
       });
 
       if (!response.ok) throw new Error("Payment failed");
-
+      console.log(response);
       // Response Html
       const html = await response.text();
 
@@ -477,8 +478,24 @@ export default function Cart() {
       if (!response.ok) throw new Error("Payment failed");
 
       // Response Html
+      console.log(response);
       const html = await response.text();
       console.log(html);
+
+      if (response.ok == true) {
+        Swal.fire({
+          title: "Payment Successful!",
+          text: "Thank you for your payment.",
+          icon: "success",
+          confirmButtonText: "OK",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            router.replace("/");
+          }
+        });
+      }
     } catch (error) {
       console.error("Payontour error:", error);
       toast.error("payontour . Please try again.");
