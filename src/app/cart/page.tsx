@@ -210,6 +210,8 @@ export default function Cart() {
   const { openModal } = useModal();
   const { selectModal, setSelectModal } = useSelectModal();
 
+  resourceInitial.app_string='newweb';
+
   useEffect(() => {
     if (resourceInitial.url_fo != "") {
       fetch(`${resourceInitial.url_fo}/mobile/data.json`, {
@@ -331,6 +333,8 @@ export default function Cart() {
 
   async function paymentGateway() {
     try {
+      // resourceInitial.url_b2c=window.location.origin.toString();
+
       // let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
       let grandtotal = subtotalSummeryOrderLocal; //idr
       const formBody = new URLSearchParams({
@@ -344,6 +348,7 @@ export default function Cart() {
         MOBILEPHONE: profile.phone,
         ln: language,
         vpc_TicketNo: IpLocation.query, // 203.128.80.46
+        backurl: window.location.origin ,
       });
 
       if (confPayment.provider == "onepay") {

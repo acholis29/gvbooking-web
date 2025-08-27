@@ -100,7 +100,7 @@ export default function DestinationClient({ slug }: Props) {
 
   // host sesuai country
   const host_img = getHostImageUrl(coreInitial, idx_comp ?? "");
-
+console.log("host_img", host_img);
   // First Load API Mobile Initial
   useEffect(() => {
     const fetchDataInitial = async () => {

@@ -112,6 +112,7 @@ export const getHostImageUrl = (
 ): string | null => {
   const found = coreInitial.find((item) => item.idx_comp === idx_comp);
   if (!found) return null;
+  
   return `${found.url_img}`;
 };
 
