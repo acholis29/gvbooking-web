@@ -84,7 +84,8 @@ export default function DrawerComponent({
     <>
       <div
         id="drawer-navigation"
-        className="fixed top-0 left-0 z-40 h-screen p-4 overflow-y-auto transition-transform -translate-x-full bg-white w-64 "
+        // className="fixed top-0 left-0 z-40 h-screen p-4 overflow-y-auto transition-transform -translate-x-full bg-white w-64 "
+        className="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-64 "
         tabIndex={-1}
         aria-labelledby="drawer-navigation-label"
       >
@@ -101,7 +102,8 @@ export default function DrawerComponent({
           className="text-gray-700 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center "
           onClick={() => {
             const drawer = document.getElementById("drawer-navigation");
-            if (drawer) drawer.classList.add("-translate-x-full");
+            // if (drawer) drawer.classList.add("-translate-x-full");
+            if (drawer) drawer.classList.add("translate-x-full");
           }}
         >
           <FontAwesomeIcon

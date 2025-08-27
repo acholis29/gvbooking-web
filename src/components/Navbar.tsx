@@ -549,10 +549,15 @@ export default function NavbarComponent() {
                 if (!drawer) return;
 
                 // Jika drawer saat ini disembunyikan, buka
-                if (drawer.classList.contains("-translate-x-full")) {
-                  drawer.classList.remove("-translate-x-full");
+                // if (drawer.classList.contains("-translate-x-full")) {
+                //   drawer.classList.remove("-translate-x-full");
+                // } else {
+                //   drawer.classList.add("-translate-x-full");
+                // }
+                if (drawer.classList.contains("translate-x-full")) {
+                  drawer.classList.remove("translate-x-full");
                 } else {
-                  drawer.classList.add("-translate-x-full");
+                  drawer.classList.add("translate-x-full");
                 }
               }}
             />
