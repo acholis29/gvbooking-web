@@ -1,0 +1,162 @@
+{"brochure":
+	[
+		{
+		  "id":"1",
+		  "category":"brochure",
+		  "language":"en",
+		  "title":"Brochure",
+		  "image":"http://gvvfo.smarttouristicsystem.com/mobile/brochure.jpg",
+		  "link":"http://gvvfo.smarttouristicsystem.com/mobile/file/brochure.pdf"
+		  
+	   },
+	   {
+		  "id":"2",
+		  "category":"brochure",
+		  "language":"en",
+		  "title":"HANOI",
+		  "image":"http://gvvfo.smarttouristicsystem.com/mobile/file/map/hanoi.jpg",
+		  "link":"http://gvvfo.smarttouristicsystem.com/mobile/file/map/hanoi.pdf"
+	   },
+	   {
+		  "id":"3",
+		  "category":"brochure",
+		  "language":"en",
+		  "title":"Ho Chi Minh City",
+		  "image":"http://gvvfo.smarttouristicsystem.com/mobile/file/map/Ho_Chi_Minh_City.jpg",
+		  "link":"http://gvvfo.smarttouristicsystem.com/mobile/file/map/Ho_Chi_Minh_City.pdf"
+	   },
+	   {
+		  "id":"4",
+		  "category":"brochure",
+		  "language":"en",
+		  "title":"Hoi An - Danang - Hue",
+		  "image":"http://gvvfo.smarttouristicsystem.com/mobile/file/map/Hoi_An_Danang_Hue.jpg",
+		  "link":"http://gvvfo.smarttouristicsystem.com/mobile/file/map/Hoi_An_Danang_Hue.pdf"
+	   },
+	   {
+		  "id":"5",
+		  "category":"brochure",
+		  "language":"en",
+		  "title":"Mui Ne",
+		  "image":"http://gvvfo.smarttouristicsystem.com/mobile/file/map/Mui_Ne.jpg",
+		  "link":"http://gvvfo.smarttouristicsystem.com/mobile/file/map/Mui_Ne.pdf"
+	   },
+	   {
+		  "id":"6",
+		  "category":"brochure",
+		  "language":"en",
+		  "title":"Nha Trang",
+		  "image":"http://gvvfo.smarttouristicsystem.com/mobile/file/map/Nha_Trang.jpg",
+		  "link":"http://gvvfo.smarttouristicsystem.com/mobile/file/map/Nha_Trang.pdf"
+	   },
+	   {
+		  "id":"7",
+		  "category":"brochure",
+		  "language":"en",
+		  "title":"Phu Quoc",
+		  "image":"http://gvvfo.smarttouristicsystem.com/mobile/file/map/Phu_Quoc.jpg",
+		  "link":"http://gvvfo.smarttouristicsystem.com/mobile/file/map/Phu_Quoc.pdf"
+	   }
+	   
+	],
+
+"menu":
+	[
+		
+		{
+			"icon" : "at",
+			"text":"About Us",
+			"link":"/support/",
+			"id":"menu-support"
+		},
+		{
+			"icon" : "folder",
+			"text":"Brochure & Informationsmappe",
+			"link":"/brochure/?id=brochure",
+			"id":"menu-infomap"
+		}
+	],
+"general":
+		{
+			"text_rep" : "Representative",
+			"address_api_IP" : "http://ip-api.com/json/",
+			"sts_hotel_booking" : false,
+			"number_wa":"+84901489897",
+			"phone_com" :"+84901489897 ",
+			"email_com" :"excursion@govacation-vietnam.com",
+			"address_api_IP":"https://system.govacation.biz/ashx/general/ipexternal.ashx"
+
+		},
+"payment":{
+		"domain":"https://internetpaygate.com/",
+		"provider":"onepay",
+		"apikey":"",
+		"apikeysec":"",
+		"sts":"live",		
+		"payment_3ds":"true",
+		"payment_site":"https://internetpaygate.com/onepay/default.aspx",
+		"payontour": false,
+		"webredirect": true,
+		"min_daypayontour": 2
+
+	},
+	"onepay_param":{
+		"virtualPaymentClientURL":"https://onepay.vn/paygate/vpcpay.op",
+		"SECURE_SECRET":"",
+		"vpc_Merchant": "OP_GOVACATVN",
+		"vpc_AccessCode" : "B0902B94",
+		"vpc_Currency" : "VND"
+		
+	},
+"idcountry_allow":["ID","AT","DE","CH"],
+"setup_text":
+	[{"language":"en",
+		"home":
+			{
+				"txt_search" : "search (eg.Hanoi)",
+				"lbl_activites" : "Activites",
+				"lbl_excdest" : "Destination",
+				"btn_b1":"Home",
+				"btn_b2":"Your Cart",
+				"btn_b3":"History"
+			},
+			"payment":
+			{
+				"lbl_text":"Payment Policy",
+				"cx_text":"This reservation is non-refundable and cannot be changed or canceled.<br>Make sure the mobile phone and email are correct.<br>E-ticket will be sent to the email you provided.<br>By tapping Proceed to pay I acknowledge that I have readand accept the term & conditions and privacy policy."
+		
+			},
+		"contact":
+			{
+				"lbl_text":"Contact Us",
+				"lbl_phone":"Phone:",
+				"lbl_email":"Email:",			
+				"lbl_call":"Call Center:"			
+			}
+		
+	},
+	{"language":"de",
+		"home":
+			{
+				"txt_search" : "suchen (eg.Hanoi)",
+				"lbl_activites" : "Aktiviteaten",
+				"lbl_excdest" : "Destination",
+				"btn_b1":"Home",
+				"btn_b2":"Your Cart",
+				"btn_b3":"History"
+			},
+		"payment":
+			{
+				"lbl_text":"Zahlungspolitik",
+				"cx_text":"Diese Reservierung ist nicht erstattungsfähig und kann nicht geändert oder storniert werden.<br>Stellen Sie sicher, dass die Mobiltelefon- und E-Mail-Adresse korrekt ist."				
+			},
+		"contact":
+			{
+				"lbl_text":"Kontaktiere uns",
+				"lbl_phone":"Telefon:",
+				"lbl_email":"Email:",			
+				"lbl_call":"Call Center:"			
+			}
+		
+	}]
+}

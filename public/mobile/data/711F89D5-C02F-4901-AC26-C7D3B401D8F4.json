@@ -1,0 +1,126 @@
+{"brochure":
+	[
+		{
+		  "category":"brochure",
+		  "language":"en",
+		  "title":"English",
+		  "image":"http://online.govacation.biz/mobile/en.jpg",
+		  "link":"http://online.govacation.biz/mobile/en.pdf"
+	   },
+	   {
+		  "category":"brochure",
+		  "language":"de",
+		  "title":"German",
+		  "image":"http://online.govacation.biz/mobile/de.jpg",
+		  "link":"http://online.govacation.biz/mobile/de.pdf"
+	   },
+	   {
+		  "category":"price",
+		  "language":"en",
+		  "title":"English",
+		  "image":"http://online.govacation.biz/mobile/en.jpg",
+		  "link":"http://online.govacation.biz/mobile/price-en.pdf"
+	   },
+	   {
+		  "category":"price",
+		  "language":"de",
+		  "title":"German",
+		  "image":"http://online.govacation.biz/mobile/de.jpg",
+		  "link":"http://online.govacation.biz/mobile/price-de.pdf"
+	   }
+	],
+
+"menu":
+	[
+		
+		{
+			"icon" : "at",
+			"text":"About Us",
+			"link":"/support/",
+			"id":"menu-support"
+		}
+	],
+"general":
+		{
+			"text_rep" : "Representative",
+			"address_api_IP" : "http://ip-api.com/json/",
+			"sts_hotel_booking" : false,
+			"number_wa":"+84901489897",
+			"phone_com" :"+84901489897 ",
+			"email_com" :"excursion@govacation-vietnam.com",
+			"address_api_IP":"https://system.govacation.biz/ashx/general/ipexternal.ashx"
+
+		},
+"payment":{
+		"domain":"https://internetpaygate.com/",
+		"provider":"Sathapana",
+		"apikey":"xnd_public_development_oPYhk1YQ74wvtE8ldUFmvQVTeHBiN1wPjmIhOgWZ0L4CgnXdaBBXYUer2Qcr",
+		"apikeysec":"xnd_production_1SRILqR6uOyVugwl6eJDh7XteNJ9mV8aKaeP0q81Fh2d8DnvWY9TsuS4kk3jF",
+		"sts":"live",		
+		"payment_3ds":"true",
+		"payment_site":"https://internetpaygate.com/sathapana/index.php",
+		"payontour": false,
+		"webredirect": true,
+		"min_daypayontour": 2
+
+	},
+	"onepay_param":{
+		"virtualPaymentClientURL":"https://onepay.vn/paygate/vpcpay.op",
+		"SECURE_SECRET":"",
+		"vpc_Merchant": "OP_GOVACATVN",
+		"vpc_AccessCode" : "B0902B94",
+		"vpc_Currency" : "VND"
+		
+	},
+"idcountry_allow":["ID","AT","DE","CH"],
+"setup_text":
+	[{"language":"en",
+		"home":
+			{
+				"txt_search" : "search (eg.Pnom Penh)",
+				"lbl_activites" : "Activites",
+				"lbl_excdest" : "Destination",
+				"btn_b1":"Home",
+				"btn_b2":"Your Cart",
+				"btn_b3":"History"
+			},
+			"payment":
+			{
+				"lbl_text":"Payment Policy",
+				"cx_text":"This reservation is non-refundable and cannot be changed or canceled.<br>Make sure the mobile phone and email are correct.<br>E-ticket will be sent to the email you provided.<br>By tapping Proceed to pay I acknowledge that I have readand accept the term & conditions and privacy policy."
+		
+			},
+		"contact":
+			{
+				"lbl_text":"Contact Us",
+				"lbl_phone":"Phone:",
+				"lbl_email":"Email:",			
+				"lbl_call":"Call Center:"			
+			}
+		
+	},
+	{"language":"de",
+		"home":
+			{
+				"txt_search" : "suchen (eg.Pnom Penh)",
+				"lbl_activites" : "Aktiviteaten",
+				"lbl_excdest" : "Destination",
+				"btn_b1":"Home",
+				"btn_b2":"Your Cart",
+				"btn_b3":"History"
+			},
+		"payment":
+			{
+				"lbl_text":"Zahlungspolitik",
+				"cx_text":"Diese Reservierung ist nicht erstattungsfähig und kann nicht geändert oder storniert werden.<br>Stellen Sie sicher, dass die Mobiltelefon- und E-Mail-Adresse korrekt ist."				
+			},
+		"contact":
+			{
+				"lbl_text":"Kontaktiere uns",
+				"lbl_phone":"Telefon:",
+				"lbl_email":"Email:",			
+				"lbl_call":"Call Center:"			
+			}
+		
+	}]
+}

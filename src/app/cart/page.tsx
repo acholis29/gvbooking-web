@@ -210,11 +210,13 @@ export default function Cart() {
   const { openModal } = useModal();
   const { selectModal, setSelectModal } = useSelectModal();
 
-  resourceInitial.app_string='newweb';
+  resourceInitial.app_string = 'newweb';
 
   useEffect(() => {
-    if (resourceInitial.url_fo != "") {
-      fetch(`${resourceInitial.url_fo}/mobile/data.json`, {
+
+    if (typeof (ListCart) == 'object' && ListCart.length > 0) {
+      console.log("Company ID:", ListCart[0].company_id);
+      fetch(`/mobile/data/${ListCart[0].company_id}.json`, {
         cache: "no-store",
       })
         .then((res) => res.json())
@@ -227,6 +229,21 @@ export default function Cart() {
         })
         .catch((err) => console.error(err));
     }
+
+    // if (resourceInitial.url_fo != "") {
+    //   fetch(`${resourceInitial.url_fo}/mobile/data.json`, {
+    //     cache: "no-store",
+    //   })
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //       console.log("Payment Data:", data);
+    //       setPayment(data.payment); // ✅ langsung set array-nya
+    //       if (data.onepay_param != null) {
+    //         setOnepayParam(data.onepay_param);
+    //       }
+    //     })
+    //     .catch((err) => console.error(err));
+    // }
     loadCart();
   }, [cartApiItems]);
 
@@ -348,7 +365,7 @@ export default function Cart() {
         MOBILEPHONE: profile.phone,
         ln: language,
         vpc_TicketNo: IpLocation.query, // 203.128.80.46
-        backurl: window.location.origin ,
+        backurl: window.location.origin,
       });
 
       if (confPayment.provider == "onepay") {
@@ -397,7 +414,6 @@ export default function Cart() {
       });
 
       if (!response.ok) throw new Error("Payment failed");
-      console.log(response);
       // Response Html
       const html = await response.text();
 

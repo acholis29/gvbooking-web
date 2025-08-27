@@ -1,0 +1,127 @@
+{"brochure":
+	[
+		{
+		  "category":"brochure",
+		  "language":"en",
+		  "title":"English",
+		  "image":"http://online.govacation.biz/mobile/en.jpg",
+		  "link":"http://online.govacation.biz/mobile/en.pdf"
+	   },
+	   {
+		  "category":"brochure",
+		  "language":"de",
+		  "title":"German",
+		  "image":"http://online.govacation.biz/mobile/de.jpg",
+		  "link":"http://online.govacation.biz/mobile/de.pdf"
+	   },
+	   {
+		  "category":"price",
+		  "language":"en",
+		  "title":"English",
+		  "image":"http://online.govacation.biz/mobile/en.jpg",
+		  "link":"http://online.govacation.biz/mobile/price-en.pdf"
+	   },
+	   {
+		  "category":"price",
+		  "language":"de",
+		  "title":"German",
+		  "image":"http://online.govacation.biz/mobile/de.jpg",
+		  "link":"http://online.govacation.biz/mobile/price-de.pdf"
+	   }
+	],
+
+"menu":
+	[
+		
+		{
+			"icon" : "money_euro_circle",
+			"text":"Price List",
+			"link":"/brochure/?id=price",
+			"id":"menu-brochure"
+		},
+		{
+			"icon" : "book",
+			"text":"Brochure",
+			"link":"/brochure/?id=brochure",
+			"id":"menu-brochure"
+		},
+		
+		{
+			"icon" : "at",
+			"text":"About Us",
+			"link":"/support/",
+			"id":"menu-support"
+		}
+	],
+"general":
+		{
+			"text_rep" : "Representative",
+			"sts_hotel_booking" : false,
+			"number_wa":"+628123801503",
+			"phone_com" :"",
+			"email_com" :"cs@govacation-indonesia.com",
+			"address_api_IP":"https://system.govacation.biz/ashx/general/ipexternal.ashx"
+		},
+"payment":{
+		"domain":"https://internetpaygate.com/",
+		"provider":"docu",
+		"apikey":"xnd_public_production_o1kwAnBIEVLexeoMegmqxeO0gmaQlTMy0RCcYZCVKDBejZodlxJQ7Yvr257Tp",
+		"apikeysec":"xnd_production_1SRILqR6uOyVugwl6eJDh7XteNJ9mV8aKaeP0q81Fh2d8DnvWY9TsuS4kk3jF",
+		"sts":"live",		
+		"payment_3ds":"true",
+		"payment_site":"https://internetpaygate.com/xendit/payment.aspx",
+		"payontour": false,
+		"min_daypayontour": 2
+	},
+"idcountry_allow":["ID","AT","DE","CH"],
+"setup_text":
+	[{"language":"en",
+		"home":
+			{
+				"txt_search" : "search (eg.ubud)",
+				"lbl_activites" : "Activites",
+				"lbl_excdest" : "Destination",
+				"btn_b1":"Home",
+				"btn_b2":"Your Cart",
+				"btn_b3":"History"
+			},
+			"payment":
+			{
+				"lbl_text":"Payment Policy",
+				"cx_text":"This reservation is non-refundable and cannot be changed or canceled.<br>Make sure the mobile phone and email are correct.<br>E-ticket will be sent to the email you provided.<br>By tapping Proceed to pay I acknowledge that I have readand accept the term & conditions and privacy policy."
+		
+			},
+		"contact":
+			{
+				"lbl_text":"Contact Us",
+				"lbl_phone":"",
+				"lbl_email":"Email:",			
+				"lbl_call":"Hotline Number:"			
+			}
+		
+	},
+	{"language":"de",
+		"home":
+			{
+				"txt_search" : "suchen (eg.ubud)",
+				"lbl_activites" : "Aktivitäten",
+				"lbl_excdest" : "Destination",
+				"btn_b1":"Home",
+				"btn_b2":"Your Cart",
+				"btn_b3":"History"
+			},
+		"payment":
+			{
+				"lbl_text":"Zahlungspolitik",
+				"cx_text":"Diese Reservierung ist nicht erstattungsfähig und kann nicht geändert oder storniert werden.<br>Stellen Sie sicher, dass die Mobiltelefon- und E-Mail-Adresse korrekt ist."				
+			},
+		"contact":
+			{
+				"lbl_text":"Kontaktiere uns",
+				"lbl_phone":"",
+				"lbl_email":"Email:",			
+				"lbl_call":"Hotline Number:"			
+			}
+		
+	}]
+}
