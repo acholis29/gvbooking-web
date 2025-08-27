@@ -84,6 +84,7 @@ export default function NavbarComponent() {
   const [isProfilDropdownOpen, setProfilDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { selectModal, setSelectModal } = useSelectModal();
+  const [firstName, setFirstName] = useState("");
 
   type CountryItem = {
     country: string;
@@ -256,6 +257,14 @@ export default function NavbarComponent() {
       setProfileInitial(parsedData);
     }
   }, []);
+
+  useEffect(() => {
+    const savedProfileData = localStorage.getItem("profileData");
+    if (savedProfileData) {
+      const parsedData = JSON.parse(savedProfileData);
+      setFirstName(parsedData.firstname);
+    }
+  }, [profile]);
 
   useEffect(() => {
     // Set Date Picker Pada
@@ -457,7 +466,10 @@ export default function NavbarComponent() {
                   icon={faUser}
                   className="text-2xl text-gray-500 hover:text-red-500"
                 />
-                <span className="text-xs text-gray-500 mt-1">PROFILE</span>
+                <span className="text-xs text-gray-500 mt-1">
+                  {" "}
+                  {firstName == "" ? "PROFILE" : firstName.toUpperCase()}
+                </span>
               </div>
 
               {isProfilDropdownOpen && (
