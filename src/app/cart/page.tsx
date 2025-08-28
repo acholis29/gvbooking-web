@@ -345,6 +345,8 @@ export default function Cart() {
     const companyId = ListCart[0].company_id;
     const result = corev2.find((item) => item.idx_comp === companyId);
     setIsSubmitting(true);
+      console.log(confPayment.provider)
+
     if (result?.payontour == false) {
       // Payontour
       if (confPayment.provider == "") {
@@ -359,7 +361,6 @@ export default function Cart() {
   async function paymentGateway() {
     try {
       // resourceInitial.url_b2c=window.location.origin.toString();
-      console.log(confPayment.provider);
       // let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
       let grandtotal = subtotalSummeryOrderLocal; //idr
       const formBody = new URLSearchParams({
@@ -375,7 +376,7 @@ export default function Cart() {
         vpc_TicketNo: IpLocation.query, // 203.128.80.46
         backurl: window.location.origin,
       });
-      if (confPayment.provider == "onepay") {
+      if (confPayment.provider == "onepay" ) {
         // append semua key-value onepay_param
         Object.entries(onepayParam).forEach(([key, value]) => {
           formBody.append(key, value);
@@ -423,24 +424,28 @@ export default function Cart() {
       if (!response.ok) throw new Error("Payment failed");
       // Response Html
       const html = await response.text();
+      if (confPayment.provider == "onepay" || confPayment.provider == "Sathapana") {
+          const newWindow = window.open("", "");
+          if (newWindow && newWindow.document) {
+            newWindow.document.open();
+            newWindow.document.write(html);
+            newWindow.document.close();
+          } else {
+            toast.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
+            console.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
+          }
+      } else {
+          // Render Modal Iframe
+          // Simpan HTML di state untuk ditampilkan di iframe
+          setPaymentHtml(html);
+          setSelectModal("payment");
+          openModal();
 
-      // Jika mau render HTML ini di iframe atau window baru:
-      // Render New Tab
-      // const newWindow = window.open("", "_blank");
-      // if (newWindow && newWindow.document) {
-      //   newWindow.document.open();
-      //   newWindow.document.write(html);
-      //   newWindow.document.close();
-      // } else {
-      //   toast.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
-      //   console.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
-      // }
+      }
+     
+      
 
-      // Render Modal Iframe
-      // Simpan HTML di state untuk ditampilkan di iframe
-      setPaymentHtml(html);
-      setSelectModal("payment");
-      openModal();
+      
     } catch (error) {
       console.error("Payment error:", error);
       toast.error("Payment . Please try again.");
@@ -754,7 +759,8 @@ export default function Cart() {
         >
           {/* Tampilkan iframe kalau sudah ada HTML */}
           {paymentHtml && (
-            <iframe
+            <iframe 
+            
               srcDoc={paymentHtml}
               style={{
                 width: "100%",
