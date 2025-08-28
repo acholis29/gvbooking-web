@@ -214,7 +214,7 @@ export default function DrawerComponent({
                   className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
                   onClick={() => {
                     const drawer = document.getElementById("drawer-navigation");
-                    if (drawer) drawer.classList.add("-translate-x-full");
+                    if (drawer) drawer.classList.add("translate-x-full");
                   }}
                 >
                   <FontAwesomeIcon
@@ -239,7 +239,7 @@ export default function DrawerComponent({
                 className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
                 onClick={() => {
                   const drawer = document.getElementById("drawer-navigation");
-                  if (drawer) drawer.classList.add("-translate-x-full");
+                  if (drawer) drawer.classList.add("translate-x-full");
                 }}
               >
                 <FontAwesomeIcon
@@ -262,7 +262,7 @@ export default function DrawerComponent({
                 className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
                 onClick={() => {
                   const drawer = document.getElementById("drawer-navigation");
-                  if (drawer) drawer.classList.add("-translate-x-full");
+                  if (drawer) drawer.classList.add("translate-x-full");
                 }}
               >
                 <FontAwesomeIcon
