@@ -202,6 +202,7 @@ export default function Cart() {
 
   const [buyCurrencyMF, setBuyCurrencyMF] = useState("");
   const [locaCurrencyMF, setLocalCurrencyMF] = useState("");
+  const [idxCompCart, setIdxCompCart] = useState("");
 
   // Context global
   const { profileInitial, resourceInitial } = useInitial();
@@ -210,13 +211,18 @@ export default function Cart() {
   const { openModal } = useModal();
   const { selectModal, setSelectModal } = useSelectModal();
 
-  resourceInitial.app_string = 'newweb';
+  resourceInitial.app_string = "newweb";
 
   useEffect(() => {
+    const cart = JSON.parse(localStorage.getItem("cart_api") || "[]");
+    if (cart.length > 0) {
+      setIdxCompCart(cart[0].company_id);
+    }
+  }, []);
 
-    if (typeof (ListCart) == 'object' && ListCart.length > 0) {
-      console.log("Company ID:", ListCart[0].company_id);
-      fetch(`/mobile/data/${ListCart[0].company_id}.json`, {
+  useEffect(() => {
+    if (idxCompCart != "") {
+      fetch(`/mobile/data/${idxCompCart}.json`, {
         cache: "no-store",
       })
         .then((res) => res.json())
@@ -245,7 +251,7 @@ export default function Cart() {
     //     .catch((err) => console.error(err));
     // }
     loadCart();
-  }, [cartApiItems]);
+  }, [cartApiItems, idxCompCart]);
 
   useEffect(() => {
     fetch(`${API_HOSTS.host1}/mobile/corev2.json`, {
@@ -339,14 +345,14 @@ export default function Cart() {
     const companyId = ListCart[0].company_id;
     const result = corev2.find((item) => item.idx_comp === companyId);
     setIsSubmitting(true);
-    if (result?.payontour == false ) {
+    if (result?.payontour == false) {
       // Payontour
-        if(confPayment.provider == ""){
-          await payontour();           
-        } else {
+      if (confPayment.provider == "") {
+        await payontour();
+      } else {
         // Payment gateway
-          await paymentGateway();
-        }
+        await paymentGateway();
+      }
     }
   }
 
