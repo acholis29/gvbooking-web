@@ -34,6 +34,7 @@ export default function Profile() {
     localStorage.setItem("profileData", JSON.stringify(data));
     setProfile(data);
     toast.success("Success Update Profile");
+    toast.success(`Hai,${data.firstname} Welcome!`);
   };
 
   useEffect(() => {}, [profile]);

@@ -26,8 +26,11 @@ import { useWish } from "@/context/WishContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useModal } from "@/context/ModalContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { useProfile } from "@/context/ProfileContext";
 // Component
 import ModalComponent from "./ModalComponent";
+// Helper
+import { capitalizeWords } from "@/helper/helper";
 
 export default function DrawerComponent({
   isOpen,
@@ -46,8 +49,11 @@ export default function DrawerComponent({
   // Language
   const { language, setLanguage, masterLanguage, setMasterLanguage } =
     useLanguage();
+  // Profile
+  const { profile, setProfile } = useProfile();
 
   const [isDropdownProfilOpen, setDropdownProfilOpen] = useState(false);
+  const [firstName, setFirstName] = useState("");
   // Modal
   const { openModal } = useModal();
   const [menuSelected, setMenuSelected] = useState("");
@@ -79,6 +85,14 @@ export default function DrawerComponent({
       })
       .catch((err) => console.error(err));
   }, []);
+
+  useEffect(() => {
+    const savedProfileData = localStorage.getItem("profileData");
+    if (savedProfileData) {
+      const parsedData = JSON.parse(savedProfileData);
+      setFirstName(parsedData.firstname);
+    }
+  }, [profile]);
 
   return (
     <>
@@ -129,13 +143,14 @@ export default function DrawerComponent({
                   className="w-5 h-5 text-xl text-gray-400"
                 />
                 <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap text-gray-500">
-                  Profile
+                  {firstName == "" ? "Profile" : capitalizeWords(firstName)}
                 </span>
                 <FontAwesomeIcon
                   icon={faChevronDown}
                   className="w-5 h-5 text-md text-gray-400"
                 />
               </button>
+
               <ul
                 id="dropdown-example"
                 className={`${
