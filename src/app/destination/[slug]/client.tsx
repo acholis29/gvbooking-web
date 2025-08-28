@@ -89,7 +89,7 @@ export default function DestinationClient({ slug }: Props) {
   const { setCurrency, setMasterCurrency, currency } = useCurrency();
   const { profile } = useProfile();
   const { date } = useDate();
-  const { saveCartApi } = useCartApi();
+  const { saveCartApi, cartApiCount } = useCartApi();
   const {
     setAgent,
     setRepCode,
@@ -100,7 +100,7 @@ export default function DestinationClient({ slug }: Props) {
 
   // host sesuai country
   const host_img = getHostImageUrl(coreInitial, idx_comp ?? "");
-console.log("host_img", host_img);
+  console.log("host_img", host_img);
   // First Load API Mobile Initial
   useEffect(() => {
     const fetchDataInitial = async () => {
