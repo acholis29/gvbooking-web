@@ -278,6 +278,7 @@ export default function DestinationClient({ slug }: Props) {
                   image={`/images/destination/${slug}.jpg`}
                   title={`${item.State}`}
                   activities={item.qty}
+                  idx_comp={idx_comp ?? ""}
                   link={`/list?id=${idx_comp}&country=${country}&state=${item.State}&id-state=${item.idx_state}`}
                 />
               ))

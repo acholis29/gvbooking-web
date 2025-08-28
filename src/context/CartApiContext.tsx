@@ -64,6 +64,8 @@ type CartApiItem = {
 type CartApiContextType = {
   cartApiItems: CartApiItem[];
   cartApiCount: number;
+  idxCompCart: string;
+  setIdxCompCart: (value: string) => void;
   addToCartApi: (item: CartApiItem) => void;
   saveCartApi: (items: CartApiItem[]) => void; // tambahkan ini
 };
@@ -72,6 +74,7 @@ const CartApiContext = createContext<CartApiContextType | undefined>(undefined);
 
 export function CartApiProvider({ children }: { children: React.ReactNode }) {
   const [cartApiItems, setCartApiItems] = useState<CartApiItem[]>([]);
+  const [idxCompCart, setIdxCompCart] = useState("");
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart_api") || "[]");
@@ -81,6 +84,9 @@ export function CartApiProvider({ children }: { children: React.ReactNode }) {
   const saveCartApi = (items: CartApiItem[]) => {
     localStorage.setItem("cart_api", JSON.stringify(items));
     setCartApiItems(items);
+    if (items.length > 0) {
+      setIdxCompCart(items[0].company_id);
+    }
   };
 
   const addToCartApi = (item: CartApiItem) => {
@@ -93,6 +99,8 @@ export function CartApiProvider({ children }: { children: React.ReactNode }) {
       value={{
         cartApiItems,
         cartApiCount: cartApiItems.length,
+        idxCompCart,
+        setIdxCompCart,
         addToCartApi,
         saveCartApi, // tambahkan ini
       }}

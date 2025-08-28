@@ -199,6 +199,7 @@ export default function Home() {
                 image={`/images/destination/${item.country.toLowerCase()}.jpg`}
                 title={item.country}
                 activities={`${activity?.qty ?? "0"}`}
+                idx_comp={item.idx_comp}
                 link={`/destination/${item.country
                   .toLowerCase()
                   .replace(/\s+/g, "-")}?id=${

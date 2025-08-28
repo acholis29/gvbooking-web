@@ -202,12 +202,12 @@ export default function Cart() {
 
   const [buyCurrencyMF, setBuyCurrencyMF] = useState("");
   const [locaCurrencyMF, setLocalCurrencyMF] = useState("");
-  const [idxCompCart, setIdxCompCart] = useState("");
+  // const [idxCompCart, setIdxCompCart] = useState("");
 
   // Context global
   const { profileInitial, resourceInitial } = useInitial();
   const { profile } = useProfile();
-  const { cartApiItems } = useCartApi();
+  const { cartApiItems, idxCompCart, setIdxCompCart } = useCartApi();
   const { openModal } = useModal();
   const { selectModal, setSelectModal } = useSelectModal();
 
@@ -221,6 +221,7 @@ export default function Cart() {
   }, []);
 
   useEffect(() => {
+    console.log("idx comp cart", idxCompCart);
     if (idxCompCart != "") {
       fetch(`/mobile/data/${idxCompCart}.json`, {
         cache: "no-store",
@@ -282,6 +283,9 @@ export default function Cart() {
     console.log(cart);
     setCart(cart);
     setIsLoading(false);
+    if (cart.length > 0) {
+      setIdxCompCart(cart[0].company_id);
+    }
   }
 
   async function handleOnChangeCard(item: CartApiItem, checked: boolean) {
@@ -345,7 +349,7 @@ export default function Cart() {
     const companyId = ListCart[0].company_id;
     const result = corev2.find((item) => item.idx_comp === companyId);
     setIsSubmitting(true);
-      console.log(confPayment.provider)
+    console.log(confPayment.provider);
 
     if (result?.payontour == false) {
       // Payontour
@@ -376,7 +380,7 @@ export default function Cart() {
         vpc_TicketNo: IpLocation.query, // 203.128.80.46
         backurl: window.location.origin,
       });
-      if (confPayment.provider == "onepay" ) {
+      if (confPayment.provider == "onepay") {
         // append semua key-value onepay_param
         Object.entries(onepayParam).forEach(([key, value]) => {
           formBody.append(key, value);
@@ -424,28 +428,28 @@ export default function Cart() {
       if (!response.ok) throw new Error("Payment failed");
       // Response Html
       const html = await response.text();
-      if (confPayment.provider == "onepay" || confPayment.provider == "Sathapana") {
-          const newWindow = window.open("", "");
-          if (newWindow && newWindow.document) {
-            newWindow.document.open();
-            newWindow.document.write(html);
-            newWindow.document.close();
-          } else {
-            toast.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
-            console.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
-          }
+      if (
+        confPayment.provider == "onepay" ||
+        confPayment.provider == "Sathapana"
+      ) {
+        const newWindow = window.open("", "");
+        if (newWindow && newWindow.document) {
+          newWindow.document.open();
+          newWindow.document.write(html);
+          newWindow.document.close();
+        } else {
+          toast.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
+          console.error(
+            "Gagal membuka jendela baru. Mungkin diblokir browser."
+          );
+        }
       } else {
-          // Render Modal Iframe
-          // Simpan HTML di state untuk ditampilkan di iframe
-          setPaymentHtml(html);
-          setSelectModal("payment");
-          openModal();
-
+        // Render Modal Iframe
+        // Simpan HTML di state untuk ditampilkan di iframe
+        setPaymentHtml(html);
+        setSelectModal("payment");
+        openModal();
       }
-     
-      
-
-      
     } catch (error) {
       console.error("Payment error:", error);
       toast.error("Payment . Please try again.");
@@ -759,8 +763,7 @@ export default function Cart() {
         >
           {/* Tampilkan iframe kalau sudah ada HTML */}
           {paymentHtml && (
-            <iframe 
-            
+            <iframe
               srcDoc={paymentHtml}
               style={{
                 width: "100%",

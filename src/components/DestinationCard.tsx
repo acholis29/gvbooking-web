@@ -9,6 +9,7 @@ type DestinationCardProps = {
   image: string;
   title: string;
   activities: string;
+  idx_comp: string;
   link?: string; // optional
 };
 
@@ -16,19 +17,20 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
   image,
   title,
   activities,
+  idx_comp,
   link = "#",
 }) => {
   // Redirect
   const router = useRouter();
   // Cart API Counter
-  const { cartApiCount } = useCartApi();
+  const { cartApiCount, idxCompCart } = useCartApi();
 
   return (
     // <Link href={link} className="block group">
     <div
       className="block group"
       onClick={() => {
-        if (cartApiCount > 0) {
+        if (cartApiCount > 0 && idx_comp != idxCompCart) {
           Swal.fire({
             title: "Are you sure?",
             text: "Your cart is not finished!",
