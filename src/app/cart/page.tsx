@@ -339,19 +339,21 @@ export default function Cart() {
     const companyId = ListCart[0].company_id;
     const result = corev2.find((item) => item.idx_comp === companyId);
     setIsSubmitting(true);
-    if (result?.payontour == false && confPayment.provider == "") {
+    if (result?.payontour == false ) {
       // Payontour
-      await payontour();
-    } else {
-      // Payment gateway
-      await paymentGateway();
+        if(confPayment.provider == ""){
+          await payontour();           
+        } else {
+        // Payment gateway
+          await paymentGateway();
+        }
     }
   }
 
   async function paymentGateway() {
     try {
       // resourceInitial.url_b2c=window.location.origin.toString();
-
+      console.log(confPayment.provider);
       // let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
       let grandtotal = subtotalSummeryOrderLocal; //idr
       const formBody = new URLSearchParams({
@@ -367,7 +369,6 @@ export default function Cart() {
         vpc_TicketNo: IpLocation.query, // 203.128.80.46
         backurl: window.location.origin,
       });
-
       if (confPayment.provider == "onepay") {
         // append semua key-value onepay_param
         Object.entries(onepayParam).forEach(([key, value]) => {
