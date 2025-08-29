@@ -25,6 +25,7 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDate } from "@/context/DateContext";
 import { useInitial } from "@/context/InitialContext";
+import Checkbox from "@/components/Checkbox";
 
 type DestinationItemApi = {
   excursion_id: string;
@@ -115,6 +116,10 @@ export default function ListClient() {
   // dropdown sorting
   const [isSortingOpen, setIsSortingOpen] = useState(false);
 
+  // State Data Checkbox Array
+  const [selectedTypesHolidayArr, setSelectedTypesHolidayArr] = useState<
+    string[]
+  >([]);
   // State Data Checkbox Single
   const [selectedTypesById, setSelectedTypesById] = useState<string>("");
 
@@ -135,14 +140,18 @@ export default function ListClient() {
     value: string
   ) => {
     if (checked) {
-      setSelectedTypesById(value);
+      setSelectedTypesHolidayArr((prev) => [...prev, value]);
+      // setSelectedTypesById(value);
     } else {
-      setSelectedTypesById("");
+      setSelectedTypesHolidayArr((prev) => prev.filter((t) => t !== value));
+      // setSelectedTypesById("");
     }
   };
 
   // Function Handle Apply Filter Desktop
   const handleApply = () => {
+    const result = selectedTypesHolidayArr.join("~");
+    setSelectedTypesById(result);
     setApply(apply + 1); // untuk trigger apply filter
   };
 
@@ -390,13 +399,13 @@ export default function ListClient() {
                 </>
               ) : (
                 <>
-                  <Radio
+                  <Checkbox
                     title={"ALL TYPE"}
                     onChange={handleCheckboxChange}
                     value={""}
                   />
                   {masterHolidayApi.map((item) => (
-                    <Radio
+                    <Checkbox
                       key={item.holiday_type}
                       title={item.holiday_type}
                       onChange={handleCheckboxChange}
