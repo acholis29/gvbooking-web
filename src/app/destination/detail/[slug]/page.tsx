@@ -350,10 +350,10 @@ export default function DetailDestination() {
               <div className="text-gray-700 w-1/2">
                 <h3 className="text-sm md:text-lg font-semibold md:font-bold text-right text-red-500">
                   {/* 07:00 - 19:00 WITA */}
-                  {dataProduct != null
+                  {/* {dataProduct != null
                     ? dataProduct.msg.product_details[0].info_pickup_service
                     : ""}
-                  {" Local Time"}
+                  {" Local Time"} */}
                 </h3>
               </div>
             </div>
