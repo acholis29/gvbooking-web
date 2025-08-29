@@ -665,15 +665,42 @@ export default function NavbarComponent() {
                         <li key={item.country}>
                           <button
                             onClick={() => {
-                              setSelectedCategory(item.country);
-                              setDropdownOpen(false);
-                              router.push(
-                                `/destination/${toLowerCaseAll(
-                                  item.country
-                                )}?id=${item.idx_comp}&country=${toLowerCaseAll(
-                                  item.country
-                                )}`
-                              );
+                              if (
+                                cartApiCount > 0 &&
+                                item.idx_comp != idxCompCart
+                              ) {
+                                Swal.fire({
+                                  title: "Are you sure?",
+                                  text: "Your cart is not finished!",
+                                  icon: "warning",
+                                  showCancelButton: false,
+                                  showDenyButton: true,
+                                  confirmButtonColor: "#ef4444", // red-500
+                                  denyButtonColor: "#6b7280", // gray-500
+                                  confirmButtonText: "Payment",
+                                  denyButtonText: "Back To Cart",
+                                }).then((result) => {
+                                  if (result.isConfirmed) {
+                                    Swal.fire({
+                                      title: "Payment",
+                                      text: "Payment success!",
+                                      icon: "success",
+                                    });
+                                  } else if (result.isDenied) {
+                                    router.push("/cart");
+                                  }
+                                });
+                              } else {
+                                setSelectedCategory(item.country);
+                                setDropdownOpen(false);
+                                router.push(
+                                  `/destination/${toLowerCaseAll(
+                                    item.country
+                                  )}?id=${
+                                    item.idx_comp
+                                  }&country=${toLowerCaseAll(item.country)}`
+                                );
+                              }
                             }}
                             type="button"
                             className="inline-flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
