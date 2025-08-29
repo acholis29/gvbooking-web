@@ -32,6 +32,7 @@ import { toLowerCaseAll } from "@/helper/helper";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Breadcrumb from "@/components/Breadcrumb";
+import Spinner from "@/components/Spinner";
 
 export default function DetailDestination() {
   const searchParams = useSearchParams();
@@ -46,6 +47,7 @@ export default function DetailDestination() {
 
   const [isDropdownProductSubOpen, setDropdownProductSubOpen] = useState(false);
   const [selectedProductSub, setSelectedProductSubOpen] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
 
   // Currency
   const { currency, setCurrency, masterCurrency, setMasterCurrency } =
@@ -311,6 +313,17 @@ export default function DetailDestination() {
     localStorage.setItem("last-search", JSON.stringify(stored));
   }, [idx_excursion]);
 
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile(); // initial
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const maximum_pax =
     dataProduct != null && dataProduct.msg.product_subs.length > 0
       ? parseInt(dataProduct.msg.product_subs[0].maximum_pax)
@@ -350,10 +363,10 @@ export default function DetailDestination() {
               <div className="text-gray-700 w-1/2">
                 <h3 className="text-sm md:text-lg font-semibold md:font-bold text-right text-red-500">
                   {/* 07:00 - 19:00 WITA */}
-                  {dataProduct != null
+                  {/* {dataProduct != null
                     ? dataProduct.msg.product_details[0].info_pickup_service
                     : ""}
-                  {" Local Time"}
+                  {" Local Time"} */}
                 </h3>
               </div>
             </div>
@@ -500,6 +513,30 @@ export default function DetailDestination() {
               </div>
             </div>
           </div>
+
+          {/* Sticky */}
+          {isMobile && (
+            <div className="md:w-[50%] h-auto fixed bottom-0 left-0 w-full z-50">
+              <div className=" max-w-xl p-5 bg-gray-100 border border-gray-200 rounded-lg shadow-sm ">
+                <p className="text-lg text-gray-900">From</p>
+                {dataProduct && dataProduct.msg.product_subs.length > 0 && (
+                  <>
+                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                      {dataProduct.msg.product_subs[0].currency}{" "}
+                      {dataProduct.msg.product_subs[0].price}{" "}
+                      <small className="font-light">per person</small>
+                    </h5>
+                    <button
+                      type="submit"
+                      className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+                    >
+                      {isLoading && <Spinner />} Check Availability
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
         </>
       ) : (
         <>

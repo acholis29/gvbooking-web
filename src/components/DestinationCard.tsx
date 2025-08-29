@@ -28,7 +28,7 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
   return (
     // <Link href={link} className="block group">
     <div
-      className="block group"
+      className="block group cursor-pointer"
       onClick={() => {
         if (cartApiCount > 0 && idx_comp != idxCompCart) {
           Swal.fire({
