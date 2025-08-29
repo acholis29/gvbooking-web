@@ -116,8 +116,10 @@ export default function ListClient() {
   // dropdown sorting
   const [isSortingOpen, setIsSortingOpen] = useState(false);
 
-  // State Data Checkbox Array
-  const [selectedTypesHolidayArr, setSelectedTypesHolidayArr] = useState<
+  // State Data Checkbox Array Desktop
+  const [selectedTypesHolidayArrDesk, setSelectedTypesHolidayArrDesk] =
+    useState<string[]>([]);
+  const [selectedTypesHolidayArrMob, setSelectedTypesHolidayArrMob] = useState<
     string[]
   >([]);
   // State Data Checkbox Single
@@ -140,25 +142,45 @@ export default function ListClient() {
     value: string
   ) => {
     if (checked) {
-      setSelectedTypesHolidayArr((prev) => [...prev, value]);
+      setSelectedTypesHolidayArrDesk((prev) => [...prev, value]);
       // setSelectedTypesById(value);
     } else {
-      setSelectedTypesHolidayArr((prev) => prev.filter((t) => t !== value));
+      setSelectedTypesHolidayArrDesk((prev) => prev.filter((t) => t !== value));
       // setSelectedTypesById("");
+    }
+  };
+
+  const handleBadgeChange = (
+    checked: boolean,
+    title: string,
+    value: string
+  ) => {
+    if (checked) {
+      setSelectedTypesHolidayArrMob((prev) => [...prev, value]);
+    } else {
+      setSelectedTypesHolidayArrMob((prev) => prev.filter((t) => t !== value));
     }
   };
 
   // Function Handle Apply Filter Desktop
   const handleApply = () => {
-    const result = selectedTypesHolidayArr.join("~");
+    const result = selectedTypesHolidayArrDesk.join("~");
     setSelectedTypesById(result);
     setApply(apply + 1); // untuk trigger apply filter
   };
 
   // Function Handle Apply Filter Mobile
   const handleApplyMobile = () => {
+    const result = selectedTypesHolidayArrMob.join("~");
+    setSelectedTypesById(result);
     setApply(apply + 1); // untuk trigger apply filter
   };
+
+  // Hanlde Mobile Filter Holiday Type
+  useEffect(() => {
+    handleApplyMobile();
+    console.log(selectedTypesHolidayArrMob);
+  }, [selectedTypesHolidayArrMob]);
 
   useEffect(() => {
     setIsLoadList(true);
@@ -516,18 +538,32 @@ export default function ListClient() {
                 <div
                   key={`mobileHoliday-${item.holiday_type}`}
                   className={`w-auto h-10  border-gray-500  ${
-                    item.holiday_type == SelectBadgeFilterMobile
+                    selectedTypesHolidayArrMob.includes(item.holiday_type_id)
                       ? "bg-red-200 border-1 border-red-500"
                       : "border-1"
                   }  rounded-lg text-center align-middle flex items-center justify-center p-2 whitespace-nowrap`}
                   onClick={() => {
-                    if (item.holiday_type == SelectBadgeFilterMobile) {
-                      setSelectBadgeFilterMobile("");
-                      handleApplyMobile();
+                    //Kalo sama unchecked
+                    if (
+                      selectedTypesHolidayArrMob.includes(item.holiday_type_id)
+                    ) {
+                      // setSelectBadgeFilterMobile("");
+                      // handleApplyMobile();
+                      handleBadgeChange(
+                        false,
+                        item.holiday_type,
+                        item.holiday_type_id
+                      );
                     } else {
-                      setSelectBadgeFilterMobile(item.holiday_type);
-                      setSelectedTypesById(item.holiday_type_id);
-                      handleApplyMobile();
+                      // kalo tidak sama checked
+                      handleBadgeChange(
+                        true,
+                        item.holiday_type,
+                        item.holiday_type_id
+                      );
+                      // setSelectBadgeFilterMobile(item.holiday_type);
+                      // setSelectedTypesById(item.holiday_type_id);
+                      // handleApplyMobile();
                     }
                   }}
                 >
