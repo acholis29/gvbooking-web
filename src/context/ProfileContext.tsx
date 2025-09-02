@@ -8,6 +8,7 @@ type FormData = {
   lastname: string;
   phone: string;
   email: string;
+  temp: string;
 };
 // Tipe data untuk context
 type ProfileContextType = {
@@ -25,6 +26,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
     lastname: "",
     phone: "",
     email: "",
+    temp: "",
   }); // default misalnya IDR
 
   return (

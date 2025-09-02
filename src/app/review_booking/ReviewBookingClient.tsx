@@ -949,6 +949,7 @@ const ProfileContent = () => {
     lastname: string;
     phone: string;
     email: string;
+    temp: string;
   };
 
   const { profile, setProfile } = useProfile();
@@ -1053,6 +1054,12 @@ const ProfileContent = () => {
               <p className="text-red-500">{errors.email.message}</p>
             )}
           </div>
+          <input
+            {...register("temp")}
+            type="hidden"
+            id="temp"
+            defaultValue={"false"}
+          />
           {/* Apply */}
           <div className="mb-3">
             <button

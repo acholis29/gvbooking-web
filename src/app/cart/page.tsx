@@ -12,6 +12,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
+// Form Libraries
+import { useForm, Controller, useFieldArray, Form } from "react-hook-form";
 // component
 import Breadcrumb from "@/components/Breadcrumb";
 import CardAccordion from "@/components/CardAccordion";
@@ -332,6 +334,13 @@ export default function Cart() {
   }
 
   async function submitPayment() {
+    const profileData = JSON.parse(localStorage.getItem("profileData") || "{}");
+    if (profileData.temp == "true") {
+      setSelectModal("ProfilAsGuest");
+      openModal();
+      return null;
+    }
+
     if (isSubmitting) {
       toast("Please wait...", {
         icon: "⏳", // hourglass
@@ -346,6 +355,7 @@ export default function Cart() {
       });
       return null;
     }
+
     const companyId = ListCart[0].company_id;
     const result = corev2.find((item) => item.idx_comp === companyId);
     setIsSubmitting(true);
@@ -428,6 +438,7 @@ export default function Cart() {
       if (!response.ok) throw new Error("Payment failed");
       // Response Html
       const html = await response.text();
+      console.log("HTML PAYMENT :", html);
       if (
         confPayment.provider == "onepay" ||
         confPayment.provider == "Sathapana"
@@ -659,7 +670,7 @@ export default function Cart() {
                 onClick={submitPayment}
                 className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer"
               >
-                {isSubmitting && <Spinner />} Payment
+                {isSubmitting && <Spinner />} Checkout
               </button>
             </div>
           )}
@@ -747,7 +758,7 @@ export default function Cart() {
                 onClick={submitPayment}
                 className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer"
               >
-                {isSubmitting && <Spinner />} Payment
+                {isSubmitting && <Spinner />} Checkout
               </button>
             </div>
           )}
@@ -774,6 +785,241 @@ export default function Cart() {
           )}
         </ModalComponent>
       )}
+
+      {/* Modal Profile */}
+      {selectModal == "ProfilAsGuest" && (
+        <ModalComponent title="Log in?" icon={faUser}>
+          <ProfileAsGuestContent />
+        </ModalComponent>
+      )}
+
+      {/* Modal Profile */}
+      {selectModal == "GoPayment" && (
+        <ModalComponent title="Pay as guest?" icon={faUser}>
+          <GoPaymentContent
+            onClick={() => {
+              submitPayment(); // ✅ sekarang submitPayment() jalan
+            }}
+          />
+        </ModalComponent>
+      )}
     </div>
   );
 }
+
+const ProfileAsGuestContent = () => {
+  const { setSelectModal } = useSelectModal();
+  const { closeModal, openModal } = useModal();
+
+  type FormData = {
+    firstname: string;
+    lastname: string;
+    phone: string;
+    email: string;
+    temp: string;
+  };
+
+  const { profile, setProfile } = useProfile();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
+
+  const onSubmit = (data: FormData) => {
+    // Simpan ke localStorage
+    closeModal();
+  };
+  return (
+    <div className="flex flex-row mb-2 p-2 md:p-0">
+      <div className="w-[100%] rounded-sm">
+        {/* Apply */}
+        <div className="mb-3">
+          <button
+            type="button"
+            className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer"
+            onClick={() => {
+              closeModal();
+              setSelectModal("GoPayment");
+              openModal();
+            }}
+          >
+            Continue as guest
+          </button>
+          <div className="flex items-center gap-3 text-gray-500 text-sm my-3">
+            <div className="flex-1 border-t"></div>
+            <span>OR</span>
+            <div className="flex-1 border-t"></div>
+          </div>
+          <p className="text-gray-500 text-sm mb-3">
+            Check out more easily and access your tickets on any device with
+            your GetYourGuide account.
+          </p>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="mb-3">
+              <input
+                {...register("email")}
+                type="email"
+                id="email"
+                defaultValue=""
+                className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5"
+                placeholder="Email"
+              />
+              {errors.firstname && (
+                <p className="text-red-500">{errors.firstname.message}</p>
+              )}
+            </div>
+            <button
+              type="submit"
+              className="text-red-800 hover:text-white border-2 border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer"
+            >
+              Continue with email
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+type GoPaymentContentProps = {
+  onClick?: () => void; // sesuai tipe function submitPayment
+};
+
+const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
+  const { closeModal } = useModal();
+
+  type FormData = {
+    firstname: string;
+    lastname: string;
+    phone: string;
+    email: string;
+    temp: string;
+  };
+
+  const { profile, setProfile } = useProfile();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
+
+  const onSubmit = async (data: FormData) => {
+    console.log(data);
+    // Simpan ke localStorage
+    localStorage.setItem("profileData", JSON.stringify(data));
+    setProfile(data);
+    toast.success("Save Profile, Success");
+    toast.success(`Hai, ${data.firstname}, Welcome!`);
+    // ✅ panggil function dari parent
+    onClick?.();
+    closeModal();
+  };
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="flex flex-row mb-2 p-2 md:p-0">
+        <div className="w-[100%] rounded-sm">
+          <div className="mb-3">
+            <label
+              htmlFor="firstname"
+              className="block mb-2 text-sm font-semibold text-gray-700"
+            >
+              First Name
+            </label>
+            <input
+              {...register("firstname", {
+                required: "First name is required",
+              })}
+              type="text"
+              id="firstname"
+              defaultValue=""
+              className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="First Name"
+              required
+            />
+            {errors.firstname && (
+              <p className="text-red-500">{errors.firstname.message}</p>
+            )}
+          </div>
+          <div className="mb-3">
+            <label
+              htmlFor="lastname"
+              className="block mb-2 text-sm font-semibold text-gray-700"
+            >
+              Last Name
+            </label>
+            <input
+              {...register("lastname", {
+                required: "Last name is required",
+              })}
+              type="text"
+              id="lastname"
+              defaultValue=""
+              className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="Last Name"
+              required
+            />
+            {errors.lastname && (
+              <p className="text-red-500">{errors.lastname.message}</p>
+            )}
+          </div>
+          <div className="mb-3">
+            <label
+              htmlFor="phone"
+              className="block mb-2 text-sm font-semibold text-gray-700"
+            >
+              Phone Number
+            </label>
+            <input
+              {...register("phone")}
+              type="number"
+              id="phone"
+              defaultValue=""
+              className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="Phone Number"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="email"
+              className="block mb-2 text-sm font-semibold text-gray-700"
+            >
+              Email
+            </label>
+            <input
+              {...register("email", {
+                required: "email is required",
+              })}
+              type="email"
+              id="email"
+              defaultValue=""
+              className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="Email"
+              required
+            />
+            {errors.email && (
+              <p className="text-red-500">{errors.email.message}</p>
+            )}
+          </div>
+          <input
+            {...register("temp")}
+            type="hidden"
+            id="temp"
+            defaultValue={"false"}
+          />
+          {/* Apply */}
+          <div className="mb-3">
+            <button
+              type="submit"
+              className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-lg text-sm px-5 py-2.5 text-center w-full"
+            >
+              Go Payment
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  );
+};

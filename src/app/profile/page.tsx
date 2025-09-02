@@ -14,6 +14,7 @@ export default function Profile() {
     lastname: string;
     phone: string;
     email: string;
+    temp: string;
   };
 
   const { profile, setProfile } = useProfile();
@@ -26,6 +27,7 @@ export default function Profile() {
   } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
+    console.log(data);
     // Simpan ke localStorage
     if (profile.email != data.email) {
       saveCartApi([]);
@@ -140,6 +142,12 @@ export default function Profile() {
                     </p>
                   )}
                 </div>
+                <input
+                  {...register("temp")}
+                  type="hidden"
+                  id="temp"
+                  defaultValue={"false"}
+                />
               </div>
             </div>
           </div>

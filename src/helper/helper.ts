@@ -112,9 +112,15 @@ export const getHostImageUrl = (
 ): string | null => {
   const found = coreInitial.find((item) => item.idx_comp === idx_comp);
   if (!found) return null;
-  
+
   return `${found.url_img}`;
 };
+
+export function generateTempEmail(): string {
+  const randomStr = Math.random().toString(36).substring(2, 10);
+  return `${randomStr}@temp.com`;
+}
+
 
 
 

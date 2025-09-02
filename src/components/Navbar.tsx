@@ -47,7 +47,11 @@ import "react-datepicker/dist/react-datepicker.css";
 
 // Helper
 import { API_HOSTS } from "@/lib/apihost";
-import { capitalizeFirst, toLowerCaseAll } from "@/helper/helper";
+import {
+  capitalizeFirst,
+  generateTempEmail,
+  toLowerCaseAll,
+} from "@/helper/helper";
 
 // Select Search Autocomplate Component
 import dynamic from "next/dynamic";
@@ -269,6 +273,32 @@ export default function NavbarComponent() {
     if (savedProfileData) {
       const parsedData = JSON.parse(savedProfileData);
       setFirstName(parsedData.firstname);
+
+      if (parsedData.email == "") {
+        let profile_temp = {
+          firstname: "guest",
+          lastname: "",
+          email: generateTempEmail(),
+          phone: "123456789",
+          temp: "true", //temporary
+        };
+
+        // Simpan ke localStorage
+        localStorage.setItem("profileData", JSON.stringify(profile_temp));
+        setProfile(profile_temp);
+      }
+    } else {
+      let profile_temp = {
+        firstname: "guest",
+        lastname: "",
+        email: generateTempEmail(),
+        phone: "123456789",
+        temp: "true", //temporary
+      };
+
+      // Simpan ke localStorage
+      localStorage.setItem("profileData", JSON.stringify(profile_temp));
+      setProfile(profile_temp);
     }
   }, [profile]);
 
