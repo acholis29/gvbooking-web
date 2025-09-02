@@ -472,6 +472,17 @@ export default function Cart() {
         setSelectModal("payment");
         openModal();
       }
+
+      // Reset Temp
+      let UpdateProfile = {
+        email: profile.email,
+        firstname: profile.firstname,
+        lastname: profile.lastname,
+        phone: "08199882",
+        temp: "true",
+      };
+
+      localStorage.setItem("profileData", JSON.stringify(UpdateProfile));
     } catch (error) {
       console.error("Payment error:", error);
       toast.error("Payment . Please try again.");
@@ -865,7 +876,7 @@ const ProfileAsGuestContent = () => {
           </div>
           <p className="text-gray-500 text-sm mb-3">
             Check out more easily and access your tickets on any device with
-            your GetYourGuide account.
+            your Govacation account.
           </p>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-3">
