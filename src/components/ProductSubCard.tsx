@@ -20,6 +20,7 @@ import { useInitial } from "@/context/InitialContext";
 // Redirect
 import { useRouter } from "next/navigation";
 import { getHostImageUrl } from "@/helper/helper";
+import DatePicker from "react-datepicker";
 
 type ProductSub = {
   excursion_id: string;
@@ -198,6 +199,8 @@ const ProductSub: React.FC<ProductSubProps> = ({
     fetchDataAllotment();
   }, [date, currency]);
 
+  const [startDate, setStartDate] = useState(new Date());
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <a className="flex flex-col md:flex-row w-full items-start mb-3 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 ">
@@ -216,6 +219,11 @@ const ProductSub: React.FC<ProductSubProps> = ({
             <h5 className="text-md font-bold tracking-tight text-gray-900 mts-2">
               {item?.sub_excursion_name}
             </h5>
+            <DatePicker
+              selected={startDate}
+              className="mt-1 bg-gray-100 font-semibold p-2 rounded-2xl w-full shadow-sm focus:outline-none focus:ring-0 border-0"
+              wrapperClassName="w-full md:w-auto max-w-xs"
+            />
             <p className="ml-4 mt-1 text-xs font-bold md:font-normal text-gray-500 ">
               Pickup from :
             </p>
