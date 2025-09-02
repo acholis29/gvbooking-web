@@ -515,7 +515,7 @@ export default function DetailDestination() {
           </div>
 
           {/* Sticky */}
-          {isMobile && (
+          {/* {isMobile && (
             <div className="md:w-[50%] h-auto fixed bottom-0 left-0 w-full z-50">
               <div className=" max-w-xl p-5 bg-gray-100 border border-gray-200 rounded-lg shadow-sm ">
                 <p className="text-lg text-gray-900">From</p>
@@ -536,7 +536,7 @@ export default function DetailDestination() {
                 )}
               </div>
             </div>
-          )}
+          )} */}
         </>
       ) : (
         <>
