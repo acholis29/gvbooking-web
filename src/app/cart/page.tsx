@@ -335,6 +335,7 @@ export default function Cart() {
 
   async function submitPayment() {
     const profileData = JSON.parse(localStorage.getItem("profileData") || "{}");
+    const profilePay = JSON.parse(localStorage.getItem("profilePay") || "{}");
     if (profileData.temp == "true") {
       setSelectModal("ProfilAsGuest");
       openModal();
@@ -376,16 +377,26 @@ export default function Cart() {
     try {
       // resourceInitial.url_b2c=window.location.origin.toString();
       // let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
+      let profile_pay = JSON.parse(
+        localStorage.getItem("profilePay") || JSON.stringify(profile)
+      );
+
+      console.log("profile pay", profile_pay);
       let grandtotal = subtotalSummeryOrderLocal; //idr
       const formBody = new URLSearchParams({
         intl: resourceInitial.company_code ?? "", // contoh intl
         pay_provider: confPayment.provider ?? "", // contoh docu, xendit, onepay
-        NAME: `${profile.firstname} ${profile.lastname}`,
-        FIRST_NAME: profile.firstname,
-        LAST_NAME: profile.lastname,
-        EMAIL: profileInitial[0].email,
+        // NAME: `${profile.firstname} ${profile.lastname}`,
+        NAME: `${profile_pay.firstname} ${profile_pay.lastname}`,
+        // FIRST_NAME: profile.firstname,
+        FIRST_NAME: profile_pay.firstname,
+        // LAST_NAME: profile.lastname,
+        LAST_NAME: profile_pay.lastname,
+        // EMAIL: profileInitial[0].email,
+        EMAIL: profile_pay.email,
         PASSPORT: "",
-        MOBILEPHONE: profile.phone,
+        // MOBILEPHONE: profile.phone,
+        MOBILEPHONE: profile_pay.phone,
         ln: language,
         vpc_TicketNo: IpLocation.query, // 203.128.80.46
         backurl: window.location.origin,
@@ -909,8 +920,21 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
   const onSubmit = async (data: FormData) => {
     console.log(data);
     // Simpan ke localStorage
-    localStorage.setItem("profileData", JSON.stringify(data));
-    setProfile(data);
+    // localStorage.setItem("profileData", JSON.stringify(data));
+    // setProfile(data);
+
+    localStorage.setItem("profilePay", JSON.stringify(data));
+
+    let UpdateProfile = {
+      email: profile.email,
+      firstname: profile.firstname,
+      lastname: profile.lastname,
+      phone: "08199882",
+      temp: "false",
+    };
+
+    localStorage.setItem("profileData", JSON.stringify(UpdateProfile));
+
     toast.success("Save Profile, Success");
     toast.success(`Hai, ${data.firstname}, Welcome!`);
     // ✅ panggil function dari parent
