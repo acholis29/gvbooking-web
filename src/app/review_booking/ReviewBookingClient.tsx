@@ -95,6 +95,7 @@ export default function ReviewBookingClient() {
   const agentId = reviewBookingObj?.agent_id;
   const repCode = reviewBookingObj?.rep_code;
   const transaction_id = reviewBookingObj?.transaction_id;
+  const subExcBookingDate = reviewBookingObj?.sub_exc_booking_date;
 
   type ProductDetail = {
     excursion_name: string;
@@ -252,7 +253,8 @@ export default function ReviewBookingClient() {
         id_excursion: idx_excursion ?? "", // Examp : "BA928E11-CE70-4427-ACD0-A7FC13C34891"
         id_excursion_sub: idx_excursion_sub ?? "", // Examp :"123A24BD-56EC-4188-BE9D-B7318EF0FB84"
         id_pickup_area: pickup_id ?? "", // Examp : "1EC87603-7ECC-48BC-A56C-F513B7B28CE3"
-        tour_date: date, //2025-07-11
+        // tour_date: date, //2025-07-11 ini global
+        tour_date: subExcBookingDate ?? "", //2025-07-11 ini sub exc
         total_pax_adult: adult ?? "0", // 1
         total_pax_child: child.count ?? "0", // 2
         total_pax_infant: infant ?? "0", // 2
@@ -492,7 +494,8 @@ export default function ReviewBookingClient() {
         id_supplier: supplierId, // Examp : "155D1088-BC9C-D85A-E9BC-96778772AC0F"
         id_pickup_area: pickup_id ?? "", // Examp pickup id : "12EBA6A1-533A-4875-B0A7-CA6362370FF3"
         pickup_point: data.roomNumber ?? "", //Exam : Lobby
-        pickup_date: date ?? "", // 2025-08-01
+        // pickup_date: date ?? "", // 2025-08-01 ini global
+        pickup_date: subExcBookingDate ?? "", // 2025-08-01 ini sub exc
         pickup_time: timePickup ?? "", //05:45
         remark: "",
         input_item: inputItem ?? "", // surcharge_id|price,

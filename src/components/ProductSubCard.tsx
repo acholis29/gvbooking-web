@@ -93,6 +93,14 @@ const ProductSub: React.FC<ProductSubProps> = ({
 
   // host sesuai country
   const host_img = getHostImageUrl(coreInitial, idx_comp ?? "");
+  // DateLocal SubExcDate
+  const [subExcBookingDate, setSubExcBookingDate] = useState<Date | null>(
+    () => {
+      const today = new Date();
+      today.setDate(today.getDate() + 1);
+      return today;
+    }
+  );
 
   const {
     register,
@@ -124,6 +132,7 @@ const ProductSub: React.FC<ProductSubProps> = ({
         agent_id: "",
         rep_code: "",
         transaction_id: "",
+        sub_exc_booking_date: "",
       });
 
       const paramsBooking = {
@@ -143,6 +152,8 @@ const ProductSub: React.FC<ProductSubProps> = ({
         agent_id: agent,
         rep_code: repCode,
         transaction_id: transaction_id ?? "",
+        sub_exc_booking_date:
+          subExcBookingDate?.toISOString().split("T")[0] ?? "",
       };
       setReviewBookingObj(paramsBooking);
       sessionStorage.setItem(
@@ -199,7 +210,11 @@ const ProductSub: React.FC<ProductSubProps> = ({
     fetchDataAllotment();
   }, [date, currency]);
 
-  const [startDate, setStartDate] = useState(new Date());
+  useEffect(() => {
+    if (date) {
+      setSubExcBookingDate(new Date(date)); // ubah string jadi Date
+    }
+  }, [date]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -220,7 +235,21 @@ const ProductSub: React.FC<ProductSubProps> = ({
               {item?.sub_excursion_name}
             </h5>
             <DatePicker
-              selected={startDate}
+              selected={subExcBookingDate}
+              minDate={(() => {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                return tomorrow;
+              })()}
+              onChange={(date) => {
+                setSubExcBookingDate(date);
+                if (date) {
+                  // Format ke yyyy-mm-dd dan simpan di context
+                  const formatted = date.toISOString().split("T")[0];
+                  setDate(formatted);
+                  localStorage.setItem("booking_date", formatted);
+                }
+              }}
               className="mt-1 bg-gray-100 font-semibold p-2 rounded-2xl w-full shadow-sm focus:outline-none focus:ring-0 border-0"
               wrapperClassName="w-full md:w-auto max-w-xs"
             />

@@ -478,7 +478,8 @@ export default function DetailDestination() {
                     </div>
                   </div>
                 </div>
-                <div className="w-full md:w-1/7 mt-3 mb-5">
+                {/* Date Global */}
+                {/* <div className="w-full md:w-1/7 mt-3 mb-5">
                   <p className="mr-2 font-semibold text-gray-500">
                     Choose a date for your tour
                   </p>
@@ -509,9 +510,9 @@ export default function DetailDestination() {
                       size="lg"
                     />
                   </div>
-                </div>
+                </div> */}
                 {dataProduct && dataProduct.msg.product_subs.length > 0 && (
-                  <>
+                  <div className="mt-3">
                     {dataProduct.msg.product_subs.map((item, index) => {
                       return (
                         <ProductSub
@@ -524,10 +525,10 @@ export default function DetailDestination() {
                         />
                       );
                     })}
-                  </>
+                  </div>
                 )}
 
-                <p className="font-bold text-lg mt-20">
+                <p className="font-bold text-lg mt-10">
                   {/* The Legendary Charm of Tanah Lot Temple: Bali's Eternal Wonder */}
                   {dataProduct != null
                     ? dataProduct.msg.product_details[0].excursion_name

@@ -18,6 +18,7 @@ type ReviewBooking = {
   agent_id: string;
   rep_code: string;
   transaction_id: string;
+  sub_exc_booking_date: string;
 };
 
 type ReviewBookingContextType = {
