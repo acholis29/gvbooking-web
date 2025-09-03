@@ -26,6 +26,7 @@ import { InitialProvider } from "@/context/InitialContext";
 import { ProfileProvider } from "@/context/ProfileContext";
 import { SelectModalProvider } from "@/context/SelectModalContext";
 import { SeasonProvider } from "@/context/SeasonContext";
+import Providers from "./providers";
 // Toast
 import { Toaster } from "react-hot-toast";
 
@@ -70,7 +71,8 @@ export default function RootLayout({
                             <SelectModalProvider>
                               <SeasonProvider>
                                 <Navbar />
-                                {children}
+                                {/* Providers Next-Auth */}
+                                <Providers>{children}</Providers>
                                 <Toaster position="top-center" />
                                 {/* Footer */}
                                 <FooterComponent />

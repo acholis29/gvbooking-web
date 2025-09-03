@@ -2,6 +2,7 @@
 // Hooks
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn, signOut, useSession } from "next-auth/react";
 // Library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -602,6 +603,17 @@ export default function Cart() {
     }
   }, [isLoading, ListCart]);
 
+  const { data: session, status } = useSession();
+  useEffect(() => {
+    if (status === "authenticated") {
+      console.log("Login sukses:", session.user);
+      // jalankan event yang kamu mau
+      router.push(
+        `/cart?auth=true&email=${session.user?.email}&name=${session.user?.name}`
+      );
+    }
+  }, [status, session, router]);
+
   if (!isLoading && ListCart.length === 0) return null;
   return (
     // Cart Page
@@ -853,6 +865,8 @@ const ProfileAsGuestContent = () => {
     // Simpan ke localStorage
     closeModal();
   };
+
+  const { data: session } = useSession();
   return (
     <div className="flex flex-row mb-2 p-2 md:p-0">
       <div className="w-[100%] rounded-sm">
@@ -867,7 +881,7 @@ const ProfileAsGuestContent = () => {
               openModal();
             }}
           >
-            Continue as guest
+            Continue as guest {session && session.user?.name}
           </button>
           <div className="flex items-center gap-3 text-gray-500 text-sm my-3">
             <div className="flex-1 border-t"></div>
@@ -894,9 +908,11 @@ const ProfileAsGuestContent = () => {
             </div>
             <button
               type="submit"
+              onClick={() => signIn("google")}
+              // onClick={() => signOut()}
               className="text-red-800 hover:text-white border-2 border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer"
             >
-              Continue with email
+              Continue with google
             </button>
           </form>
         </div>
