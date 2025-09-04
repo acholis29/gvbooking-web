@@ -25,6 +25,7 @@ import DrawerComponent from "@/components/Drawer";
 import ModalComponent from "./ModalComponent";
 
 // Library
+import { signIn, signOut, useSession } from "next-auth/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -40,6 +41,7 @@ import {
   faMoneyCheckDollar,
   faRightToBracket,
   faShoppingCart,
+  faSignOut,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
@@ -51,6 +53,7 @@ import {
   capitalizeFirst,
   generateTempEmail,
   toLowerCaseAll,
+  truncateText,
 } from "@/helper/helper";
 
 // Select Search Autocomplate Component
@@ -90,6 +93,8 @@ export default function NavbarComponent() {
   const [isMobile, setIsMobile] = useState(false);
   const { selectModal, setSelectModal } = useSelectModal();
   const [firstName, setFirstName] = useState("");
+  // Login with Google
+  const { data: session, status } = useSession();
 
   type CountryItem = {
     country: string;
@@ -105,7 +110,13 @@ export default function NavbarComponent() {
   const hideCurrency = pathname === "/" || pathname === "/home";
   const hideCartIcon = pathname === "/" || pathname === "/home";
 
-  const menu_profil = ["Options", "Sign In", "Currency", "Language"];
+  const menu_profil = [
+    "Sign In",
+    "Options",
+    "Currency",
+    "Language",
+    "Sign Out",
+  ];
 
   // Cart Counter
   const { cartCount } = useCart();
@@ -523,6 +534,11 @@ export default function NavbarComponent() {
             >
               <div
                 className="flex flex-col items-center cursor-pointer"
+                title={
+                  status == "authenticated"
+                    ? session.user?.name?.toLocaleUpperCase()
+                    : ""
+                }
                 // onClick={() => setProfilDropdownOpen(!isProfilDropdownOpen)}
               >
                 <FontAwesomeIcon
@@ -531,7 +547,15 @@ export default function NavbarComponent() {
                 />
                 <span className="text-xs text-gray-500 mt-1">
                   {" "}
-                  {firstName == "" ? "PROFILE" : firstName.toUpperCase()}
+                  {status == "authenticated"
+                    ? truncateText(
+                        session.user?.name?.toLocaleUpperCase() ?? "",
+                        10
+                      )
+                    : firstName == ""
+                    ? "PROFILE"
+                    : firstName.toUpperCase()}
+                  {/* {firstName == "" ? "PROFILE" : firstName.toUpperCase()} */}
                 </span>
               </div>
 
@@ -539,7 +563,17 @@ export default function NavbarComponent() {
                 <div className="absolute z-30 mt-2 right-0 bg-white border border-gray-200 shadow-md rounded-md w-80 py-3">
                   <ul className="text-sm text-gray-700">
                     {menu_profil.map((item, index) => {
+                      // Hidden Currency di route tertentu
                       if (item == "Currency" && hideCurrency) {
+                        return null;
+                      }
+
+                      // Hidden Sign In Ketika Login
+                      if (item == "Sign In" && status == "authenticated") {
+                        return null;
+                      }
+
+                      if (item == "Sign Out" && status == "unauthenticated") {
                         return null;
                       }
 
@@ -550,6 +584,8 @@ export default function NavbarComponent() {
                           onClick={() => {
                             if (item == "Options") {
                               router.push("/profile");
+                            } else if (item == "Sign Out") {
+                              signOut();
                             } else {
                               setSelectModal(`${item}`);
                               if (item == "Currency" && cartApiCount > 0) {
@@ -574,6 +610,8 @@ export default function NavbarComponent() {
                                   ? faDollarSign
                                   : item === "Options"
                                   ? faGear
+                                  : item === "Sign Out"
+                                  ? faSignOut
                                   : faGlobe
                               }
                               className="text-lg text-gray-500 shrink-0"

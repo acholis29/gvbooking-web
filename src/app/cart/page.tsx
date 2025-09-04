@@ -2,9 +2,14 @@
 // Hooks
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn, signOut, useSession } from "next-auth/react";
 // Library
+import { signIn, useSession } from "next-auth/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faApple,
+  faFacebook,
+  faGoogle,
+} from "@fortawesome/free-brands-svg-icons";
 import {
   faChevronDown,
   faChevronUp,
@@ -605,12 +610,12 @@ export default function Cart() {
 
   const { data: session, status } = useSession();
   useEffect(() => {
-    if (status === "authenticated") {
+    let oauth = sessionStorage.getItem("oauth");
+    if (status === "authenticated" && oauth == "true") {
       console.log("Login sukses:", session.user);
       // jalankan event yang kamu mau
-      router.push(
-        `/cart?auth=true&email=${session.user?.email}&name=${session.user?.name}`
-      );
+      setSelectModal("GoPaymentOauth");
+      openModal();
     }
   }, [status, session, router]);
 
@@ -822,15 +827,36 @@ export default function Cart() {
 
       {/* Modal Profile */}
       {selectModal == "ProfilAsGuest" && (
-        <ModalComponent title="Log in?" icon={faUser}>
+        <ModalComponent title="Log in?" icon={faUser} closeBackdrop={false}>
           <ProfileAsGuestContent />
         </ModalComponent>
       )}
 
-      {/* Modal Profile */}
+      {/* Modal GoPayment */}
       {selectModal == "GoPayment" && (
-        <ModalComponent title="Pay as guest?" icon={faUser}>
+        <ModalComponent
+          title="Pay as guest?"
+          icon={faUser}
+          closeBackdrop={false}
+        >
           <GoPaymentContent
+            onClick={() => {
+              submitPayment(); // ✅ sekarang submitPayment() jalan
+            }}
+          />
+        </ModalComponent>
+      )}
+
+      {/* Modal Payment Oauth */}
+      {selectModal == "GoPaymentOauth" && (
+        <ModalComponent
+          title={`Pay as ${
+            status == "authenticated" ? session.user?.name : ""
+          }`}
+          icon={faUser}
+          closeBackdrop={false}
+        >
+          <GoPaymentOauthContent
             onClick={() => {
               submitPayment(); // ✅ sekarang submitPayment() jalan
             }}
@@ -876,12 +902,13 @@ const ProfileAsGuestContent = () => {
             type="button"
             className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer"
             onClick={() => {
+              // sekarang bisa langsung set dari sini
               closeModal();
               setSelectModal("GoPayment");
               openModal();
             }}
           >
-            Continue as guest {session && session.user?.name}
+            Continue as guest
           </button>
           <div className="flex items-center gap-3 text-gray-500 text-sm my-3">
             <div className="flex-1 border-t"></div>
@@ -892,6 +919,32 @@ const ProfileAsGuestContent = () => {
             Check out more easily and access your tickets on any device with
             your Govacation account.
           </p>
+
+          <div className="flex flex-row gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                signIn("google");
+                sessionStorage.setItem("oauth", "true");
+              }}
+              className="text-gray-400 mb-3 hover:text-white border-2 border-gray-400 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer"
+            >
+              <FontAwesomeIcon icon={faGoogle} className=" w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              className="text-gray-400 mb-3 hover:text-white border-2 border-gray-400 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer"
+            >
+              <FontAwesomeIcon icon={faApple} className=" w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              className="text-gray-400 mb-3 hover:text-white border-2 border-gray-400 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer"
+            >
+              <FontAwesomeIcon icon={faFacebook} className=" w-5 h-5" />
+            </button>
+          </div>
+
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-3">
               <input
@@ -909,10 +962,9 @@ const ProfileAsGuestContent = () => {
             <button
               type="submit"
               onClick={() => signIn("google")}
-              // onClick={() => signOut()}
               className="text-red-800 hover:text-white border-2 border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer"
             >
-              Continue with google
+              Continue with email
             </button>
           </form>
         </div>
@@ -1060,6 +1112,79 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
             id="temp"
             defaultValue={"false"}
           />
+          {/* Apply */}
+          <div className="mb-3">
+            <button
+              type="submit"
+              className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-lg text-sm px-5 py-2.5 text-center w-full"
+            >
+              Go Payment
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  );
+};
+
+const GoPaymentOauthContent = ({ onClick }: GoPaymentContentProps) => {
+  const { closeModal } = useModal();
+  const { data: session, status } = useSession();
+
+  type FormData = {
+    firstname: string;
+    lastname: string;
+    phone: string;
+    email: string;
+    temp: string;
+  };
+
+  const { profile, setProfile } = useProfile();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
+
+  const onSubmit = async (data: FormData) => {
+    let email = "";
+    let firstname = "";
+    let lastname = "";
+    if (status == "authenticated") {
+      email = session.user?.email ?? "";
+      firstname = session.user?.name ?? "";
+      lastname = session.user?.name ?? "";
+    }
+    let ProfilPay = {
+      email: email,
+      firstname: firstname,
+      lastname: lastname,
+      phone: "000000",
+      temp: "false",
+    };
+    localStorage.setItem("profilePay", JSON.stringify(ProfilPay));
+
+    let UpdateProfile = {
+      email: profile.email,
+      firstname: profile.firstname,
+      lastname: profile.lastname,
+      phone: "000000",
+      temp: "false",
+    };
+
+    localStorage.setItem("profileData", JSON.stringify(UpdateProfile));
+
+    toast.success("Save Profile, Success");
+    toast.success(`Hai, ${data.firstname}, Welcome!`);
+    // ✅ panggil function dari parent
+    onClick?.();
+    closeModal();
+  };
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="flex flex-row mb-2 p-2 md:p-0">
+        <div className="w-[100%] rounded-sm">
           {/* Apply */}
           <div className="mb-3">
             <button

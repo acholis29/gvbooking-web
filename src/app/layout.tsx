@@ -70,12 +70,14 @@ export default function RootLayout({
                           <ProfileProvider>
                             <SelectModalProvider>
                               <SeasonProvider>
-                                <Navbar />
-                                {/* Providers Next-Auth */}
-                                <Providers>{children}</Providers>
-                                <Toaster position="top-center" />
-                                {/* Footer */}
-                                <FooterComponent />
+                                <Providers>
+                                  <Navbar />
+                                  {/* Providers Next-Auth */}
+                                  {children}
+                                  <Toaster position="top-center" />
+                                  {/* Footer */}
+                                  <FooterComponent />
+                                </Providers>
                               </SeasonProvider>
                             </SelectModalProvider>
                           </ProfileProvider>

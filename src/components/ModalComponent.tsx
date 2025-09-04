@@ -44,7 +44,10 @@ const ModalComponent: React.FC<ModalProps> = ({
     <Modal
       dismissible={closeBackdrop}
       show={open}
-      onClose={closeModal}
+      onClose={() => {
+        closeModal();
+        sessionStorage.removeItem("oauth");
+      }}
       size={size}
     >
       <ModalHeader className={`${bgColor} ${textColor}`}>
