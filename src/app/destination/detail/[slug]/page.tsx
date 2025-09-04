@@ -452,18 +452,18 @@ export default function DetailDestination() {
         )}
 
         {/* Baris Content */}
-        <div className="flex flex-col md:flex-row pb-5 gap-5 mt-3">
+        <div className="flex flex-col md:flex-row pb-5 gap-5 mt-5">
           <div className="order-2 md:order-1 w-full md:flex-[5] text-gray-600">
             {/* Short Description */}
-            <p className="font-normal text-md">
+            <p className="font-normal text-md text-justify">
               Explore Grand Canyon West on the Hualapai Reservation on this day
               trip from Las Vegas. Walk along the rim of the canyon, admire the
               views, and make a stop for views of Hoover Dam.
             </p>
             {/* About Activity */}
             <p className="font-bold text-lg mt-3">About this activity</p>
-            <div className="w-full flex flex-col mt-2">
-              <div className="flex flex-row w-full">
+            <div className="w-full flex flex-col mt-5">
+              <div className="flex flex-row w-full mb-5">
                 <div className="mr-2">
                   <FontAwesomeIcon
                     icon={faCalendarCheck}
@@ -478,7 +478,7 @@ export default function DetailDestination() {
                   </p>
                 </div>
               </div>
-              <div className="flex flex-row w-full">
+              <div className="flex flex-row w-full mb-5">
                 <div className="mr-2">
                   <FontAwesomeIcon
                     icon={faCalendarWeek}
@@ -495,7 +495,7 @@ export default function DetailDestination() {
                   </p>
                 </div>
               </div>
-              <div className="flex flex-row w-full">
+              <div className="flex flex-row w-full mb-5">
                 <div className="mr-2">
                   <FontAwesomeIcon
                     icon={faClockRotateLeft}
@@ -510,7 +510,7 @@ export default function DetailDestination() {
                   </p>
                 </div>
               </div>
-              <div className="flex flex-row w-full">
+              <div className="flex flex-row w-full mb-5">
                 <div className="mr-2">
                   <FontAwesomeIcon
                     icon={faTicketSimple}
@@ -523,7 +523,7 @@ export default function DetailDestination() {
                   <p className="text-sm">-</p>
                 </div>
               </div>
-              <div className="flex flex-row w-full">
+              <div className="flex flex-row w-full mb-5">
                 <div className="mr-2">
                   <FontAwesomeIcon
                     icon={faUserCheck}
@@ -572,7 +572,7 @@ export default function DetailDestination() {
                 </div> */}
 
             {/* Judul Deskripsi  */}
-            <p className="font-bold text-lg mt-10">
+            <p className="font-bold text-lg mt-5">
               {/* The Legendary Charm of Tanah Lot Temple: Bali's Eternal Wonder */}
               {dataProduct != null
                 ? dataProduct.msg.product_details[0].excursion_name
@@ -586,7 +586,7 @@ export default function DetailDestination() {
             </p>
             {/* Deskripsi  */}
             <div
-              className="prose max-w-none text-sm text-gray-700"
+              className="prose max-w-none text-justify text-sm text-gray-700"
               dangerouslySetInnerHTML={{
                 __html:
                   dataProduct != null
