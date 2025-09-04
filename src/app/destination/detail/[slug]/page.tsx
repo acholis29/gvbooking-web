@@ -37,6 +37,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Breadcrumb from "@/components/Breadcrumb";
 import Spinner from "@/components/Spinner";
+import SkeletonDetailProdukSub from "@/components/SkeletonDetailProdukSub";
 
 export default function DetailDestination() {
   const searchParams = useSearchParams();
@@ -124,7 +125,13 @@ export default function DetailDestination() {
   };
 
   const [dataProduct, setDataProduct] = useState<ProductResponse | null>(null);
+  const [dataProductSub, setDataProductSub] = useState<ProductResponse | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingProdukDetail, setIsLoadingProdukDetail] = useState(true);
+  const [isLoadingProdukDetailSub, setIsLoadingProdukDetailSub] =
+    useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Konversi string ke Date (atau fallback ke hari ini jika kosong)
@@ -148,7 +155,8 @@ export default function DetailDestination() {
 
       try {
         const res = await fetch(
-          `${API_HOSTS.host1}/excursion.asmx/v2_product_description`,
+          // `${API_HOSTS.host1}/excursion.asmx/v2_product_description`,
+          `${API_HOSTS.host1}/excursion.asmx/product_description`,
           {
             method: "POST",
             headers: {
@@ -167,12 +175,61 @@ export default function DetailDestination() {
       } catch (err: any) {
         setError(err.message || "Error");
         setIsLoading(false);
+        setIsLoadingProdukDetail(false);
         console.error("Fetch error:", err);
       } finally {
         setIsLoading(false); // selesai loading
+        setIsLoadingProdukDetail(false); // Loading Produk
       }
     };
 
+    fetchData();
+  }, [idx_excursion, idx_comp, currency, language]);
+
+  // Produk Detail Sub
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true); // mulai loading
+      const formBody = new URLSearchParams({
+        shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
+        xml: "false",
+        id_excursion: idx_excursion ?? "", // Examp : "03208A45-4A41-4E1B-A597-20525C090E52"
+        code_of_language: language, // DE
+        code_of_currency: currency, // IDR
+        promo_code: "R-BC",
+      });
+
+      try {
+        const res = await fetch(
+          `${API_HOSTS.host1}/excursion.asmx/product_sub`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formBody.toString(),
+          }
+        );
+
+        const contentType = res.headers.get("content-type") || "";
+
+        if (contentType.includes("application/json")) {
+          const json = await res.json();
+          console.log("Poduct Sub", json);
+          setDataProductSub(json);
+        }
+      } catch (err: any) {
+        setError(err.message || "Error");
+        setIsLoading(false);
+        setIsLoadingProdukDetail(false);
+        setIsLoadingProdukDetailSub(false);
+        console.error("Fetch error:", err);
+      } finally {
+        setIsLoading(false); // selesai loading
+        setIsLoadingProdukDetail(false); // Loading Produk
+        setIsLoadingProdukDetailSub(false); // Loading Produk Sub
+      }
+    };
     fetchData();
   }, [idx_excursion, idx_comp, currency, language]);
 
@@ -335,16 +392,16 @@ export default function DetailDestination() {
 
   return (
     <>
-      {!isLoading ? (
-        <>
-          <div className="max-w-screen-xl mx-auto px-4">
-            <Breadcrumb
-              pageName="Activity"
-              country={country || ""}
-              state={state || ""}
-              idx_comp={idx_comp || ""}
-            />
-            {/* Baris Title */}
+      <div className="max-w-screen-xl mx-auto px-4">
+        <Breadcrumb
+          pageName="Activity"
+          country={country || ""}
+          state={state || ""}
+          idx_comp={idx_comp || ""}
+        />
+        {/* Baris Title */}
+        {!isLoadingProdukDetail ? (
+          <>
             <div className="flex flex-row justify-between items-center mt-4">
               <div className="text-gray-700 w-full">
                 <h3 className="text-xl md:text-4xl font-bold">
@@ -389,97 +446,99 @@ export default function DetailDestination() {
                   : ""
               }
             />
+          </>
+        ) : (
+          <SkeletonDetailProduk />
+        )}
 
-            {/* Baris Content */}
-            <div className="flex flex-col md:flex-row pb-5 gap-5">
-              <div className="order-2 md:order-1 w-full md:flex-[5] text-gray-600">
-                {/* Short Description */}
-                <p className="font-normal text-md">
-                  Explore Grand Canyon West on the Hualapai Reservation on this
-                  day trip from Las Vegas. Walk along the rim of the canyon,
-                  admire the views, and make a stop for views of Hoover Dam.
-                </p>
-                {/* About Activity */}
-                <p className="font-bold text-lg mt-3">About this activity</p>
-                <div className="w-full flex flex-col mt-2">
-                  <div className="flex flex-row w-full">
-                    <div className="mr-2">
-                      <FontAwesomeIcon
-                        icon={faCalendarCheck}
-                        className="w-10 h-10 text-gray-500"
-                        size="lg"
-                      />
-                    </div>
-                    <div className="">
-                      <p className="font-bold text-md">Free cancellation</p>
-                      <p className="text-sm">
-                        Cancel up to 24 hours in advance for a full refund
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex flex-row w-full">
-                    <div className="mr-2">
-                      <FontAwesomeIcon
-                        icon={faCalendarWeek}
-                        className="w-10 h-10 text-gray-500"
-                        size="lg"
-                      />
-                    </div>
-                    <div className="">
-                      <p className="font-bold text-md">
-                        Reserve now & pay later
-                      </p>
-
-                      <p className="text-sm">
-                        Keep your travel plans flexible — book your spot and pay
-                        nothing today.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex flex-row w-full">
-                    <div className="mr-2">
-                      <FontAwesomeIcon
-                        icon={faClockRotateLeft}
-                        className="w-10 h-10 text-gray-500"
-                        size="lg"
-                      />
-                    </div>
-                    <div className="">
-                      <p className="font-bold text-md">Duration 10.5 hours</p>
-                      <p className="text-sm">
-                        Check availability to see starting times
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex flex-row w-full">
-                    <div className="mr-2">
-                      <FontAwesomeIcon
-                        icon={faTicketSimple}
-                        className="w-10 h-10 text-gray-500"
-                        size="lg"
-                      />
-                    </div>
-                    <div className="">
-                      <p className="font-bold text-md">Skip the ticket line</p>
-                      <p className="text-sm">-</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-row w-full">
-                    <div className="mr-2">
-                      <FontAwesomeIcon
-                        icon={faUserCheck}
-                        className="w-10 h-10 text-gray-500"
-                        size="lg"
-                      />
-                    </div>
-                    <div className="">
-                      <p className="font-bold text-md">Live tour guide</p>
-                      <p className="text-sm">English</p>
-                    </div>
-                  </div>
+        {/* Baris Content */}
+        <div className="flex flex-col md:flex-row pb-5 gap-5 mt-3">
+          <div className="order-2 md:order-1 w-full md:flex-[5] text-gray-600">
+            {/* Short Description */}
+            <p className="font-normal text-md">
+              Explore Grand Canyon West on the Hualapai Reservation on this day
+              trip from Las Vegas. Walk along the rim of the canyon, admire the
+              views, and make a stop for views of Hoover Dam.
+            </p>
+            {/* About Activity */}
+            <p className="font-bold text-lg mt-3">About this activity</p>
+            <div className="w-full flex flex-col mt-2">
+              <div className="flex flex-row w-full">
+                <div className="mr-2">
+                  <FontAwesomeIcon
+                    icon={faCalendarCheck}
+                    className="w-10 h-10 text-gray-500"
+                    size="lg"
+                  />
                 </div>
-                {/* Date Global */}
-                {/* <div className="w-full md:w-1/7 mt-3 mb-5">
+                <div className="">
+                  <p className="font-bold text-md">Free cancellation</p>
+                  <p className="text-sm">
+                    Cancel up to 24 hours in advance for a full refund
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="mr-2">
+                  <FontAwesomeIcon
+                    icon={faCalendarWeek}
+                    className="w-10 h-10 text-gray-500"
+                    size="lg"
+                  />
+                </div>
+                <div className="">
+                  <p className="font-bold text-md">Reserve now & pay later</p>
+
+                  <p className="text-sm">
+                    Keep your travel plans flexible — book your spot and pay
+                    nothing today.
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="mr-2">
+                  <FontAwesomeIcon
+                    icon={faClockRotateLeft}
+                    className="w-10 h-10 text-gray-500"
+                    size="lg"
+                  />
+                </div>
+                <div className="">
+                  <p className="font-bold text-md">Duration 10.5 hours</p>
+                  <p className="text-sm">
+                    Check availability to see starting times
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="mr-2">
+                  <FontAwesomeIcon
+                    icon={faTicketSimple}
+                    className="w-10 h-10 text-gray-500"
+                    size="lg"
+                  />
+                </div>
+                <div className="">
+                  <p className="font-bold text-md">Skip the ticket line</p>
+                  <p className="text-sm">-</p>
+                </div>
+              </div>
+              <div className="flex flex-row w-full">
+                <div className="mr-2">
+                  <FontAwesomeIcon
+                    icon={faUserCheck}
+                    className="w-10 h-10 text-gray-500"
+                    size="lg"
+                  />
+                </div>
+                <div className="">
+                  <p className="font-bold text-md">Live tour guide</p>
+                  <p className="text-sm">English</p>
+                </div>
+              </div>
+            </div>
+            {/* Date Global */}
+            {/* <div className="w-full md:w-1/7 mt-3 mb-5">
                   <p className="mr-2 font-semibold text-gray-500">
                     Choose a date for your tour
                   </p>
@@ -511,101 +570,109 @@ export default function DetailDestination() {
                     />
                   </div>
                 </div> */}
-                {dataProduct && dataProduct.msg.product_subs.length > 0 && (
-                  <div className="mt-3">
-                    {dataProduct.msg.product_subs.map((item, index) => {
-                      return (
-                        <ProductSub
-                          key={index}
-                          item={item}
-                          idx_comp={idx_comp ?? ""}
-                          transaction_id={transaction_id ?? ""} //ada isinya jika user change cart
-                          country={toLowerCaseAll(country ?? "")}
-                          state={toLowerCaseAll(state ?? "")}
-                        />
-                      );
-                    })}
-                  </div>
-                )}
 
-                <p className="font-bold text-lg mt-10">
-                  {/* The Legendary Charm of Tanah Lot Temple: Bali's Eternal Wonder */}
-                  {dataProduct != null
-                    ? dataProduct.msg.product_details[0].excursion_name
-                    : ""}{" "}
-                  {dataProduct != null
-                    ? dataProduct.msg.product_details[0].info_location
-                    : ""}
-                  {" | "}
-                  {dataProduct != null
-                    ? dataProduct.msg.product_details[0].info_category
-                    : ""}
-                </p>
-                {/* Deskripsi  */}
-                <div
-                  className="prose max-w-none text-sm text-gray-700"
-                  dangerouslySetInnerHTML={{
-                    __html:
-                      dataProduct != null
-                        ? dataProduct.msg.product_details[0].info_general
-                        : "",
-                  }}
-                />
+            {/* Judul Deskripsi  */}
+            <p className="font-bold text-lg mt-10">
+              {/* The Legendary Charm of Tanah Lot Temple: Bali's Eternal Wonder */}
+              {dataProduct != null
+                ? dataProduct.msg.product_details[0].excursion_name
+                : ""}{" "}
+              {dataProduct != null
+                ? dataProduct.msg.product_details[0].info_location
+                : ""}{" "}
+              {dataProduct != null
+                ? dataProduct.msg.product_details[0].info_category
+                : ""}
+            </p>
+            {/* Deskripsi  */}
+            <div
+              className="prose max-w-none text-sm text-gray-700"
+              dangerouslySetInnerHTML={{
+                __html:
+                  dataProduct != null
+                    ? dataProduct.msg.product_details[0].info_general
+                    : "",
+              }}
+            />
 
-                {/* About Activity */}
-                <p className="font-bold text-lg mt-3">About this activity</p>
-                <div className="border p-3 rounded-2xl w-full md:w-1/2">
-                  <p className="font-bold text-lg">Order now and pay later</p>
-                  <p>
-                    Keep your travel plans flexible - book your place and pay
-                    nothing today.
-                  </p>
-                  <p className="font-bold text-lg">Free cancellation</p>
-                  <p>
-                    Cancel up to 24 hours before the activity starts for a full
-                    refund.
-                  </p>
-                  <p className="font-bold text-lg">Duration 3 - 4 hours</p>
-                  <p>Check availability to see start times.</p>
-                  <p className="font-bold text-lg">Live tour guide</p>
-                  <p>English</p>
-                </div>
+            {!isLoadingProdukDetailSub ? (
+              <>
+                {dataProductSub &&
+                  dataProductSub.msg.product_subs.length > 0 && (
+                    <div className="mt-3">
+                      {dataProductSub.msg.product_subs.map((item, index) => {
+                        return (
+                          <ProductSub
+                            key={index}
+                            item={item}
+                            idx_comp={idx_comp ?? ""}
+                            transaction_id={transaction_id ?? ""} //ada isinya jika user change cart
+                            country={toLowerCaseAll(country ?? "")}
+                            state={toLowerCaseAll(state ?? "")}
+                          />
+                        );
+                      })}
+                    </div>
+                  )}
+              </>
+            ) : (
+              <>
+                <SkeletonDetailProdukSub />
+              </>
+            )}
 
-                <p className="font-bold text-lg mt-3">Destination</p>
-                <div className="w-full md:w-1/2">
-                  <p>
-                    <span className="font-bold">
-                      Witnessing the Beauty of Sunset:
-                    </span>
-                    Don't miss the stunning sunset moment. Find the best spot in
-                    the cliff area or the surrounding coffee shops to enjoy this
-                    unforgettable view.
-                  </p>
-                  <br />
-                  <p>
-                    <span className="font-bold">
-                      Visiting Batu Bolong Temple:
-                    </span>
-                    Just a few steps from Tanah Lot, you will find Pura Batu
-                    Bolong, a small temple with a hole at the bottom, which also
-                    offers beautiful sea views.
-                  </p>
-                  <br />
-                  <p>
-                    <span className="font-bold">
-                      Interacting with the Sacred Snake:
-                    </span>
-                    In the lower coral area, there is a small cave inhabited by
-                    sacred sea snakes. You can touch them (with a guide) and it
-                    is believed to bring good luck.
-                  </p>
-                </div>
-              </div>
+            {/* About Activity */}
+            {/* <p className="font-bold text-lg mt-3">About this activity</p>
+            <div className="border p-3 rounded-2xl w-full md:w-1/2">
+              <p className="font-bold text-lg">Order now and pay later</p>
+              <p>
+                Keep your travel plans flexible - book your place and pay
+                nothing today.
+              </p>
+              <p className="font-bold text-lg">Free cancellation</p>
+              <p>
+                Cancel up to 24 hours before the activity starts for a full
+                refund.
+              </p>
+              <p className="font-bold text-lg">Duration 3 - 4 hours</p>
+              <p>Check availability to see start times.</p>
+              <p className="font-bold text-lg">Live tour guide</p>
+              <p>English</p>
             </div>
-          </div>
 
-          {/* Sticky */}
-          {/* {isMobile && (
+            <p className="font-bold text-lg mt-3">Destination</p>
+            <div className="w-full md:w-1/2">
+              <p>
+                <span className="font-bold">
+                  Witnessing the Beauty of Sunset:
+                </span>
+                Don't miss the stunning sunset moment. Find the best spot in the
+                cliff area or the surrounding coffee shops to enjoy this
+                unforgettable view.
+              </p>
+              <br />
+              <p>
+                <span className="font-bold">Visiting Batu Bolong Temple:</span>
+                Just a few steps from Tanah Lot, you will find Pura Batu Bolong,
+                a small temple with a hole at the bottom, which also offers
+                beautiful sea views.
+              </p>
+              <br />
+              <p>
+                <span className="font-bold">
+                  Interacting with the Sacred Snake:
+                </span>
+                In the lower coral area, there is a small cave inhabited by
+                sacred sea snakes. You can touch them (with a guide) and it is
+                believed to bring good luck.
+              </p>
+            </div> */}
+          </div>
+        </div>
+      </div>
+
+      {/* Sticky */}
+      {/* {isMobile && (
             <div className="md:w-[50%] h-auto fixed bottom-0 left-0 w-full z-50">
               <div className=" max-w-xl p-5 bg-gray-100 border border-gray-200 rounded-lg shadow-sm ">
                 <p className="text-lg text-gray-900">From</p>
@@ -627,12 +694,6 @@ export default function DetailDestination() {
               </div>
             </div>
           )} */}
-        </>
-      ) : (
-        <>
-          <SkeletonDetailProduk />
-        </>
-      )}
     </>
   );
 }
