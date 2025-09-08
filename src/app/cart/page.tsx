@@ -367,7 +367,8 @@ export default function Cart() {
     const result = corev2.find((item) => item.idx_comp === companyId);
     setIsSubmitting(true);
     console.log(confPayment.provider);
-
+    // Checout
+    await checkout();
     if (result?.payontour == false) {
       // Payontour
       if (confPayment.provider == "") {
@@ -577,6 +578,45 @@ export default function Cart() {
       toast.error("payontour . Please try again.");
     } finally {
       setIsSubmitting(false);
+    }
+  }
+
+  async function checkout() {
+    try {
+      let profile_pay = JSON.parse(
+        localStorage.getItem("profilePay") || JSON.stringify(profile)
+      );
+
+      const formBody = new URLSearchParams({
+        shared_key: idxCompCart, // Indo Or Others
+        xml: "false",
+        id_master_file: profileInitial[0].idx_mf,
+        language_code: language,
+        voucher_number: profileInitial[0].voucher,
+        promo_code: "R-BC",
+        guest_first_name: profile_pay.firstname,
+        guest_last_name: profile_pay.lastname,
+        guest_email: profile_pay.email,
+        guest_mobile: "mobile",
+        user_agent_string: "WEB",
+      });
+
+      return console.log("CHECKOUT : ", formBody.toString());
+      let url = `${confPayment.domain}/excursion.asmx/v2_cart_checkout`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formBody.toString(),
+      });
+
+      if (!response.ok) throw new Error("Checkout failed");
+
+      // Response Html
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
   }
 
