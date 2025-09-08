@@ -601,8 +601,8 @@ export default function Cart() {
         user_agent_string: "WEB",
       });
 
-      return console.log("CHECKOUT : ", formBody.toString());
-      let url = `${confPayment.domain}/excursion.asmx/v2_cart_checkout`;
+      console.log("CHECKOUT : ", formBody.toString());
+      let url = `${API_HOSTS.host1}/excursion.asmx/v2_cart_checkout`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -614,7 +614,8 @@ export default function Cart() {
       if (!response.ok) throw new Error("Checkout failed");
 
       // Response Html
-      console.log(response);
+      const data = await response.json();
+      console.log("Checkout Response JSON:", data);
     } catch (error) {
       console.log(error);
     }
