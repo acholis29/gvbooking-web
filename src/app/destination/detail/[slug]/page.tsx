@@ -53,6 +53,7 @@ export default function DetailDestination() {
   const [isDropdownProductSubOpen, setDropdownProductSubOpen] = useState(false);
   const [selectedProductSub, setSelectedProductSubOpen] = useState("");
   const [isMobile, setIsMobile] = useState(false);
+  const [defaultCancelText, setDefaultCanceText] = useState("");
 
   // Currency
   const { currency, setCurrency, masterCurrency, setMasterCurrency } =
@@ -263,8 +264,10 @@ export default function DetailDestination() {
         if (contentType.includes("application/json")) {
           const json = await res.json();
           console.log(json);
+          console.log("Canceled : ", json);
           fetchSecondDataInitial(json.msg);
           setRepCode(json.msg.default_rep_code); //R-BC
+          setDefaultCanceText(json.msg.default_cancelText); //Cancel Text
         }
       } catch (err: any) {
         console.error("Fetch error:", err);
@@ -474,7 +477,8 @@ export default function DetailDestination() {
                 <div className="">
                   <p className="font-bold text-md">Free cancellation</p>
                   <p className="text-sm">
-                    Cancel up to 24 hours in advance for a full refund
+                    {/* Cancel up to 24 hours in advance for a full refund */}
+                    {defaultCancelText ?? ""}
                   </p>
                 </div>
               </div>
