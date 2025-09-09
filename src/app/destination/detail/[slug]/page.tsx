@@ -476,10 +476,16 @@ export default function DetailDestination() {
                 </div>
                 <div className="">
                   <p className="font-bold text-md">Free cancellation</p>
-                  <p className="text-sm">
-                    {/* Cancel up to 24 hours in advance for a full refund */}
-                    {defaultCancelText ?? ""}
-                  </p>
+                  {/* <p className="text-sm">
+                    {defaultCancelText ?? ""} */}
+                  {/* Cancel up to 24 hours in advance for a full refund */}
+                  {/* </p> */}
+                  <p
+                    className="text-sm"
+                    dangerouslySetInnerHTML={{
+                      __html: defaultCancelText ?? "",
+                    }}
+                  ></p>
                 </div>
               </div>
               <div className="flex flex-row w-full mb-5">
