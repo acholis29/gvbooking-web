@@ -25,6 +25,7 @@ import {
   faCalendarWeek,
   faChevronDown,
   faClockRotateLeft,
+  faListCheck,
   faTicketSimple,
   faUserCheck,
 } from "@fortawesome/free-solid-svg-icons";
@@ -551,7 +552,31 @@ export default function DetailDestination() {
                   <p className="text-sm">English</p>
                 </div>
               </div>
+              <div className="flex flex-row w-full mb-5">
+                <div className="mr-2">
+                  <FontAwesomeIcon
+                    icon={faListCheck}
+                    className="w-10 h-10 text-gray-500"
+                    size="lg"
+                  />
+                </div>
+                <div className="">
+                  <p className="font-bold text-md">Facilities</p>
+                  <p
+                    className="text-sm"
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        dataProduct != null &&
+                        dataProduct.msg.product_details[0].info_facilities !=
+                          null
+                          ? dataProduct.msg.product_details[0].info_facilities
+                          : "-",
+                    }}
+                  ></p>
+                </div>
+              </div>
             </div>
+
             {/* Date Global */}
             {/* <div className="w-full md:w-1/7 mt-3 mb-5">
                   <p className="mr-2 font-semibold text-gray-500">
