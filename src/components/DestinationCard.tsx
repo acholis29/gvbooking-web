@@ -36,18 +36,19 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
             text: "Your cart is not finished!",
             icon: "warning",
             showCancelButton: false,
-            showDenyButton: true,
+            showDenyButton: false,
             confirmButtonColor: "#ef4444", // red-500
             denyButtonColor: "#6b7280", // gray-500
-            confirmButtonText: "Payment",
-            denyButtonText: "Back To Cart",
+            confirmButtonText: "Go To Cart",
+            // denyButtonText: "Back To Cart",
           }).then((result) => {
             if (result.isConfirmed) {
-              Swal.fire({
-                title: "Payment",
-                text: "Your file has been deleted.",
-                icon: "success",
-              });
+              router.push("/cart");
+              // Swal.fire({
+              //   title: "Payment",
+              //   text: "Your file has been deleted.",
+              //   icon: "success",
+              // });
             } else if (result.isDenied) {
               router.push("/cart");
             }
