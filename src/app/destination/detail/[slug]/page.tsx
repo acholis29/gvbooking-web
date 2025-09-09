@@ -85,6 +85,7 @@ export default function DetailDestination() {
     info_category: string;
     info_duration: string;
     info_general: string;
+    info_sortdesc: string;
     info_facilities: string;
     info_pickup_service: string;
     info_finish_time: string;
@@ -459,9 +460,13 @@ export default function DetailDestination() {
           <div className="order-2 md:order-1 w-full md:flex-[5] text-gray-600">
             {/* Short Description */}
             <p className="font-normal text-md text-justify">
-              Explore Grand Canyon West on the Hualapai Reservation on this day
+              {dataProduct != null &&
+              dataProduct.msg.product_details[0].info_sortdesc != null
+                ? dataProduct.msg.product_details[0].info_sortdesc
+                : "~ Short description is empty ~"}
+              {/* Explore Grand Canyon West on the Hualapai Reservation on this day
               trip from Las Vegas. Walk along the rim of the canyon, admire the
-              views, and make a stop for views of Hoover Dam.
+              views, and make a stop for views of Hoover Dam. */}
             </p>
             {/* About Activity */}
             <p className="font-bold text-lg mt-3">About this activity</p>
