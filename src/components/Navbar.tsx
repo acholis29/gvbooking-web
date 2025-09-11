@@ -1039,7 +1039,7 @@ const SignInContent = () => {
           type="submit"
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center"
         >
-          Submit
+          Sign In
         </button>
 
         {/* separator */}
@@ -1060,8 +1060,19 @@ const SignInContent = () => {
             alt="Google logo"
             className="w-5 h-5 mr-2"
           />
-          Login with Google
+          Continue with Google
         </button>
+
+        {/* link ke sign up */}
+        <p className="text-sm text-center text-gray-600 mt-4">
+          Don’t have an account?{" "}
+          <a
+            href="/signup"
+            className="text-blue-600 hover:underline font-medium"
+          >
+            Sign Up
+          </a>
+        </p>
       </form>
     </div>
   );
