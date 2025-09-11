@@ -961,7 +961,7 @@ const ProfileAsGuestContent = () => {
             your Govacation account.
           </p>
 
-          <div className="flex flex-row gap-2">
+          {/* <div className="flex flex-row gap-2">
             <button
               type="button"
               onClick={() => {
@@ -983,6 +983,51 @@ const ProfileAsGuestContent = () => {
               className="text-gray-400 mb-3 hover:text-white border-2 border-gray-400 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer"
             >
               <FontAwesomeIcon icon={faFacebook} className=" w-5 h-5" />
+            </button>
+          </div> */}
+
+          <div className="flex flex-row gap-2">
+            {/* Google */}
+            <button
+              type="button"
+              onClick={() => {
+                signIn("google");
+                sessionStorage.setItem("oauth", "true");
+              }}
+              className="flex items-center justify-center text-gray-700 mb-3 hover:text-white border-2 border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer gap-2"
+            >
+              <img
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                alt="Google"
+                className="w-5 h-5"
+              />
+              <span>Google</span>
+            </button>
+
+            {/* Apple */}
+            <button
+              type="button"
+              className="flex items-center justify-center text-gray-700 mb-3 hover:text-white border-2 border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer gap-2"
+            >
+              <img
+                src="https://www.svgrepo.com/show/508761/apple.svg"
+                alt="Apple"
+                className="w-5 h-5"
+              />
+              <span>Apple</span>
+            </button>
+
+            {/* Facebook */}
+            <button
+              type="button"
+              className="flex items-center justify-center text-gray-700 mb-3 hover:text-white border-2 border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer gap-2"
+            >
+              <img
+                src="https://www.svgrepo.com/show/475647/facebook-color.svg"
+                alt="Facebook"
+                className="w-5 h-5"
+              />
+              <span>Facebook</span>
             </button>
           </div>
 
