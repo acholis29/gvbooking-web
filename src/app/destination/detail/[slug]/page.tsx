@@ -494,7 +494,7 @@ export default function DetailDestination() {
                   ></p>
                 </div>
               </div>
-              <div className="flex flex-row w-full mb-5">
+              {/* <div className="flex flex-row w-full mb-5">
                 <div className="mr-2">
                   <FontAwesomeIcon
                     icon={faCalendarWeek}
@@ -510,7 +510,7 @@ export default function DetailDestination() {
                     nothing today.
                   </p>
                 </div>
-              </div>
+              </div> */}
               <div className="flex flex-row w-full mb-5">
                 <div className="mr-2">
                   <FontAwesomeIcon
@@ -520,13 +520,18 @@ export default function DetailDestination() {
                   />
                 </div>
                 <div className="">
-                  <p className="font-bold text-md">Duration 10.5 hours</p>
+                  <p className="font-bold text-md">
+                    Duration{" "}
+                    {dataProduct != null
+                      ? dataProduct.msg.product_details[0].info_duration
+                      : ""}{" "}
+                  </p>
                   <p className="text-sm">
                     Check availability to see starting times
                   </p>
                 </div>
               </div>
-              <div className="flex flex-row w-full mb-5">
+              {/* <div className="flex flex-row w-full mb-5">
                 <div className="mr-2">
                   <FontAwesomeIcon
                     icon={faTicketSimple}
@@ -538,7 +543,7 @@ export default function DetailDestination() {
                   <p className="font-bold text-md">Skip the ticket line</p>
                   <p className="text-sm">-</p>
                 </div>
-              </div>
+              </div> */}
               <div className="flex flex-row w-full mb-5">
                 <div className="mr-2">
                   <FontAwesomeIcon
@@ -568,7 +573,8 @@ export default function DetailDestination() {
                       __html:
                         dataProduct != null &&
                         dataProduct.msg.product_details[0].info_facilities !=
-                          null
+                          null &&
+                        dataProduct.msg.product_details[0].info_facilities != ""
                           ? dataProduct.msg.product_details[0].info_facilities
                           : "-",
                     }}
