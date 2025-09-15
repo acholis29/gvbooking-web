@@ -994,7 +994,7 @@ const ProfileAsGuestContent = () => {
                 signIn("google");
                 sessionStorage.setItem("oauth", "true");
               }}
-              className="flex items-center justify-center text-gray-700 mb-3 hover:text-white border-2 border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer gap-2"
+              className="flex items-center justify-center text-gray-700 mb-3 hover:text-gray-500 border-2 border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer gap-2"
             >
               <img
                 src="https://www.svgrepo.com/show/475656/google-color.svg"
@@ -1005,7 +1005,7 @@ const ProfileAsGuestContent = () => {
             </button>
 
             {/* Apple */}
-            <button
+            {/* <button
               type="button"
               className="flex items-center justify-center text-gray-700 mb-3 hover:text-white border-2 border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer gap-2"
             >
@@ -1015,10 +1015,10 @@ const ProfileAsGuestContent = () => {
                 className="w-5 h-5"
               />
               <span>Apple</span>
-            </button>
+            </button> */}
 
             {/* Facebook */}
-            <button
+            {/* <button
               type="button"
               className="flex items-center justify-center text-gray-700 mb-3 hover:text-white border-2 border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer gap-2"
             >
@@ -1028,7 +1028,7 @@ const ProfileAsGuestContent = () => {
                 className="w-5 h-5"
               />
               <span>Facebook</span>
-            </button>
+            </button> */}
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)}>
