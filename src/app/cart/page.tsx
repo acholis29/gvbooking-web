@@ -1032,7 +1032,7 @@ const ProfileAsGuestContent = () => {
             </button> */}
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
+          {/* <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-3">
               <input
                 {...register("email")}
@@ -1053,7 +1053,7 @@ const ProfileAsGuestContent = () => {
             >
               Continue with email
             </button>
-          </form>
+          </form> */}
         </div>
       </div>
     </div>
