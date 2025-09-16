@@ -1137,7 +1137,7 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
     localStorage.setItem("profileData", JSON.stringify(UpdateProfile));
 
     toast.success("Save Profile, Success");
-    toast.success(`Hai, ${data.firstname}, Welcome!`);
+    toast.success(`Hai ${data.firstname ?? ""}, Welcome!`);
     // ✅ panggil function dari parent
     onClick?.();
     closeModal();
@@ -1298,7 +1298,7 @@ const GoPaymentOauthContent = ({ onClick }: GoPaymentContentProps) => {
     localStorage.setItem("profileData", JSON.stringify(UpdateProfile));
 
     toast.success("Save Profile, Success");
-    toast.success(`Hai, ${data.firstname}, Welcome!`);
+    toast.success(`Hai ${data.firstname ?? ""}, Welcome!`);
     // ✅ panggil function dari parent
     onClick?.();
     closeModal();

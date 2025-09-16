@@ -968,7 +968,7 @@ const ProfileContent = () => {
     localStorage.setItem("profileData", JSON.stringify(data));
     setProfile(data);
     toast.success("Save Profile, Success");
-    toast.success(`Hai, ${data.firstname}, Welcome!`);
+    toast.success(`Hai ${data.firstname ?? ""}, Welcome!`);
     closeModal();
   };
   return (
