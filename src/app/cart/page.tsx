@@ -34,6 +34,7 @@ import {
   capitalizeWords,
   truncateText,
   formatRibuanInternational,
+  splitUsername,
 } from "@/helper/helper";
 import { useModal } from "@/context/ModalContext";
 import ModalComponent from "@/components/ModalComponent";
@@ -1240,8 +1241,8 @@ const GoPaymentOauthContent = ({ onClick }: GoPaymentContentProps) => {
     let lastname = "";
     if (status == "authenticated") {
       email = session.user?.email ?? "";
-      firstname = session.user?.name ?? "";
-      lastname = session.user?.name ?? "";
+      firstname = splitUsername(session.user?.name ?? "")[0] ?? "-";
+      lastname = splitUsername(session.user?.name ?? "")[1] ?? "-";
     }
     let ProfilPay = {
       email: email,

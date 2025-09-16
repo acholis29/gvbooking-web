@@ -121,6 +121,11 @@ export function generateTempEmail(): string {
   return `${randomStr}@temp.com`;
 }
 
+export function splitUsername(fullname: string) {
+  const arr: string[] = fullname.split(" ");
+  return arr
+}
+
 
 
 
