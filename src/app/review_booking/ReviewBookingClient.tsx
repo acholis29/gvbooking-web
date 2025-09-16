@@ -323,16 +323,16 @@ export default function ReviewBookingClient() {
     let total_charge = 0;
     if (ChargeType.length > 0) {
       for (let i = 0; i < ChargeType.length; i++) {
-        total += parseInt(ChargeType[i].sale_rates_total);
-        total_charge += parseInt(ChargeType[i].sale_rates_total);
+        total += parseFloat(ChargeType[i].sale_rates_total);
+        total_charge += parseFloat(ChargeType[i].sale_rates_total);
       }
     }
 
     if (Surcharge.length > 0) {
       for (let j = 0; j < Surcharge.length; j++) {
         if (Surcharge[j].mandatory.toLocaleLowerCase() == "true") {
-          total += parseInt(Surcharge[j].price);
-          total_surcharge += parseInt(Surcharge[j].price);
+          total += parseFloat(Surcharge[j].price);
+          total_surcharge += parseFloat(Surcharge[j].price);
           // masukin data cheked
           setSelectedSurcharge((prev) => [...prev, Surcharge[j]]);
         }

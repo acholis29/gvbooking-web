@@ -326,9 +326,9 @@ export default function Cart() {
     let discTotal = 0;
     let subTotalLocal = 0;
     items.map((item, index) => {
-      subTotal += parseInt(item.priceori);
-      discTotal += parseInt(item.disc);
-      subTotalLocal += parseInt(item.price_local);
+      subTotal += parseFloat(item.priceori);
+      discTotal += parseFloat(item.disc);
+      subTotalLocal += parseFloat(item.price_local);
       if (index == 0) {
         setLocalCurrencyMF(item.currency_local);
         setBuyCurrencyMF(item.currency);
@@ -714,6 +714,7 @@ export default function Cart() {
                 <p className="text-sm text-gray-700 font-bold">Subtotal</p>
                 <p className="text-sm text-gray-700 font-semibold">
                   {buyCurrencyMF}{" "}
+                  {/* {formatRibuanInternational(subtotalSummeryOrder)} */}
                   {formatRibuanInternational(subtotalSummeryOrder)}
                 </p>
               </div>
