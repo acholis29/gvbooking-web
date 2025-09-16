@@ -343,10 +343,40 @@ export default function Cart() {
   async function submitPayment() {
     const profileData = JSON.parse(localStorage.getItem("profileData") || "{}");
     const profilePay = JSON.parse(localStorage.getItem("profilePay") || "{}");
-    if (profileData.temp == "true") {
-      setSelectModal("ProfilAsGuest");
-      openModal();
-      return null;
+
+    //cek auth google
+    if (status != "authenticated") {
+      if (profileData.temp == "true") {
+        setSelectModal("ProfilAsGuest");
+        openModal();
+        return null;
+      }
+    } else {
+      // Inisialisasi profilpay
+      let email = session.user?.email ?? "";
+      let firstname = splitUsername(session.user?.name ?? "")[0] ?? "-";
+      let lastname = splitUsername(session.user?.name ?? "")[1] ?? "-";
+
+      let ProfilPay = {
+        email: email,
+        firstname: firstname,
+        lastname: lastname,
+        phone: "000000",
+        temp: "false",
+      };
+      // SET PROFIL PAY
+      localStorage.setItem("profilePay", JSON.stringify(ProfilPay));
+
+      let UpdateProfile = {
+        email: profile.email,
+        firstname: profile.firstname,
+        lastname: profile.lastname,
+        phone: "000000",
+        temp: "false",
+      };
+
+      // SET / UPDATE PROFIL DATA
+      localStorage.setItem("profileData", JSON.stringify(UpdateProfile));
     }
 
     if (isSubmitting) {
@@ -650,14 +680,18 @@ export default function Cart() {
     }
   }, [isLoading, ListCart]);
 
+  // Handle Refresh Saat Sudah Login di cart
   const { data: session, status } = useSession();
   useEffect(() => {
     let oauth = sessionStorage.getItem("oauth");
     if (status === "authenticated" && oauth == "true") {
       console.log("Login sukses:", session.user);
       // jalankan event yang kamu mau
-      setSelectModal("GoPaymentOauth");
-      openModal();
+      // setSelectModal("GoPaymentOauth");
+      // openModal();
+      if (ListCart.length > 0) {
+        submitPayment();
+      }
     }
   }, [status, session, router]);
 

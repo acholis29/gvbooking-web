@@ -587,6 +587,7 @@ export default function NavbarComponent() {
                               router.push("/profile");
                             } else if (item == "Sign Out") {
                               signOut();
+                              sessionStorage.setItem("oauth", "false");
                             } else {
                               setSelectModal(`${item}`);
                               if (item == "Currency" && cartApiCount > 0) {
