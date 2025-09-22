@@ -109,6 +109,7 @@ export default function NavbarComponent() {
 
   const hideCurrency = pathname === "/" || pathname === "/home";
   const hideCartIcon = pathname === "/" || pathname === "/home";
+  const redirectLocation = pathname === "/" || pathname === "/home";
 
   const menu_profil = [
     "Sign In",
@@ -334,6 +335,69 @@ export default function NavbarComponent() {
     // Bersihkan event listener saat unmount
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Geolocation
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          console.log("Lat : ", pos.coords.latitude);
+          console.log("Lat : ", pos.coords.longitude);
+          setLocation({
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          });
+        },
+        (err) => {
+          setError(err.message);
+        }
+      );
+    } else {
+      setError("Geolocation tidak didukung di browser ini.");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!location) return;
+    if (countryMaster.length == 0) return;
+
+    const fetchCountry = async () => {
+      try {
+        let country = await checkCountry(location.lat, location.lng);
+        console.log("Country : ", country);
+        console.log("Country Master :", countryMaster);
+        countryMaster.map((item, index) => {
+          if (item.country.toLowerCase() == country.toLowerCase()) {
+            console.log("KETEMU ------- ", country);
+            if (redirectLocation) {
+              router.push(
+                `/destination/${toLowerCaseAll(item.country)}?id=${
+                  item.idx_comp
+                }&country=${toLowerCaseAll(item.country)}`
+              );
+            }
+          }
+        });
+      } catch (err) {
+        console.error("Error ambil negara:", err);
+      }
+    };
+
+    fetchCountry();
+  }, [location, countryMaster]);
+
+  // Function Get Country OpenStreetmap
+  async function checkCountry(lat: number, lng: number) {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+    );
+    const data = await res.json();
+    return data.address.country; // contoh: "Indonesia"
+  }
 
   return (
     <nav className="sticky top-0 z-50 bg-white">
