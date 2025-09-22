@@ -372,7 +372,6 @@ export default function NavbarComponent() {
         console.log("Country Master :", countryMaster);
         countryMaster.map((item, index) => {
           if (item.country.toLowerCase() == country.toLowerCase()) {
-            console.log("KETEMU ------- ", country);
             if (redirectLocation) {
               router.push(
                 `/destination/${toLowerCaseAll(item.country)}?id=${
