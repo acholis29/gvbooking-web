@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import * as React from "react";
 import "yet-another-react-lightbox/styles.css";
 import Lightbox from "yet-another-react-lightbox";
+import Video from "yet-another-react-lightbox/plugins/video";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhotoFilm } from "@fortawesome/free-solid-svg-icons";
@@ -31,7 +32,8 @@ const Galery: React.FC<GaleryProps> = ({
     : [];
   const [open, setOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-
+  console.log(galleryArray);
+  galleryArray.unshift("/videos/bali-kaur.mp4");
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -52,20 +54,47 @@ const Galery: React.FC<GaleryProps> = ({
           <div className="hidden md:grid grid-cols-3 gap-2 py-5">
             {/* Gambar Utama */}
             <div className="">
-              <img
-                className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
-                src={galleryArray[0]}
-                alt="Galery"
-                onClick={() => {
-                  setSelectedIndex(0); // index gambar yang diklik
-                  setOpen(true);
-                }}
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.onerror = null;
-                  target.src = "/images/icon/android-chrome-512x512.png";
-                }}
-              />
+              {galleryArray[0].endsWith(".mp4") ? (
+                // Jika Vidio Tampilkan Tumbnile
+                <div
+                  className="relative w-full h-full cursor-pointer"
+                  onClick={() => {
+                    setSelectedIndex(0);
+                    setOpen(true);
+                  }}
+                >
+                  <img
+                    className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
+                    src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
+                    alt="Video Thumbnail"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.onerror = null;
+                      target.src = "/images/icon/android-chrome-512x512.png";
+                    }}
+                  />
+                  {/* Overlay icon play */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="bg-black/50 rounded-full p-4">▶ Play</div>
+                  </div>
+                </div>
+              ) : (
+                // Jika gambar
+                <img
+                  className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
+                  src={galleryArray[0]}
+                  alt="Galery"
+                  onClick={() => {
+                    setSelectedIndex(0);
+                    setOpen(true);
+                  }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null;
+                    target.src = "/images/icon/android-chrome-512x512.png";
+                  }}
+                />
+              )}
             </div>
             <div className="">
               <img
@@ -156,7 +185,7 @@ const Galery: React.FC<GaleryProps> = ({
                 slidesPerView={1}
                 className="w-full h-full"
               >
-                {galleryArray.map((img, index) => (
+                {/* {galleryArray.map((img, index) => (
                   <SwiperSlide key={`swiper-${index}`}>
                     <img
                       src={img}
@@ -172,6 +201,50 @@ const Galery: React.FC<GaleryProps> = ({
                         target.src = "/images/icon/android-chrome-512x512.png";
                       }}
                     />
+                  </SwiperSlide>
+                ))} */}
+
+                {galleryArray.map((media, index) => (
+                  <SwiperSlide key={`swiper-${index}`}>
+                    {media.endsWith(".mp4") ? (
+                      // Jika Vidio Maka Tampilkan Tumbnile
+                      <div
+                        className="relative cursor-pointer w-full h-full"
+                        onClick={() => {
+                          setSelectedIndex(index);
+                          setOpen(true);
+                        }}
+                      >
+                        {/* Thumbnail dari video */}
+                        <video
+                          className="w-full h-full object-cover rounded"
+                          poster="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
+                        />
+                        {/* Overlay icon play */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="bg-black/50 rounded-full p-4 text-white text-3xl">
+                            ▶ Play
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      // Jika Gambar
+                      <img
+                        src={media}
+                        className="w-full h-full object-cover rounded"
+                        alt={`Gallery ${index + 1}`}
+                        onClick={() => {
+                          setSelectedIndex(index);
+                          setOpen(true);
+                        }}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.onerror = null;
+                          target.src =
+                            "/images/icon/android-chrome-512x512.png";
+                        }}
+                      />
+                    )}
                   </SwiperSlide>
                 ))}
               </Swiper>
@@ -204,6 +277,36 @@ const Galery: React.FC<GaleryProps> = ({
       <Lightbox
         open={open}
         close={() => setOpen(false)}
+        plugins={[Video]}
+        styles={{ container: { backgroundColor: "rgba(0, 0, 0, .8)" } }}
+        className="tailwind-lightbox"
+        index={selectedIndex}
+        slides={galleryArray.map((media) =>
+          media.endsWith(".mp4")
+            ? {
+                type: "video",
+                sources: [
+                  {
+                    src: media, // path video, misalnya "/videos/bali-kaur.mp4"
+                    type: "video/mp4",
+                  },
+                ],
+                autoPlay: true,
+                controls: true,
+              }
+            : {
+                src: media, // path image
+                width: 3840,
+                height: 2560,
+              }
+        )}
+      />
+
+      {/* Asli */}
+      {/* <Lightbox
+        open={open}
+        close={() => setOpen(false)}
+        plugins={[Video]}
         styles={{ container: { backgroundColor: "rgba(0, 0, 0, .8)" } }}
         className="tailwind-lightbox"
         index={selectedIndex}
@@ -212,7 +315,7 @@ const Galery: React.FC<GaleryProps> = ({
           width: 3840, // Atau ganti sesuai kebutuhan
           height: 2560,
         }))}
-      />
+      /> */}
 
       {/* Grid Thumbnail */}
       {/* <div className="max-w-screen-xl mx-auto px-4 pb-4">
