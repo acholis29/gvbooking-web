@@ -12,8 +12,8 @@ import { Carousel } from "flowbite-react";
 // Carousel Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/pagination";
+// import "swiper/css";
+// import "swiper/css/pagination";
 
 type GaleryProps = {
   picture?: string;
@@ -32,8 +32,11 @@ const Galery: React.FC<GaleryProps> = ({
     : [];
   const [open, setOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  console.log(galleryArray);
-  galleryArray.unshift("/videos/bali-kaur.mp4");
+  // console.log(galleryArray);
+  // galleryArray.unshift("/videos/bali-kaur.mp4"); //tambah vidio index 0
+  // galleryArray.push("/videos/bali-kaur.mp4"); //tambah vidio index terakhir
+  // galleryArray.splice(2, 0, "/videos/bali-kaur.mp4"); //sisipkan diindex 2
+
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -97,53 +100,131 @@ const Galery: React.FC<GaleryProps> = ({
               )}
             </div>
             <div className="">
-              <img
-                className="w-full h-full object-cover"
-                src={galleryArray[1]}
-                alt="Galery"
-                onClick={() => {
-                  setSelectedIndex(1); // index gambar yang diklik
-                  setOpen(true);
-                }}
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.onerror = null;
-                  target.src = "/images/icon/android-chrome-512x512.png";
-                }}
-              />
+              {galleryArray[1].endsWith(".mp4") ? (
+                // Jika Vidio Tampilkan Tumbnile
+                <div
+                  className="relative w-full h-full cursor-pointer"
+                  onClick={() => {
+                    setSelectedIndex(1);
+                    setOpen(true);
+                  }}
+                >
+                  <img
+                    className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
+                    src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
+                    alt="Video Thumbnail"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.onerror = null;
+                      target.src = "/images/icon/android-chrome-512x512.png";
+                    }}
+                  />
+                  {/* Overlay icon play */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="bg-black/50 rounded-full p-4">▶ Play</div>
+                  </div>
+                </div>
+              ) : (
+                <img
+                  className="w-full h-full object-cover"
+                  src={galleryArray[1]}
+                  alt="Galery"
+                  onClick={() => {
+                    setSelectedIndex(1); // index gambar yang diklik
+                    setOpen(true);
+                  }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null;
+                    target.src = "/images/icon/android-chrome-512x512.png";
+                  }}
+                />
+              )}
             </div>
             <div className="grid grid-rows-2 gap-2">
               <div className="">
-                <img
-                  className="w-full h-full object-cover rounded-tr-sm"
-                  src={galleryArray[2]}
-                  alt="Galery"
-                  onClick={() => {
-                    setSelectedIndex(2); // index gambar yang diklik
-                    setOpen(true);
-                  }}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.onerror = null;
-                    target.src = "/images/icon/android-chrome-512x512.png";
-                  }}
-                />
+                {galleryArray[2].endsWith(".mp4") ? (
+                  // Jika Vidio Tampilkan Tumbnile
+                  <div
+                    className="relative w-full h-full cursor-pointer"
+                    onClick={() => {
+                      setSelectedIndex(2);
+                      setOpen(true);
+                    }}
+                  >
+                    <img
+                      className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
+                      src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
+                      alt="Video Thumbnail"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.onerror = null;
+                        target.src = "/images/icon/android-chrome-512x512.png";
+                      }}
+                    />
+                    {/* Overlay icon play */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="bg-black/50 rounded-full p-4">▶ Play</div>
+                    </div>
+                  </div>
+                ) : (
+                  <img
+                    className="w-full h-full object-cover rounded-tr-sm"
+                    src={galleryArray[2]}
+                    alt="Galery"
+                    onClick={() => {
+                      setSelectedIndex(2); // index gambar yang diklik
+                      setOpen(true);
+                    }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.onerror = null;
+                      target.src = "/images/icon/android-chrome-512x512.png";
+                    }}
+                  />
+                )}
               </div>
               <div className="relative">
-                <img
-                  className="w-full h-full object-cover rounded-br-sm"
-                  src={galleryArray[3]}
-                  alt="Galery"
-                  onClick={() => {
-                    setSelectedIndex(3); // index gambar yang diklik
-                    setOpen(true);
-                  }}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.onerror = null;
-                    target.src = "/images/icon/android-chrome-512x512.png";
-                  }}
-                />
+                {galleryArray[3].endsWith(".mp4") ? (
+                  // Jika Vidio Tampilkan Tumbnile
+                  <div
+                    className="relative w-full h-full cursor-pointer"
+                    onClick={() => {
+                      setSelectedIndex(3);
+                      setOpen(true);
+                    }}
+                  >
+                    <img
+                      className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
+                      src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
+                      alt="Video Thumbnail"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.onerror = null;
+                        target.src = "/images/icon/android-chrome-512x512.png";
+                      }}
+                    />
+                    {/* Overlay icon play */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="bg-black/50 rounded-full p-4">▶ Play</div>
+                    </div>
+                  </div>
+                ) : (
+                  <img
+                    className="w-full h-full object-cover rounded-br-sm"
+                    src={galleryArray[3]}
+                    alt="Galery"
+                    onClick={() => {
+                      setSelectedIndex(3); // index gambar yang diklik
+                      setOpen(true);
+                    }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.onerror = null;
+                      target.src = "/images/icon/android-chrome-512x512.png";
+                    }}
+                  />
+                )}
                 {/* Button pojok kanan bawah */}
                 {galleryArray.length > 4 && (
                   <button
