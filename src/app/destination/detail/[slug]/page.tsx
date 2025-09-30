@@ -35,7 +35,7 @@ import { log } from "console";
 import { toLowerCaseAll } from "@/helper/helper";
 // Date Picker
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+// import "react-datepicker/dist/react-datepicker.css";
 import Breadcrumb from "@/components/Breadcrumb";
 import Spinner from "@/components/Spinner";
 import SkeletonDetailProdukSub from "@/components/SkeletonDetailProdukSub";
@@ -463,7 +463,10 @@ export default function DetailDestination() {
             <p className="font-normal text-md text-justify">
               {dataProduct != null &&
               dataProduct.msg.product_details[0].info_sortdesc != null
-                ? dataProduct.msg.product_details[0].info_sortdesc
+                ? dataProduct.msg.product_details[0].info_sortdesc.replace(
+                    /<[^>]*>/g,
+                    ""
+                  )
                 : "~ Short description is empty ~"}
               {/* Explore Grand Canyon West on the Hualapai Reservation on this day
               trip from Las Vegas. Walk along the rim of the canyon, admire the
