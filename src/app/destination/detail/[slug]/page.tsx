@@ -467,7 +467,7 @@ export default function DetailDestination() {
                     /<[^>]*>/g,
                     ""
                   )
-                : "~ Short description is empty ~"}
+                : ""}
               {/* Explore Grand Canyon West on the Hualapai Reservation on this day
               trip from Las Vegas. Walk along the rim of the canyon, admire the
               views, and make a stop for views of Hoover Dam. */}
