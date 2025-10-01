@@ -35,7 +35,7 @@ import { log } from "console";
 import { toLowerCaseAll } from "@/helper/helper";
 // Date Picker
 import DatePicker from "react-datepicker";
-// import "react-datepicker/dist/react-datepicker.css";
+import "react-datepicker/dist/react-datepicker.css";
 import Breadcrumb from "@/components/Breadcrumb";
 import Spinner from "@/components/Spinner";
 import SkeletonDetailProdukSub from "@/components/SkeletonDetailProdukSub";
