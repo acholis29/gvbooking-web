@@ -32,8 +32,8 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
       onClick={() => {
         if (cartApiCount > 0 && idx_comp != idxCompCart) {
           Swal.fire({
-            title: "Are you sure?",
-            text: "Your cart is not finished!",
+            title: "You still have items in your cart.",
+            text: "Please complete your booking or empty your cart before continuing.",
             icon: "warning",
             showCancelButton: false,
             showDenyButton: false,

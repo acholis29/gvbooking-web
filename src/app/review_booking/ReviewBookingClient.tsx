@@ -576,7 +576,7 @@ export default function ReviewBookingClient() {
             <Controller
               name="roomNumber"
               control={control}
-              defaultValue={"Lobby"}
+              defaultValue={""} //Nomor Ruangan
               rules={{ required: "Room number is required" }}
               render={({ field }) => (
                 <ReviewBookingCard
@@ -594,7 +594,7 @@ export default function ReviewBookingClient() {
                   }
                   sub_title_1={sub_excursion_name ?? ""}
                   sub_title_2={`Pickup : ${pickup_name}`}
-                  sub_title_3={`Room : ${room}`}
+                  sub_title_3={`Meet at the Lobby`}
                   pickup_time_from={pickup_time_from ?? ""}
                   adult={adult ?? ""}
                   child={child.count ?? ""}

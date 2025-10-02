@@ -22,6 +22,7 @@ import { useCartApi } from "@/context/CartApiContext";
 // Helper
 import { getCountryImageUrl, getHostImageUrl } from "@/helper/helper";
 import { API_HOSTS } from "@/lib/apihost";
+import RecentlyCard from "@/components/RecentlyCard";
 
 type Props = {
   slug: string;
@@ -83,6 +84,9 @@ export default function DestinationClient({ slug }: Props) {
   const [recomdedDestinationApi, setRecomendedDestinationApi] = useState<
     RecomendedDestinationApiItem[]
   >([]);
+  // Last Search Berdarkan Country
+  const [LastSearch, setLastSearch] = useState<RecomendedDestinationItem[]>([]);
+  const [isLoadingLastSearch, setIsLoadingLastSearch] = useState(true);
 
   //  State Global Context
   const { setLanguage, setMasterLanguage, language } = useLanguage();
@@ -245,6 +249,34 @@ export default function DestinationClient({ slug }: Props) {
       });
   }, []);
 
+  //Last Search Percountry
+  useEffect(() => {
+    // Ambil dari localStorage
+    let lastSearch = JSON.parse(localStorage.getItem("last-search") || "[]");
+    // Pastikan bentuknya array
+    if (!Array.isArray(lastSearch)) {
+      lastSearch = [lastSearch];
+    }
+    // Gabung jadi string dipisah koma
+    const joined = lastSearch.join(",");
+
+    console.log(joined);
+    fetch(
+      `/api/excursion/attr/last-search?exc_j=${joined}`, // gunakan '' untuk mendapatkan semua rekomendasi
+      {
+        cache: "no-store", // ⛔ jangan ambil dari cache
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setLastSearch(data);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => {
+        setIsLoadingLastSearch(false);
+      });
+  }, []);
+
   return (
     // Destination Page
     <div>
@@ -341,64 +373,17 @@ export default function DestinationClient({ slug }: Props) {
         {/* Last Your Search */}
       </div>
 
-      {/* Section Recomended Tour Dari Database Pak Anang */}
-      {/* <div className="bg-gray-100 my-6 pb-6">
-        <section className="py-6 px-4 max-w-screen-xl mx-auto">
-          <p className="text-red-gvi font-bold text-3xl">Recomended</p>
-        </section>
-        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
-          {isLoadingRecom ? (
-            <>
-              <SkeletonCard />
-              <SkeletonCard />
-              <SkeletonCard />
-              <SkeletonCard />
-            </>
-          ) : recomdedDestination.length > 0 ? (
-            recomdedDestination.map((item, index) => (
-              <EcommersCard
-                key={index}
-                idx_comp={item.idx_comp}
-                idx_excursion={item.Idx_excursion}
-                // image={`https://picsum.photos/800/600?random=${index}`}
-                image={`${host_img}/media/${item.code_exc}/TN_400_${item.Gbr}`}
-                title={`${item.State}, ${item.Name_excursion}`}
-                sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
-                price={`${item.PriceFrom}`}
-                currency={item.Currency}
-                // link="/destination/detail/indonesia"
-                link={`/destination/detail/${item.Country}?id=${
-                  item.idx_comp
-                }&country=${item.Country.toLowerCase()}&state=${item.State.toLowerCase()}&exc=${
-                  item.Idx_excursion
-                }`}
-              />
-            ))
-          ) : (
-            <p className="col-span-4 text-gray-500 text-center">
-              <FontAwesomeIcon
-                icon={faInbox}
-                className="w-10 h-10 text-red-gvi 0 pl-2"
-              />{" "}
-              Recomended is empty.
-            </p>
-          )}
-        </section>
-      </div> */}
-
       {/* Section Last Your Search */}
       <div className="bg-white my-6 pb-6">
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
           <p className="text-red-gvi font-bold text-3xl">
-            {/* {" "}
-            <FontAwesomeIcon
-              icon={faCar}
-              className="w-10 h-10 text-red-gvi 0 pl-2"
-            />{" "} */}
-            <span className="transform: uppercase;">Tour in {slug}</span>
+            <span className="transform: uppercase;">
+              Recently viewed in {slug}
+            </span>
           </p>
         </section>
-        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
+        {/* Ini yang lama Tour In Indonesia */}
+        {/* <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
           {isLoadingRecom ? (
             <>
               <SkeletonCard />
@@ -418,18 +403,16 @@ export default function DestinationClient({ slug }: Props) {
                   ) ?? "/images/icon/android-chrome-512x512.png";
               }
               return (
-                <EcommersCard
+                <RecentlyCard
                   key={index}
                   idx_comp={item.idx_comp}
                   idx_excursion={item.Idx_excursion}
                   // image={`https://picsum.photos/800/600?random=${index}`}
-                  // image={`${host_img}/media/${item.code_exc}/TN_400_${item.Gbr}`}
                   image={imgUrl}
                   title={`${item.State}, ${item.Name_excursion}`}
                   sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                   price={`${item.PriceFrom}`}
                   currency={item.Currency}
-                  // link="/destination/detail/indonesia"
                   link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
                 />
               );
@@ -440,7 +423,51 @@ export default function DestinationClient({ slug }: Props) {
                 icon={faInbox}
                 className="w-10 h-10 text-red-gvi 0 pl-2"
               />{" "}
-              Tour is empty.
+              Recently viewed is empty.
+            </p>
+          )}
+        </section> */}
+        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
+          {isLoadingLastSearch ? (
+            <>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </>
+          ) : LastSearch.length > 0 ? (
+            LastSearch.map((item, index) => {
+              let imgUrl = "/images/icon/android-chrome-512x512.png";
+              if (item.Gbr != "") {
+                imgUrl =
+                  getCountryImageUrl(
+                    coreInitial,
+                    item.idx_comp,
+                    `media/${item.code_exc}/TN_400_${item.Gbr}`
+                  ) ?? "/images/icon/android-chrome-512x512.png";
+              }
+              if (item.idx_comp == idx_comp)
+                return (
+                  <RecentlyCard
+                    key={index}
+                    idx_comp={item.idx_comp}
+                    idx_excursion={item.Idx_excursion}
+                    image={imgUrl}
+                    title={`${item.State}, ${item.Name_excursion}`}
+                    sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
+                    price={`${item.PriceFrom}`}
+                    currency={item.Currency}
+                    link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
+                  />
+                );
+            })
+          ) : (
+            <p className="col-span-4 text-gray-500 text-center">
+              <FontAwesomeIcon
+                icon={faInbox}
+                className="w-10 h-10 text-red-gvi 0 pl-2"
+              />{" "}
+              Recently viewed is empty.
             </p>
           )}
         </section>

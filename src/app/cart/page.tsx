@@ -214,7 +214,7 @@ export default function Cart() {
   // const [idxCompCart, setIdxCompCart] = useState("");
 
   // Context global
-  const { profileInitial, resourceInitial } = useInitial();
+  const { profileInitial, resourceInitial, coreInitial } = useInitial();
   const { profile } = useProfile();
   const { cartApiItems, idxCompCart, setIdxCompCart } = useCartApi();
   const { openModal } = useModal();
@@ -781,13 +781,35 @@ export default function Cart() {
                   {formatRibuanInternational(subtotalSummeryOrderLocal)}
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={submitPayment}
-                className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer"
-              >
-                {isSubmitting && <Spinner />} Checkout
-              </button>
+              <div className="flex justify-between gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const match = coreInitial.find(
+                      (item) => item.idx_comp === idxCompCart
+                    );
+
+                    if (match) {
+                      router.push(
+                        `/destination/${match.country.toLowerCase()}?id=${idxCompCart}&country=${match.country.toLowerCase()}`
+                      );
+                    } else {
+                      router.push("/");
+                    }
+                  }}
+                  className="text-white w-1/2 bg-gray-500 hover:bg-gray-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
+                >
+                  Browse More Tours
+                </button>
+
+                <button
+                  type="button"
+                  onClick={submitPayment}
+                  className="text-white w-1/2 bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
+                >
+                  {isSubmitting && <Spinner />} Checkout
+                </button>
+              </div>
             </div>
           )}
 
@@ -869,13 +891,35 @@ export default function Cart() {
                   )}
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={submitPayment}
-                className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer"
-              >
-                {isSubmitting && <Spinner />} Checkout
-              </button>
+              <div className="flex justify-between gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const match = coreInitial.find(
+                      (item) => item.idx_comp === idxCompCart
+                    );
+
+                    if (match) {
+                      router.push(
+                        `/destination/${match.country.toLowerCase()}?id=${idxCompCart}&country=${match.country.toLowerCase()}`
+                      );
+                    } else {
+                      router.push("/");
+                    }
+                  }}
+                  className="text-white w-1/2 bg-gray-500 hover:bg-gray-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
+                >
+                  Browse More
+                </button>
+
+                <button
+                  type="button"
+                  onClick={submitPayment}
+                  className="text-white w-1/2 bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
+                >
+                  {isSubmitting && <Spinner />} Checkout
+                </button>
+              </div>
             </div>
           )}
         </div>

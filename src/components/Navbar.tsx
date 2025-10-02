@@ -470,8 +470,8 @@ export default function NavbarComponent() {
                                 item.idx_comp != idxCompCart
                               ) {
                                 Swal.fire({
-                                  title: "Are you sure?",
-                                  text: "Your cart is not finished!",
+                                  title: "You still have items in your cart.",
+                                  text: "Please complete your booking or empty your cart before continuing.",
                                   icon: "warning",
                                   showCancelButton: false,
                                   showDenyButton: false,
@@ -655,7 +655,7 @@ export default function NavbarComponent() {
                               setSelectModal(`${item}`);
                               if (item == "Currency" && cartApiCount > 0) {
                                 toast(
-                                  "Currency cannot be changed after transactions are added to the cart.",
+                                  "Currency can only be changed with an empty cart. Please clear your cart to switch currency.",
                                   {
                                     icon: "⚠️", // warning emoji
                                   }
@@ -803,8 +803,8 @@ export default function NavbarComponent() {
                                 item.idx_comp != idxCompCart
                               ) {
                                 Swal.fire({
-                                  title: "Are you sure?",
-                                  text: "Your cart is not finished!",
+                                  title: "You still have items in your cart.",
+                                  text: "Please complete your booking or empty your cart before continuing.",
                                   icon: "warning",
                                   showCancelButton: false,
                                   showDenyButton: true,

@@ -4,12 +4,7 @@ import { useEffect, useState } from "react";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCartPlus,
-  faHeart,
-  faStar,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
 // State Global / Context
 import { useCart } from "@/context/CartContext";
@@ -21,19 +16,19 @@ import Link from "next/link";
 // Path
 import { usePathname } from "next/navigation";
 
-type EcommersCardProps = {
+type RecentlyCardProps = {
   idx_comp: string;
   idx_excursion: string;
   image: string;
   title: string;
   sub_title: string;
-  price: string;
+  price?: string;
   currency?: string;
   link?: string;
   colorWish?: boolean;
 };
 
-const EcommersCard: React.FC<EcommersCardProps> = ({
+const RecentlyCard: React.FC<RecentlyCardProps> = ({
   idx_comp,
   idx_excursion,
   image,
@@ -116,22 +111,9 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
             {sub_title}
           </p>
         </Link>
-
-        {!hidePrice && (
-          <div className="flex items-center justify-between mt-auto">
-            <div>
-              <span className="text-md font-bold text-gray-700">
-                {" "}
-                {currency} {price}{" "}
-              </span>
-
-              <span className="text-sm  text-gray-700">per person</span>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
 };
 
-export default EcommersCard;
+export default RecentlyCard;
