@@ -54,7 +54,7 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
   }, [pickup_time_from]);
 
   return (
-    <div className="relative w-full flex flex-row items-start bg-white border border-gray-200 rounded-lg shadow-sm md:max-w-3xl hover:bg-gray-100 mb-3">
+    <div className="relative w-full flex flex-row items-start bg-white border border-gray-200 rounded-lg shadow-sm md:max-w-3xl hover:border-gray-300 hover:shadow-md mb-3">
       <img
         className="w-30 h-35 p-2 object-cover rounded-2xl"
         src={image}
@@ -89,7 +89,7 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
         </p>
         <input
           type="text"
-          className="text-gray-600 text-sm border-gray-300 w-full h-8 bg-gray-100 rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
+          className="text-gray-600 text-sm border-gray-300 w-full h-8  rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
           placeholder="Enter Room Number (Optional)"
           value={roomValue}
           onChange={(e) => onRoomChange(e.target.value)}
@@ -113,7 +113,11 @@ const ReviewBookingCard: React.FC<ReviewBookingCardProps> = ({
               setPickupTimeFrom(e.target.value);
               onTimeChange(e.target.value);
             }}
-            className="text-gray-600 text-sm border-gray-300 w-30 h-8 bg-gray-100 rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2"
+            className={`text-gray-600 text-sm border-gray-300 w-30 h-8 ${
+              pickup_time_from == "00:00" || pickup_time_from == ""
+                ? "bg-white"
+                : "bg-gray-100"
+            } bg-gray-100 rounded-md mt-2 focus:outline-none focus:ring-0 focus:border-blue-300 focus:border-2`}
             required
             disabled={
               pickup_time_from == "00:00" || pickup_time_from == ""
