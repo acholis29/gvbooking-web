@@ -250,6 +250,7 @@ const ProductSub: React.FC<ProductSubProps> = ({
                   localStorage.setItem("booking_date", formatted);
                 }
               }}
+              dateFormat="dd/MM/yyyy"
               className="mt-1 bg-gray-100 font-semibold p-2 rounded-2xl w-full shadow-sm focus:outline-none focus:ring-0 border-0"
               wrapperClassName="w-full md:w-auto max-w-xs"
             />
