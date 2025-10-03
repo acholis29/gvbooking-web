@@ -3,6 +3,7 @@ import AsyncSelect from "react-select/async";
 import { capitalizeWords } from "@/helper/helper";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import toast from "react-hot-toast";
 
 // Styling custom Tailwind
 const customStyles = {
@@ -109,7 +110,7 @@ export default function SelectCustomAsyn({
       );
 
       const json = await res.json();
-
+      console.log("JSON = ", json);
       const fetchedOptions = json.msg.map((item: any) => ({
         value: item.location_id,
         label: item.location_name,
@@ -148,6 +149,47 @@ export default function SelectCustomAsyn({
           const selectedOption = selected as OptionType | null;
           // onChange?.(selectedOption?.value ?? null);
           onChange?.(selectedOption);
+          // Toast Untuk No Service Pickup Avilable
+          if (selected?.value == "NA") {
+            toast.custom(
+              (t) => (
+                <div
+                  className={`${
+                    t.visible ? "animate-enter" : "animate-leave"
+                  } relative max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+                >
+                  {/* Close button */}
+                  <button
+                    onClick={() => toast.dismiss(t.id)}
+                    className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+                  >
+                    ✕
+                  </button>
+
+                  <div className="flex-1 w-0 p-4">
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0">
+                        <span className="text-blue-500 text-xl">ℹ️</span>
+                      </div>
+                      <div className="ml-3 flex-1">
+                        <p className="text-sm font-semibold text-gray-900">
+                          Your pickup area isn’t listed.
+                        </p>
+                        <p className="mt-1 text-sm text-gray-500">
+                          It looks like we don’t cover this area in our regular
+                          pickup service. Please continue your booking and enter
+                          your pickup details in the designated field. Once
+                          received, our team will reach out to confirm if pickup
+                          is possible and let you know if extra charges apply.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ),
+              { duration: 13000 } // masih auto close setelah 13 detik
+            );
+          }
         }}
         onBlur={onBlur}
         placeholder={placeholder}
