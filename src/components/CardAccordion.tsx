@@ -237,7 +237,7 @@ const CardAccordion: React.FC<Props> = ({
           onClick={() => {
             // aksi untuk toggle accordion
             console.log("toggle accordion");
-            setAccordion(!isOpenAccordion);
+            // setAccordion(!isOpenAccordion);
           }}
         >
           <div className=" w-[100%] max-w-36 md:w-48 h-auto p-2">
@@ -261,6 +261,41 @@ const CardAccordion: React.FC<Props> = ({
               {item.location_name} | {item.pickup_time}
               {/* <FontAwesomeIcon icon={faClock} className="w-4 h-4 ml-1" /> */}
             </p>
+
+            <div className="flex flex-row gap-2">
+              {/* Button remove */}
+              <div
+                className="flex flex-row items-center gap-2 group cursor-pointer"
+                onClick={handleRemove}
+              >
+                {isRemoving ? (
+                  <Spinner />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    className="w-5 h-5 text-gray-500 group-hover:text-red-700"
+                    size="sm"
+                  />
+                )}
+                <p className="text-gray-600 text-sm group-hover:text-red-700">
+                  Remove
+                </p>
+              </div>
+              {/* Button Change */}
+              <div
+                className="flex flex-row items-center gap-2 group cursor-pointer"
+                onClick={handleChange}
+              >
+                <FontAwesomeIcon
+                  icon={faEdit}
+                  className="w-5 h-5 text-gray-500 group-hover:text-red-700"
+                  size="sm"
+                />
+                <p className="text-gray-600 text-sm group-hover:text-red-700">
+                  Change
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <div className="flex flex-row w-full bg-gray-100">
@@ -298,7 +333,7 @@ const CardAccordion: React.FC<Props> = ({
             </p>
           </div>
         </div>
-
+        {/* Accordion */}
         <div
           className={`${isOpenAccordion ? "flex flex-row" : "hidden"} w-full`}
         >
@@ -372,8 +407,9 @@ const CardAccordion: React.FC<Props> = ({
         <div
           className={`${isOpenAccordion ? "flex flex-row" : "hidden"} w-full`}
         >
-          <div className="w-[5%] py-4  text-left"></div>
-          <div className="w-[95%] p-4  flex flex-row justify-start items-center gap-3">
+          {/* Button Remove dan Change */}
+          {/* <div className="w-[5%] py-4  text-left"></div> */}
+          {/* <div className="w-[95%] p-4  flex flex-row justify-start items-center gap-3">
             <div
               className="flex flex-row items-center gap-2 group cursor-pointer"
               onClick={handleRemove}
@@ -404,7 +440,7 @@ const CardAccordion: React.FC<Props> = ({
                 Change
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
