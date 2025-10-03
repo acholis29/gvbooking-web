@@ -344,6 +344,13 @@ export default function Cart() {
     const profileData = JSON.parse(localStorage.getItem("profileData") || "{}");
     const profilePay = JSON.parse(localStorage.getItem("profilePay") || "{}");
 
+    if (subtotalSummeryOrderLocal == 0) {
+      toast.error(
+        "You cannot checkout if you have not selected at least one item in the cart!"
+      );
+      return null;
+    }
+
     //cek auth google
     if (status != "authenticated") {
       if (profileData.temp == "true") {
