@@ -277,7 +277,7 @@ export default function Home() {
       {/* Section Last Your Search */}
       <div className="bg-white my-6 pb-6">
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
-          <p className="text-red-gvi font-bold text-3xl">Last view</p>
+          <p className="text-red-gvi font-bold text-3xl">Recently Viewed</p>
         </section>
 
         <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
@@ -322,7 +322,7 @@ export default function Home() {
                 icon={faInbox}
                 className="w-10 h-10 text-red-gvi 0 pl-2"
               />{" "}
-              Last view is empty.
+              Recently viewed is empty.
             </p>
           )}
         </section>
