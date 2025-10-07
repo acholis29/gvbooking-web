@@ -151,18 +151,36 @@ export default function DetailDestination() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate);
   // open dropdown pax (adult, child, infant)
   const [openDropdownPax, setOpenDropdownPax] = useState(false);
+  // open date avaibility
+  const [openDateAvaibility, setOpenDateAvaibility] = useState(false);
   // set adult, child, infant
   const [adultCount, setAdultCount] = useState(1);
   const [childCount, setChildCount] = useState(0);
   const [infantCount, setInfantCount] = useState(0);
   const [valDropdownPax, setValDropdownPax] = useState("Adult x 1");
-  const ref = useRef<HTMLDivElement>(null);
+  // Handle Close OnClick Out Reference
+  const refPax = useRef<HTMLDivElement>(null);
+  const refDate = useRef<HTMLDivElement>(null);
+  const [childAges, setChildAges] = useState<string[]>([]);
+
+  // Hanlde Child Age
+  const handleAgeChange = (index: number, value: string) => {
+    const updatedAges = [...childAges];
+    updatedAges[index] = value;
+    setChildAges(updatedAges);
+  };
 
   // Tutup dropdown kalau klik di luar
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+
+      if (refPax.current && !refPax.current.contains(target)) {
         setOpenDropdownPax(false);
+      }
+
+      if (refDate.current && !refDate.current.contains(target)) {
+        setOpenDateAvaibility(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -173,15 +191,15 @@ export default function DetailDestination() {
     let parts: string[] = [];
 
     if (adultCount > 0) {
-      parts.push(`Adult x ${adultCount}`);
+      parts.push(`Adl x ${adultCount}`);
     }
 
     if (childCount > 0) {
-      parts.push(`Child x ${childCount}`);
+      parts.push(`Chd x ${childCount}`);
     }
 
     if (infantCount > 0) {
-      parts.push(`Infant x ${infantCount}`);
+      parts.push(`Inf x ${infantCount}`);
     }
 
     if (adultCount == 0 && childCount == 0 && infantCount == 0) {
@@ -614,7 +632,7 @@ export default function DetailDestination() {
                           //   ?.scrollIntoView({ behavior: "smooth" });
 
                           window.scrollTo({
-                            top: 1400,
+                            top: 1000,
                             behavior: "smooth",
                           });
 
@@ -626,9 +644,12 @@ export default function DetailDestination() {
                             // target.scrollIntoView({ behavior: "smooth" });
 
                             // kasih efek highlight sementara
-                            target.classList.add("ring-2", "ring-red-700");
+                            target.classList.add("ring-2", "ring-gray-500");
                             setTimeout(() => {
-                              target.classList.remove("ring-2", "ring-red-700");
+                              target.classList.remove(
+                                "ring-2",
+                                "ring-gray-500"
+                              );
                             }, 1500); // hilang setelah 1.5 detik
                           }
                         }}
@@ -689,7 +710,7 @@ export default function DetailDestination() {
                 {/* Kiri: input-input */}
                 <div className="flex flex-row gap-5">
                   {/* Pax Adult, Child, Infant */}
-                  <div className="relative" ref={ref}>
+                  <div className="relative" ref={refPax}>
                     {/* Trigger */}
                     <div
                       className="h-10 w-70 px-3 flex flex-row justify-between items-center bg-white rounded-xl cursor-pointer"
@@ -745,32 +766,53 @@ export default function DetailDestination() {
                               }}
                             />
                           </li>
-                          <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around">
-                            <p className="w-10 font-semibold">Child</p>
-                            <FontAwesomeIcon
-                              icon={faMinusCircle}
-                              className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                openDropdownPax ? "rotate-180" : ""
-                              }`}
-                              size="lg"
-                              onClick={() => {
-                                if (childCount > 0) {
-                                  setChildCount(childCount - 1);
+                          <li className="px-4 py-2 hover:bg-gray-100 flex flex-col">
+                            <div className="flex flex-row justify-around items-center">
+                              <p className="w-10 font-semibold">Child</p>
+                              <FontAwesomeIcon
+                                icon={faMinusCircle}
+                                className="w-4 h-4 text-red-400"
+                                onClick={() =>
+                                  childCount > 0 &&
+                                  setChildCount(childCount - 1)
                                 }
-                              }}
-                            />
-                            <p className="w-5 text-center">{childCount}</p>
-                            <FontAwesomeIcon
-                              icon={faPlusCircle}
-                              className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                openDropdownPax ? "rotate-180" : ""
-                              }`}
-                              size="lg"
-                              onClick={() => {
-                                setChildCount(childCount + 1);
-                              }}
-                            />
+                              />
+                              <p className="w-5 text-center">{childCount}</p>
+                              <FontAwesomeIcon
+                                icon={faPlusCircle}
+                                className="w-4 h-4 text-red-400"
+                                onClick={() => setChildCount(childCount + 1)}
+                              />
+                            </div>
+
+                            {/* Input umur anak */}
+                            {childCount > 0 && (
+                              <div className="mt-2 ml-5 flex flex-col gap-1">
+                                {[...Array(childCount)].map((_, i) => (
+                                  <div
+                                    key={i}
+                                    className="flex items-center gap-2"
+                                  >
+                                    <p className="text-xs w-10 text-gray-500">
+                                      Age {i + 1}
+                                    </p>
+                                    <input
+                                      type="number"
+                                      min="0"
+                                      max="12"
+                                      className="w-16 px-2 py-1 border rounded-md text-sm"
+                                      value={childAges[i] || ""}
+                                      onChange={(e) =>
+                                        handleAgeChange(i, e.target.value)
+                                      }
+                                      placeholder="0–12"
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </li>
+
                           <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around">
                             <p className="w-10 font-semibold">Infant</p>
                             <FontAwesomeIcon
@@ -803,18 +845,60 @@ export default function DetailDestination() {
                   </div>
 
                   {/* Select Date */}
-                  <div className="h-10 w-50 px-3 flex flex-row justify-around items-center bg-white rounded-xl">
-                    <FontAwesomeIcon
-                      icon={faCalendarAlt}
-                      className="w-4 h-4 text-gray-500 mr-1"
-                      size="lg"
-                    />
-                    <p className="text-sm font-bold">Select Date</p>
-                    <FontAwesomeIcon
-                      icon={faCaretDown}
-                      className="w-4 h-4 text-gray-500 ml-2"
-                      size="lg"
-                    />
+                  <div
+                    className="relative h-10 w-50 flex flex-row justify-around items-center bg-white rounded-xl cursor-pointer"
+                    ref={refDate}
+                  >
+                    <div
+                      className="h-10 w-50 px-3 flex flex-row justify-around items-center bg-white rounded-xl cursor-pointer"
+                      onClick={() => {
+                        setOpenDateAvaibility(!openDateAvaibility);
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={faCalendarAlt}
+                        className="w-4 h-4 text-gray-500 mr-1"
+                        size="lg"
+                      />
+                      {/* <p className="text-sm font-bold">Select Date</p> */}
+                      <p className="text-sm font-bold">
+                        {selectedDate
+                          ? selectedDate.toLocaleDateString("en-GB") // format: dd/mm/yyyy
+                          : ""}
+                      </p>
+                      <FontAwesomeIcon
+                        icon={faCaretDown}
+                        className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
+                          openDateAvaibility ? "rotate-180" : ""
+                        }`}
+                        size="lg"
+                      />
+                    </div>
+                    {openDateAvaibility && (
+                      <div className="absolute top-full mt-2 right-0 z-10 bg-white shadow-lg rounded">
+                        <DatePicker
+                          selected={selectedDate}
+                          onChange={(date) => {
+                            setSelectedDate(date);
+                            if (date) {
+                              // Format ke yyyy-mm-dd dan simpan di context
+                              const formatted = date
+                                .toISOString()
+                                .split("T")[0];
+                              setDate(formatted);
+                              localStorage.setItem("booking_date", formatted);
+                            }
+                          }}
+                          minDate={(() => {
+                            const tomorrow = new Date();
+                            tomorrow.setDate(tomorrow.getDate() + 1);
+                            return tomorrow;
+                          })()}
+                          inline
+                          className="p-2"
+                        />
+                      </div>
+                    )}
                   </div>
 
                   {/* Find Pickup */}
@@ -840,7 +924,7 @@ export default function DetailDestination() {
             </p>
 
             {/* Card Sub Excursion */}
-            <div className="w-full rounded-2xl mt-5 hover:border-2 border-red-700 shadow-md bg-gray-100">
+            <div className="w-full rounded-2xl mt-5 hover:border-2 border-gray-400 shadow-md bg-gray-100">
               {/* Desc */}
               <div className="flex flex-row p-5 justify-between gap-10">
                 <div className="flex flex-col">
