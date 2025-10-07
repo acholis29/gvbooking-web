@@ -165,8 +165,13 @@ export default function DetailDestination() {
 
   // Hanlde Child Age
   const handleAgeChange = (index: number, value: string) => {
+    let age = parseInt(value);
+    if (isNaN(age)) age = 1;
+    if (age < 1) age = 1;
+    if (age > 12) age = 12;
+
     const updatedAges = [...childAges];
-    updatedAges[index] = value;
+    updatedAges[index] = age.toString();
     setChildAges(updatedAges);
   };
 
@@ -798,10 +803,10 @@ export default function DetailDestination() {
                                     </p>
                                     <input
                                       type="number"
-                                      min="0"
+                                      min="1"
                                       max="12"
                                       className="w-16 px-2 py-1 border rounded-md text-sm"
-                                      value={childAges[i] || ""}
+                                      value={childAges[i] || "1"}
                                       onChange={(e) =>
                                         handleAgeChange(i, e.target.value)
                                       }
