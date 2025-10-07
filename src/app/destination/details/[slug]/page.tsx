@@ -19,20 +19,15 @@ import { useCartApi } from "@/context/CartApiContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
-  faArrowAltCircleDown,
   faCalendarAlt,
   faCalendarCheck,
-  faCalendarDays,
-  faCalendarWeek,
   faCaretDown,
-  faChevronDown,
-  faCircleDown,
   faClock,
   faClockRotateLeft,
   faListCheck,
   faMinusCircle,
   faPlusCircle,
-  faTicketSimple,
+  faSearch,
   faUser,
   faUserCheck,
 } from "@fortawesome/free-solid-svg-icons";
@@ -46,6 +41,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import Breadcrumb from "@/components/Breadcrumb";
 import Spinner from "@/components/Spinner";
 import SkeletonDetailProdukSub from "@/components/SkeletonDetailProdukSub";
+import SelectCustomAsynNew from "@/components/SelectCustomAsynNew";
+// Form Libraries
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 
 export default function DetailDestination() {
   const searchParams = useSearchParams();
@@ -62,6 +60,19 @@ export default function DetailDestination() {
   const [selectedProductSub, setSelectedProductSubOpen] = useState("");
   const [isMobile, setIsMobile] = useState(false);
   const [defaultCancelText, setDefaultCanceText] = useState("");
+  const [labelSelectPickup, setLabelSelectPickup] = useState<string>("");
+  const [pickupTimeFrom, setPickupTimeFrom] = useState<string>("");
+
+  // Form Validate
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    control,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data: any) => {};
 
   // Currency
   const { currency, setCurrency, masterCurrency, setMasterCurrency } =
@@ -625,17 +636,18 @@ export default function DetailDestination() {
                   <div className="w-full flex flex-row justify-between items-center">
                     <div className="flex flex-col">
                       <p className="font-semibold text-sm">From</p>
-                      <p className="font-bold text-lg">EUR 180.000</p>
+                      {/* <p className="font-bold text-lg">EUR 180.000</p> */}
+                      <p className="font-bold text-lg">
+                        {dataProductSub?.msg.product_subs[0].currency ?? ""}{" "}
+                        {dataProductSub?.msg.product_subs[0].price ?? ""}
+                      </p>
                       <p className="text-sm">per person</p>
                     </div>
                     <div className="flex flex-col">
                       <button
                         className="w-60 bg-red-600 text-white font-bold rounded-2xl px-4 py-2"
                         onClick={() => {
-                          // document
-                          //   .getElementById("availability-section")
-                          //   ?.scrollIntoView({ behavior: "smooth" });
-
+                          // Scroll ke card check avaibility
                           window.scrollTo({
                             top: 1000,
                             behavior: "smooth",
@@ -703,226 +715,255 @@ export default function DetailDestination() {
             />
 
             {/* Card Check Available */}
-            <div
-              className="w-full h-40 bg-gray-300 rounded-2xl mt-5 p-8"
-              id="availability-section"
-            >
-              <p className="text-lg font-semibold">
-                Select participants, date, and language
-              </p>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div
+                className="w-full h-40 bg-gray-300 rounded-2xl mt-5 p-8"
+                id="availability-section"
+              >
+                <p className="text-lg font-semibold">
+                  Select participants, date, and language
+                </p>
 
-              <div className="flex flex-row items-center justify-between mt-5">
-                {/* Kiri: input-input */}
-                <div className="flex flex-row gap-5">
-                  {/* Pax Adult, Child, Infant */}
-                  <div className="relative" ref={refPax}>
-                    {/* Trigger */}
-                    <div
-                      className="h-10 w-70 px-3 flex flex-row justify-between items-center bg-white rounded-xl cursor-pointer"
-                      onClick={() => setOpenDropdownPax(!openDropdownPax)}
-                    >
-                      <div className="flex items-center">
+                <div className="flex flex-row items-center justify-between mt-5">
+                  {/* Kiri: input-input */}
+                  <div className="flex flex-row gap-5">
+                    {/* Pax Adult, Child, Infant */}
+                    <div className="relative" ref={refPax}>
+                      {/* Trigger */}
+                      <div
+                        className="h-10 w-70 px-3 flex flex-row justify-between items-center bg-white rounded-xl cursor-pointer"
+                        onClick={() => setOpenDropdownPax(!openDropdownPax)}
+                      >
+                        <div className="flex items-center">
+                          <FontAwesomeIcon
+                            icon={faUser}
+                            className="w-4 h-4 text-gray-500 mr-2"
+                            size="lg"
+                          />
+                          <p className="text-sm font-bold">
+                            {valDropdownPax}
+                            {/* Adult x 1, Child x 1, Infant x 1 */}
+                          </p>
+                        </div>
                         <FontAwesomeIcon
-                          icon={faUser}
-                          className="w-4 h-4 text-gray-500 mr-2"
+                          icon={faCaretDown}
+                          className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
+                            openDropdownPax ? "rotate-180" : ""
+                          }`}
                           size="lg"
                         />
-                        <p className="text-sm font-bold">
-                          {valDropdownPax}
-                          {/* Adult x 1, Child x 1, Infant x 1 */}
-                        </p>
                       </div>
-                      <FontAwesomeIcon
-                        icon={faCaretDown}
-                        className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
-                          openDropdownPax ? "rotate-180" : ""
-                        }`}
-                        size="lg"
-                      />
-                    </div>
 
-                    {/* Dropdown list muncul di bawah trigger */}
-                    {openDropdownPax && (
-                      <div className="absolute top-full mt-2 w-52 bg-white rounded-xl shadow-lg border border-gray-200 z-10">
-                        <ul className="py-2">
-                          <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around">
-                            <p className="w-10 font-semibold">Adult</p>
-                            <FontAwesomeIcon
-                              icon={faMinusCircle}
-                              className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                openDropdownPax ? "rotate-180" : ""
-                              }`}
-                              size="lg"
-                              onClick={() => {
-                                if (adultCount > 0) {
-                                  setAdultCount(adultCount - 1);
-                                }
-                              }}
-                            />
-                            <p className="w-5 text-center">{adultCount}</p>
-                            <FontAwesomeIcon
-                              icon={faPlusCircle}
-                              className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                openDropdownPax ? "rotate-180" : ""
-                              }`}
-                              size="lg"
-                              onClick={() => {
-                                setAdultCount(adultCount + 1);
-                              }}
-                            />
-                          </li>
-                          <li className="px-4 py-2 hover:bg-gray-100 flex flex-col">
-                            <div className="flex flex-row justify-around items-center">
-                              <p className="w-10 font-semibold">Child</p>
+                      {/* Dropdown list muncul di bawah trigger */}
+                      {openDropdownPax && (
+                        <div className="absolute top-full mt-2 w-52 bg-white rounded-xl shadow-lg border border-gray-200 z-10">
+                          <ul className="py-2">
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around">
+                              <p className="w-10 font-semibold">Adult</p>
                               <FontAwesomeIcon
                                 icon={faMinusCircle}
-                                className="w-4 h-4 text-red-400"
-                                onClick={() =>
-                                  childCount > 0 &&
-                                  setChildCount(childCount - 1)
-                                }
+                                className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                  openDropdownPax ? "rotate-180" : ""
+                                }`}
+                                size="lg"
+                                onClick={() => {
+                                  if (adultCount > 0) {
+                                    setAdultCount(adultCount - 1);
+                                  }
+                                }}
                               />
-                              <p className="w-5 text-center">{childCount}</p>
+                              <p className="w-5 text-center">{adultCount}</p>
                               <FontAwesomeIcon
                                 icon={faPlusCircle}
-                                className="w-4 h-4 text-red-400"
-                                onClick={() => setChildCount(childCount + 1)}
+                                className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                  openDropdownPax ? "rotate-180" : ""
+                                }`}
+                                size="lg"
+                                onClick={() => {
+                                  setAdultCount(adultCount + 1);
+                                }}
                               />
-                            </div>
-
-                            {/* Input umur anak */}
-                            {childCount > 0 && (
-                              <div className="mt-2 ml-5 flex flex-col gap-1">
-                                {[...Array(childCount)].map((_, i) => (
-                                  <div
-                                    key={i}
-                                    className="flex items-center gap-2"
-                                  >
-                                    <p className="text-xs w-10 text-gray-500">
-                                      Age {i + 1}
-                                    </p>
-                                    <input
-                                      type="number"
-                                      min="1"
-                                      max="12"
-                                      className="w-16 px-2 py-1 border rounded-md text-sm"
-                                      value={childAges[i] || "1"}
-                                      onChange={(e) =>
-                                        handleAgeChange(i, e.target.value)
-                                      }
-                                      placeholder="0–12"
-                                    />
-                                  </div>
-                                ))}
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 flex flex-col">
+                              <div className="flex flex-row justify-around items-center">
+                                <p className="w-10 font-semibold">Child</p>
+                                <FontAwesomeIcon
+                                  icon={faMinusCircle}
+                                  className="w-4 h-4 text-red-400"
+                                  onClick={() =>
+                                    childCount > 0 &&
+                                    setChildCount(childCount - 1)
+                                  }
+                                />
+                                <p className="w-5 text-center">{childCount}</p>
+                                <FontAwesomeIcon
+                                  icon={faPlusCircle}
+                                  className="w-4 h-4 text-red-400"
+                                  onClick={() => setChildCount(childCount + 1)}
+                                />
                               </div>
-                            )}
-                          </li>
 
-                          <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around">
-                            <p className="w-10 font-semibold">Infant</p>
-                            <FontAwesomeIcon
-                              icon={faMinusCircle}
-                              className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                openDropdownPax ? "rotate-180" : ""
-                              }`}
-                              size="lg"
-                              onClick={() => {
-                                if (infantCount > 0) {
-                                  setInfantCount(infantCount - 1);
-                                }
-                              }}
-                            />
-                            <p className="w-5 text-center">{infantCount}</p>
-                            <FontAwesomeIcon
-                              icon={faPlusCircle}
-                              className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                openDropdownPax ? "rotate-180" : ""
-                              }`}
-                              size="lg"
-                              onClick={() => {
-                                setInfantCount(infantCount + 1);
-                              }}
-                            />
-                          </li>
-                        </ul>
-                      </div>
-                    )}
-                  </div>
+                              {/* Input umur anak */}
+                              {childCount > 0 && (
+                                <div className="mt-2 ml-5 flex flex-col gap-1">
+                                  {[...Array(childCount)].map((_, i) => (
+                                    <div
+                                      key={i}
+                                      className="flex items-center gap-2"
+                                    >
+                                      <p className="text-xs w-10 text-gray-500">
+                                        Age {i + 1}
+                                      </p>
+                                      <input
+                                        type="number"
+                                        min="1"
+                                        max="12"
+                                        className="w-16 px-2 py-1 border rounded-md text-sm"
+                                        value={childAges[i] || "1"}
+                                        onChange={(e) =>
+                                          handleAgeChange(i, e.target.value)
+                                        }
+                                        placeholder="0–12"
+                                      />
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </li>
 
-                  {/* Select Date */}
-                  <div
-                    className="relative h-10 w-50 flex flex-row justify-around items-center bg-white rounded-xl cursor-pointer"
-                    ref={refDate}
-                  >
-                    <div
-                      className="h-10 w-50 px-3 flex flex-row justify-around items-center bg-white rounded-xl cursor-pointer"
-                      onClick={() => {
-                        setOpenDateAvaibility(!openDateAvaibility);
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        icon={faCalendarAlt}
-                        className="w-4 h-4 text-gray-500 mr-1"
-                        size="lg"
-                      />
-                      {/* <p className="text-sm font-bold">Select Date</p> */}
-                      <p className="text-sm font-bold">
-                        {selectedDate
-                          ? selectedDate.toLocaleDateString("en-GB") // format: dd/mm/yyyy
-                          : ""}
-                      </p>
-                      <FontAwesomeIcon
-                        icon={faCaretDown}
-                        className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
-                          openDateAvaibility ? "rotate-180" : ""
-                        }`}
-                        size="lg"
-                      />
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around">
+                              <p className="w-10 font-semibold">Infant</p>
+                              <FontAwesomeIcon
+                                icon={faMinusCircle}
+                                className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                  openDropdownPax ? "rotate-180" : ""
+                                }`}
+                                size="lg"
+                                onClick={() => {
+                                  if (infantCount > 0) {
+                                    setInfantCount(infantCount - 1);
+                                  }
+                                }}
+                              />
+                              <p className="w-5 text-center">{infantCount}</p>
+                              <FontAwesomeIcon
+                                icon={faPlusCircle}
+                                className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                  openDropdownPax ? "rotate-180" : ""
+                                }`}
+                                size="lg"
+                                onClick={() => {
+                                  setInfantCount(infantCount + 1);
+                                }}
+                              />
+                            </li>
+                          </ul>
+                        </div>
+                      )}
                     </div>
-                    {openDateAvaibility && (
-                      <div className="absolute top-full mt-2 right-0 z-10 bg-white shadow-lg rounded">
-                        <DatePicker
-                          selected={selectedDate}
-                          onChange={(date) => {
-                            setSelectedDate(date);
-                            if (date) {
-                              // Format ke yyyy-mm-dd dan simpan di context
-                              const formatted = date
-                                .toISOString()
-                                .split("T")[0];
-                              setDate(formatted);
-                              localStorage.setItem("booking_date", formatted);
-                            }
-                          }}
-                          minDate={(() => {
-                            const tomorrow = new Date();
-                            tomorrow.setDate(tomorrow.getDate() + 1);
-                            return tomorrow;
-                          })()}
-                          inline
-                          className="p-2"
+
+                    {/* Select Date */}
+                    <div
+                      className="relative h-10 w-50 flex flex-row justify-around items-center bg-white rounded-xl cursor-pointer"
+                      ref={refDate}
+                    >
+                      <div
+                        className="h-10 w-50 px-3 flex flex-row justify-around items-center bg-white rounded-xl cursor-pointer"
+                        onClick={() => {
+                          setOpenDateAvaibility(!openDateAvaibility);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faCalendarAlt}
+                          className="w-4 h-4 text-gray-500 mr-1"
+                          size="lg"
+                        />
+                        {/* <p className="text-sm font-bold">Select Date</p> */}
+                        <p className="text-sm font-bold">
+                          {selectedDate
+                            ? selectedDate.toLocaleDateString("en-GB") // format: dd/mm/yyyy
+                            : ""}
+                        </p>
+                        <FontAwesomeIcon
+                          icon={faCaretDown}
+                          className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
+                            openDateAvaibility ? "rotate-180" : ""
+                          }`}
+                          size="lg"
                         />
                       </div>
-                    )}
-                  </div>
+                      {openDateAvaibility && (
+                        <div className="absolute top-full mt-2 right-0 z-10 bg-white shadow-lg rounded">
+                          <DatePicker
+                            selected={selectedDate}
+                            onChange={(date) => {
+                              setSelectedDate(date);
+                              if (date) {
+                                // Format ke yyyy-mm-dd dan simpan di context
+                                const formatted = date
+                                  .toISOString()
+                                  .split("T")[0];
+                                setDate(formatted);
+                                localStorage.setItem("booking_date", formatted);
+                              }
+                            }}
+                            minDate={(() => {
+                              const tomorrow = new Date();
+                              tomorrow.setDate(tomorrow.getDate() + 1);
+                              return tomorrow;
+                            })()}
+                            inline
+                            className="p-2"
+                          />
+                        </div>
+                      )}
+                    </div>
 
-                  {/* Find Pickup */}
-                  <div className="h-10 w-60 px-3 flex flex-row justify-around items-center bg-white rounded-xl">
+                    {/* Find Pickup */}
+                    {/* <div className="h-10 w-60 px-3 flex flex-row justify-around items-center bg-white rounded-xl">
                     <p className="text-sm font-bold">Find Pickup ...</p>
                     <FontAwesomeIcon
-                      icon={faCaretDown}
+                      icon={faSearch}
                       className="w-4 h-4 text-gray-500 ml-2"
                       size="lg"
                     />
-                  </div>
-                </div>
+                  </div> */}
 
-                {/* Kanan: button */}
-                <button className="w-60 bg-red-600 text-white font-bold rounded-2xl px-4 py-2">
-                  Check Availability
-                </button>
+                    <div className="h-10 w-70 flex flex-row justify-around items-center">
+                      <Controller //validasi
+                        name="pickup_area"
+                        control={control}
+                        rules={{ required: "pickup area is required!" }}
+                        render={({ field, fieldState }) => (
+                          <SelectCustomAsynNew
+                            idx_comp={idx_comp ?? ""}
+                            id_excursion={idx_excursion ?? ""}
+                            placeholder="Find Pickup Area ..."
+                            value={field.value}
+                            onChange={(val) => {
+                              field.onChange(val?.value);
+                              setLabelSelectPickup(val?.label ?? "");
+                              setPickupTimeFrom(val?.data.time_pickup_from);
+                            }}
+                            onBlur={field.onBlur}
+                            name={field.name}
+                            error={fieldState.error?.message}
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Kanan: button */}
+                  <button
+                    type="submit"
+                    className="w-60 bg-red-600 text-white font-bold rounded-2xl px-4 py-2"
+                  >
+                    Check Availability
+                  </button>
+                </div>
               </div>
-            </div>
+            </form>
 
             <p className="text-md font-semibold mt-5">
               Choose from 1 available option
