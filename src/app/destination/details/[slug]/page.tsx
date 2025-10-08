@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 
 import Galery from "@/components/Galery";
-import ProductSub from "@/components/ProductSubCard";
+import ProductSubNew from "@/components/ProductSubNewCard";
 import { GLOBAL_VAR } from "@/lib/globalVar";
 import { API_HOSTS } from "@/lib/apihost";
 
@@ -41,7 +41,15 @@ import "react-datepicker/dist/react-datepicker.css";
 import Breadcrumb from "@/components/Breadcrumb";
 import Spinner from "@/components/Spinner";
 import SkeletonDetailProdukSub from "@/components/SkeletonDetailProdukSub";
-import SelectCustomAsynNew from "@/components/SelectCustomAsynNew";
+// import SelectCustomAsynNew from "@/components/SelectCustomAsynNew";
+import dynamic from "next/dynamic";
+const SelectCustomAsynNew = dynamic(
+  () => import("@/components/SelectCustomAsynNew"),
+  {
+    ssr: false,
+  }
+);
+
 // Form Libraries
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 
@@ -63,6 +71,11 @@ export default function DetailDestination() {
   const [labelSelectPickup, setLabelSelectPickup] = useState<string>("");
   const [pickupTimeFrom, setPickupTimeFrom] = useState<string>("");
 
+  // Check avaibility
+  const [checkAvaibility, setCheckAvaibility] = useState(false);
+  // Pickup Area
+  const [pickupAreaId, setPickupAreaId] = useState("");
+
   // Form Validate
   const {
     register,
@@ -72,7 +85,11 @@ export default function DetailDestination() {
     control,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data: any) => {};
+  const onSubmit = (data: any) => {
+    console.log(data);
+    setCheckAvaibility(true);
+    setPickupAreaId(data.pickup_area);
+  };
 
   // Currency
   const { currency, setCurrency, masterCurrency, setMasterCurrency } =
@@ -920,15 +937,6 @@ export default function DetailDestination() {
                     </div>
 
                     {/* Find Pickup */}
-                    {/* <div className="h-10 w-60 px-3 flex flex-row justify-around items-center bg-white rounded-xl">
-                    <p className="text-sm font-bold">Find Pickup ...</p>
-                    <FontAwesomeIcon
-                      icon={faSearch}
-                      className="w-4 h-4 text-gray-500 ml-2"
-                      size="lg"
-                    />
-                  </div> */}
-
                     <div className="h-10 w-70 flex flex-row justify-around items-center">
                       <Controller //validasi
                         name="pickup_area"
@@ -957,7 +965,7 @@ export default function DetailDestination() {
                   {/* Kanan: button */}
                   <button
                     type="submit"
-                    className="w-60 bg-red-600 text-white font-bold rounded-2xl px-4 py-2"
+                    className="w-60 bg-red-600 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer"
                   >
                     Check Availability
                   </button>
@@ -965,102 +973,29 @@ export default function DetailDestination() {
               </div>
             </form>
 
-            <p className="text-md font-semibold mt-5">
-              Choose from 1 available option
-            </p>
+            {checkAvaibility && (
+              <p className="text-md font-semibold mt-5">
+                Choose from {dataProductSub?.msg.product_subs.length} available
+                option
+              </p>
+            )}
 
-            {/* Card Sub Excursion */}
-            <div className="w-full rounded-2xl mt-5 hover:border-2 border-gray-400 shadow-md bg-gray-100">
-              {/* Desc */}
-              <div className="flex flex-row p-5 justify-between gap-10">
-                <div className="flex flex-col">
-                  <h1 className="text-md font-bold">Tanah Lot, Bali</h1>
-                  <p className="text-sm">
-                    Pickup : THE SAMAYA UBUD | Meet at the lobby
-                  </p>
-
-                  {/* Room number */}
-                  <input
-                    type="text"
-                    placeholder="Enter Room Number (Optional)"
-                    value=""
-                    onChange={(e) => {}}
-                    className="text-gray-600 text-sm border border-gray-300 w-full h-8 rounded-md mt-2
-                   focus:outline-none focus:ring-0 focus:border-2 focus:border-blue-300"
-                  />
-
-                  {/* Time input */}
-                  <div className="relative inline-block mt-2">
-                    {/* Ikon jam */}
-                    <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none">
-                      <FontAwesomeIcon
-                        icon={faClock}
-                        className="w-4 h-4 text-gray-600"
-                      />
-                    </div>
-
-                    <input
-                      type="time"
-                      id="time"
-                      value="07:00"
-                      onChange={(e) => {}}
-                      required
-                      className="text-gray-600 text-sm border border-gray-300 pl-8 w-32 h-8 
-                     bg-gray-100 rounded-md focus:outline-none focus:ring-0 
-                     focus:border-2 focus:border-blue-300"
-                    />
-                  </div>
-                </div>
-                {/* Badge */}
-                <div className="flex flex-col flex-2/3">
-                  <h1 className="text-sm font-bold">Add Surcharge</h1>
-                  <div className="flex flex-row gap-2 flex-wrap">
-                    <span className="bg-gray-300 text-gray-800 text-xs font-semibold me-2 px-2.5 py-1 rounded-md border border-red-700">
-                      GUIDE SURCHARGE FOREIGN ~ EUR 10.00
-                    </span>
-                    <span className="bg-gray-300 text-gray-800 text-xs font-semibold me-2 px-2.5 py-1 rounded-md">
-                      GUIDE SURCHARGE FOREIGN ~ EUR 10.00
-                    </span>
-                    <span className="bg-gray-300 text-gray-800 text-xs font-semibold me-2 px-2.5 py-1 rounded-md">
-                      GUIDE SURCHARGE FOREIGN ~ EUR 10.00
-                    </span>
-                    <span className="bg-gray-300 text-gray-800 text-xs font-semibold me-2 px-2.5 py-1 rounded-md">
-                      GUIDE SURCHARGE FOREIGN ~ EUR 10.00
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Total */}
-              <div
-                className="flex flex-row justify-between gap-7 border-t-2 border-red-700 
-                  bg-gray-300 rounded-b-2xl p-5"
-              >
-                {/* Left side (pricing) */}
-                <div className="flex flex-row gap-5">
-                  <div className="flex flex-col">
-                    <h1 className="text-xl font-bold">EUR 180.00</h1>
-                    <p className="text-xs">1 Adult x Rp 676,851</p>
-                    <p className="text-xs">1 Youth x Rp 451,234</p>
-                    <p className="text-xs">1 Child x Rp 0</p>
-                    <p className="text-xs mt-2 italic">
-                      *All taxes and fees included
-                    </p>
-                  </div>
-                  <div className="flex flex-col mt-7">
-                    <p className="text-xs">Surcharge Rp 265.00</p>
-                    <p className="text-xs">Discount Rp 265.00</p>
-                  </div>
-                </div>
-
-                {/* Right side (button) */}
-                <div className="flex flex-col items-center justify-center">
-                  <button className="w-60 bg-red-600 text-white font-bold rounded-2xl px-4 py-2">
-                    Continue
-                  </button>
-                </div>
-              </div>
-            </div>
+            {/* Card Sub Excursion dan Surcharge*/}
+            {checkAvaibility &&
+              dataProductSub?.msg.product_subs.map((item, index) => (
+                <ProductSubNew
+                  key={index}
+                  dataSub={item}
+                  pickupArea={labelSelectPickup}
+                  pickupArea_id={pickupAreaId}
+                  pickup_time={pickupTimeFrom}
+                  idx_comp={idx_comp ?? ""}
+                  date_booking={date}
+                  total_pax_adult={adultCount.toString()}
+                  total_pax_child={childCount.toString()}
+                  total_pax_infant={infantCount.toString()}
+                />
+              ))}
           </div>
         </div>
       </div>
