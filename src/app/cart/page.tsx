@@ -200,6 +200,8 @@ export default function Cart() {
     provider: "",
     sts: "",
   });
+  // Check Thailand dicart
+  const [isThailand, setIsThailand] = useState(false);
 
   const [onepayParam, setOnepayParam] = useState<varOnepayParam>({
     virtualPaymentClientURL: "",
@@ -702,6 +704,16 @@ export default function Cart() {
     }
   }, [status, session, router]);
 
+  useEffect(() => {
+    const match = coreInitial.find((item) => item.idx_comp === idxCompCart);
+
+    if (match && match.country.toLocaleLowerCase() == "thailand") {
+      // alert("thailand");
+      setIsThailand(true);
+    } else {
+      setIsThailand(false);
+    }
+  }, []);
   if (!isLoading && ListCart.length === 0) return null;
   return (
     // Cart Page
@@ -809,13 +821,31 @@ export default function Cart() {
                   Browse More Tours
                 </button>
 
-                <button
+                {/* <button
                   type="button"
                   onClick={submitPayment}
                   className="text-white w-1/2 bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
                 >
                   {isSubmitting && <Spinner />} Checkout
-                </button>
+                </button> */}
+
+                {isThailand ? (
+                  <button
+                    type="button"
+                    onClick={() => {}}
+                    className="text-white w-1/2 bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
+                  >
+                    Thailand
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={submitPayment}
+                    className="text-white w-1/2 bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
+                  >
+                    {isSubmitting && <Spinner />} Checkout
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -919,13 +949,31 @@ export default function Cart() {
                   Browse More
                 </button>
 
-                <button
+                {/* <button
                   type="button"
                   onClick={submitPayment}
                   className="text-white w-1/2 bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
                 >
                   {isSubmitting && <Spinner />} Checkout
-                </button>
+                </button> */}
+
+                {isThailand ? (
+                  <button
+                    type="button"
+                    onClick={() => {}}
+                    className="text-white w-1/2 bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
+                  >
+                    Thailand
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={submitPayment}
+                    className="text-white w-1/2 bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
+                  >
+                    {isSubmitting && <Spinner />} Checkout
+                  </button>
+                )}
               </div>
             </div>
           )}
