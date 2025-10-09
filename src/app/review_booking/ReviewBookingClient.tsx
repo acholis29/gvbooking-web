@@ -577,7 +577,7 @@ export default function ReviewBookingClient() {
               name="roomNumber"
               control={control}
               defaultValue={""} //Nomor Ruangan
-              rules={{ required: "Room number is required" }}
+              // rules={{ required: "Room number is required" }}
               render={({ field }) => (
                 <ReviewBookingCard
                   key={1}

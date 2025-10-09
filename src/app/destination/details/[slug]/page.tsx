@@ -203,6 +203,23 @@ export default function DetailDestination() {
     setChildAges(updatedAges);
   };
 
+  // Hanlde First Load Age
+  const prevCountRef = useRef(childCount);
+  useEffect(() => {
+    // kalau childCount bertambah (increment)
+    if (childCount > prevCountRef.current) {
+      const diff = childCount - prevCountRef.current;
+      setChildAges((prev) => [...prev, ...Array(diff).fill("12")]);
+    }
+    // kalau berkurang, hapus elemen dari akhir
+    else if (childCount < prevCountRef.current) {
+      setChildAges((prev) => prev.slice(0, childCount));
+    }
+
+    // simpan nilai terbaru untuk perbandingan berikutnya
+    prevCountRef.current = childCount;
+  }, [childCount]);
+
   // Tutup dropdown kalau klik di luar
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -786,6 +803,7 @@ export default function DetailDestination() {
                                 onClick={() => {
                                   if (adultCount > 0) {
                                     setAdultCount(adultCount - 1);
+                                    setCheckAvaibility(false);
                                   }
                                 }}
                               />
@@ -798,6 +816,7 @@ export default function DetailDestination() {
                                 size="lg"
                                 onClick={() => {
                                   setAdultCount(adultCount + 1);
+                                  setCheckAvaibility(false);
                                 }}
                               />
                             </li>
@@ -807,16 +826,20 @@ export default function DetailDestination() {
                                 <FontAwesomeIcon
                                   icon={faMinusCircle}
                                   className="w-4 h-4 text-red-400"
-                                  onClick={() =>
+                                  onClick={() => {
                                     childCount > 0 &&
-                                    setChildCount(childCount - 1)
-                                  }
+                                      setChildCount(childCount - 1);
+                                    setCheckAvaibility(false);
+                                  }}
                                 />
                                 <p className="w-5 text-center">{childCount}</p>
                                 <FontAwesomeIcon
                                   icon={faPlusCircle}
                                   className="w-4 h-4 text-red-400"
-                                  onClick={() => setChildCount(childCount + 1)}
+                                  onClick={() => {
+                                    setChildCount(childCount + 1);
+                                    setCheckAvaibility(false);
+                                  }}
                                 />
                               </div>
 
@@ -836,7 +859,7 @@ export default function DetailDestination() {
                                         min="1"
                                         max="12"
                                         className="w-16 px-2 py-1 border rounded-md text-sm"
-                                        value={childAges[i] || "1"}
+                                        value={childAges[i] || "12"}
                                         onChange={(e) =>
                                           handleAgeChange(i, e.target.value)
                                         }
@@ -860,6 +883,7 @@ export default function DetailDestination() {
                                   if (infantCount > 0) {
                                     setInfantCount(infantCount - 1);
                                   }
+                                  setCheckAvaibility(false);
                                 }}
                               />
                               <p className="w-5 text-center">{infantCount}</p>
@@ -871,6 +895,7 @@ export default function DetailDestination() {
                                 size="lg"
                                 onClick={() => {
                                   setInfantCount(infantCount + 1);
+                                  setCheckAvaibility(false);
                                 }}
                               />
                             </li>
@@ -923,6 +948,7 @@ export default function DetailDestination() {
                                 setDate(formatted);
                                 localStorage.setItem("booking_date", formatted);
                               }
+                              setCheckAvaibility(false);
                             }}
                             minDate={(() => {
                               const tomorrow = new Date();
@@ -952,6 +978,7 @@ export default function DetailDestination() {
                               field.onChange(val?.value);
                               setLabelSelectPickup(val?.label ?? "");
                               setPickupTimeFrom(val?.data.time_pickup_from);
+                              setCheckAvaibility(false);
                             }}
                             onBlur={field.onBlur}
                             name={field.name}
@@ -993,6 +1020,7 @@ export default function DetailDestination() {
                   date_booking={date}
                   total_pax_adult={adultCount.toString()}
                   total_pax_child={childCount.toString()}
+                  arr_ages_child={childAges}
                   total_pax_infant={infantCount.toString()}
                 />
               ))}

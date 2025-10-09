@@ -4,6 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { API_HOSTS } from "@/lib/apihost";
 import { useSeason } from "@/context/SeasonContext";
 import Spinner from "./Spinner";
+import { useCurrency } from "@/context/CurrencyContext";
+import { acis_qty_age } from "@/helper/helper";
+import { count } from "console";
 
 type ProductSub = {
   excursion_id: string;
@@ -29,6 +32,7 @@ type ProductSubNewProps = {
   date_booking: string;
   total_pax_adult: string;
   total_pax_child: string;
+  arr_ages_child: string[];
   total_pax_infant: string;
 };
 
@@ -40,6 +44,7 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
   date_booking,
   total_pax_adult,
   total_pax_child,
+  arr_ages_child,
   total_pax_infant,
 }) => {
   type PriceOfSurcharge = {
@@ -85,11 +90,30 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
   const [marketId, setMarketId] = useState<string>("");
   const [supplierId, setSupplierId] = useState<string>("");
   const [contractId, setContractId] = useState<string>("");
+  const [total, setTotal] = useState<number>(0);
+
+  // Currency
+  const { currency, setCurrency } = useCurrency();
 
   // Loading
   const [isLoadingSurCharge, setIsLoadingSurcharge] = useState(true);
+  const [isLoadingChargeType, setIsLoadingChargeType] = useState(true);
 
   useEffect(() => {
+    let objChild = {
+      count: total_pax_child,
+      ages: arr_ages_child,
+    };
+
+    // console.log("OBJ", JSON.stringify(objChild));
+    const acis = acis_qty_age(
+      total_pax_adult.toString(),
+      JSON.stringify(objChild),
+      total_pax_infant.toString() ?? ""
+    );
+
+    // console.log("ACCCISSS", acis);
+
     const fetchDataGuideSurcharge = async () => {
       const formBody = new URLSearchParams({
         shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
@@ -101,9 +125,9 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
         total_pax_adult: total_pax_adult ?? "0", // 1
         total_pax_child: total_pax_child ?? "0", // 2
         total_pax_infant: total_pax_infant ?? "0", // 2
-        code_of_currency: "IDR", // IDR
+        code_of_currency: currency, // IDR
         promo_code: "R-BC", // R-BC
-        acis_qty_age: "A|1|0", // A|1|0,C|1|11,C|1|11
+        acis_qty_age: acis, // A|1|0,C|1|11,C|1|11
       });
 
       console.log(formBody.toString());
@@ -135,23 +159,56 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
           setMarketId(data_msc.market_id);
           setContractId(data_msc.contract_id);
           setSupplierId(data_msc.supplier_id);
-          //   hitungTotal(
-          //     json.msg.price_of_charge_type,
-          //     json.msg.price_of_surcharge
-          //   );
+          hitungTotal(
+            json.msg.price_of_charge_type,
+            json.msg.price_of_surcharge
+          );
           //   concatInputItem(json.msg.price_of_charge_type);
           //   concatInputSurcharge(json.msg.price_of_surcharge);
         }
       } catch (err: any) {
         console.error("Fetch error:", err);
         setIsLoadingSurcharge(false);
+        setIsLoadingChargeType(false);
       } finally {
+        setIsLoadingChargeType(false);
         setIsLoadingSurcharge(false);
       }
     };
 
     fetchDataGuideSurcharge();
   }, []);
+
+  function hitungTotal(
+    ChargeType: PriceOfChargeType[],
+    Surcharge: PriceOfSurcharge[]
+  ): number {
+    let total = 0;
+    let total_surcharge = 0;
+    let total_charge = 0;
+    if (ChargeType.length > 0) {
+      for (let i = 0; i < ChargeType.length; i++) {
+        total += parseFloat(ChargeType[i].sale_rates_total);
+        total_charge += parseFloat(ChargeType[i].sale_rates_total);
+      }
+    }
+
+    // if (Surcharge.length > 0) {
+    //   for (let j = 0; j < Surcharge.length; j++) {
+    //     if (Surcharge[j].mandatory.toLocaleLowerCase() == "true") {
+    //       total += parseFloat(Surcharge[j].price);
+    //       total_surcharge += parseFloat(Surcharge[j].price);
+    //       // masukin data cheked
+    //       setSelectedSurcharge((prev) => [...prev, Surcharge[j]]);
+    //     }
+    //   }
+    // }
+
+    setTotal(total);
+    // setTotalCharge(total_charge);
+    // setTotalSurcharge(total_surcharge);
+    return total;
+  }
 
   return (
     <div className="w-full rounded-2xl mt-5 hover:border-2 border-gray-400 shadow-md bg-gray-100">
@@ -215,7 +272,7 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
                 <span className="sr-only">Loading...</span>
               </div>
             )}
-            {dataSurcharge.length > 0 &&
+            {dataSurcharge.length > 0 ? (
               dataSurcharge.map((items, index) => {
                 return (
                   <span
@@ -225,12 +282,20 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
                         ? "border border-red-700"
                         : "cursor-pointer"
                     }`}
+                    onClick={() => {
+                      if (items.mandatory.toLocaleLowerCase() != "true") {
+                        alert("Click");
+                      }
+                    }}
                   >
                     {items.surcharge_name} ~ {items.currency} 
                     {items.price_in_format}
                   </span>
                 );
-              })}
+              })
+            ) : (
+              <p className="text-xs">-</p>
+            )}
             {/* <span className="bg-gray-300 text-gray-800 text-xs font-semibold me-2 px-2.5 py-1 rounded-md border border-red-700">
               GUIDE SURCHARGE FOREIGN ~ EUR 10.00
             </span> */}
@@ -246,15 +311,73 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
         {/* Left side (pricing) */}
         <div className="flex flex-row gap-5">
           <div className="flex flex-col">
-            <h1 className="text-xl font-bold">EUR 180.00</h1>
-            <p className="text-xs">1 Adult x Rp 676,851</p>
+            {isLoadingChargeType ? (
+              <p className="text-sm text-gray-600 font-medium animate-pulse">
+                Please wait, calculating…
+              </p>
+            ) : (
+              <h1 className="text-xl font-bold">
+                {currency} {total.toLocaleString()}
+              </h1>
+            )}
+
+            {isLoadingChargeType && (
+              <div
+                role="status"
+                className="max-w-sm animate-pulse flex flex-col gap-2 mt-2"
+              >
+                <div className="h-3 bg-gray-200 rounded-md  w-40 mb-1"></div>
+                <div className="h-3 bg-gray-200 rounded-md  w-40 mb-1"></div>
+                <div className="h-3 bg-gray-200 rounded-md  w-40 mb-1"></div>
+
+                <span className="sr-only">Loading...</span>
+              </div>
+            )}
+
+            {dataChargeType.length > 0 ? (
+              dataChargeType.map((item, index) => (
+                <p key={index} className="text-xs">
+                  {item.pax}{" "}
+                  {item.charge_type === "A"
+                    ? "Adult"
+                    : item.charge_type === "C"
+                    ? "Child"
+                    : item.charge_type === "I"
+                    ? "Infant"
+                    : "N/A"}{" "}
+                  {" x "}
+                  {item.sale_currency} {item.sale_rates_total_in_format}
+                </p>
+              ))
+            ) : (
+              <p></p>
+            )}
+
+            {/* <p className="text-xs">1 Adult x Rp 676,851</p>
             <p className="text-xs">1 Youth x Rp 451,234</p>
-            <p className="text-xs">1 Child x Rp 0</p>
+            <p className="text-xs">1 Child x Rp 0</p> */}
             <p className="text-xs mt-2 italic">*All taxes and fees included</p>
           </div>
           <div className="flex flex-col mt-7">
-            <p className="text-xs">Surcharge Rp 265.00</p>
-            <p className="text-xs">Discount Rp 265.00</p>
+            {isLoadingChargeType && (
+              <div
+                role="status"
+                className="max-w-sm animate-pulse flex flex-col gap-2 mt-2"
+              >
+                <div className="h-3 bg-gray-200 rounded-md  w-30 mb-1"></div>
+                <div className="h-3 bg-gray-200 rounded-md  w-30 mb-1"></div>
+
+                <span className="sr-only">Loading...</span>
+              </div>
+            )}
+
+            {!isLoadingChargeType && (
+              <>
+                {" "}
+                <p className="text-xs">Surcharge Rp 0</p>
+                <p className="text-xs">Discount Rp 0</p>
+              </>
+            )}
           </div>
         </div>
 
