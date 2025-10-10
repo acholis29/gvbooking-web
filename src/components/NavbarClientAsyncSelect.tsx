@@ -178,7 +178,7 @@ export default function NavbarClientAsyncSelect(props: any) {
           if (selectedOption) {
             if (excursion_id) {
               router.push(
-                `/destination/detail/${country}?id=${idx_comp_select}&country=${country}&state=${state}&exc=${excursion_id}`
+                `/destination/details/${country}?id=${idx_comp_select}&country=${country}&state=${state}&exc=${excursion_id}`
               );
             } else {
               router.push(
@@ -199,7 +199,7 @@ export default function NavbarClientAsyncSelect(props: any) {
           if (selectedOption) {
             if (excursion_id) {
               router.push(
-                `/destination/detail/${country}?id=${_idx_comp}&country=${country}&state=${state}&exc=${excursion_id}`
+                `/destination/details/${country}?id=${_idx_comp}&country=${country}&state=${state}&exc=${excursion_id}`
               );
             } else {
               router.push(

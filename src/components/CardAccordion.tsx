@@ -191,7 +191,7 @@ const CardAccordion: React.FC<Props> = ({
     if (json.length > 0) {
       // Redirect Ke Detail Product Sambil Bawa trancation_id lama untuk dihapus dari cart jika berhasil
       router.push(
-        `/destination/detail/${json[0].Country}?id=${json[0].idx_comp}&country=${json[0].Country}&state=${json[0].State}&exc=${json[0].Idx_excursion}&transaction_id=${item.transaction_id}`
+        `/destination/details/${json[0].Country}?id=${json[0].idx_comp}&country=${json[0].Country}&state=${json[0].State}&exc=${json[0].Idx_excursion}&transaction_id=${item.transaction_id}`
       );
     } else {
       toast.error("Sorry, there is someting wrong!");

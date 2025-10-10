@@ -351,8 +351,8 @@ export default function DestinationClient({ slug }: Props) {
                 sub_title={`${item.location_state}, ${item.location_country}`.toUpperCase()}
                 price={`${item.price_in_format}`}
                 currency={item.currency}
-                // link="/destination/detail/indonesia"
-                link={`/destination/detail/${
+                // link="/destination/details/indonesia"
+                link={`/destination/details/${
                   item.location_country
                 }?id=${idx_comp}&country=${item.location_country.toLowerCase()}&state=${item.location_state.toLowerCase()}&exc=${
                   item.excursion_id
@@ -413,7 +413,7 @@ export default function DestinationClient({ slug }: Props) {
                   sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                   price={`${item.PriceFrom}`}
                   currency={item.Currency}
-                  link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
+                  link={`/destination/details/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
                 />
               );
             })
@@ -457,7 +457,7 @@ export default function DestinationClient({ slug }: Props) {
                     sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                     price={`${item.PriceFrom}`}
                     currency={item.Currency}
-                    link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
+                    link={`/destination/details/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
                   />
                 );
             })

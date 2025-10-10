@@ -255,8 +255,8 @@ export default function Home() {
                   sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                   price={`${item.PriceFrom}`}
                   currency={item.Currency}
-                  // link="/destination/detail/indonesia"
-                  link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
+                  // link="/destination/details/indonesia"
+                  link={`/destination/details/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
                 />
               );
             })
@@ -311,8 +311,8 @@ export default function Home() {
                   sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                   price={`${item.PriceFrom}`}
                   currency={item.Currency}
-                  // link="/destination/detail/indonesia"
-                  link={`/destination/detail/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
+                  // link="/destination/details/indonesia"
+                  link={`/destination/details/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
                 />
               );
             })
