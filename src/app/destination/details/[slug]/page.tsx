@@ -679,11 +679,11 @@ export default function DetailDestination() {
                     </div>
                     <div className="flex flex-col">
                       <button
-                        className="w-60 bg-red-600 text-white font-bold rounded-2xl px-4 py-2"
+                        className="w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer"
                         onClick={() => {
                           // Scroll ke card check avaibility
                           window.scrollTo({
-                            top: 1000,
+                            top: 1900,
                             behavior: "smooth",
                           });
 
@@ -992,7 +992,7 @@ export default function DetailDestination() {
                   {/* Kanan: button */}
                   <button
                     type="submit"
-                    className="w-60 bg-red-600 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer"
+                    className="w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer"
                   >
                     Check Availability
                   </button>

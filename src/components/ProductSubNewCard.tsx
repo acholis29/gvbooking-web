@@ -6,7 +6,6 @@ import { useSeason } from "@/context/SeasonContext";
 import Spinner from "./Spinner";
 import { useCurrency } from "@/context/CurrencyContext";
 import { acis_qty_age } from "@/helper/helper";
-import { count } from "console";
 
 type ProductSub = {
   excursion_id: string;
@@ -84,6 +83,9 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
 
   const [dataSurcharge, setDataSurcharge] = useState<PriceOfSurcharge[]>([]);
   const [dataChargeType, setDataChargeType] = useState<PriceOfChargeType[]>([]);
+  const [selectedSurcharge, setSelectedSurcharge] = useState<
+    PriceOfSurcharge[]
+  >([]);
   // Session Id
   const { voucherNumber, setVoucherNumber, masterFileId, setMasterFileId } =
     useSeason();
@@ -91,6 +93,8 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
   const [supplierId, setSupplierId] = useState<string>("");
   const [contractId, setContractId] = useState<string>("");
   const [total, setTotal] = useState<number>(0);
+  const [totalSurcharge, setTotalSurcharge] = useState<number>(0);
+  const [totalCharge, setTotalCharge] = useState<number>(0);
 
   // Currency
   const { currency, setCurrency } = useCurrency();
@@ -193,22 +197,50 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
       }
     }
 
-    // if (Surcharge.length > 0) {
-    //   for (let j = 0; j < Surcharge.length; j++) {
-    //     if (Surcharge[j].mandatory.toLocaleLowerCase() == "true") {
-    //       total += parseFloat(Surcharge[j].price);
-    //       total_surcharge += parseFloat(Surcharge[j].price);
-    //       // masukin data cheked
-    //       setSelectedSurcharge((prev) => [...prev, Surcharge[j]]);
-    //     }
-    //   }
-    // }
+    if (Surcharge.length > 0) {
+      for (let j = 0; j < Surcharge.length; j++) {
+        if (Surcharge[j].mandatory.toLocaleLowerCase() == "true") {
+          total += parseFloat(Surcharge[j].price);
+          total_surcharge += parseFloat(Surcharge[j].price);
+        }
+      }
+    }
+
+    if (selectedSurcharge.length > 0) {
+      for (let k = 0; k < selectedSurcharge.length; k++) {
+        total += parseFloat(selectedSurcharge[k].price);
+        total_surcharge += parseFloat(selectedSurcharge[k].price);
+      }
+    }
 
     setTotal(total);
-    // setTotalCharge(total_charge);
-    // setTotalSurcharge(total_surcharge);
+    setTotalCharge(total_charge);
+    setTotalSurcharge(total_surcharge);
     return total;
   }
+
+  function handleBadgeSurchargeChange(itemSelected: PriceOfSurcharge) {
+    setSelectedSurcharge((prev) => {
+      // Check item sudah ada di dalam array apa belum
+      const exists = prev.some(
+        (item) => item.surcharge_id === itemSelected.surcharge_id
+      );
+
+      if (exists) {
+        // Hapus item yang sama
+        return prev.filter(
+          (item) => item.surcharge_id !== itemSelected.surcharge_id
+        );
+      } else {
+        // Tambahkan item baru
+        return [...prev, itemSelected];
+      }
+    });
+  }
+
+  useEffect(() => {
+    hitungTotal(dataChargeType, dataSurcharge);
+  }, [selectedSurcharge]);
 
   return (
     <div className="w-full rounded-2xl mt-5 hover:border-2 border-gray-400 shadow-md bg-gray-100">
@@ -274,6 +306,11 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
             )}
             {dataSurcharge.length > 0 ? (
               dataSurcharge.map((items, index) => {
+                // Check Apa Surcharge Ini Sudah Selected Apa Belum
+                const isExist = selectedSurcharge.some(
+                  (item) => item.surcharge_id === items.surcharge_id
+                );
+
                 return (
                   <span
                     key={index}
@@ -281,12 +318,17 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
                       items.mandatory.toLocaleLowerCase() == "true"
                         ? "border border-red-700"
                         : "cursor-pointer"
-                    }`}
+                    } ${isExist ? "border border-red-700" : ""}`}
                     onClick={() => {
                       if (items.mandatory.toLocaleLowerCase() != "true") {
-                        alert("Click");
+                        handleBadgeSurchargeChange(items);
                       }
                     }}
+                    title={`${
+                      items.mandatory.toLocaleLowerCase() == "true"
+                        ? "Included"
+                        : `${isExist ? "Click to remove" : "Click to include"}`
+                    } `}
                   >
                     {items.surcharge_name} ~ {items.currency} 
                     {items.price_in_format}
@@ -374,8 +416,11 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
             {!isLoadingChargeType && (
               <>
                 {" "}
-                <p className="text-xs">Surcharge Rp 0</p>
-                <p className="text-xs">Discount Rp 0</p>
+                <p className="text-xs">
+                  Surcharge x {currency} {totalSurcharge}
+                </p>
+                {/* Discount tidak ada disini hanya ada di cart */}
+                <p className="text-xs">Discount {currency} 0</p>
               </>
             )}
           </div>
@@ -383,9 +428,11 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
 
         {/* Right side (button) */}
         <div className="flex flex-col items-center justify-center">
-          <button className="w-60 bg-red-600 text-white font-bold rounded-2xl px-4 py-2">
-            Continue
-          </button>
+          {!isLoadingChargeType && (
+            <button className="w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer">
+              Continue
+            </button>
+          )}
         </div>
       </div>
     </div>
