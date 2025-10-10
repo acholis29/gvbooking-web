@@ -26,7 +26,7 @@ type ProductSubNewProps = {
   dataSub: ProductSub;
   pickupArea: string;
   pickupArea_id: string;
-  pickup_time: string;
+  pickup_time_from: string;
   idx_comp: string;
   date_booking: string;
   total_pax_adult: string;
@@ -39,6 +39,7 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
   dataSub,
   pickupArea,
   pickupArea_id,
+  pickup_time_from,
   idx_comp,
   date_booking,
   total_pax_adult,
@@ -95,7 +96,10 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
   const [total, setTotal] = useState<number>(0);
   const [totalSurcharge, setTotalSurcharge] = useState<number>(0);
   const [totalCharge, setTotalCharge] = useState<number>(0);
-
+  const [roomNumber, setRoomNumber] = useState("");
+  const [pickupTimeFrom, setPickupTimeFrom] = useState<string>(
+    pickup_time_from || ""
+  );
   // Currency
   const { currency, setCurrency } = useCurrency();
 
@@ -257,8 +261,11 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
           <input
             type="text"
             placeholder="Enter Room Number (Optional)"
-            value=""
-            onChange={(e) => {}}
+            value={roomNumber}
+            onChange={(e) => {
+              console.log(e.target.value);
+              setRoomNumber(e.target.value);
+            }}
             className="text-gray-600 text-sm border border-gray-300 w-full h-8 rounded-md mt-2
                       focus:outline-none focus:ring-0 focus:border-2 focus:border-blue-300"
           />
@@ -276,12 +283,23 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
             <input
               type="time"
               id="time"
-              value="07:00"
-              onChange={(e) => {}}
+              value={pickupTimeFrom}
+              onChange={(e) => {
+                setPickupTimeFrom(e.target.value);
+              }}
               required
-              className="text-gray-600 text-sm border border-gray-300 pl-8 w-40 h-8 
-                        bg-gray-100 rounded-md focus:outline-none focus:ring-0 
-                        focus:border-2 focus:border-blue-300"
+              className={`text-gray-600 text-sm border border-gray-300 pl-8 w-40 h-8 
+                        ${
+                          pickup_time_from == "00:00" || pickup_time_from == ""
+                            ? "bg-white"
+                            : "bg-gray-100"
+                        } rounded-md focus:outline-none focus:ring-0 
+                        focus:border-2 focus:border-blue-300`}
+              disabled={
+                pickup_time_from == "00:00" || pickup_time_from == ""
+                  ? false
+                  : true
+              }
             />
           </div>
         </div>

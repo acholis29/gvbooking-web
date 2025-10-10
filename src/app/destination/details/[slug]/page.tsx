@@ -1015,7 +1015,7 @@ export default function DetailDestination() {
                   dataSub={item}
                   pickupArea={labelSelectPickup}
                   pickupArea_id={pickupAreaId}
-                  pickup_time={pickupTimeFrom}
+                  pickup_time_from={pickupTimeFrom}
                   idx_comp={idx_comp ?? ""}
                   date_booking={date}
                   total_pax_adult={adultCount.toString()}
