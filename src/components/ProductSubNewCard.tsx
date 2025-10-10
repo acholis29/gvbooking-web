@@ -7,6 +7,11 @@ import Spinner from "./Spinner";
 import { useCurrency } from "@/context/CurrencyContext";
 import { acis_qty_age } from "@/helper/helper";
 import { Alert } from "flowbite-react";
+import toast from "react-hot-toast";
+import { useInitial } from "@/context/InitialContext";
+import { useLanguage } from "@/context/LanguageContext";
+import { useCartApi } from "@/context/CartApiContext";
+import { useRouter } from "next/navigation";
 
 type ProductSub = {
   excursion_id: string;
@@ -82,6 +87,16 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
     markup_type_HJ_HB: string;
     category_MA: string;
   };
+  // GLOBAL CONTEXT / HOOKS
+  const router = useRouter();
+  // Profile Initial dan Resource initial
+  const { resourceInitial, profileInitial } = useInitial();
+  // Language
+  const { language, setLanguage } = useLanguage();
+  // Inital Global
+  const { agent, repCode, coreInitial } = useInitial();
+  // Hooks Customs
+  const { saveCartApi } = useCartApi();
 
   const [dataSurcharge, setDataSurcharge] = useState<PriceOfSurcharge[]>([]);
   const [dataChargeType, setDataChargeType] = useState<PriceOfChargeType[]>([]);
@@ -101,12 +116,17 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
   const [pickupTimeFrom, setPickupTimeFrom] = useState<string>(
     pickup_time_from || ""
   );
+  const [inputItem, setInputItem] = useState<string>("");
+  const [inputSurcharge, setInputSurcharge] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   // Currency
   const { currency, setCurrency } = useCurrency();
 
   // Loading
   const [isLoadingSurCharge, setIsLoadingSurcharge] = useState(true);
   const [isLoadingChargeType, setIsLoadingChargeType] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     let objChild = {
@@ -172,8 +192,8 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
             json.msg.price_of_charge_type,
             json.msg.price_of_surcharge
           );
-          //   concatInputItem(json.msg.price_of_charge_type);
-          //   concatInputSurcharge(json.msg.price_of_surcharge);
+          concatInputItem(json.msg.price_of_charge_type);
+          concatInputSurcharge(json.msg.price_of_surcharge);
         }
       } catch (err: any) {
         console.error("Fetch error:", err);
@@ -232,15 +252,136 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
       );
 
       if (exists) {
+        // Hapus string set input surcharge
+        setInputSurcharge((prev) => {
+          const toRemove = `${itemSelected.surcharge_id}|${itemSelected.price}`;
+          const parts = prev.split(",").filter((item) => item !== toRemove);
+          return parts.join(",");
+        });
         // Hapus item yang sama
         return prev.filter(
           (item) => item.surcharge_id !== itemSelected.surcharge_id
         );
       } else {
+        // Tambah string set input surcharge
+        setInputSurcharge((prev) => {
+          const newItem = `${itemSelected.surcharge_id}|${itemSelected.price}`;
+          if (!prev.includes(newItem)) {
+            return prev ? `${prev},${newItem}` : newItem;
+          }
+          return prev;
+        });
         // Tambahkan item baru
         return [...prev, itemSelected];
       }
     });
+  }
+
+  function concatInputItem(ChargeType: PriceOfChargeType[]): string {
+    let inputItem = "";
+    if (ChargeType.length > 0) {
+      for (let i = 0; i < ChargeType.length; i++) {
+        inputItem += ChargeType[i].charge_type + "|";
+        inputItem += ChargeType[i].pax + "|";
+        inputItem += ChargeType[i].age + "|";
+        inputItem += ChargeType[i].buy_rates + "|";
+        inputItem += ChargeType[i].buy_currency_id + "|";
+        inputItem += ChargeType[i].sale_rates + "|";
+        inputItem += ChargeType[i].sale_currency_id + "|";
+        inputItem += ChargeType[i].raw_exchange_rates + "|";
+        inputItem += ChargeType[i].buy_rates_total + "|";
+        inputItem += ChargeType[i].sale_rates_total + ",";
+      }
+      inputItem = inputItem.slice(0, -1); // hapus koma terakhir
+    }
+    setInputItem(inputItem);
+    return inputItem;
+  }
+
+  function concatInputSurcharge(Surcharge: PriceOfSurcharge[]): string {
+    let inputSurcharge = "";
+    if (Surcharge.length > 0) {
+      for (let j = 0; j < Surcharge.length; j++) {
+        if (Surcharge[j].mandatory.toLocaleLowerCase() == "true") {
+          inputSurcharge += Surcharge[j].surcharge_id + "|";
+          inputSurcharge += Surcharge[j].price + ",";
+        }
+      }
+      inputSurcharge = inputSurcharge.slice(0, -1);
+      setInputSurcharge(inputSurcharge);
+    }
+    return inputSurcharge;
+  }
+
+  function handleSubmitToCart() {
+    if (isSubmitting) {
+      toast("Please wait...", {
+        icon: "⏳", // hourglass
+      });
+      return null;
+    }
+    setIsSubmitting(true);
+
+    const PostDataCart = async () => {
+      setIsLoading(true); // mulai loading
+      const formBody = new URLSearchParams({
+        shared_key: idx_comp ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8" IDX_COMP INDONESIA
+        xml: "false",
+        id_master_file: profileInitial[0].idx_mf ?? "",
+        language_code: language,
+        voucher_number: profileInitial[0].voucher, // Examp : "250759791"
+        id_transaction: "",
+        id_excursion: dataSub.excursion_id ?? "", // Examp : "3A4D09DA-0F15-4F96-B9DE-337D808C43E0"
+        id_excursion_sub: dataSub.sub_excursion_id ?? "",
+        id_agent: agent ?? "", // Examp AgentId Indo : "AF228762-345C-47B9-BDB8-19B94FB7A02D"
+        id_contract: contractId ?? "", // Examp : "543662F5-0BC9-4198-8076-54440FBDDF38"
+        id_market: marketId ?? "", // Examp : "4AD24FF1-2F16-47DB-BBC8-D2E5395773EB"
+        id_supplier: supplierId, // Examp : "155D1088-BC9C-D85A-E9BC-96778772AC0F"
+        id_pickup_area: pickupArea_id ?? "", // Examp pickup id : "12EBA6A1-533A-4875-B0A7-CA6362370FF3"
+        pickup_point: roomNumber ?? "", //Exam : Lobby
+        pickup_date: date_booking ?? "", // 2025-08-01 ini sub exc
+        pickup_time: pickupTimeFrom ?? "", //05:45
+        remark: "",
+        input_item: inputItem ?? "", // surcharge_id|price,
+        input_surcharge: inputSurcharge ?? "", // "DB7DA528-58C7-4C11-96C6-571125744413|134295"
+      });
+
+      try {
+        const res = await fetch(
+          `${API_HOSTS.host1}/excursion.asmx/v2_cart_save`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formBody.toString(),
+          }
+        );
+
+        const contentType = res.headers.get("content-type") || "";
+
+        if (contentType.includes("application/json")) {
+          const json = await res.json();
+          //RESPONSE ADD TO CART
+          console.log("+++++ FORM BODY +++++");
+          console.log(formBody.toString());
+          console.log("+++++ RESPONSE ADD TO CART ++++++");
+          console.log(json);
+          // set data cart api disini
+          saveCartApi(json.msg);
+          toast.success("Success add to cart");
+        }
+      } catch (err: any) {
+        setError(err.message || "Error");
+        console.error("Fetch error:", err);
+      } finally {
+        // redirect ke cart page
+        setIsSubmitting(false);
+        setIsLoading(false); // selesai loading
+        router.replace("/cart");
+      }
+    };
+    PostDataCart();
   }
 
   useEffect(() => {
@@ -457,11 +598,11 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
           {!isLoadingChargeType && (
             <button
               onClick={() => {
-                alert("to cart");
+                handleSubmitToCart();
               }}
               className="w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer"
             >
-              Continue
+              {isLoading && <Spinner />} Continue
             </button>
           )}
         </div>
