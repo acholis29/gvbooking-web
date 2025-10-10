@@ -431,6 +431,7 @@ export default function Cart() {
       console.log("profile pay", profile_pay);
       let grandtotal = subtotalSummeryOrderLocal; //idr
       const formBody = new URLSearchParams({
+        idx_comp: idxCompCart ?? "",
         intl: resourceInitial.company_code ?? "", // contoh intl
         pay_provider: confPayment.provider ?? "", // contoh docu, xendit, onepay
         // NAME: `${profile.firstname} ${profile.lastname}`,
