@@ -6,6 +6,7 @@ import { useSeason } from "@/context/SeasonContext";
 import Spinner from "./Spinner";
 import { useCurrency } from "@/context/CurrencyContext";
 import { acis_qty_age } from "@/helper/helper";
+import { Alert } from "flowbite-react";
 
 type ProductSub = {
   excursion_id: string;
@@ -271,7 +272,7 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
           />
 
           {/* Time input */}
-          <div className="relative inline-block mt-2">
+          <div className="relative inline-block mt-2 item">
             {/* Ikon jam */}
             <div className="absolute inset-y-0 left-30 flex items-center pointer-events-none">
               <FontAwesomeIcon
@@ -302,6 +303,13 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
               }
             />
           </div>
+          {pickup_time_from == "00:00" || pickup_time_from == "" ? (
+            <p className="text-xs text-yellow-600 italic pt-1">
+              *You can change the pickup time
+            </p>
+          ) : (
+            <p className="text-xs text-yellow-500"></p>
+          )}
         </div>
         {/* Badge */}
         <div className="flex flex-col flex-2/3">
@@ -447,7 +455,12 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
         {/* Right side (button) */}
         <div className="flex flex-col items-center justify-center">
           {!isLoadingChargeType && (
-            <button className="w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer">
+            <button
+              onClick={() => {
+                alert("to cart");
+              }}
+              className="w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer"
+            >
               Continue
             </button>
           )}
