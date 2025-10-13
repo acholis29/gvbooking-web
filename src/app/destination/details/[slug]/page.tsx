@@ -71,6 +71,17 @@ export default function DetailDestination() {
   const [labelSelectPickup, setLabelSelectPickup] = useState<string>("");
   const [pickupTimeFrom, setPickupTimeFrom] = useState<string>("");
 
+  type ChargeTypeProps = {
+    name: string;
+    code: string;
+    min_pax: string;
+    max_pax: string;
+    age_from: string;
+    age_to: string;
+  };
+  // Allotment untuk lihat jenis pax Adult, Child, Infant
+  const [dataChargeType, setDataChargeType] = useState<ChargeTypeProps[]>([]);
+
   // Check avaibility
   const [checkAvaibility, setCheckAvaibility] = useState(false);
   // Pickup Area
@@ -499,6 +510,56 @@ export default function DetailDestination() {
     localStorage.setItem("last-search", JSON.stringify(stored));
   }, [idx_excursion]);
 
+  // Product Allotment
+  useEffect(() => {
+    const subs = dataProductSub?.msg?.product_subs ?? [];
+    if (subs.length > 0) {
+      console.log("HALOOOOOOO");
+      const fetchDataAllotment = async () => {
+        setIsLoading(true); // mulai loading
+        const formBody = new URLSearchParams({
+          shared_key: idx_comp || "", // ← ambil dari props // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
+          xml: "false",
+          id_excursion: idx_excursion || "", // Examp : "03208A45-4A41-4E1B-A597-20525C090E52"
+          id_excursion_sub:
+            dataProductSub?.msg?.product_subs[0].sub_excursion_id ?? "", // Examp : "03208A45-4A41-4E1B-A597-20525C090E52"
+          tour_date: date, //2025-07-07
+          code_of_currency: currency, //IDR, EUR, USD
+          promo_code: "R-BC",
+        });
+
+        try {
+          const res = await fetch(
+            `${API_HOSTS.host1}/excursion.asmx/v2_product_allotment_list_batch`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: formBody.toString(),
+            }
+          );
+
+          const contentType = res.headers.get("content-type") || "";
+
+          if (contentType.includes("application/json")) {
+            const json = await res.json();
+            const chargeTypes = json?.msg?.[0]?.charge_type ?? null;
+            setDataChargeType(chargeTypes);
+            console.log("CHARGE TYPE : ", chargeTypes);
+          }
+        } catch (err: any) {
+          setError(err.message || "Terjadi kesalahan");
+          console.error("Fetch error:", err);
+        } finally {
+          setIsLoading(false); // selesai loading
+        }
+      };
+
+      fetchDataAllotment();
+    }
+  }, [dataProductSub]);
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -702,6 +763,12 @@ export default function DetailDestination() {
                     <div className="flex flex-col">
                       <p className="font-semibold text-sm">From</p>
                       {/* <p className="font-bold text-lg">EUR 180.000</p> */}
+                      {isLoadingProdukDetailSub && (
+                        <div className="flex flex-row items-center">
+                          <Spinner />{" "}
+                          <p className="text-xs animate-pulse">Please wait</p>
+                        </div>
+                      )}
                       <p className="font-bold text-lg">
                         {dataProductSub?.msg.product_subs[0].currency ?? ""}{" "}
                         {dataProductSub?.msg.product_subs[0].price ?? ""}
@@ -822,113 +889,155 @@ export default function DetailDestination() {
                       {openDropdownPax && (
                         <div className="absolute top-full mt-2 w-52 bg-white rounded-xl shadow-lg border border-gray-200 z-10">
                           <ul className="py-2">
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around">
-                              <p className="w-10 font-semibold">Adult</p>
-                              <FontAwesomeIcon
-                                icon={faMinusCircle}
-                                className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                  openDropdownPax ? "rotate-180" : ""
-                                }`}
-                                size="lg"
-                                onClick={() => {
-                                  if (adultCount > 0) {
-                                    setAdultCount(adultCount - 1);
-                                    setCheckAvaibility(false);
-                                  }
-                                }}
-                              />
-                              <p className="w-5 text-center">{adultCount}</p>
-                              <FontAwesomeIcon
-                                icon={faPlusCircle}
-                                className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                  openDropdownPax ? "rotate-180" : ""
-                                }`}
-                                size="lg"
-                                onClick={() => {
-                                  setAdultCount(adultCount + 1);
-                                  setCheckAvaibility(false);
-                                }}
-                              />
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 flex flex-col">
-                              <div className="flex flex-row justify-around items-center">
-                                <p className="w-10 font-semibold">Child</p>
-                                <FontAwesomeIcon
-                                  icon={faMinusCircle}
-                                  className="w-4 h-4 text-red-400"
-                                  onClick={() => {
-                                    childCount > 0 &&
-                                      setChildCount(childCount - 1);
-                                    setCheckAvaibility(false);
-                                  }}
-                                />
-                                <p className="w-5 text-center">{childCount}</p>
-                                <FontAwesomeIcon
-                                  icon={faPlusCircle}
-                                  className="w-4 h-4 text-red-400"
-                                  onClick={() => {
-                                    setChildCount(childCount + 1);
-                                    setCheckAvaibility(false);
-                                  }}
-                                />
-                              </div>
-
-                              {/* Input umur anak */}
-                              {childCount > 0 && (
-                                <div className="mt-2 ml-5 flex flex-col gap-1">
-                                  {[...Array(childCount)].map((_, i) => (
-                                    <div
-                                      key={i}
-                                      className="flex items-center gap-2"
-                                    >
-                                      <p className="text-xs w-10 text-gray-500">
-                                        Age {i + 1}
-                                      </p>
-                                      <input
-                                        type="number"
-                                        min="1"
-                                        max="12"
-                                        className="w-16 px-2 py-1 border rounded-md text-sm"
-                                        value={childAges[i] || "12"}
-                                        onChange={(e) =>
-                                          handleAgeChange(i, e.target.value)
+                            {/* Adult */}
+                            {dataChargeType.map((item, index) => {
+                              if (item.name.toLowerCase() == "adult") {
+                                return (
+                                  <li
+                                    key={index}
+                                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around"
+                                  >
+                                    <p className="w-10 font-semibold">Adult</p>
+                                    <FontAwesomeIcon
+                                      icon={faMinusCircle}
+                                      className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                        openDropdownPax ? "rotate-180" : ""
+                                      }`}
+                                      size="lg"
+                                      onClick={() => {
+                                        if (adultCount > 0) {
+                                          setAdultCount(adultCount - 1);
+                                          setCheckAvaibility(false);
                                         }
-                                        placeholder="0–12"
+                                      }}
+                                    />
+                                    <p className="w-5 text-center">
+                                      {adultCount}
+                                    </p>
+                                    <FontAwesomeIcon
+                                      icon={faPlusCircle}
+                                      className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                        openDropdownPax ? "rotate-180" : ""
+                                      }`}
+                                      size="lg"
+                                      onClick={() => {
+                                        setAdultCount(adultCount + 1);
+                                        setCheckAvaibility(false);
+                                      }}
+                                    />
+                                  </li>
+                                );
+                              }
+                            })}
+
+                            {/* Child */}
+                            {dataChargeType.map((item, index) => {
+                              if (item.name.toLocaleLowerCase() == "child") {
+                                return (
+                                  <li
+                                    key={index}
+                                    className="px-4 py-2 hover:bg-gray-100 flex flex-col"
+                                  >
+                                    <div className="flex flex-row justify-around items-center">
+                                      <p className="w-10 font-semibold">
+                                        Child
+                                      </p>
+                                      <FontAwesomeIcon
+                                        icon={faMinusCircle}
+                                        className="w-4 h-4 text-red-400"
+                                        onClick={() => {
+                                          childCount > 0 &&
+                                            setChildCount(childCount - 1);
+                                          setCheckAvaibility(false);
+                                        }}
+                                      />
+                                      <p className="w-5 text-center">
+                                        {childCount}
+                                      </p>
+                                      <FontAwesomeIcon
+                                        icon={faPlusCircle}
+                                        className="w-4 h-4 text-red-400"
+                                        onClick={() => {
+                                          setChildCount(childCount + 1);
+                                          setCheckAvaibility(false);
+                                        }}
                                       />
                                     </div>
-                                  ))}
-                                </div>
-                              )}
-                            </li>
 
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around">
-                              <p className="w-10 font-semibold">Infant</p>
-                              <FontAwesomeIcon
-                                icon={faMinusCircle}
-                                className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                  openDropdownPax ? "rotate-180" : ""
-                                }`}
-                                size="lg"
-                                onClick={() => {
-                                  if (infantCount > 0) {
-                                    setInfantCount(infantCount - 1);
-                                  }
-                                  setCheckAvaibility(false);
-                                }}
-                              />
-                              <p className="w-5 text-center">{infantCount}</p>
-                              <FontAwesomeIcon
-                                icon={faPlusCircle}
-                                className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                  openDropdownPax ? "rotate-180" : ""
-                                }`}
-                                size="lg"
-                                onClick={() => {
-                                  setInfantCount(infantCount + 1);
-                                  setCheckAvaibility(false);
-                                }}
-                              />
-                            </li>
+                                    {/* Input umur anak */}
+                                    {childCount > 0 && (
+                                      <div className="mt-2 ml-5 flex flex-col gap-1">
+                                        {[...Array(childCount)].map((_, i) => (
+                                          <div
+                                            key={i}
+                                            className="flex items-center gap-2"
+                                          >
+                                            <p className="text-xs w-10 text-gray-500">
+                                              Age {i + 1}
+                                            </p>
+                                            <input
+                                              type="number"
+                                              min="1"
+                                              max="12"
+                                              className="w-16 px-2 py-1 border rounded-md text-sm"
+                                              value={childAges[i] || "12"}
+                                              onChange={(e) =>
+                                                handleAgeChange(
+                                                  i,
+                                                  e.target.value
+                                                )
+                                              }
+                                              placeholder="0–12"
+                                            />
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </li>
+                                );
+                              }
+                            })}
+
+                            {/* Infant */}
+                            {dataChargeType.map((item, index) => {
+                              if (item.name.toLocaleLowerCase() == "infant") {
+                                return (
+                                  <li
+                                    key={index}
+                                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around"
+                                  >
+                                    <p className="w-10 font-semibold">Infant</p>
+                                    <FontAwesomeIcon
+                                      icon={faMinusCircle}
+                                      className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                        openDropdownPax ? "rotate-180" : ""
+                                      }`}
+                                      size="lg"
+                                      onClick={() => {
+                                        if (infantCount > 0) {
+                                          setInfantCount(infantCount - 1);
+                                        }
+                                        setCheckAvaibility(false);
+                                      }}
+                                    />
+                                    <p className="w-5 text-center">
+                                      {infantCount}
+                                    </p>
+                                    <FontAwesomeIcon
+                                      icon={faPlusCircle}
+                                      className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                        openDropdownPax ? "rotate-180" : ""
+                                      }`}
+                                      size="lg"
+                                      onClick={() => {
+                                        setInfantCount(infantCount + 1);
+                                        setCheckAvaibility(false);
+                                      }}
+                                    />
+                                  </li>
+                                );
+                              }
+                            })}
                           </ul>
                         </div>
                       )}
@@ -949,7 +1058,7 @@ export default function DetailDestination() {
                         <div className="flex flex-row items-center">
                           <FontAwesomeIcon
                             icon={faCalendarAlt}
-                            className="w-4 h-4 text-gray-500 mr-1"
+                            className="w-4 h-4 text-gray-500 mr-2"
                             size="lg"
                           />
                           <p className="text-sm font-bold">
@@ -1070,6 +1179,14 @@ export default function DetailDestination() {
               <div className="flex flex-row gap-1 justify-between mb-2 items-center">
                 <div className="flex flex-col flex-1">
                   <p className="text-gray-700 tex-xs">From</p>
+                  {isLoadingProdukDetailSub && (
+                    <div className="flex flex-row items-center">
+                      <Spinner />{" "}
+                      <p className="text-xs animate-pulse text-gray-700">
+                        Please wait
+                      </p>
+                    </div>
+                  )}
                   <p className="text-gray-700">
                     <span className="font-semibold text-lg">
                       {dataProductSub?.msg.product_subs[0].currency ?? ""}{" "}

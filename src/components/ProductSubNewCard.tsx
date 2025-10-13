@@ -456,7 +456,7 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
         {/* Badge */}
         <div className="flex flex-col flex-2/3">
           <h1 className="text-sm font-bold">
-            Add Surcharge {isLoadingSurCharge && <Spinner />}
+            Surcharge {isLoadingSurCharge && <Spinner />}
           </h1>
           <div className="flex flex-col md:flex-row gap-2 flex-wrap">
             {/* Table Surgery && Data Surcharge */}
