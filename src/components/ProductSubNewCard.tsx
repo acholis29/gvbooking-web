@@ -391,7 +391,8 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
   return (
     <div className="w-full rounded-2xl mt-5 hover:border-2 border-gray-400 shadow-md bg-gray-100">
       {/* Desc */}
-      <div className="flex flex-row p-5 justify-between gap-10">
+      <div className="flex flex-col md:flex-row p-5 justify-between gap-5 md:gap-10">
+        {/* Tilte, Time, Room */}
         <div className="flex flex-col">
           <h1 className="text-md font-bold">
             {dataSub.sub_excursion_name ?? "Sub Excursion Name"}
@@ -457,16 +458,16 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
           <h1 className="text-sm font-bold">
             Add Surcharge {isLoadingSurCharge && <Spinner />}
           </h1>
-          <div className="flex flex-row gap-2 flex-wrap">
+          <div className="flex flex-col md:flex-row gap-2 flex-wrap">
             {/* Table Surgery && Data Surcharge */}
             {isLoadingSurCharge && (
               <div
                 role="status"
-                className="max-w-sm animate-pulse flex flex-row gap-2 mt-2"
+                className="max-w-sm animate-pulse flex flex-col md:flex-row md:gap-2 mt-2"
               >
-                <div className="h-6 bg-gray-200 rounded-md  w-60 mb-4"></div>
-                <div className="h-6 bg-gray-200 rounded-md  w-60 mb-4"></div>
-                <div className="h-6 bg-gray-200 rounded-md  w-60 mb-4"></div>
+                <div className="h-6 bg-gray-200 rounded-md  w-60 mb-3 md:mb-4"></div>
+                <div className="h-6 bg-gray-200 rounded-md  w-60 mb-3 md:mb-4"></div>
+                <div className="h-6 bg-gray-200 rounded-md  w-60 mb-3 md:mb-4"></div>
 
                 <span className="sr-only">Loading...</span>
               </div>
@@ -514,7 +515,7 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
 
       {/* Total */}
       <div
-        className="flex flex-row justify-between gap-7 border-t-2 border-red-700 
+        className="flex flex-col md:flex-row justify-between gap-7 border-t-2 border-red-700 
                      bg-gray-300 rounded-b-2xl p-5"
       >
         {/* Left side (pricing) */}
@@ -594,13 +595,13 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
         </div>
 
         {/* Right side (button) */}
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center md:w-60">
           {!isLoadingChargeType && (
             <button
               onClick={() => {
                 handleSubmitToCart();
               }}
-              className="w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer"
+              className="w-full md:w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer"
             >
               {isLoading && <Spinner />} Continue
             </button>

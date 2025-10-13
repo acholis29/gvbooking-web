@@ -665,7 +665,7 @@ export default function DetailDestination() {
               </div>
 
               {/* Kanan */}
-              <div className="w-1/3">
+              <div className="w-1/3 hidden md:block">
                 <div className="bg-gray-200 shadow-lg rounded-lg p-5">
                   <div className="w-full flex flex-row justify-between items-center">
                     <div className="flex flex-col">
@@ -751,16 +751,16 @@ export default function DetailDestination() {
             {/* Card Check Available */}
             <form onSubmit={handleSubmit(onSubmit)}>
               <div
-                className="w-full h-40 bg-gray-300 rounded-2xl mt-5 p-8"
+                className="w-full md:h-40 bg-gray-300 rounded-2xl mt-5 p-8"
                 id="availability-section"
               >
-                <p className="text-lg font-semibold">
+                <p className="text-sm md:text-lg font-semibold">
                   Select participants, date, and language
                 </p>
 
-                <div className="flex flex-row items-center justify-between mt-5">
+                <div className="flex flex-col md:flex-row items-center justify-between mt-5">
                   {/* Kiri: input-input */}
-                  <div className="flex flex-row gap-5">
+                  <div className="flex flex-col md:flex-row gap-2 md:gap-5">
                     {/* Pax Adult, Child, Infant */}
                     <div className="relative" ref={refPax}>
                       {/* Trigger */}
@@ -906,26 +906,30 @@ export default function DetailDestination() {
 
                     {/* Select Date */}
                     <div
-                      className="relative h-10 w-50 flex flex-row justify-around items-center bg-white rounded-xl cursor-pointer"
+                      className="relative h-10 md:w-50 flex flex-row items-center bg-white rounded-xl cursor-pointer"
                       ref={refDate}
                     >
                       <div
-                        className="h-10 w-50 px-3 flex flex-row justify-around items-center bg-white rounded-xl cursor-pointer"
+                        className="h-10 w-full md:w-50 px-3 flex flex-row justify-between items-center bg-white rounded-xl cursor-pointer"
                         onClick={() => {
                           setOpenDateAvaibility(!openDateAvaibility);
                         }}
                       >
-                        <FontAwesomeIcon
-                          icon={faCalendarAlt}
-                          className="w-4 h-4 text-gray-500 mr-1"
-                          size="lg"
-                        />
-                        {/* <p className="text-sm font-bold">Select Date</p> */}
-                        <p className="text-sm font-bold">
-                          {selectedDate
-                            ? selectedDate.toLocaleDateString("en-GB") // format: dd/mm/yyyy
-                            : ""}
-                        </p>
+                        {/* Kiri: Icon Kalender + Tanggal */}
+                        <div className="flex flex-row items-center">
+                          <FontAwesomeIcon
+                            icon={faCalendarAlt}
+                            className="w-4 h-4 text-gray-500 mr-1"
+                            size="lg"
+                          />
+                          <p className="text-sm font-bold">
+                            {selectedDate
+                              ? selectedDate.toLocaleDateString("en-GB") // format: dd/mm/yyyy
+                              : "Select Date"}
+                          </p>
+                        </div>
+
+                        {/* Kanan: Icon Panah */}
                         <FontAwesomeIcon
                           icon={faCaretDown}
                           className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
@@ -934,6 +938,8 @@ export default function DetailDestination() {
                           size="lg"
                         />
                       </div>
+
+                      {/* Popup Kalender */}
                       {openDateAvaibility && (
                         <div className="absolute top-full mt-2 right-0 z-10 bg-white shadow-lg rounded">
                           <DatePicker
@@ -941,7 +947,6 @@ export default function DetailDestination() {
                             onChange={(date) => {
                               setSelectedDate(date);
                               if (date) {
-                                // Format ke yyyy-mm-dd dan simpan di context
                                 const formatted = date
                                   .toISOString()
                                   .split("T")[0];
@@ -990,12 +995,14 @@ export default function DetailDestination() {
                   </div>
 
                   {/* Kanan: button */}
-                  <button
-                    type="submit"
-                    className="w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer"
-                  >
-                    Check Availability
-                  </button>
+                  <div className="p-2 md:ml-20 w-full">
+                    <button
+                      type="submit"
+                      className="w-full md:w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl mt-4 md:mt-0 px-4 py-2 cursor-pointer"
+                    >
+                      Check Availability
+                    </button>
+                  </div>
                 </div>
               </div>
             </form>
