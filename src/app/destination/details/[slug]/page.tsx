@@ -190,6 +190,8 @@ export default function DetailDestination() {
   const refPax = useRef<HTMLDivElement>(null);
   const refDate = useRef<HTMLDivElement>(null);
   const [childAges, setChildAges] = useState<string[]>([]);
+  // Handle Hide Buttom Sheet Ketika sudah di target
+  const [isSectionVisible, setIsSectionVisible] = useState(false);
 
   // Hanlde Child Age
   const handleAgeChange = (index: number, value: string) => {
@@ -513,6 +515,35 @@ export default function DetailDestination() {
       ? parseInt(dataProduct.msg.product_subs[0].maximum_pax)
       : 1;
 
+  // Handle Hidden Bottom Sheet
+  useEffect(() => {
+    const target = document.getElementById("availability-section");
+    if (!target) return;
+
+    const handleScroll = () => {
+      const rect = target.getBoundingClientRect();
+
+      // Cek apakah elemen sudah muncul atau sudah lewat layar
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        // Elemen sedang terlihat di layar
+        setIsSectionVisible(true);
+      } else if (rect.top < 0) {
+        // Elemen sudah lewat (di atas viewport)
+        setIsSectionVisible(true);
+      } else {
+        // Elemen masih di bawah viewport → tampilkan tombol
+        setIsSectionVisible(false);
+      }
+    };
+
+    // Jalankan sekali saat pertama kali render
+    handleScroll();
+
+    // Pasang listener scroll
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
       <div className="max-w-screen-xl mx-auto px-4">
@@ -681,27 +712,26 @@ export default function DetailDestination() {
                       <button
                         className="w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer"
                         onClick={() => {
-                          // Scroll ke card check avaibility
-                          window.scrollTo({
-                            top: 1900,
-                            behavior: "smooth",
-                          });
-
                           const target = document.getElementById(
                             "availability-section"
                           );
 
                           if (target) {
-                            // target.scrollIntoView({ behavior: "smooth" });
+                            // Scroll ke tengah layar dengan efek halus
+                            target.scrollIntoView({
+                              behavior: "smooth",
+                              block: "center",
+                              inline: "nearest",
+                            });
 
-                            // kasih efek highlight sementara
+                            // Efek highlight sementara
                             target.classList.add("ring-2", "ring-gray-500");
                             setTimeout(() => {
                               target.classList.remove(
                                 "ring-2",
                                 "ring-gray-500"
                               );
-                            }, 1500); // hilang setelah 1.5 detik
+                            }, 1500);
                           }
                         }}
                       >
@@ -1033,6 +1063,53 @@ export default function DetailDestination() {
               ))}
           </div>
         </div>
+
+        {isMobile && !isSectionVisible && (
+          <div className="md:w-[50%] h-auto fixed bottom-0 left-0 w-full z-50 shadow">
+            <div className="max-w-xl p-6 bg-gray-300 border border-gray-200 rounded-lg shadow-sm ">
+              <div className="flex flex-row gap-1 justify-between mb-2 items-center">
+                <div className="flex flex-col flex-1">
+                  <p className="text-gray-700 tex-xs">From</p>
+                  <p className="text-gray-700">
+                    <span className="font-semibold text-lg">
+                      {dataProductSub?.msg.product_subs[0].currency ?? ""}{" "}
+                      {dataProductSub?.msg.product_subs[0].price ?? ""}{" "}
+                    </span>{" "}
+                  </p>
+                  <p className="text-xs text-gray-700">per person</p>
+                </div>
+                <div className="flex flex-col flex-2">
+                  <button
+                    type="submit"
+                    className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-3xl text-sm px-5 py-2.5 me-2 mb-2"
+                    onClick={() => {
+                      const target = document.getElementById(
+                        "availability-section"
+                      );
+
+                      if (target) {
+                        // Scroll ke tengah layar dengan efek halus
+                        target.scrollIntoView({
+                          behavior: "smooth",
+                          block: "center",
+                          inline: "nearest",
+                        });
+
+                        // Efek highlight sementara
+                        target.classList.add("ring-2", "ring-gray-500");
+                        setTimeout(() => {
+                          target.classList.remove("ring-2", "ring-gray-500");
+                        }, 1500);
+                      }
+                    }}
+                  >
+                    Check Avaibility
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
