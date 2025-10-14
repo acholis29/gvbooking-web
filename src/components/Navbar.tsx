@@ -641,6 +641,10 @@ export default function NavbarComponent() {
                         return null;
                       }
 
+                      if (item == "Options" && status == "authenticated") {
+                        return null;
+                      }
+
                       return (
                         <li
                           key={index}
