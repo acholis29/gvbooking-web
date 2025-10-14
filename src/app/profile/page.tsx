@@ -4,11 +4,19 @@ import { parse } from "path";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 // Context Global
 import { useProfile } from "@/context/ProfileContext";
 import { useCartApi } from "@/context/CartApiContext";
+// Library
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Profile() {
+  // Login with Google
+  const { data: session, status } = useSession();
+  // Redirect
+  const router = useRouter();
+
   type FormData = {
     firstname: string;
     lastname: string;
@@ -41,7 +49,17 @@ export default function Profile() {
 
   useEffect(() => {}, [profile]);
 
-  // Cart Page
+  // Kalo sudah login google jangan masuk profil
+  useEffect(() => {
+    if (status == "authenticated") {
+      router.back();
+    }
+  });
+  // Kalo dipaksa return null
+  if (status == "authenticated") {
+    return null;
+  }
+
   return (
     <div className="max-w-screen-xl mx-auto">
       <Breadcrumb pageName="Profile" />
@@ -66,7 +84,11 @@ export default function Profile() {
                     })}
                     type="text"
                     id="first-name"
-                    defaultValue={profile.firstname}
+                    defaultValue={
+                      profile.temp.toLocaleLowerCase() == "true"
+                        ? ""
+                        : profile.firstname
+                    }
                     className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="first name"
                     required
@@ -90,7 +112,11 @@ export default function Profile() {
                     })}
                     type="text"
                     id="last-name"
-                    defaultValue={profile.lastname}
+                    defaultValue={
+                      profile.temp.toLocaleLowerCase() == "true"
+                        ? ""
+                        : profile.lastname
+                    }
                     className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="last name"
                     required
@@ -114,7 +140,11 @@ export default function Profile() {
                     {...register("phone")}
                     type="number"
                     id="phone"
-                    defaultValue={profile.phone}
+                    defaultValue={
+                      profile.temp.toLocaleLowerCase() == "true"
+                        ? ""
+                        : profile.phone
+                    }
                     className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="phone number (optional)"
                   />
@@ -132,7 +162,11 @@ export default function Profile() {
                     })}
                     type="email"
                     id="email"
-                    defaultValue={profile.email}
+                    defaultValue={
+                      profile.temp.toLocaleLowerCase() == "true"
+                        ? ""
+                        : profile.email
+                    }
                     className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="name@flowbite.com"
                     required
