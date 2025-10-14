@@ -10,12 +10,16 @@ import { useProfile } from "@/context/ProfileContext";
 import { useCartApi } from "@/context/CartApiContext";
 // Library
 import { signIn, signOut, useSession } from "next-auth/react";
+import { API_HOSTS } from "@/lib/apihost";
+import { useInitial } from "@/context/InitialContext";
 
 export default function Profile() {
   // Login with Google
   const { data: session, status } = useSession();
   // Redirect
   const router = useRouter();
+  // Context global
+  const { profileInitial, resourceInitial, coreInitial } = useInitial();
 
   type FormData = {
     firstname: string;
@@ -26,7 +30,37 @@ export default function Profile() {
   };
 
   const { profile, setProfile } = useProfile();
-  const { saveCartApi } = useCartApi();
+  const { saveCartApi, idxCompCart } = useCartApi();
+
+  // Update Email
+  async function updateEmail(email: string) {
+    try {
+      const formBody = new URLSearchParams({
+        shared_key: idxCompCart, // Indo Or Others
+        xml: "false",
+        id_master_file: profileInitial[0].idx_mf,
+        email: email,
+      });
+
+      console.log(formBody.toString());
+      let url = `${API_HOSTS.host1}/excursion.asmx/v2_updateemail`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formBody.toString(),
+      });
+
+      if (!response.ok) throw new Error("update email failed");
+
+      // Response Html
+      const data = await response.json();
+      console.log("Update email JSON:", data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const {
     register,
@@ -34,7 +68,7 @@ export default function Profile() {
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     console.log(data);
     // Simpan ke localStorage
     if (profile.email != data.email) {
@@ -42,9 +76,15 @@ export default function Profile() {
     }
 
     localStorage.setItem("profileData", JSON.stringify(data));
+    localStorage.setItem("profilePay", JSON.stringify(data));
     setProfile(data);
+
+    if (idxCompCart != "" || idxCompCart != null) {
+      await updateEmail(data.email);
+    }
     toast.success("Success Update Profile");
     toast.success(`Hai,${data.firstname} Welcome!`);
+    router.push("/");
   };
 
   useEffect(() => {}, [profile]);

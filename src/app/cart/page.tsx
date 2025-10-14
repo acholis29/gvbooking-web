@@ -377,10 +377,10 @@ export default function Cart() {
       localStorage.setItem("profilePay", JSON.stringify(ProfilPay));
 
       let UpdateProfile = {
-        email: profile.email,
-        firstname: profile.firstname,
-        lastname: profile.lastname,
-        phone: "000000",
+        email: profileData.email,
+        firstname: profileData.firstname,
+        lastname: profileData.lastname,
+        phone: profileData.phone ?? "000000",
         temp: "false",
       };
 
@@ -522,16 +522,16 @@ export default function Cart() {
         openModal();
       }
 
-      // Reset Temp
-      let UpdateProfile = {
-        email: profile.email,
-        firstname: profile.firstname,
-        lastname: profile.lastname,
-        phone: "08199882",
-        temp: "true",
-      };
+      // Reset Temp supaya kalo temp true harus isi form lagi
+      // let UpdateProfile = {
+      //   email: profile.email,
+      //   firstname: profile.firstname,
+      //   lastname: profile.lastname,
+      //   phone: "08199882",
+      //   temp: "true",
+      // };
 
-      localStorage.setItem("profileData", JSON.stringify(UpdateProfile));
+      // localStorage.setItem("profileData", JSON.stringify(UpdateProfile));
     } catch (error) {
       console.error("Payment error:", error);
       toast.error("Payment . Please try again.");
@@ -1175,6 +1175,40 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
   };
 
   const { profile, setProfile } = useProfile();
+  const { cartApiItems, idxCompCart, setIdxCompCart } = useCartApi();
+  // Context global
+  const { profileInitial, setProfileInitial, resourceInitial, coreInitial } =
+    useInitial();
+
+  // Update Email
+  async function updateEmail(email: string) {
+    try {
+      const formBody = new URLSearchParams({
+        shared_key: idxCompCart, // Indo Or Others
+        xml: "false",
+        id_master_file: profileInitial[0].idx_mf,
+        email: email,
+      });
+
+      console.log(formBody.toString());
+      let url = `${API_HOSTS.host1}/excursion.asmx/v2_updateemail`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formBody.toString(),
+      });
+
+      if (!response.ok) throw new Error("update email failed");
+
+      // Response Html
+      const data = await response.json();
+      console.log("Update email JSON:", data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const {
     register,
@@ -1184,21 +1218,41 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
 
   const onSubmit = async (data: FormData) => {
     console.log(data);
-    // Simpan ke localStorage
-    // localStorage.setItem("profileData", JSON.stringify(data));
-    // setProfile(data);
-
+    // Ubah email profilInitial untuk cart
+    await updateEmail(data.email);
+    // ubah email profilPay
     localStorage.setItem("profilePay", JSON.stringify(data));
 
     let UpdateProfile = {
-      email: profile.email,
-      firstname: profile.firstname,
-      lastname: profile.lastname,
-      phone: "08199882",
+      email: data.email,
+      firstname: data.firstname,
+      lastname: data.lastname,
+      phone: data.phone ?? "0000",
       temp: "false",
     };
-
+    // Ubah profil data
+    setProfile(UpdateProfile);
     localStorage.setItem("profileData", JSON.stringify(UpdateProfile));
+
+    // Ubah Profile Initial
+    const savedProfileInitial = localStorage.getItem("profile_initial");
+    if (savedProfileInitial) {
+      const parsedData = JSON.parse(savedProfileInitial);
+
+      // ambil data lama dan ubah email-nya
+      const updatedProfile = [
+        {
+          ...parsedData[0], // ambil data lama dari localStorage
+          email: data.email, // ganti email dengan email baru
+        },
+      ];
+
+      // simpan ke state
+      setProfileInitial(updatedProfile);
+
+      // simpan kembali ke localStorage
+      localStorage.setItem("profile_initial", JSON.stringify(updatedProfile));
+    }
 
     toast.success("Save Profile, Success");
     toast.success(`Hai ${data.firstname ?? ""}, Welcome!`);
