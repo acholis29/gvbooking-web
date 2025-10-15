@@ -187,8 +187,11 @@ export default function SelectCustomAsyn({
                   </div>
                 </div>
               ),
-              { duration: 13000 } // masih auto close setelah 13 detik
+              { duration: 8000 } // masih auto close setelah 8 detik
             );
+          } else {
+            // Tutup semua toast yang masih aktif
+            toast.dismiss();
           }
         }}
         onBlur={onBlur}
