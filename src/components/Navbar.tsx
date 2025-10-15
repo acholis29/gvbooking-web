@@ -1123,7 +1123,7 @@ const SignInContent = () => {
           // onClick={() => console.log("Login with Google clicked")}
           onClick={() => {
             signIn("google");
-            sessionStorage.setItem("oauth", "true");
+            // sessionStorage.setItem("oauth", "true");
           }}
           className="flex items-center justify-center w-full px-5 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
         >

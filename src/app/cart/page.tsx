@@ -216,7 +216,8 @@ export default function Cart() {
   // const [idxCompCart, setIdxCompCart] = useState("");
 
   // Context global
-  const { profileInitial, resourceInitial, coreInitial } = useInitial();
+  const { profileInitial, setProfileInitial, resourceInitial, coreInitial } =
+    useInitial();
   const { profile } = useProfile();
   const { cartApiItems, idxCompCart, setIdxCompCart } = useCartApi();
   const { openModal } = useModal();
@@ -342,6 +343,129 @@ export default function Cart() {
     setSubtotalSummeryOrderLocal(subTotalLocal);
   }
 
+  // function Update Email API
+  async function updateEmail(email: string) {
+    try {
+      const formBody = new URLSearchParams({
+        shared_key: idxCompCart, // Indo Or Others
+        xml: "false",
+        id_master_file: profileInitial[0].idx_mf,
+        email: email,
+      });
+
+      console.log(formBody.toString());
+      let url = `${API_HOSTS.host1}/excursion.asmx/v2_updateemail`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formBody.toString(),
+      });
+
+      if (!response.ok) throw new Error("update email failed");
+
+      // Response Html
+      const data = await response.json();
+      console.log("Update email JSON:", data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Untuk Validasi payment dengan google atau guest
+  async function validationAccountPayment() {
+    // harus ada cart yang di centang
+    if (subtotalSummeryOrderLocal == 0) {
+      toast.error(
+        "You cannot checkout if you have not selected at least one item in the cart!"
+      );
+      return null;
+    }
+
+    // check auth google
+    if (status != "authenticated") {
+      setSelectModal("ProfilAsGuest");
+      openModal();
+      return null;
+    } else {
+      // Kalo sudah login google
+      // Inisialisasi profilepay dari session google
+      sessionStorage.setItem("oauth", "true");
+      let email = session.user?.email ?? "";
+      let firstname = splitUsername(session.user?.name ?? "")[0] ?? "-";
+      let lastname = splitUsername(session.user?.name ?? "")[1] ?? "-";
+
+      let ProfilPay = {
+        email: email,
+        firstname: firstname,
+        lastname: lastname,
+        phone: "",
+        temp: "false",
+      };
+
+      // Update Email di Profile Initial API
+      await updateEmail(email);
+      // SET PROFIL PAY
+      localStorage.setItem("profilePay", JSON.stringify(ProfilPay));
+      localStorage.setItem("profileData", JSON.stringify(ProfilPay));
+      // Ubah Profile Initial
+      const savedProfileInitial = localStorage.getItem("profile_initial");
+      if (savedProfileInitial) {
+        const parsedData = JSON.parse(savedProfileInitial);
+
+        // ambil data lama dan ubah email-nya
+        const updatedProfile = [
+          {
+            ...parsedData[0], // ambil data lama dari localStorage
+            email: email, // ganti email dengan email baru
+          },
+        ];
+
+        // simpan ke state
+        setProfileInitial(updatedProfile);
+
+        // simpan kembali ke localStorage
+        localStorage.setItem("profile_initial", JSON.stringify(updatedProfile));
+      }
+      await submitPayment2();
+    }
+  }
+
+  async function submitPayment2() {
+    // Cegah Submit Berulang
+    if (isSubmitting) {
+      toast("Please wait...", {
+        icon: "⏳", // hourglass
+      });
+      return null;
+    }
+
+    // Cegah Remove Cart Disaat Submit
+    if (isRemove) {
+      toast.success("Please Wait Remove Finished!");
+      toast("Please Wait Remove Finished!...", {
+        icon: "⏳", // hourglass
+      });
+      return null;
+    }
+
+    const companyId = ListCart[0].company_id;
+    const result = corev2.find((item) => item.idx_comp === companyId);
+    setIsSubmitting(true);
+    // Checout
+    await checkout();
+    if (result?.payontour == false) {
+      // Payontour
+      if (confPayment.provider == "") {
+        await payontour();
+      } else {
+        // Payment gateway
+        await paymentGateway();
+      }
+    }
+  }
+
   async function submitPayment() {
     const profileData = JSON.parse(localStorage.getItem("profileData") || "{}");
     const profilePay = JSON.parse(localStorage.getItem("profilePay") || "{}");
@@ -355,11 +479,9 @@ export default function Cart() {
 
     //cek auth google
     if (status != "authenticated") {
-      if (profileData.temp == "true") {
-        setSelectModal("ProfilAsGuest");
-        openModal();
-        return null;
-      }
+      setSelectModal("ProfilAsGuest");
+      openModal();
+      return null;
     } else {
       // Inisialisasi profilpay
       let email = session.user?.email ?? "";
@@ -428,7 +550,6 @@ export default function Cart() {
         localStorage.getItem("profilePay") || JSON.stringify(profile)
       );
 
-      console.log("profile pay", profile_pay);
       let grandtotal = subtotalSummeryOrderLocal; //idr
       const formBody = new URLSearchParams({
         idx_comp: idxCompCart ?? "",
@@ -694,16 +815,60 @@ export default function Cart() {
   // Handle Refresh Saat Sudah Login di cart
   const { data: session, status } = useSession();
   useEffect(() => {
-    let oauth = sessionStorage.getItem("oauth");
-    if (status === "authenticated" && oauth == "true") {
-      console.log("Login sukses:", session.user);
-      // jalankan event yang kamu mau
-      // setSelectModal("GoPaymentOauth");
-      // openModal();
-      if (ListCart.length > 0) {
-        submitPayment();
+    const handleOAuth = async () => {
+      let oauth = sessionStorage.getItem("oauth");
+
+      if (status === "authenticated" && oauth === "true") {
+        if (ListCart.length > 0) {
+          // Inisialisasi profilePay dari session google
+
+          const email = session.user?.email ?? "";
+          const [firstname, lastname] = splitUsername(
+            session.user?.name ?? ""
+          ) ?? ["-", "-"];
+
+          const ProfilPay = {
+            email,
+            firstname,
+            lastname,
+            phone: "",
+            temp: "false",
+          };
+
+          // 🔹 Update Email di Profile Initial API
+          await updateEmail(email);
+
+          // 🔹 Simpan ke localStorage
+          localStorage.setItem("profilePay", JSON.stringify(ProfilPay));
+          localStorage.setItem("profileData", JSON.stringify(ProfilPay));
+
+          // 🔹 Ubah Profile Initial
+          const savedProfileInitial = localStorage.getItem("profile_initial");
+          if (savedProfileInitial) {
+            const parsedData = JSON.parse(savedProfileInitial);
+
+            const updatedProfile = [
+              {
+                ...parsedData[0],
+                email,
+              },
+            ];
+
+            // Update state dan localStorage
+            setProfileInitial(updatedProfile);
+            localStorage.setItem(
+              "profile_initial",
+              JSON.stringify(updatedProfile)
+            );
+          }
+
+          // 🔹 Submit payment (cukup sekali)
+          await submitPayment2();
+        }
       }
-    }
+    };
+
+    handleOAuth();
   }, [status, session, router]);
 
   useEffect(() => {
@@ -824,10 +989,11 @@ export default function Cart() {
 
                 <button
                   type="button"
-                  onClick={submitPayment}
+                  onClick={validationAccountPayment}
                   className={`text-white w-1/2 bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer`}
                 >
-                  {isSubmitting && <Spinner />} Checkout
+                  {isSubmitting && <Spinner />} Checkout{" "}
+                  {status == "authenticated" ? "With Google" : ""}
                 </button>
               </div>
             </div>
@@ -934,10 +1100,11 @@ export default function Cart() {
 
                 <button
                   type="button"
-                  onClick={submitPayment}
+                  onClick={validationAccountPayment}
                   className="text-white w-1/2 bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
                 >
-                  {isSubmitting && <Spinner />} Checkout
+                  {isSubmitting && <Spinner />} Checkout{" "}
+                  {status == "authenticated" ? "With Google" : ""}
                 </button>
               </div>
             </div>
@@ -982,7 +1149,7 @@ export default function Cart() {
         >
           <GoPaymentContent
             onClick={() => {
-              submitPayment(); // ✅ sekarang submitPayment() jalan
+              submitPayment2(); // ✅ sekarang submitPayment() jalan
             }}
           />
         </ModalComponent>
@@ -1008,6 +1175,12 @@ export default function Cart() {
   );
 }
 
+// Type Data Untuk Modal
+type GoPaymentContentProps = {
+  onClick?: () => void; // sesuai tipe function submitPayment
+};
+
+// Modal Pilih Guest Atau Google
 const ProfileAsGuestContent = () => {
   const { setSelectModal } = useSelectModal();
   const { closeModal, openModal } = useModal();
@@ -1159,10 +1332,7 @@ const ProfileAsGuestContent = () => {
   );
 };
 
-type GoPaymentContentProps = {
-  onClick?: () => void; // sesuai tipe function submitPayment
-};
-
+// Modal Form Guest
 const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
   const { closeModal } = useModal();
 
@@ -1180,7 +1350,7 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
   const { profileInitial, setProfileInitial, resourceInitial, coreInitial } =
     useInitial();
 
-  // Update Email
+  // function Update Email Local Modal
   async function updateEmail(email: string) {
     try {
       const formBody = new URLSearchParams({
@@ -1209,17 +1379,8 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
       console.log(error);
     }
   }
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>();
-
-  const onSubmit = async (data: FormData) => {
-    console.log(data);
-    // Ubah email profilInitial untuk cart
-    await updateEmail(data.email);
+  // function Update Profile Data, ProfilePay dan ProfileInitial Pada Localstorage Local Modal
+  async function updateProfilLocalStorage(data: FormData) {
     // ubah email profilPay
     localStorage.setItem("profilePay", JSON.stringify(data));
 
@@ -1253,6 +1414,18 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
       // simpan kembali ke localStorage
       localStorage.setItem("profile_initial", JSON.stringify(updatedProfile));
     }
+  }
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
+
+  const onSubmit = async (data: FormData) => {
+    // Ubah email profilInitial api untuk cart
+    await updateEmail(data.email);
+    await updateProfilLocalStorage(data);
 
     toast.success("Save Profile, Success");
     toast.success(`Hai ${data.firstname ?? ""}, Welcome!`);
@@ -1277,7 +1450,7 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
               })}
               type="text"
               id="firstname"
-              defaultValue=""
+              defaultValue={profile.temp == "true" ? "" : profile.firstname}
               className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               placeholder="First Name"
               required
@@ -1299,7 +1472,7 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
               })}
               type="text"
               id="lastname"
-              defaultValue=""
+              defaultValue={profile.temp == "true" ? "" : profile.lastname}
               className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               placeholder="Last Name"
               required
@@ -1319,7 +1492,7 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
               {...register("phone")}
               type="number"
               id="phone"
-              defaultValue=""
+              defaultValue={profile.temp == "true" ? "" : profile.phone}
               className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               placeholder="Phone Number"
             />
@@ -1337,7 +1510,7 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
               })}
               type="email"
               id="email"
-              defaultValue=""
+              defaultValue={profile.temp == "true" ? "" : profile.email}
               className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               placeholder="Email"
               required
@@ -1367,6 +1540,7 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
   );
 };
 
+// Modal Google
 const GoPaymentOauthContent = ({ onClick }: GoPaymentContentProps) => {
   const { closeModal } = useModal();
   const { data: session, status } = useSession();
