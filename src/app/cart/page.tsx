@@ -622,7 +622,8 @@ export default function Cart() {
       if (
         confPayment.provider == "onepay" ||
         confPayment.provider == "Sathapana" ||
-        confPayment.provider == "kpayment"
+        confPayment.provider == "kpayment" ||
+        confPayment.provider == "docu"
       ) {
         const newWindow = window.open("", "");
         if (newWindow && newWindow.document) {
@@ -635,6 +636,8 @@ export default function Cart() {
             "Gagal membuka jendela baru. Mungkin diblokir browser."
           );
         }
+
+        sessionStorage.setItem("oauth", "false");
       } else {
         // Render Modal Iframe
         // Simpan HTML di state untuk ditampilkan di iframe
