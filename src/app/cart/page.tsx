@@ -622,21 +622,26 @@ export default function Cart() {
       if (
         confPayment.provider == "onepay" ||
         confPayment.provider == "Sathapana" ||
-        confPayment.provider == "kpayment" ||
-        confPayment.provider == "docu"
+        confPayment.provider == "kpayment"
       ) {
-        const newWindow = window.open("", "");
-        if (newWindow && newWindow.document) {
-          newWindow.document.open();
-          newWindow.document.write(html);
-          newWindow.document.close();
-        } else {
-          toast.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
-          console.error(
-            "Gagal membuka jendela baru. Mungkin diblokir browser."
-          );
-        }
+        // OPEN NEW WINDOW / NEW TAB
+        // const newWindow = window.open("", "");
+        // if (newWindow && newWindow.document) {
+        //   newWindow.document.open();
+        //   newWindow.document.write(html);
+        //   newWindow.document.close();
+        // } else {
+        //   toast.error("Gagal membuka jendela baru. Mungkin diblokir browser.");
+        //   console.error(
+        //     "Gagal membuka jendela baru. Mungkin diblokir browser."
+        //   );
+        // }
 
+        // REPLACE HALAMAN DENGAN HTML PAYMENT
+        document.open();
+        document.write(html);
+        document.close();
+        // Set oauth localstorage
         sessionStorage.setItem("oauth", "false");
       } else {
         // Render Modal Iframe
