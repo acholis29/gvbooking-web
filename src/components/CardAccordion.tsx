@@ -1,11 +1,14 @@
 // components/CardAccordion.tsx
 // Hooks
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 // Library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Swal from "sweetalert2";
 import {
+  faCalendarAlt,
   faCalendarDays,
+  faCancel,
+  faCaretDown,
   faChevronDown,
   faChevronUp,
   faClock,
@@ -23,6 +26,7 @@ import { useCartApi } from "@/context/CartApiContext";
 import { useRouter } from "next/navigation";
 import Spinner from "@/components/Spinner";
 import { useInitial } from "@/context/InitialContext";
+import DatePicker from "react-datepicker";
 
 type DetailPax = {
   charge_type: string;
@@ -101,6 +105,9 @@ const CardAccordion: React.FC<Props> = ({
   const [isRemoving, setIsRemoving] = useState(false);
   const router = useRouter();
   const { coreInitial } = useInitial();
+  const [isEdit, setIsEdit] = useState(false);
+  const refDate = useRef<HTMLDivElement>(null);
+  const [openDateEdit, setOpenDateEdit] = useState(false);
 
   const removeItemCart = async () => {
     setIsRemoving(true);
@@ -257,12 +264,79 @@ const CardAccordion: React.FC<Props> = ({
               {item.excursion_name ?? "-"}
             </h5>
             <div className="flex flex-row"></div>
-            <p className="mb-3 text-xs md:text-md text-gray-700">
-              {item.location_name} | {item.pickup_time}
-              {/* <FontAwesomeIcon icon={faClock} className="w-4 h-4 ml-1" /> */}
-            </p>
+            {!isEdit && (
+              <p className="mb-3 text-xs md:text-md text-gray-700">
+                {item.location_name} | {item.pickup_time}
+                {/* <FontAwesomeIcon icon={faClock} className="w-4 h-4 ml-1" /> */}
+              </p>
+            )}
 
-            <div className="flex flex-row gap-2">
+            {isEdit && (
+              <>
+                {/* Select Date */}
+                <div
+                  className="relative h-10 md:w-50 flex flex-row items-center bg-gray-200 rounded-xl cursor-pointer"
+                  ref={refDate}
+                >
+                  <div
+                    className="h-10 w-full md:w-50 px-3 flex flex-row justify-between items-center bg-gray-200 rounded-xl cursor-pointer"
+                    onClick={() => {
+                      setOpenDateEdit(!openDateEdit);
+                    }}
+                  >
+                    {/* Kiri: Icon Kalender + Tanggal */}
+                    <div className="flex flex-row items-center">
+                      <FontAwesomeIcon
+                        icon={faCalendarAlt}
+                        className="w-4 h-4 text-gray-500 mr-2"
+                        size="lg"
+                      />
+                      <p className="text-sm font-bold text-gray-500">
+                        {/* {selectedDate
+                          ? selectedDate.toLocaleDateString("en-GB") // format: dd/mm/yyyy
+                          : "Select Date"} */}
+                        {new Date().toLocaleDateString("en-GB")}
+                      </p>
+                    </div>
+
+                    {/* Kanan: Icon Panah */}
+                    <FontAwesomeIcon
+                      icon={faCaretDown}
+                      className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
+                        openDateEdit ? "rotate-180" : ""
+                      }`}
+                      size="lg"
+                    />
+                  </div>
+
+                  {/* Popup Kalender */}
+                  {openDateEdit && (
+                    <div className="absolute top-full mt-2 right-0 z-10 bg-white shadow-lg rounded">
+                      <DatePicker
+                        selected={new Date()}
+                        // onChange={(date) => {
+                        //   setSelectedDate(date);
+                        //   if (date) {
+                        //     const formatted = date.toISOString().split("T")[0];
+                        //     setDate(formatted);
+                        //     localStorage.setItem("booking_date", formatted);
+                        //   }
+                        //   setCheckAvaibility(false);
+                        // }}
+                        minDate={(() => {
+                          const tomorrow = new Date();
+                          tomorrow.setDate(tomorrow.getDate() + 1);
+                          return tomorrow;
+                        })()}
+                        inline
+                        className="p-2"
+                      />
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+            <div className="flex flex-row gap-2 mt-2 mb-2">
               {/* Button remove */}
               <div
                 className="flex flex-row items-center gap-2 group cursor-pointer"
@@ -282,7 +356,8 @@ const CardAccordion: React.FC<Props> = ({
                 </p>
               </div>
               {/* Button Change */}
-              <div
+              {/* diganti dengan edit */}
+              {/* <div
                 className="flex flex-row items-center gap-2 group cursor-pointer"
                 onClick={handleChange}
               >
@@ -294,7 +369,40 @@ const CardAccordion: React.FC<Props> = ({
                 <p className="text-gray-600 text-sm group-hover:text-red-700">
                   Change
                 </p>
-              </div>
+              </div> */}
+              {!isEdit ? (
+                <div
+                  className="flex flex-row items-center gap-2 group cursor-pointer"
+                  onClick={() => {
+                    setIsEdit(!isEdit);
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faEdit}
+                    className="w-5 h-5 text-gray-500 group-hover:text-red-700"
+                    size="sm"
+                  />
+                  <p className="text-gray-600 text-sm group-hover:text-red-700">
+                    Edit
+                  </p>
+                </div>
+              ) : (
+                <div
+                  className="flex flex-row items-center gap-2 group cursor-pointer"
+                  onClick={() => {
+                    setIsEdit(!isEdit);
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faCancel}
+                    className="w-5 h-5 text-gray-500 group-hover:text-red-700"
+                    size="sm"
+                  />
+                  <p className="text-gray-600 text-sm group-hover:text-red-700">
+                    Cancel
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
