@@ -32,7 +32,7 @@ const Galery: React.FC<GaleryProps> = ({
     : [];
   const [open, setOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  // console.log(galleryArray);
+  console.log("GALERYA :", galleryArray);
   // galleryArray.unshift("/videos/bali-kaur.mp4"); //tambah vidio index 0
   // galleryArray.push("/videos/bali-kaur.mp4"); //tambah vidio index terakhir
   // galleryArray.splice(2, 0, "/videos/bali-kaur.mp4"); //sisipkan diindex 2
@@ -57,7 +57,7 @@ const Galery: React.FC<GaleryProps> = ({
           <div className="hidden md:grid grid-cols-3 gap-2 py-5">
             {/* Gambar Utama */}
             <div className="">
-              {galleryArray[0].endsWith(".mp4") ? (
+              {galleryArray[0]?.endsWith(".mp4") ? (
                 // Jika Vidio Tampilkan Tumbnile
                 <div
                   className="relative w-full h-full cursor-pointer"
@@ -100,7 +100,7 @@ const Galery: React.FC<GaleryProps> = ({
               )}
             </div>
             <div className="">
-              {galleryArray[1].endsWith(".mp4") ? (
+              {galleryArray[1]?.endsWith(".mp4") ? (
                 // Jika Vidio Tampilkan Tumbnile
                 <div
                   className="relative w-full h-full cursor-pointer"
@@ -143,7 +143,7 @@ const Galery: React.FC<GaleryProps> = ({
             </div>
             <div className="grid grid-rows-2 gap-2">
               <div className="">
-                {galleryArray[2].endsWith(".mp4") ? (
+                {galleryArray[2]?.endsWith(".mp4") ? (
                   // Jika Vidio Tampilkan Tumbnile
                   <div
                     className="relative w-full h-full cursor-pointer"
@@ -185,7 +185,7 @@ const Galery: React.FC<GaleryProps> = ({
                 )}
               </div>
               <div className="relative">
-                {galleryArray[3].endsWith(".mp4") ? (
+                {galleryArray[3]?.endsWith(".mp4") ? (
                   // Jika Vidio Tampilkan Tumbnile
                   <div
                     className="relative w-full h-full cursor-pointer"
