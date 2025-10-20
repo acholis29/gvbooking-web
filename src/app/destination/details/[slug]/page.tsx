@@ -34,7 +34,7 @@ import {
 import SkeletonDetailProduk from "@/components/SkeletonDetailProduk";
 import { useSearchParams } from "next/navigation";
 import { log } from "console";
-import { toLowerCaseAll } from "@/helper/helper";
+import { splitUsername, toLowerCaseAll } from "@/helper/helper";
 // Date Picker
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -52,6 +52,7 @@ const SelectCustomAsynNew = dynamic(
 
 // Form Libraries
 import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { useSession } from "next-auth/react";
 
 export default function DetailDestination() {
   const searchParams = useSearchParams();
@@ -122,7 +123,7 @@ export default function DetailDestination() {
     setProfileInitial,
   } = useInitial();
   // Profil
-  const { profile } = useProfile();
+  const { profile, setProfile } = useProfile();
   // Cart API
   const { saveCartApi } = useCartApi();
 
@@ -484,7 +485,7 @@ export default function DetailDestination() {
     if (date != "") {
       fetchDataInitial();
     }
-  }, [date]);
+  }, [date, profile]);
 
   // Last search
   useEffect(() => {
@@ -604,6 +605,34 @@ export default function DetailDestination() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Login with Google
+  const { data: session, status } = useSession();
+  // Handle Profile Data
+  useEffect(() => {
+    const handleOAuth = async () => {
+      if (status == "authenticated") {
+        const email = session.user?.email ?? "";
+        const [firstname, lastname] = splitUsername(
+          session.user?.name ?? ""
+        ) ?? ["-", "-"];
+
+        const ProfilPay = {
+          email,
+          firstname,
+          lastname,
+          phone: "",
+          temp: "false",
+        };
+        setProfile(ProfilPay);
+        // 🔹 Simpan ke localStorage
+        localStorage.setItem("profilePay", JSON.stringify(ProfilPay));
+        localStorage.setItem("profileData", JSON.stringify(ProfilPay));
+      }
+    };
+
+    handleOAuth();
+  }, [session]);
 
   return (
     <>

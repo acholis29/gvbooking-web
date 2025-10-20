@@ -18,7 +18,11 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 // Helper
-import { capitalizeWords, getHostImageUrl } from "@/helper/helper"; // sesuaikan path
+import {
+  capitalizeWords,
+  getHostImageUrl,
+  splitUsername,
+} from "@/helper/helper"; // sesuaikan path
 // Global State
 import { useWish } from "@/context/WishContext";
 import { useCurrency } from "@/context/CurrencyContext";
@@ -26,6 +30,8 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useDate } from "@/context/DateContext";
 import { useInitial } from "@/context/InitialContext";
 import Checkbox from "@/components/Checkbox";
+import { useSession } from "next-auth/react";
+import { useProfile } from "@/context/ProfileContext";
 
 type DestinationItemApi = {
   excursion_id: string;
@@ -352,6 +358,35 @@ export default function ListClient() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Login with Google
+  const { data: session, status } = useSession();
+  const { profile, setProfile } = useProfile();
+  // Handle Profile Data
+  useEffect(() => {
+    const handleOAuth = async () => {
+      if (status == "authenticated") {
+        const email = session.user?.email ?? "";
+        const [firstname, lastname] = splitUsername(
+          session.user?.name ?? ""
+        ) ?? ["-", "-"];
+
+        const ProfilPay = {
+          email,
+          firstname,
+          lastname,
+          phone: "",
+          temp: "false",
+        };
+        setProfile(ProfilPay);
+        // 🔹 Simpan ke localStorage
+        localStorage.setItem("profilePay", JSON.stringify(ProfilPay));
+        localStorage.setItem("profileData", JSON.stringify(ProfilPay));
+      }
+    };
+
+    handleOAuth();
+  }, [session]);
 
   return (
     // List Page

@@ -375,6 +375,12 @@ export default function Cart() {
 
   // Untuk Validasi payment dengan google atau guest
   async function validationAccountPayment() {
+    if (localStorage.length == 0) {
+      toast.error("Checkout Error, Please Try Again From Country!");
+      router.push("/");
+      return null;
+    }
+
     // harus ada cart yang di centang
     if (subtotalSummeryOrderLocal == 0) {
       toast.error(
@@ -815,7 +821,8 @@ export default function Cart() {
 
   useEffect(() => {
     if (!isLoading && ListCart.length === 0) {
-      router.back();
+      // router.back();
+      router.push("/");
       toast.success("Cart is empty");
     }
   }, [isLoading, ListCart]);

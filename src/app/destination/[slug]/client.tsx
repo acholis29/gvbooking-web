@@ -20,9 +20,14 @@ import { useProfile } from "@/context/ProfileContext";
 import { useDate } from "@/context/DateContext";
 import { useCartApi } from "@/context/CartApiContext";
 // Helper
-import { getCountryImageUrl, getHostImageUrl } from "@/helper/helper";
+import {
+  getCountryImageUrl,
+  getHostImageUrl,
+  splitUsername,
+} from "@/helper/helper";
 import { API_HOSTS } from "@/lib/apihost";
 import RecentlyCard from "@/components/RecentlyCard";
+import { useSession } from "next-auth/react";
 
 type Props = {
   slug: string;
@@ -91,7 +96,7 @@ export default function DestinationClient({ slug }: Props) {
   //  State Global Context
   const { setLanguage, setMasterLanguage, language } = useLanguage();
   const { setCurrency, setMasterCurrency, currency } = useCurrency();
-  const { profile } = useProfile();
+  const { profile, setProfile } = useProfile();
   const { date } = useDate();
   const { saveCartApi, cartApiCount } = useCartApi();
   const {
@@ -276,6 +281,34 @@ export default function DestinationClient({ slug }: Props) {
         setIsLoadingLastSearch(false);
       });
   }, []);
+
+  // Login with Google
+  const { data: session, status } = useSession();
+  // Handle Profile Data
+  useEffect(() => {
+    const handleOAuth = async () => {
+      if (status == "authenticated") {
+        const email = session.user?.email ?? "";
+        const [firstname, lastname] = splitUsername(
+          session.user?.name ?? ""
+        ) ?? ["-", "-"];
+
+        const ProfilPay = {
+          email,
+          firstname,
+          lastname,
+          phone: "",
+          temp: "false",
+        };
+        setProfile(ProfilPay);
+        // 🔹 Simpan ke localStorage
+        localStorage.setItem("profilePay", JSON.stringify(ProfilPay));
+        localStorage.setItem("profileData", JSON.stringify(ProfilPay));
+      }
+    };
+
+    handleOAuth();
+  }, [session]);
 
   return (
     // Destination Page

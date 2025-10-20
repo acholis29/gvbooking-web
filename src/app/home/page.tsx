@@ -23,8 +23,10 @@ import { log } from "console";
 import SkeletonCard from "@/components/SkeletonCard";
 import { API_HOSTS } from "@/lib/apihost";
 import { useInitial } from "@/context/InitialContext";
-import { getCountryImageUrl } from "@/helper/helper";
-
+import { getCountryImageUrl, splitUsername } from "@/helper/helper";
+// Library
+import { signIn, signOut, useSession } from "next-auth/react";
+import { useProfile } from "@/context/ProfileContext";
 export default function Home() {
   type DestinationItem = {
     app_name: string;
@@ -166,6 +168,35 @@ export default function Home() {
         setIsLoadingLastSearch(false);
       });
   }, []);
+
+  // Login with Google
+  const { data: session, status } = useSession();
+  const { profile, setProfile } = useProfile();
+  // Handle Profile Data
+  useEffect(() => {
+    const handleOAuth = async () => {
+      if (status == "authenticated") {
+        const email = session.user?.email ?? "";
+        const [firstname, lastname] = splitUsername(
+          session.user?.name ?? ""
+        ) ?? ["-", "-"];
+
+        const ProfilPay = {
+          email,
+          firstname,
+          lastname,
+          phone: "",
+          temp: "false",
+        };
+        setProfile(ProfilPay);
+        // 🔹 Simpan ke localStorage
+        localStorage.setItem("profilePay", JSON.stringify(ProfilPay));
+        localStorage.setItem("profileData", JSON.stringify(ProfilPay));
+      }
+    };
+
+    handleOAuth();
+  }, [session]);
 
   return (
     // Home Page
