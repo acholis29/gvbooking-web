@@ -13,7 +13,10 @@ import {
   faChevronUp,
   faClock,
   faEdit,
+  faMinusCircle,
+  faPlusCircle,
   faTrash,
+  faUser,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 // Helper
@@ -27,6 +30,7 @@ import { useRouter } from "next/navigation";
 import Spinner from "@/components/Spinner";
 import { useInitial } from "@/context/InitialContext";
 import DatePicker from "react-datepicker";
+import { useCurrency } from "@/context/CurrencyContext";
 
 type DetailPax = {
   charge_type: string;
@@ -106,8 +110,35 @@ const CardAccordion: React.FC<Props> = ({
   const router = useRouter();
   const { coreInitial } = useInitial();
   const [isEdit, setIsEdit] = useState(false);
-  const refDate = useRef<HTMLDivElement>(null);
   const [openDateEdit, setOpenDateEdit] = useState(false);
+  // State Edit
+  const [selectedDate, setSelectedDate] = useState(new Date(item.pickup_date));
+  const [openDropdownPax, setOpenDropdownPax] = useState(false);
+
+  // set adult, child, infant
+  const [adultCount, setAdultCount] = useState(1);
+  const [childCount, setChildCount] = useState(0);
+  const [infantCount, setInfantCount] = useState(0);
+  const [valDropdownPax, setValDropdownPax] = useState("Adult x 1");
+  const [childAges, setChildAges] = useState<string[]>([]);
+  // Currency
+  const { currency, setCurrency } = useCurrency();
+
+  type ChargeTypeProps = {
+    name: string;
+    code: string;
+    min_pax: string;
+    max_pax: string;
+    age_from: string;
+    age_to: string;
+  };
+
+  // Allotment untuk lihat jenis pax Adult, Child, Infant
+  const [dataChargeType, setDataChargeType] = useState<ChargeTypeProps[]>([]);
+
+  // Handle Close OnClick Out Reference
+  const refPax = useRef<HTMLDivElement>(null);
+  const refDate = useRef<HTMLDivElement>(null);
 
   const removeItemCart = async () => {
     setIsRemoving(true);
@@ -213,6 +244,80 @@ const CardAccordion: React.FC<Props> = ({
       return "/images/error/loading.gif";
     }
   }
+
+  // Hanlde Child Age
+  const handleAgeChange = (index: number, value: string) => {
+    let age = parseInt(value);
+    if (isNaN(age)) age = 1;
+    if (age < 1) age = 1;
+    if (age > 12) age = 12;
+
+    const updatedAges = [...childAges];
+    updatedAges[index] = age.toString();
+    setChildAges(updatedAges);
+  };
+  // Tutup dropdown kalau klik di luar
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      const target = e.target as Node;
+
+      if (refPax.current && !refPax.current.contains(target)) {
+        setOpenDropdownPax(false);
+      }
+
+      if (refDate.current && !refDate.current.contains(target)) {
+        setOpenDateEdit(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Product Allotment
+  useEffect(() => {
+    const fetchDataAllotment = async () => {
+      // setIsLoading(true); // mulai loading
+      const formBody = new URLSearchParams({
+        shared_key: item.company_id || "", // ← ambil dari props // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
+        xml: "false",
+        id_excursion: item.excursion_id || "", // Examp : "03208A45-4A41-4E1B-A597-20525C090E52"
+        id_excursion_sub: item.excursion_sub_id || "", // Examp : "03208A45-4A41-4E1B-A597-20525C090E52"
+        tour_date: item.pickup_date, //2025-07-07
+        code_of_currency: item.currency, //IDR, EUR, USD
+        promo_code: "R-BC",
+      });
+
+      try {
+        const res = await fetch(
+          `${API_HOSTS.host1}/excursion.asmx/v2_product_allotment_list_batch`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formBody.toString(),
+          }
+        );
+
+        const contentType = res.headers.get("content-type") || "";
+
+        if (contentType.includes("application/json")) {
+          const json = await res.json();
+          const chargeTypes = json?.msg?.[0]?.charge_type ?? null;
+          setDataChargeType(chargeTypes);
+          console.log("CHARGE TYPE : ", chargeTypes);
+        }
+      } catch (err: any) {
+        // setError(err.message || "Terjadi kesalahan");
+        console.error("Fetch error:", err);
+      } finally {
+        // setIsLoading(false); // selesai loading
+      }
+    };
+
+    fetchDataAllotment();
+  }, []);
+
   return (
     <div className="relative md:max-w-3xl mb-4">
       {/* Tombol pojok kanan atas */}
@@ -264,22 +369,23 @@ const CardAccordion: React.FC<Props> = ({
               {item.excursion_name ?? "-"}
             </h5>
             <div className="flex flex-row"></div>
+
             {!isEdit && (
               <p className="mb-3 text-xs md:text-md text-gray-700">
                 {item.location_name} | {item.pickup_time}
                 {/* <FontAwesomeIcon icon={faClock} className="w-4 h-4 ml-1" /> */}
               </p>
             )}
-
+            {/* Date Edit */}
             {isEdit && (
-              <>
+              <div className="flex flex-row gap-1">
                 {/* Select Date */}
                 <div
                   className="relative h-10 md:w-50 flex flex-row items-center bg-gray-200 rounded-xl cursor-pointer"
                   ref={refDate}
                 >
                   <div
-                    className="h-10 w-full md:w-50 px-3 flex flex-row justify-between items-center bg-gray-200 rounded-xl cursor-pointer"
+                    className="h-10 w-full md:w-50 px-3 flex flex-row justify-between items-center bg-white border border-gray-400 rounded-xl cursor-pointer"
                     onClick={() => {
                       setOpenDateEdit(!openDateEdit);
                     }}
@@ -292,10 +398,7 @@ const CardAccordion: React.FC<Props> = ({
                         size="lg"
                       />
                       <p className="text-sm font-bold text-gray-500">
-                        {/* {selectedDate
-                          ? selectedDate.toLocaleDateString("en-GB") // format: dd/mm/yyyy
-                          : "Select Date"} */}
-                        {new Date().toLocaleDateString("en-GB")}
+                        {selectedDate.toLocaleDateString("en-GB")}
                       </p>
                     </div>
 
@@ -313,16 +416,11 @@ const CardAccordion: React.FC<Props> = ({
                   {openDateEdit && (
                     <div className="absolute top-full mt-2 right-0 z-10 bg-white shadow-lg rounded">
                       <DatePicker
-                        selected={new Date()}
-                        // onChange={(date) => {
-                        //   setSelectedDate(date);
-                        //   if (date) {
-                        //     const formatted = date.toISOString().split("T")[0];
-                        //     setDate(formatted);
-                        //     localStorage.setItem("booking_date", formatted);
-                        //   }
-                        //   setCheckAvaibility(false);
-                        // }}
+                        selected={selectedDate}
+                        onChange={(date) => {
+                          if (!date) return; // stop kalau date null
+                          setSelectedDate(date);
+                        }}
                         minDate={(() => {
                           const tomorrow = new Date();
                           tomorrow.setDate(tomorrow.getDate() + 1);
@@ -334,8 +432,188 @@ const CardAccordion: React.FC<Props> = ({
                     </div>
                   )}
                 </div>
-              </>
+
+                <div className="relative" ref={refPax}>
+                  {/* Trigger */}
+                  <div
+                    className="h-10 w-60 px-3 flex flex-row justify-between items-center bg-white border border-gray-400 rounded-xl cursor-pointer"
+                    onClick={() => setOpenDropdownPax(!openDropdownPax)}
+                  >
+                    <div className="flex items-center">
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        className="w-4 h-4 text-gray-500 mr-2"
+                        size="lg"
+                      />
+                      <p className="text-sm font-bold text-gray-500">
+                        {valDropdownPax}
+                        {/* Adult x 1, Child x 1, Infant x 1 */}
+                      </p>
+                    </div>
+                    <FontAwesomeIcon
+                      icon={faCaretDown}
+                      className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
+                        openDropdownPax ? "rotate-180" : ""
+                      }`}
+                      size="lg"
+                    />
+                  </div>
+
+                  {/* Dropdown list muncul di bawah trigger */}
+                  {openDropdownPax && (
+                    <div className="absolute top-full mt-2 w-52 bg-white rounded-xl shadow-lg border border-gray-200 z-10">
+                      <ul className="py-2">
+                        {/* Adult */}
+                        {dataChargeType.map((item, index) => {
+                          if (item.name.toLowerCase() == "adult") {
+                            return (
+                              <li
+                                key={index}
+                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around"
+                              >
+                                <p className="w-10 font-semibold text-gray-500">
+                                  Adult
+                                </p>
+                                <FontAwesomeIcon
+                                  icon={faMinusCircle}
+                                  className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                    openDropdownPax ? "rotate-180" : ""
+                                  }`}
+                                  size="lg"
+                                  onClick={() => {
+                                    if (adultCount > 0) {
+                                      setAdultCount(adultCount - 1);
+                                    }
+                                  }}
+                                />
+                                <p className="w-5 text-center text-gray-500">
+                                  {adultCount}
+                                </p>
+                                <FontAwesomeIcon
+                                  icon={faPlusCircle}
+                                  className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                    openDropdownPax ? "rotate-180" : ""
+                                  }`}
+                                  size="lg"
+                                  onClick={() => {
+                                    setAdultCount(adultCount + 1);
+                                  }}
+                                />
+                              </li>
+                            );
+                          }
+                        })}
+
+                        {/* Child */}
+                        {dataChargeType.map((item, index) => {
+                          if (item.name.toLocaleLowerCase() == "child") {
+                            return (
+                              <li
+                                key={index}
+                                className="px-4 py-2 hover:bg-gray-100 flex flex-col"
+                              >
+                                <div className="flex flex-row justify-around items-center">
+                                  <p className="w-10 font-semibold text-gray-500">
+                                    Child
+                                  </p>
+                                  <FontAwesomeIcon
+                                    icon={faMinusCircle}
+                                    className="w-4 h-4 text-red-400"
+                                    onClick={() => {
+                                      childCount > 0 &&
+                                        setChildCount(childCount - 1);
+                                    }}
+                                  />
+                                  <p className="w-5 text-center text-gray-500">
+                                    {childCount}
+                                  </p>
+                                  <FontAwesomeIcon
+                                    icon={faPlusCircle}
+                                    className="w-4 h-4 text-red-400"
+                                    onClick={() => {
+                                      setChildCount(childCount + 1);
+                                    }}
+                                  />
+                                </div>
+
+                                {/* Input umur anak */}
+                                {childCount > 0 && (
+                                  <div className="mt-2 ml-5 flex flex-col gap-1">
+                                    {[...Array(childCount)].map((_, i) => (
+                                      <div
+                                        key={i}
+                                        className="flex items-center gap-2"
+                                      >
+                                        <p className="text-xs w-10 text-gray-500">
+                                          Age {i + 1}
+                                        </p>
+                                        <input
+                                          type="number"
+                                          min="1"
+                                          max="12"
+                                          className="w-16 px-2 py-1 border rounded-md text-sm text-gray-500"
+                                          value={childAges[i] || "12"}
+                                          onChange={(e) =>
+                                            handleAgeChange(i, e.target.value)
+                                          }
+                                          placeholder="0–12"
+                                        />
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </li>
+                            );
+                          }
+                        })}
+
+                        {/* Infant */}
+                        {dataChargeType.map((item, index) => {
+                          if (item.name.toLocaleLowerCase() == "infant") {
+                            return (
+                              <li
+                                key={index}
+                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around"
+                              >
+                                <p className="w-10 font-semibold text-gray-500">
+                                  Infant
+                                </p>
+                                <FontAwesomeIcon
+                                  icon={faMinusCircle}
+                                  className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                    openDropdownPax ? "rotate-180" : ""
+                                  }`}
+                                  size="lg"
+                                  onClick={() => {
+                                    if (infantCount > 0) {
+                                      setInfantCount(infantCount - 1);
+                                    }
+                                  }}
+                                />
+                                <p className="w-5 text-center text-gray-500">
+                                  {infantCount}
+                                </p>
+                                <FontAwesomeIcon
+                                  icon={faPlusCircle}
+                                  className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                    openDropdownPax ? "rotate-180" : ""
+                                  }`}
+                                  size="lg"
+                                  onClick={() => {
+                                    setInfantCount(infantCount + 1);
+                                  }}
+                                />
+                              </li>
+                            );
+                          }
+                        })}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
             )}
+
             <div className="flex flex-row gap-2 mt-2 mb-2">
               {/* Button remove */}
               <div
