@@ -19,9 +19,11 @@ import { useCartApi } from "@/context/CartApiContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
+  faBatteryEmpty,
   faCalendarAlt,
   faCalendarCheck,
   faCaretDown,
+  faCircleXmark,
   faClock,
   faClockRotateLeft,
   faListCheck,
@@ -174,6 +176,52 @@ export default function DetailDestination() {
     id: string;
   };
 
+  type Allotment = {
+    date: string;
+    date_detail: {
+      year: string;
+      month: string;
+      month_name: string;
+      day: string;
+      day_name: string;
+    };
+    balance: string;
+    type: string; // "PP"
+    info: string; // e.g. "Availability: 99 Pax"
+    currency: string; // "IDR"
+    price_in_raw: string; // "1936000"
+    price_in_format: string; // "1,936,000.00"
+    status: string; // "1"
+  };
+
+  type ChargeType = {
+    name: string; // "Adult", "Child", "Infant"
+    code: string; // "A", "C", "I"
+    min_pax: string;
+    max_pax: string;
+    age_from: string;
+    age_to: string;
+  };
+
+  type AllotmentMsg = {
+    excursion_id: string;
+    sub_excursion_id: string;
+    allotment_list: Allotment[];
+    charge_type: ChargeType[];
+  };
+
+  type AllotmentResponse = {
+    error: string;
+    msg: AllotmentMsg[];
+    len: {
+      current_row: string;
+      total_row: string;
+      total_page: string;
+      time: string;
+    };
+    id: string;
+  };
+
   const [dataProduct, setDataProduct] = useState<ProductResponse | null>(null);
   const [dataProductSub, setDataProductSub] = useState<ProductResponse | null>(
     null
@@ -204,6 +252,9 @@ export default function DetailDestination() {
   const [childAges, setChildAges] = useState<string[]>([]);
   // Handle Hide Buttom Sheet Ketika sudah di target
   const [isSectionVisible, setIsSectionVisible] = useState(false);
+  // Allotment Msg Untuk Cek Allotment List
+  const [allotmentResponse, setAllotmentResponse] =
+    useState<AllotmentResponse | null>(null);
 
   // Hanlde Child Age
   const handleAgeChange = (index: number, value: string) => {
@@ -511,7 +562,7 @@ export default function DetailDestination() {
     localStorage.setItem("last-search", JSON.stringify(stored));
   }, [idx_excursion]);
 
-  // Product Allotment
+  // Product Allotment Untuk Cek Pax Tersedia
   useEffect(() => {
     const subs = dataProductSub?.msg?.product_subs ?? [];
     if (subs.length > 0) {
@@ -559,6 +610,57 @@ export default function DetailDestination() {
 
       fetchDataAllotment();
     }
+  }, [dataProductSub]);
+
+  useEffect(() => {
+    // Pastikan dataProductSub sudah tersedia sebelum fetch
+    if (!dataProductSub?.msg?.product_subs?.length) return;
+
+    const subExcursionIds =
+      dataProductSub?.msg?.product_subs
+        ?.map((item) => item.sub_excursion_id)
+        .join(",") ?? "";
+
+    const fetchDataAllotment = async () => {
+      setIsLoading(true); // mulai loading
+      const formBody = new URLSearchParams({
+        shared_key: idx_comp || "", // ← ambil dari props // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
+        xml: "false",
+        id_excursion: idx_excursion || "", // Examp : "03208A45-4A41-4E1B-A597-20525C090E52"
+        id_excursion_sub: subExcursionIds, // Examp : "03208A45-4A41-4E1B-A597-20525C090E52,03208A45-4A41-4E1B-A597-20525C090E52 "
+        tour_date: date, //2025-07-07
+        code_of_currency: currency, //IDR, EUR, USD
+        promo_code: "R-BC",
+      });
+
+      try {
+        const res = await fetch(
+          `${API_HOSTS.host1}/excursion.asmx/v2_product_allotment_list_batch`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formBody.toString(),
+          }
+        );
+
+        const contentType = res.headers.get("content-type") || "";
+
+        if (contentType.includes("application/json")) {
+          const json = await res.json();
+          setAllotmentResponse(json);
+          console.log("ALLOTMENT ===== ", json);
+        }
+      } catch (err: any) {
+        setError(err.message || "Terjadi kesalahan");
+        console.error("Fetch error:", err);
+      } finally {
+        setIsLoading(false); // selesai loading
+      }
+    };
+
+    fetchDataAllotment();
   }, [dataProductSub]);
 
   useEffect(() => {
@@ -633,6 +735,20 @@ export default function DetailDestination() {
 
     handleOAuth();
   }, [session]);
+
+  // ✅ Hitung validProductSubs di luar return JSX
+  const validProductSubs =
+    dataProductSub?.msg?.product_subs.filter((item) => {
+      const matchedAllotment = allotmentResponse?.msg?.find(
+        (a) => a.sub_excursion_id === item.sub_excursion_id
+      );
+      const matchAllotmentDate = matchedAllotment?.allotment_list.find(
+        (b) => b.date === date
+      );
+      return !!matchAllotmentDate;
+    }) ?? [];
+
+  const validProductSubsCount = validProductSubs.length;
 
   return (
     <>
@@ -1177,28 +1293,59 @@ export default function DetailDestination() {
 
             {checkAvaibility && (
               <p className="text-md font-semibold mt-5">
-                Choose from {dataProductSub?.msg.product_subs.length} available
-                option
+                Choose from {validProductSubsCount} available option
+              </p>
+            )}
+
+            {checkAvaibility && validProductSubsCount == 0 && (
+              <p className="text-md font-semibold mt-5 text-center">
+                <FontAwesomeIcon
+                  icon={faCircleXmark}
+                  className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
+                    openDateAvaibility ? "rotate-180" : ""
+                  }`}
+                  size="lg"
+                />{" "}
+                SORRY, NOT AVAILABLE !
               </p>
             )}
 
             {/* Card Sub Excursion dan Surcharge*/}
             {checkAvaibility &&
-              dataProductSub?.msg.product_subs.map((item, index) => (
-                <ProductSubNew
-                  key={index}
-                  dataSub={item}
-                  pickupArea={labelSelectPickup}
-                  pickupArea_id={pickupAreaId}
-                  pickup_time_from={pickupTimeFrom}
-                  idx_comp={idx_comp ?? ""}
-                  date_booking={date}
-                  total_pax_adult={adultCount.toString()}
-                  total_pax_child={childCount.toString()}
-                  arr_ages_child={childAges}
-                  total_pax_infant={infantCount.toString()}
-                />
-              ))}
+              dataProductSub?.msg.product_subs.map((item, index) => {
+                // Cek apakah allotmentList sudah ada
+                const matchedAllotment = allotmentResponse?.msg?.find(
+                  (a) => a.sub_excursion_id === item.sub_excursion_id
+                );
+
+                if (matchedAllotment == undefined) {
+                  return null;
+                } else {
+                  const matchAllotmentDate =
+                    matchedAllotment.allotment_list.find(
+                      (b) => b.date === date
+                    );
+                  if (matchAllotmentDate == undefined) {
+                    return null;
+                  } else {
+                    return (
+                      <ProductSubNew
+                        key={index}
+                        dataSub={item}
+                        pickupArea={labelSelectPickup}
+                        pickupArea_id={pickupAreaId}
+                        pickup_time_from={pickupTimeFrom}
+                        idx_comp={idx_comp ?? ""}
+                        date_booking={date}
+                        total_pax_adult={adultCount.toString()}
+                        total_pax_child={childCount.toString()}
+                        arr_ages_child={childAges}
+                        total_pax_infant={infantCount.toString()}
+                      />
+                    );
+                  }
+                }
+              })}
           </div>
         </div>
 
