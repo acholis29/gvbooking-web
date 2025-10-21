@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 // Library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import Swal from "sweetalert2";
 import {
   faCalendarAlt,
@@ -15,6 +16,7 @@ import {
   faEdit,
   faMinusCircle,
   faPlusCircle,
+  faSave,
   faTrash,
   faUser,
   faUsers,
@@ -31,6 +33,7 @@ import Spinner from "@/components/Spinner";
 import { useInitial } from "@/context/InitialContext";
 import DatePicker from "react-datepicker";
 import { useCurrency } from "@/context/CurrencyContext";
+import SelectCustomAsynNew from "./SelectCustomAsynNew";
 
 type DetailPax = {
   charge_type: string;
@@ -139,6 +142,19 @@ const CardAccordion: React.FC<Props> = ({
   // Handle Close OnClick Out Reference
   const refPax = useRef<HTMLDivElement>(null);
   const refDate = useRef<HTMLDivElement>(null);
+
+  // Form Validate
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    control,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data: any) => {
+    console.log(data);
+  };
 
   const removeItemCart = async () => {
     setIsRemoving(true);
@@ -376,242 +392,268 @@ const CardAccordion: React.FC<Props> = ({
                 {/* <FontAwesomeIcon icon={faClock} className="w-4 h-4 ml-1" /> */}
               </p>
             )}
-            {/* Date Edit */}
+            {/*Edit */}
             {isEdit && (
-              <div className="flex flex-row gap-1">
-                {/* Select Date */}
-                <div
-                  className="relative h-10 md:w-50 flex flex-row items-center bg-gray-200 rounded-xl cursor-pointer"
-                  ref={refDate}
-                >
+              <>
+                <div className="flex flex-row gap-1">
+                  {/* Select Date */}
                   <div
-                    className="h-10 w-full md:w-50 px-3 flex flex-row justify-between items-center bg-white border border-gray-400 rounded-xl cursor-pointer"
-                    onClick={() => {
-                      setOpenDateEdit(!openDateEdit);
-                    }}
+                    className="relative h-10 md:w-50 flex flex-row items-center bg-gray-200 rounded-xl cursor-pointer"
+                    ref={refDate}
                   >
-                    {/* Kiri: Icon Kalender + Tanggal */}
-                    <div className="flex flex-row items-center">
+                    <div
+                      className="h-10 w-full md:w-50 px-3 flex flex-row justify-between items-center bg-white border border-gray-300 rounded-xl cursor-pointer"
+                      onClick={() => {
+                        setOpenDateEdit(!openDateEdit);
+                      }}
+                    >
+                      {/* Kiri: Icon Kalender + Tanggal */}
+                      <div className="flex flex-row items-center">
+                        <FontAwesomeIcon
+                          icon={faCalendarAlt}
+                          className="w-4 h-4 text-gray-500 mr-2"
+                          size="lg"
+                        />
+                        <p className="text-sm font-bold text-gray-500">
+                          {selectedDate.toLocaleDateString("en-GB")}
+                        </p>
+                      </div>
+
+                      {/* Kanan: Icon Panah */}
                       <FontAwesomeIcon
-                        icon={faCalendarAlt}
-                        className="w-4 h-4 text-gray-500 mr-2"
+                        icon={faCaretDown}
+                        className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
+                          openDateEdit ? "rotate-180" : ""
+                        }`}
                         size="lg"
                       />
-                      <p className="text-sm font-bold text-gray-500">
-                        {selectedDate.toLocaleDateString("en-GB")}
-                      </p>
                     </div>
 
-                    {/* Kanan: Icon Panah */}
-                    <FontAwesomeIcon
-                      icon={faCaretDown}
-                      className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
-                        openDateEdit ? "rotate-180" : ""
-                      }`}
-                      size="lg"
-                    />
+                    {/* Popup Kalender */}
+                    {openDateEdit && (
+                      <div className="absolute top-full mt-2 right-0 z-10 bg-white shadow-lg rounded">
+                        <DatePicker
+                          selected={selectedDate}
+                          onChange={(date) => {
+                            if (!date) return; // stop kalau date null
+                            setSelectedDate(date);
+                          }}
+                          minDate={(() => {
+                            const tomorrow = new Date();
+                            tomorrow.setDate(tomorrow.getDate() + 1);
+                            return tomorrow;
+                          })()}
+                          inline
+                          className="p-2"
+                        />
+                      </div>
+                    )}
                   </div>
-
-                  {/* Popup Kalender */}
-                  {openDateEdit && (
-                    <div className="absolute top-full mt-2 right-0 z-10 bg-white shadow-lg rounded">
-                      <DatePicker
-                        selected={selectedDate}
-                        onChange={(date) => {
-                          if (!date) return; // stop kalau date null
-                          setSelectedDate(date);
-                        }}
-                        minDate={(() => {
-                          const tomorrow = new Date();
-                          tomorrow.setDate(tomorrow.getDate() + 1);
-                          return tomorrow;
-                        })()}
-                        inline
-                        className="p-2"
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div className="relative" ref={refPax}>
-                  {/* Trigger */}
-                  <div
-                    className="h-10 w-60 px-3 flex flex-row justify-between items-center bg-white border border-gray-400 rounded-xl cursor-pointer"
-                    onClick={() => setOpenDropdownPax(!openDropdownPax)}
-                  >
-                    <div className="flex items-center">
+                  {/* PAX */}
+                  <div className="relative" ref={refPax}>
+                    {/* Trigger */}
+                    <div
+                      className="h-10 w-60 px-3 flex flex-row justify-between items-center bg-white border border-gray-300 rounded-xl cursor-pointer"
+                      onClick={() => setOpenDropdownPax(!openDropdownPax)}
+                    >
+                      <div className="flex items-center">
+                        <FontAwesomeIcon
+                          icon={faUser}
+                          className="w-4 h-4 text-gray-500 mr-2"
+                          size="lg"
+                        />
+                        <p className="text-sm font-bold text-gray-500">
+                          {valDropdownPax}
+                          {/* Adult x 1, Child x 1, Infant x 1 */}
+                        </p>
+                      </div>
                       <FontAwesomeIcon
-                        icon={faUser}
-                        className="w-4 h-4 text-gray-500 mr-2"
+                        icon={faCaretDown}
+                        className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
+                          openDropdownPax ? "rotate-180" : ""
+                        }`}
                         size="lg"
                       />
-                      <p className="text-sm font-bold text-gray-500">
-                        {valDropdownPax}
-                        {/* Adult x 1, Child x 1, Infant x 1 */}
-                      </p>
                     </div>
-                    <FontAwesomeIcon
-                      icon={faCaretDown}
-                      className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
-                        openDropdownPax ? "rotate-180" : ""
-                      }`}
-                      size="lg"
-                    />
-                  </div>
 
-                  {/* Dropdown list muncul di bawah trigger */}
-                  {openDropdownPax && (
-                    <div className="absolute top-full mt-2 w-52 bg-white rounded-xl shadow-lg border border-gray-200 z-10">
-                      <ul className="py-2">
-                        {/* Adult */}
-                        {dataChargeType.map((item, index) => {
-                          if (item.name.toLowerCase() == "adult") {
-                            return (
-                              <li
-                                key={index}
-                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around"
-                              >
-                                <p className="w-10 font-semibold text-gray-500">
-                                  Adult
-                                </p>
-                                <FontAwesomeIcon
-                                  icon={faMinusCircle}
-                                  className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                    openDropdownPax ? "rotate-180" : ""
-                                  }`}
-                                  size="lg"
-                                  onClick={() => {
-                                    if (adultCount > 0) {
-                                      setAdultCount(adultCount - 1);
-                                    }
-                                  }}
-                                />
-                                <p className="w-5 text-center text-gray-500">
-                                  {adultCount}
-                                </p>
-                                <FontAwesomeIcon
-                                  icon={faPlusCircle}
-                                  className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                    openDropdownPax ? "rotate-180" : ""
-                                  }`}
-                                  size="lg"
-                                  onClick={() => {
-                                    setAdultCount(adultCount + 1);
-                                  }}
-                                />
-                              </li>
-                            );
-                          }
-                        })}
-
-                        {/* Child */}
-                        {dataChargeType.map((item, index) => {
-                          if (item.name.toLocaleLowerCase() == "child") {
-                            return (
-                              <li
-                                key={index}
-                                className="px-4 py-2 hover:bg-gray-100 flex flex-col"
-                              >
-                                <div className="flex flex-row justify-around items-center">
+                    {/* Dropdown list muncul di bawah trigger */}
+                    {openDropdownPax && (
+                      <div className="absolute top-full mt-2 w-52 bg-white rounded-xl shadow-lg border border-gray-200 z-10">
+                        <ul className="py-2">
+                          {/* Adult */}
+                          {dataChargeType.map((item, index) => {
+                            if (item.name.toLowerCase() == "adult") {
+                              return (
+                                <li
+                                  key={index}
+                                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around"
+                                >
                                   <p className="w-10 font-semibold text-gray-500">
-                                    Child
+                                    Adult
                                   </p>
                                   <FontAwesomeIcon
                                     icon={faMinusCircle}
-                                    className="w-4 h-4 text-red-400"
+                                    className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                      openDropdownPax ? "rotate-180" : ""
+                                    }`}
+                                    size="lg"
                                     onClick={() => {
-                                      childCount > 0 &&
-                                        setChildCount(childCount - 1);
+                                      if (adultCount > 0) {
+                                        setAdultCount(adultCount - 1);
+                                      }
                                     }}
                                   />
                                   <p className="w-5 text-center text-gray-500">
-                                    {childCount}
+                                    {adultCount}
                                   </p>
                                   <FontAwesomeIcon
                                     icon={faPlusCircle}
-                                    className="w-4 h-4 text-red-400"
+                                    className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                      openDropdownPax ? "rotate-180" : ""
+                                    }`}
+                                    size="lg"
                                     onClick={() => {
-                                      setChildCount(childCount + 1);
+                                      setAdultCount(adultCount + 1);
                                     }}
                                   />
-                                </div>
+                                </li>
+                              );
+                            }
+                          })}
 
-                                {/* Input umur anak */}
-                                {childCount > 0 && (
-                                  <div className="mt-2 ml-5 flex flex-col gap-1">
-                                    {[...Array(childCount)].map((_, i) => (
-                                      <div
-                                        key={i}
-                                        className="flex items-center gap-2"
-                                      >
-                                        <p className="text-xs w-10 text-gray-500">
-                                          Age {i + 1}
-                                        </p>
-                                        <input
-                                          type="number"
-                                          min="1"
-                                          max="12"
-                                          className="w-16 px-2 py-1 border rounded-md text-sm text-gray-500"
-                                          value={childAges[i] || "12"}
-                                          onChange={(e) =>
-                                            handleAgeChange(i, e.target.value)
-                                          }
-                                          placeholder="0–12"
-                                        />
-                                      </div>
-                                    ))}
+                          {/* Child */}
+                          {dataChargeType.map((item, index) => {
+                            if (item.name.toLocaleLowerCase() == "child") {
+                              return (
+                                <li
+                                  key={index}
+                                  className="px-4 py-2 hover:bg-gray-100 flex flex-col"
+                                >
+                                  <div className="flex flex-row justify-around items-center">
+                                    <p className="w-10 font-semibold text-gray-500">
+                                      Child
+                                    </p>
+                                    <FontAwesomeIcon
+                                      icon={faMinusCircle}
+                                      className="w-4 h-4 text-red-400"
+                                      onClick={() => {
+                                        childCount > 0 &&
+                                          setChildCount(childCount - 1);
+                                      }}
+                                    />
+                                    <p className="w-5 text-center text-gray-500">
+                                      {childCount}
+                                    </p>
+                                    <FontAwesomeIcon
+                                      icon={faPlusCircle}
+                                      className="w-4 h-4 text-red-400"
+                                      onClick={() => {
+                                        setChildCount(childCount + 1);
+                                      }}
+                                    />
                                   </div>
-                                )}
-                              </li>
-                            );
-                          }
-                        })}
 
-                        {/* Infant */}
-                        {dataChargeType.map((item, index) => {
-                          if (item.name.toLocaleLowerCase() == "infant") {
-                            return (
-                              <li
-                                key={index}
-                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around"
-                              >
-                                <p className="w-10 font-semibold text-gray-500">
-                                  Infant
-                                </p>
-                                <FontAwesomeIcon
-                                  icon={faMinusCircle}
-                                  className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                    openDropdownPax ? "rotate-180" : ""
-                                  }`}
-                                  size="lg"
-                                  onClick={() => {
-                                    if (infantCount > 0) {
-                                      setInfantCount(infantCount - 1);
-                                    }
-                                  }}
-                                />
-                                <p className="w-5 text-center text-gray-500">
-                                  {infantCount}
-                                </p>
-                                <FontAwesomeIcon
-                                  icon={faPlusCircle}
-                                  className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                    openDropdownPax ? "rotate-180" : ""
-                                  }`}
-                                  size="lg"
-                                  onClick={() => {
-                                    setInfantCount(infantCount + 1);
-                                  }}
-                                />
-                              </li>
-                            );
-                          }
-                        })}
-                      </ul>
-                    </div>
-                  )}
+                                  {/* Input umur anak */}
+                                  {childCount > 0 && (
+                                    <div className="mt-2 ml-5 flex flex-col gap-1">
+                                      {[...Array(childCount)].map((_, i) => (
+                                        <div
+                                          key={i}
+                                          className="flex items-center gap-2"
+                                        >
+                                          <p className="text-xs w-10 text-gray-500">
+                                            Age {i + 1}
+                                          </p>
+                                          <input
+                                            type="number"
+                                            min="1"
+                                            max="12"
+                                            className="w-16 px-2 py-1 border rounded-md text-sm text-gray-500"
+                                            value={childAges[i] || "12"}
+                                            onChange={(e) =>
+                                              handleAgeChange(i, e.target.value)
+                                            }
+                                            placeholder="0–12"
+                                          />
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </li>
+                              );
+                            }
+                          })}
+
+                          {/* Infant */}
+                          {dataChargeType.map((item, index) => {
+                            if (item.name.toLocaleLowerCase() == "infant") {
+                              return (
+                                <li
+                                  key={index}
+                                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around"
+                                >
+                                  <p className="w-10 font-semibold text-gray-500">
+                                    Infant
+                                  </p>
+                                  <FontAwesomeIcon
+                                    icon={faMinusCircle}
+                                    className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                      openDropdownPax ? "rotate-180" : ""
+                                    }`}
+                                    size="lg"
+                                    onClick={() => {
+                                      if (infantCount > 0) {
+                                        setInfantCount(infantCount - 1);
+                                      }
+                                    }}
+                                  />
+                                  <p className="w-5 text-center text-gray-500">
+                                    {infantCount}
+                                  </p>
+                                  <FontAwesomeIcon
+                                    icon={faPlusCircle}
+                                    className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                      openDropdownPax ? "rotate-180" : ""
+                                    }`}
+                                    size="lg"
+                                    onClick={() => {
+                                      setInfantCount(infantCount + 1);
+                                    }}
+                                  />
+                                </li>
+                              );
+                            }
+                          })}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+                <div className="flex flex-col mt-1">
+                  {/* Find Pickup */}
+                  <div className="h-10 w-full flex flex-row justify-around items-center">
+                    <Controller //validasi
+                      name="pickup_area"
+                      control={control}
+                      rules={{ required: "pickup area is required!" }}
+                      render={({ field, fieldState }) => (
+                        <SelectCustomAsynNew
+                          idx_comp={item.company_id ?? ""}
+                          id_excursion={item.excursion_id ?? ""}
+                          placeholder="Find Pickup Area ..."
+                          value={field.value}
+                          onChange={(val) => {
+                            field.onChange(val?.value);
+                          }}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          error={fieldState.error?.message}
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
+              </>
             )}
 
             <div className="flex flex-row gap-2 mt-2 mb-2">
@@ -665,21 +707,38 @@ const CardAccordion: React.FC<Props> = ({
                   </p>
                 </div>
               ) : (
-                <div
-                  className="flex flex-row items-center gap-2 group cursor-pointer"
-                  onClick={() => {
-                    setIsEdit(!isEdit);
-                  }}
-                >
-                  <FontAwesomeIcon
-                    icon={faCancel}
-                    className="w-5 h-5 text-gray-500 group-hover:text-red-700"
-                    size="sm"
-                  />
-                  <p className="text-gray-600 text-sm group-hover:text-red-700">
-                    Cancel
-                  </p>
-                </div>
+                <>
+                  <div
+                    className="flex flex-row items-center gap-2 group cursor-pointer"
+                    onClick={() => {
+                      setIsEdit(!isEdit);
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faCancel}
+                      className="w-5 h-5 text-gray-500 group-hover:text-red-700"
+                      size="sm"
+                    />
+                    <p className="text-gray-600 text-sm group-hover:text-red-700">
+                      Cancel
+                    </p>
+                  </div>
+                  <div
+                    className="flex flex-row items-center gap-2 group cursor-pointer"
+                    onClick={() => {
+                      setIsEdit(!isEdit);
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faSave}
+                      className="w-5 h-5 text-gray-500 group-hover:text-red-700"
+                      size="sm"
+                    />
+                    <p className="text-gray-600 text-sm group-hover:text-red-700">
+                      Save
+                    </p>
+                  </div>
+                </>
               )}
             </div>
           </div>

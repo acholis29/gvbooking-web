@@ -127,7 +127,7 @@ export default function SelectCustomAsynNew({
   };
 
   return (
-    <div className="relative w-full max-w-xs">
+    <div className="relative w-full max-w-xl">
       <AsyncSelect
         cacheOptions={false} // <- ini kunci
         defaultOptions={true}
