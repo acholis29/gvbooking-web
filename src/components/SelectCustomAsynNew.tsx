@@ -74,6 +74,9 @@ type SelectCustomProps = {
   onBlur?: () => void;
   name?: string;
   error?: string;
+  // Bagian Ini Hanya Untuk Edit Di Cart
+  defaultValue?: string | null;
+  defaultLabel?: string | null;
 };
 
 export default function SelectCustomAsynNew({
@@ -85,6 +88,8 @@ export default function SelectCustomAsynNew({
   onBlur,
   name,
   error,
+  defaultValue,
+  defaultLabel,
 }: SelectCustomProps) {
   const [options, setOptions] = useState<OptionType[]>([]);
 
@@ -126,6 +131,17 @@ export default function SelectCustomAsynNew({
     }
   };
 
+  let defaultOption = null;
+  if (defaultLabel == "" || defaultLabel == null) {
+    defaultOption = null;
+  } else {
+    defaultOption = {
+      value: defaultValue ?? "",
+      label: defaultLabel ?? "",
+      icon: faLocationDot,
+    };
+  }
+
   return (
     <div className="relative w-full max-w-xl">
       <AsyncSelect
@@ -133,7 +149,7 @@ export default function SelectCustomAsynNew({
         defaultOptions={true}
         isClearable
         loadOptions={loadOptions}
-        value={options.find((opt) => opt.value === value) || null}
+        value={options.find((opt) => opt.value === value) || defaultOption}
         formatOptionLabel={(option) => (
           <div className="flex items-center gap-2">
             <FontAwesomeIcon

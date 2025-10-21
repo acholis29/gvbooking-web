@@ -334,6 +334,50 @@ const CardAccordion: React.FC<Props> = ({
     fetchDataAllotment();
   }, []);
 
+  useEffect(() => {
+    let parts: string[] = [];
+
+    if (adultCount > 0) {
+      parts.push(`Adl x ${adultCount}`);
+    }
+
+    if (childCount > 0) {
+      parts.push(`Chd x ${childCount}`);
+    }
+
+    if (infantCount > 0) {
+      parts.push(`Inf x ${infantCount}`);
+    }
+
+    if (adultCount == 0 && childCount == 0 && infantCount == 0) {
+      setAdultCount(1);
+    }
+
+    let text = parts.join(", ");
+
+    setValDropdownPax(text);
+  }, [adultCount, childCount, infantCount]);
+
+  // Initial value pax
+  useEffect(() => {
+    if (item.detail_pax.length > 0) {
+      item.detail_pax.forEach((pax, index) => {
+        console.log(`Pax ${index + 1}:`, pax);
+        if (pax.charge_type.toLocaleLowerCase() == "a") {
+          setAdultCount(parseInt(pax.quantity));
+        }
+
+        if (pax.charge_type.toLocaleLowerCase() == "c") {
+          setChildCount(parseInt(pax.quantity));
+        }
+
+        if (pax.charge_type.toLocaleLowerCase() == "i") {
+          setInfantCount(parseInt(pax.quantity));
+        }
+      });
+    }
+  }, []);
+
   return (
     <div className="relative md:max-w-3xl mb-4">
       {/* Tombol pojok kanan atas */}
@@ -395,7 +439,7 @@ const CardAccordion: React.FC<Props> = ({
             {/*Edit */}
             {isEdit && (
               <>
-                <div className="flex flex-row gap-1">
+                <div className="flex flex-col md:flex-row gap-1">
                   {/* Select Date */}
                   <div
                     className="relative h-10 md:w-50 flex flex-row items-center bg-gray-200 rounded-xl cursor-pointer"
@@ -629,7 +673,7 @@ const CardAccordion: React.FC<Props> = ({
                     )}
                   </div>
                 </div>
-                <div className="flex flex-col mt-1">
+                <div className="flex flex-col mt-2">
                   {/* Find Pickup */}
                   <div className="h-10 w-full flex flex-row justify-around items-center">
                     <Controller //validasi
@@ -642,6 +686,8 @@ const CardAccordion: React.FC<Props> = ({
                           id_excursion={item.excursion_id ?? ""}
                           placeholder="Find Pickup Area ..."
                           value={field.value}
+                          defaultLabel={item.location_name} // opsional hanya untuk edit atau update
+                          defaultValue={item.location_id} // opsional hanya untuk edit atau update
                           onChange={(val) => {
                             field.onChange(val?.value);
                           }}
