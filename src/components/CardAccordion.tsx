@@ -22,7 +22,12 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 // Helper
-import { format_date, capitalizeFirst, getHostImageUrl } from "@/helper/helper";
+import {
+  format_date,
+  capitalizeFirst,
+  getHostImageUrl,
+  acis_qty_age,
+} from "@/helper/helper";
 import { API_HOSTS } from "@/lib/apihost";
 // Library
 import toast from "react-hot-toast";
@@ -33,6 +38,7 @@ import Spinner from "@/components/Spinner";
 import { useInitial } from "@/context/InitialContext";
 import DatePicker from "react-datepicker";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useLanguage } from "@/context/LanguageContext";
 import SelectCustomAsynNew from "./SelectCustomAsynNew";
 
 type DetailPax = {
@@ -111,12 +117,27 @@ const CardAccordion: React.FC<Props> = ({
   const { saveCartApi } = useCartApi();
   const [isRemoving, setIsRemoving] = useState(false);
   const router = useRouter();
-  const { coreInitial } = useInitial();
+  // Inital Global
+  const { agent, repCode, coreInitial } = useInitial();
   const [isEdit, setIsEdit] = useState(false);
   const [openDateEdit, setOpenDateEdit] = useState(false);
   // State Edit
   const [selectedDate, setSelectedDate] = useState(new Date(item.pickup_date));
+  const [locationId, setLocaltionId] = useState(item.location_id);
   const [openDropdownPax, setOpenDropdownPax] = useState(false);
+  const [total, setTotal] = useState<number>(0);
+  const [totalSurcharge, setTotalSurcharge] = useState<number>(0);
+  const [totalCharge, setTotalCharge] = useState<number>(0);
+  const [isLoadingSave, setIsLoadingSave] = useState(false);
+  const [marketId, setMarketId] = useState<string>("");
+  const [supplierId, setSupplierId] = useState<string>("");
+  const [contractId, setContractId] = useState<string>("");
+  const [locationPickupTime, setLocationPickupTime] = useState(
+    item.pickup_time
+  );
+
+  const [inputItem, setInputItem] = useState<string>("");
+  const [inputSurcharge, setInputSurcharge] = useState<string>("");
 
   // set adult, child, infant
   const [adultCount, setAdultCount] = useState(1);
@@ -126,6 +147,7 @@ const CardAccordion: React.FC<Props> = ({
   const [childAges, setChildAges] = useState<string[]>([]);
   // Currency
   const { currency, setCurrency } = useCurrency();
+  const { language } = useLanguage();
 
   type ChargeTypeProps = {
     name: string;
@@ -136,8 +158,47 @@ const CardAccordion: React.FC<Props> = ({
     age_to: string;
   };
 
+  type PriceOfSurcharge = {
+    surcharge_id: string;
+    surcharge_name: string;
+    currency: string;
+    price: string;
+    price_in_format: string;
+    mandatory: string;
+  };
+
+  type PriceOfChargeType = {
+    excursion_id: string;
+    sub_excursion_id: string;
+    contract_id: string;
+    market_id: string;
+    supplier_id: string;
+    tour_date: string;
+    charge_type: string;
+    pax: string;
+    age: string;
+    raw_sale_rates: string;
+    raw_exchange_rates: string;
+    sale_currency: string;
+    sale_currency_id: string;
+    sale_rates: string;
+    sale_rates_total: string;
+    sale_rates_total_in_format: string;
+    buy_currency_id: string;
+    buy_rates: string;
+    buy_rates_total: string;
+    markup_value: string;
+    markup_type_PV: string;
+    markup_type_HJ_HB: string;
+    category_MA: string;
+  };
+
   // Allotment untuk lihat jenis pax Adult, Child, Infant
   const [dataChargeType, setDataChargeType] = useState<ChargeTypeProps[]>([]);
+  const [priceSurcharge, setPriceSurcharge] = useState<PriceOfSurcharge[]>([]);
+  const [priceChargeType, setPriceChargeType] = useState<PriceOfChargeType[]>(
+    []
+  );
 
   // Handle Close OnClick Out Reference
   const refPax = useRef<HTMLDivElement>(null);
@@ -272,6 +333,24 @@ const CardAccordion: React.FC<Props> = ({
     updatedAges[index] = age.toString();
     setChildAges(updatedAges);
   };
+
+  // Hanlde First Load Age
+  const prevCountRef = useRef(childCount);
+  useEffect(() => {
+    // kalau childCount bertambah (increment)
+    if (childCount > prevCountRef.current) {
+      const diff = childCount - prevCountRef.current;
+      setChildAges((prev) => [...prev, ...Array(diff).fill("12")]);
+    }
+    // kalau berkurang, hapus elemen dari akhir
+    else if (childCount < prevCountRef.current) {
+      setChildAges((prev) => prev.slice(0, childCount));
+    }
+
+    // simpan nilai terbaru untuk perbandingan berikutnya
+    prevCountRef.current = childCount;
+  }, [childCount]);
+
   // Tutup dropdown kalau klik di luar
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -377,6 +456,236 @@ const CardAccordion: React.FC<Props> = ({
       });
     }
   }, []);
+
+  function hitungTotal(
+    ChargeType: PriceOfChargeType[],
+    Surcharge: PriceOfSurcharge[]
+  ): number {
+    let total = 0;
+    let total_surcharge = 0;
+    let total_charge = 0;
+    if (ChargeType.length > 0) {
+      for (let i = 0; i < ChargeType.length; i++) {
+        total += parseFloat(ChargeType[i].sale_rates_total);
+        total_charge += parseFloat(ChargeType[i].sale_rates_total);
+      }
+    }
+
+    if (Surcharge.length > 0) {
+      for (let j = 0; j < Surcharge.length; j++) {
+        if (Surcharge[j].mandatory.toLocaleLowerCase() == "true") {
+          total += parseFloat(Surcharge[j].price);
+          total_surcharge += parseFloat(Surcharge[j].price);
+        }
+      }
+    }
+
+    // Bagian ini cek surcharge yang sudah dipilih sebelumnya
+    if (Surcharge.length > 0) {
+      for (let k = 0; k < Surcharge.length; k++) {
+        if (Surcharge[k].mandatory.toLocaleLowerCase() == "false") {
+          const found = item.detail_surcharge.find(
+            (item) =>
+              item.surcharge.toLocaleLowerCase() ==
+              Surcharge[k].surcharge_name.toLocaleLowerCase()
+          );
+
+          if (found) {
+            total += parseFloat(Surcharge[k].price);
+            total_surcharge += parseFloat(Surcharge[k].price);
+          }
+        }
+      }
+    }
+
+    setTotal(total);
+    setTotalCharge(total_charge);
+    setTotalSurcharge(total_surcharge);
+    return total;
+  }
+
+  function concatInputItem(ChargeType: PriceOfChargeType[]): string {
+    let inputItem = "";
+    if (ChargeType.length > 0) {
+      for (let i = 0; i < ChargeType.length; i++) {
+        inputItem += ChargeType[i].charge_type + "|";
+        inputItem += ChargeType[i].pax + "|";
+        inputItem += ChargeType[i].age + "|";
+        inputItem += ChargeType[i].buy_rates + "|";
+        inputItem += ChargeType[i].buy_currency_id + "|";
+        inputItem += ChargeType[i].sale_rates + "|";
+        inputItem += ChargeType[i].sale_currency_id + "|";
+        inputItem += ChargeType[i].raw_exchange_rates + "|";
+        inputItem += ChargeType[i].buy_rates_total + "|";
+        inputItem += ChargeType[i].sale_rates_total + ",";
+      }
+      inputItem = inputItem.slice(0, -1); // hapus koma terakhir
+    }
+    setInputItem(inputItem);
+    return inputItem;
+  }
+
+  function concatInputSurcharge(Surcharge: PriceOfSurcharge[]): string {
+    let inputSurcharge = "";
+    if (Surcharge.length > 0) {
+      for (let j = 0; j < Surcharge.length; j++) {
+        if (Surcharge[j].mandatory.toLocaleLowerCase() == "true") {
+          inputSurcharge += Surcharge[j].surcharge_id + "|";
+          inputSurcharge += Surcharge[j].price + ",";
+        }
+      }
+      inputSurcharge = inputSurcharge.slice(0, -1);
+      setInputSurcharge(inputSurcharge);
+    }
+    return inputSurcharge;
+  }
+
+  // Save Update Cart
+  async function saveUpdateCart() {
+    // Jalankan API SUB Excursion untuk ambil price
+    // Jalankan API Product Price untuk ambil charge type dan surchargenya yang mandatori
+    if (isLoadingSave) {
+      toast.error("Please Wait");
+      return null;
+    }
+    setIsLoadingSave(true);
+    let objChild = {
+      count: childCount,
+      ages: childAges,
+    };
+
+    // console.log("OBJ", JSON.stringify(objChild));
+    const acis = acis_qty_age(
+      adultCount.toString(),
+      JSON.stringify(objChild),
+      infantCount.toString() ?? ""
+    );
+
+    // console.log(acis);
+
+    const fetchDataGuideSurcharge = async () => {
+      const formBody = new URLSearchParams({
+        shared_key: item.company_id ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
+        xml: "false",
+        id_excursion: item.excursion_id ?? "", // Examp : "BA928E11-CE70-4427-ACD0-A7FC13C34891"
+        id_excursion_sub: item.excursion_sub_id ?? "", // Examp :"123A24BD-56EC-4188-BE9D-B7318EF0FB84"
+        id_pickup_area: locationId ?? "", // Examp : "1EC87603-7ECC-48BC-A56C-F513B7B28CE3"
+        tour_date: selectedDate.toISOString().split("T")[0] ?? "", //2025-07-11 ini sub exc
+        total_pax_adult: adultCount.toString(), // 1
+        total_pax_child: childCount.toString(), // 2
+        total_pax_infant: infantCount.toString(), // 2
+        code_of_currency: item.currency, // IDR
+        promo_code: "R-BC", // R-BC
+        acis_qty_age: acis, // A|1|0,C|1|11,C|1|11
+      });
+
+      try {
+        const res = await fetch(
+          `${API_HOSTS.host1}/excursion.asmx/v2_product_price`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formBody.toString(),
+          }
+        );
+
+        const contentType = res.headers.get("content-type") || "";
+
+        if (contentType.includes("application/json")) {
+          const json = await res.json();
+          setPriceSurcharge(json.msg.price_of_surcharge);
+          setPriceChargeType(json.msg.price_of_charge_type);
+          const total = hitungTotal(
+            json.msg.price_of_charge_type,
+            json.msg.price_of_surcharge
+          );
+
+          const data_msc = json?.msg?.price_of_charge_type?.find(
+            (item: any) => item.charge_type === "A"
+          );
+          setMarketId(data_msc.market_id);
+          setContractId(data_msc.contract_id);
+          setSupplierId(data_msc.supplier_id);
+          concatInputItem(json.msg.price_of_charge_type);
+          concatInputSurcharge(json.msg.price_of_surcharge);
+
+          alert(`Total price dan surcharge yang baru :  ${total}`);
+        }
+      } catch (err: any) {
+        console.error("Fetch error:", err);
+        setIsLoadingSave(false);
+      } finally {
+        // setIsLoadingSave(false);
+      }
+    };
+
+    await fetchDataGuideSurcharge();
+    await handleSubmitToCart();
+    // Jumlahkan keduanya
+    // Save Cart API
+    // Reload Cart
+  }
+
+  // Save to cart
+  function handleSubmitToCart() {
+    const PostDataCart = async () => {
+      const formBody = new URLSearchParams({
+        shared_key: item.company_id ?? "", // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8" IDX_COMP INDONESIA
+        xml: "false",
+        id_master_file: item.master_file_id ?? "",
+        language_code: language,
+        voucher_number: item.voucher_number, // Examp : "250759791"
+        id_transaction: "",
+        id_excursion: item.excursion_id ?? "", // Examp : "3A4D09DA-0F15-4F96-B9DE-337D808C43E0"
+        id_excursion_sub: item.excursion_sub_id ?? "",
+        id_agent: agent ?? "", // Examp AgentId Indo : "AF228762-345C-47B9-BDB8-19B94FB7A02D"
+        id_contract: contractId ?? "", // Examp : "543662F5-0BC9-4198-8076-54440FBDDF38"
+        id_market: marketId ?? "", // Examp : "4AD24FF1-2F16-47DB-BBC8-D2E5395773EB"
+        id_supplier: supplierId ?? "", // Examp : "155D1088-BC9C-D85A-E9BC-96778772AC0F"
+        id_pickup_area: item.location_id ?? "", // Examp pickup id : "12EBA6A1-533A-4875-B0A7-CA6362370FF3"
+        pickup_point: item.location_detail ?? "", //Exam : Lobby
+        pickup_date: selectedDate.toISOString().split("T")[0] ?? "", // 2025-08-01 ini sub exc
+        pickup_time: locationPickupTime ?? "", //05:45
+        remark: "",
+        input_item: inputItem ?? "", // surcharge_id|price,
+        input_surcharge: inputSurcharge ?? "", // "DB7DA528-58C7-4C11-96C6-571125744413|134295"
+      });
+
+      try {
+        const res = await fetch(
+          `${API_HOSTS.host1}/excursion.asmx/v2_cart_save`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formBody.toString(),
+          }
+        );
+
+        const contentType = res.headers.get("content-type") || "";
+
+        if (contentType.includes("application/json")) {
+          const json = await res.json();
+          //RESPONSE ADD TO CART
+          console.log("+++++ FORM BODY +++++");
+          console.log(formBody.toString());
+          console.log("+++++ RESPONSE ADD TO CART ++++++");
+          console.log("BARUUUUUU : ", json);
+          // set data cart api disini
+          saveCartApi(json.msg);
+          toast.success("Success add to cart");
+        }
+      } catch (err: any) {
+        console.error("Fetch error:", err);
+      } finally {
+        setIsLoadingSave(false);
+      }
+    };
+    PostDataCart();
+  }
 
   return (
     <div className="relative md:max-w-3xl mb-4">
@@ -690,6 +999,8 @@ const CardAccordion: React.FC<Props> = ({
                           defaultValue={item.location_id} // opsional hanya untuk edit atau update
                           onChange={(val) => {
                             field.onChange(val?.value);
+                            setLocaltionId(val?.value ?? "");
+                            setLocationPickupTime(val?.data.time_pickup_from);
                           }}
                           onBlur={field.onBlur}
                           name={field.name}
@@ -771,15 +1082,20 @@ const CardAccordion: React.FC<Props> = ({
                   </div>
                   <div
                     className="flex flex-row items-center gap-2 group cursor-pointer"
-                    onClick={() => {
-                      setIsEdit(!isEdit);
+                    onClick={async () => {
+                      await saveUpdateCart();
                     }}
                   >
-                    <FontAwesomeIcon
-                      icon={faSave}
-                      className="w-5 h-5 text-gray-500 group-hover:text-red-700"
-                      size="sm"
-                    />
+                    {isLoadingSave ? (
+                      <Spinner />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faSave}
+                        className="w-5 h-5 text-gray-500 group-hover:text-red-700"
+                        size="sm"
+                      />
+                    )}
+
                     <p className="text-gray-600 text-sm group-hover:text-red-700">
                       Save
                     </p>

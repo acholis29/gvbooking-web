@@ -196,12 +196,15 @@ export default function FooterComponent() {
             </div>
             <hr className="text-gray-200" />
             <div className="px-4 py-6 bg-gray-100  md:flex md:items-center md:justify-between">
-              <span className="text-sm text-gray-900  sm:text-center">
+              <span className="text-sm text-gray-900">
                 © {new Date().getFullYear()}{" "}
                 <a href="https://go-vacation.com/" target="_blank">
                   GoVacation™
                 </a>
-                . All Rights Reserved.
+                . All Rights Reserved. <br />
+                <small className="italic text-gray-500">
+                  Last update : 2025-10-21
+                </small>
               </span>
               <div className="flex mt-4 justify-between items-center md:mt-0 space-x-5 rtl:space-x-reverse">
                 <a
