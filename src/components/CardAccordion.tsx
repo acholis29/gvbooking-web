@@ -118,7 +118,7 @@ const CardAccordion: React.FC<Props> = ({
   const [isRemoving, setIsRemoving] = useState(false);
   const router = useRouter();
   // Inital Global
-  const { agent, repCode, coreInitial } = useInitial();
+  const { agent, repCode, coreInitial, resourceInitial } = useInitial();
   const [isEdit, setIsEdit] = useState(false);
   const [openDateEdit, setOpenDateEdit] = useState(false);
   // State Edit
@@ -529,9 +529,22 @@ const CardAccordion: React.FC<Props> = ({
     let inputSurcharge = "";
     if (Surcharge.length > 0) {
       for (let j = 0; j < Surcharge.length; j++) {
+        // Kalo mandatory true langsung tambahkan
         if (Surcharge[j].mandatory.toLocaleLowerCase() == "true") {
           inputSurcharge += Surcharge[j].surcharge_id + "|";
           inputSurcharge += Surcharge[j].price + ",";
+        } else {
+          // Kalo mandatory false, cek apakah dipilih sebelumnya jika ya tambahkan
+          const found = item.detail_surcharge.find(
+            (item) =>
+              item.surcharge.toLocaleLowerCase() ==
+              Surcharge[j].surcharge_name.toLocaleLowerCase()
+          );
+
+          if (found) {
+            inputSurcharge += Surcharge[j].surcharge_id + "|";
+            inputSurcharge += Surcharge[j].price + ",";
+          }
         }
       }
       inputSurcharge = inputSurcharge.slice(0, -1);
@@ -611,7 +624,7 @@ const CardAccordion: React.FC<Props> = ({
           concatInputItem(json.msg.price_of_charge_type);
           concatInputSurcharge(json.msg.price_of_surcharge);
 
-          alert(`Total price dan surcharge yang baru :  ${total}`);
+          // alert(`Total price dan surcharge yang baru :  ${total}`);
         }
       } catch (err: any) {
         console.error("Fetch error:", err);
@@ -621,11 +634,7 @@ const CardAccordion: React.FC<Props> = ({
       }
     };
 
-    await fetchDataGuideSurcharge();
-    await handleSubmitToCart();
-    // Jumlahkan keduanya
-    // Save Cart API
-    // Reload Cart
+    fetchDataGuideSurcharge();
   }
 
   // Save to cart
@@ -640,7 +649,7 @@ const CardAccordion: React.FC<Props> = ({
         id_transaction: "",
         id_excursion: item.excursion_id ?? "", // Examp : "3A4D09DA-0F15-4F96-B9DE-337D808C43E0"
         id_excursion_sub: item.excursion_sub_id ?? "",
-        id_agent: agent ?? "", // Examp AgentId Indo : "AF228762-345C-47B9-BDB8-19B94FB7A02D"
+        id_agent: resourceInitial.agent_id ?? "", // Examp AgentId Indo : "AF228762-345C-47B9-BDB8-19B94FB7A02D"
         id_contract: contractId ?? "", // Examp : "543662F5-0BC9-4198-8076-54440FBDDF38"
         id_market: marketId ?? "", // Examp : "4AD24FF1-2F16-47DB-BBC8-D2E5395773EB"
         id_supplier: supplierId ?? "", // Examp : "155D1088-BC9C-D85A-E9BC-96778772AC0F"
@@ -652,7 +661,7 @@ const CardAccordion: React.FC<Props> = ({
         input_item: inputItem ?? "", // surcharge_id|price,
         input_surcharge: inputSurcharge ?? "", // "DB7DA528-58C7-4C11-96C6-571125744413|134295"
       });
-
+      console.log(formBody.toString());
       try {
         const res = await fetch(
           `${API_HOSTS.host1}/excursion.asmx/v2_cart_save`,
@@ -676,6 +685,8 @@ const CardAccordion: React.FC<Props> = ({
           console.log("BARUUUUUU : ", json);
           // set data cart api disini
           saveCartApi(json.msg);
+          removeItemCart();
+          setIsEdit(false);
           toast.success("Success add to cart");
         }
       } catch (err: any) {
@@ -686,6 +697,12 @@ const CardAccordion: React.FC<Props> = ({
     };
     PostDataCart();
   }
+
+  useEffect(() => {
+    if (total == 0 && priceChargeType.length == 0) return;
+    // alert(inputSurcharge);
+    handleSubmitToCart();
+  }, [priceSurcharge]);
 
   return (
     <div className="relative md:max-w-3xl mb-4">
