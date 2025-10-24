@@ -214,7 +214,7 @@ const CardAccordion: React.FC<Props> = ({
     formState: { errors },
   } = useForm();
   const onSubmit = (data: any) => {
-    console.log(data);
+    // data form disini
   };
 
   const removeItemCart = async () => {
@@ -243,7 +243,6 @@ const CardAccordion: React.FC<Props> = ({
 
       if (contentType.includes("application/json")) {
         const json = await res.json();
-        console.log(json);
         saveCartApi(json.msg);
         toast.success("Cart Removed");
 
@@ -302,7 +301,6 @@ const CardAccordion: React.FC<Props> = ({
     );
 
     const json = await res.json();
-    console.log(json);
     if (json.length > 0) {
       // Redirect Ke Detail Product Sambil Bawa trancation_id lama untuk dihapus dari cart jika berhasil
       router.push(
@@ -400,7 +398,6 @@ const CardAccordion: React.FC<Props> = ({
           const json = await res.json();
           const chargeTypes = json?.msg?.[0]?.charge_type ?? null;
           setDataChargeType(chargeTypes);
-          console.log("CHARGE TYPE : ", chargeTypes);
         }
       } catch (err: any) {
         // setError(err.message || "Terjadi kesalahan");
@@ -441,7 +438,6 @@ const CardAccordion: React.FC<Props> = ({
   useEffect(() => {
     if (item.detail_pax.length > 0) {
       item.detail_pax.forEach((pax, index) => {
-        console.log(`Pax ${index + 1}:`, pax);
         if (pax.charge_type.toLocaleLowerCase() == "a") {
           setAdultCount(parseInt(pax.quantity));
         }
@@ -567,14 +563,11 @@ const CardAccordion: React.FC<Props> = ({
       ages: childAges,
     };
 
-    // console.log("OBJ", JSON.stringify(objChild));
     const acis = acis_qty_age(
       adultCount.toString(),
       JSON.stringify(objChild),
       infantCount.toString() ?? ""
     );
-
-    // console.log(acis);
 
     const fetchDataGuideSurcharge = async () => {
       const formBody = new URLSearchParams({
@@ -623,8 +616,6 @@ const CardAccordion: React.FC<Props> = ({
           setSupplierId(data_msc.supplier_id);
           concatInputItem(json.msg.price_of_charge_type);
           concatInputSurcharge(json.msg.price_of_surcharge);
-
-          // alert(`Total price dan surcharge yang baru :  ${total}`);
         }
       } catch (err: any) {
         console.error("Fetch error:", err);
@@ -661,7 +652,7 @@ const CardAccordion: React.FC<Props> = ({
         input_item: inputItem ?? "", // surcharge_id|price,
         input_surcharge: inputSurcharge ?? "", // "DB7DA528-58C7-4C11-96C6-571125744413|134295"
       });
-      console.log(formBody.toString());
+
       try {
         const res = await fetch(
           `${API_HOSTS.host1}/excursion.asmx/v2_cart_save`,
@@ -679,10 +670,6 @@ const CardAccordion: React.FC<Props> = ({
         if (contentType.includes("application/json")) {
           const json = await res.json();
           //RESPONSE ADD TO CART
-          console.log("+++++ FORM BODY +++++");
-          console.log(formBody.toString());
-          console.log("+++++ RESPONSE ADD TO CART ++++++");
-          console.log("BARUUUUUU : ", json);
           // set data cart api disini
           saveCartApi(json.msg);
           removeItemCart();
@@ -700,7 +687,6 @@ const CardAccordion: React.FC<Props> = ({
 
   useEffect(() => {
     if (total == 0 && priceChargeType.length == 0) return;
-    // alert(inputSurcharge);
     handleSubmitToCart();
   }, [priceSurcharge]);
 
@@ -711,7 +697,6 @@ const CardAccordion: React.FC<Props> = ({
         className="absolute top-2 right-2 z-10  text-white text-sm px-1 py-1 rounded hover:bg-gray-100 cursor-pointer"
         onClick={() => {
           // aksi untuk toggle accordion
-          console.log("toggle accordion");
           setAccordion(!isOpenAccordion);
         }}
       >
@@ -734,7 +719,6 @@ const CardAccordion: React.FC<Props> = ({
           className="flex items-start flex-row"
           onClick={() => {
             // aksi untuk toggle accordion
-            console.log("toggle accordion");
             // setAccordion(!isOpenAccordion);
           }}
         >
@@ -1130,7 +1114,6 @@ const CardAccordion: React.FC<Props> = ({
               value={item.transaction_id}
               onChange={(e) => {
                 const checked = e.target.checked;
-                console.log("Checkbox is:", checked ? "Checked" : "Unchecked");
                 onChangeCart(item, checked);
               }}
               defaultChecked={true} // ✅ hanya untuk default

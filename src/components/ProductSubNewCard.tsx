@@ -134,14 +134,11 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
       ages: arr_ages_child,
     };
 
-    // console.log("OBJ", JSON.stringify(objChild));
     const acis = acis_qty_age(
       total_pax_adult.toString(),
       JSON.stringify(objChild),
       total_pax_infant.toString() ?? ""
     );
-
-    // console.log("ACCCISSS", acis);
 
     const fetchDataGuideSurcharge = async () => {
       const formBody = new URLSearchParams({
@@ -158,8 +155,6 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
         promo_code: "R-BC", // R-BC
         acis_qty_age: acis, // A|1|0,C|1|11,C|1|11
       });
-
-      console.log(formBody.toString());
 
       try {
         const res = await fetch(
@@ -363,10 +358,6 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
         if (contentType.includes("application/json")) {
           const json = await res.json();
           //RESPONSE ADD TO CART
-          console.log("+++++ FORM BODY +++++");
-          console.log(formBody.toString());
-          console.log("+++++ RESPONSE ADD TO CART ++++++");
-          console.log(json);
           // set data cart api disini
           saveCartApi(json.msg);
           toast.success("Success add to cart");
@@ -406,7 +397,6 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
             placeholder="Enter Room Number (Optional)"
             value={roomNumber}
             onChange={(e) => {
-              console.log(e.target.value);
               setRoomNumber(e.target.value);
             }}
             className="text-gray-600 text-sm border border-gray-300 w-full h-8 rounded-md mt-2

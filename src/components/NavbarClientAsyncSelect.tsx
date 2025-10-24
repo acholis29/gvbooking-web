@@ -107,7 +107,6 @@ export default function NavbarClientAsyncSelect(props: any) {
         );
 
         const json = await res.json();
-        console.log(json);
 
         if (json.error != "True") {
           fetchedOptions = json.msg.map((item: any) => ({

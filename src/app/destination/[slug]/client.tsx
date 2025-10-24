@@ -109,7 +109,6 @@ export default function DestinationClient({ slug }: Props) {
 
   // host sesuai country
   const host_img = getHostImageUrl(coreInitial, idx_comp ?? "");
-  console.log("host_img", host_img);
   // First Load API Mobile Initial
   useEffect(() => {
     const fetchDataInitial = async () => {
@@ -134,7 +133,6 @@ export default function DestinationClient({ slug }: Props) {
 
         if (contentType.includes("application/json")) {
           const json = await res.json();
-          console.log(json);
           fetchSecondDataInitial(json.msg);
           setRepCode(json.msg.default_rep_code); //R-BC
         }
@@ -171,7 +169,6 @@ export default function DestinationClient({ slug }: Props) {
         );
 
         const json = await res.json();
-        console.log("Response 2:", json.msg);
         const languageList = json.msg.company_language.map((item: any) => ({
           MSLanguage: item.language_code,
         }));
@@ -232,7 +229,6 @@ export default function DestinationClient({ slug }: Props) {
       .then((res) => res.json())
       .then((data) => {
         setLocalDestination(data);
-        console.log(data);
       })
       .catch((err) => console.error(err))
       .finally(() => {
@@ -264,8 +260,6 @@ export default function DestinationClient({ slug }: Props) {
     }
     // Gabung jadi string dipisah koma
     const joined = lastSearch.join(",");
-
-    console.log(joined);
     fetch(
       `/api/excursion/attr/last-search?exc_j=${joined}`, // gunakan '' untuk mendapatkan semua rekomendasi
       {

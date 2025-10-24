@@ -72,7 +72,6 @@ export default function DrawerComponent({
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setMasterCurrency(data);
       })
       .catch((err) => console.error(err));
@@ -86,9 +85,7 @@ export default function DrawerComponent({
       .then((data) => {
         setMasterLanguage(data);
       })
-      .finally(() => {
-        console.log(masterLanguage);
-      })
+      .finally(() => {})
       .catch((err) => console.error(err));
   }, []);
 
@@ -506,7 +503,6 @@ const SignInContent = () => {
         {/* tombol login dengan google */}
         <button
           type="button"
-          // onClick={() => console.log("Login with Google clicked")}
           onClick={() => {
             signIn("google");
             sessionStorage.setItem("oauth", "true");

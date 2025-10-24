@@ -42,7 +42,6 @@ export default function Profile() {
         email: email,
       });
 
-      console.log(formBody.toString());
       let url = `${API_HOSTS.host1}/excursion.asmx/v2_updateemail`;
       const response = await fetch(url, {
         method: "POST",
@@ -56,9 +55,8 @@ export default function Profile() {
 
       // Response Html
       const data = await response.json();
-      console.log("Update email JSON:", data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -69,7 +67,6 @@ export default function Profile() {
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    console.log(data);
     // Simpan ke localStorage
     if (profile.email != data.email) {
       saveCartApi([]);

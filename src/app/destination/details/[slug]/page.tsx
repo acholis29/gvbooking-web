@@ -100,7 +100,6 @@ export default function DetailDestination() {
     formState: { errors },
   } = useForm();
   const onSubmit = (data: any) => {
-    console.log(data);
     setCheckAvaibility(true);
     setPickupAreaId(data.pickup_area);
   };
@@ -401,7 +400,7 @@ export default function DetailDestination() {
 
         if (contentType.includes("application/json")) {
           const json = await res.json();
-          console.log("Poduct Sub", json);
+
           setDataProductSub(json);
         }
       } catch (err: any) {
@@ -448,8 +447,6 @@ export default function DetailDestination() {
 
         if (contentType.includes("application/json")) {
           const json = await res.json();
-          console.log(json);
-          console.log("Canceled : ", json);
           fetchSecondDataInitial(json.msg);
           setRepCode(json.msg.default_rep_code); //R-BC
           setDefaultCanceText(json.msg.default_cancelText); //Cancel Text
@@ -472,7 +469,7 @@ export default function DetailDestination() {
           email: profile.email ?? "",
           mobile: profile.phone ?? "",
         });
-        console.log(formBody.toString());
+
         const res = await fetch(
           `${API_HOSTS.host1}/excursion.asmx/v2_product_search_initialize`,
           {
@@ -485,8 +482,6 @@ export default function DetailDestination() {
         );
 
         const json = await res.json();
-        console.log("Response 2:", json.msg);
-        console.log("Cart Item :", json.msg.cart_item);
         const languageList = json.msg.company_language.map((item: any) => ({
           MSLanguage: item.language_code,
         }));
@@ -566,7 +561,6 @@ export default function DetailDestination() {
   useEffect(() => {
     const subs = dataProductSub?.msg?.product_subs ?? [];
     if (subs.length > 0) {
-      console.log("HALOOOOOOO");
       const fetchDataAllotment = async () => {
         setIsLoading(true); // mulai loading
         const formBody = new URLSearchParams({
@@ -598,7 +592,6 @@ export default function DetailDestination() {
             const json = await res.json();
             const chargeTypes = json?.msg?.[0]?.charge_type ?? null;
             setDataChargeType(chargeTypes);
-            console.log("CHARGE TYPE : ", chargeTypes);
           }
         } catch (err: any) {
           setError(err.message || "Terjadi kesalahan");
@@ -650,7 +643,6 @@ export default function DetailDestination() {
         if (contentType.includes("application/json")) {
           const json = await res.json();
           setAllotmentResponse(json);
-          console.log("ALLOTMENT ===== ", json);
         }
       } catch (err: any) {
         setError(err.message || "Terjadi kesalahan");

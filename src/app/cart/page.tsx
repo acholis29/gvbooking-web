@@ -233,14 +233,12 @@ export default function Cart() {
   }, []);
 
   useEffect(() => {
-    console.log("idx comp cart", idxCompCart);
     if (idxCompCart != "") {
       fetch(`/mobile/data/${idxCompCart}.json`, {
         cache: "no-store",
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log("Payment Data:", data);
           setPayment(data.payment); // ✅ langsung set array-nya
           if (data.onepay_param != null) {
             setOnepayParam(data.onepay_param);
@@ -255,7 +253,6 @@ export default function Cart() {
     //   })
     //     .then((res) => res.json())
     //     .then((data) => {
-    //       console.log("Payment Data:", data);
     //       setPayment(data.payment); // ✅ langsung set array-nya
     //       if (data.onepay_param != null) {
     //         setOnepayParam(data.onepay_param);
@@ -273,7 +270,6 @@ export default function Cart() {
       .then((res) => res.json())
       .then((data) => {
         setCorev2(data); // ✅ langsung set array-nya
-        console.log(data);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -285,14 +281,12 @@ export default function Cart() {
       .then((res) => res.json())
       .then((data) => {
         setIpLocation(data); // ✅ langsung set array-nya
-        console.log(data);
       })
       .catch((err) => console.error(err));
   }, []);
 
   function loadCart() {
     const cart = JSON.parse(localStorage.getItem("cart_api") || "[]");
-    console.log(cart);
     setCart(cart);
     setIsLoading(false);
     if (cart.length > 0) {
@@ -353,7 +347,6 @@ export default function Cart() {
         email: email,
       });
 
-      console.log(formBody.toString());
       let url = `${API_HOSTS.host1}/excursion.asmx/v2_updateemail`;
       const response = await fetch(url, {
         method: "POST",
@@ -367,9 +360,8 @@ export default function Cart() {
 
       // Response Html
       const data = await response.json();
-      console.log("Update email JSON:", data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -534,7 +526,6 @@ export default function Cart() {
     const companyId = ListCart[0].company_id;
     const result = corev2.find((item) => item.idx_comp === companyId);
     setIsSubmitting(true);
-    console.log(confPayment.provider);
     // Checout
     await checkout();
     if (result?.payontour == false) {
@@ -624,7 +615,6 @@ export default function Cart() {
       if (!response.ok) throw new Error("Payment failed");
       // Response Html
       const html = await response.text();
-      console.log("HTML PAYMENT :", html);
       if (
         confPayment.provider == "onepay" ||
         confPayment.provider == "Sathapana" ||
@@ -677,7 +667,6 @@ export default function Cart() {
 
   async function payontour() {
     try {
-      console.log("pay on tour");
       let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
       const formBody = new URLSearchParams({
         intl: resourceInitial.company_code ?? "", // contoh intl
@@ -732,9 +721,7 @@ export default function Cart() {
       if (!response.ok) throw new Error("Payment failed");
 
       // Response Html
-      console.log(response);
       const html = await response.text();
-      console.log(html);
 
       if (response.ok == true) {
         Swal.fire({
@@ -778,7 +765,6 @@ export default function Cart() {
         user_agent_string: "WEB",
       });
 
-      console.log("CHECKOUT : ", formBody.toString());
       let url = `${API_HOSTS.host1}/excursion.asmx/v2_cart_checkout`;
       const response = await fetch(url, {
         method: "POST",
@@ -792,9 +778,8 @@ export default function Cart() {
 
       // Response Html
       const data = await response.json();
-      console.log("Checkout Response JSON:", data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -1386,7 +1371,6 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
         email: email,
       });
 
-      console.log(formBody.toString());
       let url = `${API_HOSTS.host1}/excursion.asmx/v2_updateemail`;
       const response = await fetch(url, {
         method: "POST",
@@ -1400,9 +1384,8 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
 
       // Response Html
       const data = await response.json();
-      console.log("Update email JSON:", data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
   // function Update Profile Data, ProfilePay dan ProfileInitial Pada Localstorage Local Modal

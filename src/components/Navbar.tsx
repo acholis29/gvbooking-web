@@ -185,7 +185,6 @@ export default function NavbarComponent() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setMasterCurrency(data);
       })
       .catch((err) => console.error(err));
@@ -199,9 +198,7 @@ export default function NavbarComponent() {
       .then((data) => {
         setMasterLanguage(data);
       })
-      .finally(() => {
-        console.log(masterLanguage);
-      })
+      .finally(() => {})
       .catch((err) => console.error(err));
   }, []);
 
@@ -345,8 +342,6 @@ export default function NavbarComponent() {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          console.log("Lat : ", pos.coords.latitude);
-          console.log("Lat : ", pos.coords.longitude);
           setLocation({
             lat: pos.coords.latitude,
             lng: pos.coords.longitude,
@@ -368,8 +363,6 @@ export default function NavbarComponent() {
     const fetchCountry = async () => {
       try {
         let country = await checkCountry(location.lat, location.lng);
-        console.log("Country : ", country);
-        console.log("Country Master :", countryMaster);
         countryMaster.map((item, index) => {
           if (item.country.toLowerCase() == country.toLowerCase()) {
             if (redirectLocation) {
@@ -1120,7 +1113,6 @@ const SignInContent = () => {
         {/* tombol login dengan google */}
         <button
           type="button"
-          // onClick={() => console.log("Login with Google clicked")}
           onClick={() => {
             signIn("google");
             // sessionStorage.setItem("oauth", "true");

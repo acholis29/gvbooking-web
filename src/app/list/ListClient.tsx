@@ -185,7 +185,6 @@ export default function ListClient() {
   // Hanlde Mobile Filter Holiday Type
   useEffect(() => {
     handleApplyMobile();
-    console.log(selectedTypesHolidayArrMob);
   }, [selectedTypesHolidayArrMob]);
 
   useEffect(() => {

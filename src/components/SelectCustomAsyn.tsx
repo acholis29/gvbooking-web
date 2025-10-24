@@ -110,7 +110,6 @@ export default function SelectCustomAsyn({
       );
 
       const json = await res.json();
-      console.log("JSON = ", json);
       const fetchedOptions = json.msg.map((item: any) => ({
         value: item.location_id,
         label: item.location_name,

@@ -263,8 +263,6 @@ export default function ReviewBookingClient() {
         acis_qty_age: acis, // A|1|0,C|1|11,C|1|11
       });
 
-      console.log(formBody);
-
       try {
         const res = await fetch(
           `${API_HOSTS.host1}/excursion.asmx/v2_product_price`,
@@ -291,7 +289,6 @@ export default function ReviewBookingClient() {
           setMarketId(data_msc.market_id);
           setContractId(data_msc.contract_id);
           setSupplierId(data_msc.supplier_id);
-          console.log(json.msg.price_of_charge_type);
           hitungTotal(
             json.msg.price_of_charge_type,
             json.msg.price_of_surcharge
@@ -437,7 +434,6 @@ export default function ReviewBookingClient() {
 
       if (contentType.includes("application/json")) {
         const json = await res.json();
-        console.log(json);
         saveCartApi(json.msg);
         toast.success("Cart Old Removed");
       }
@@ -460,7 +456,6 @@ export default function ReviewBookingClient() {
   } = useForm();
 
   const onSubmit = (data: any) => {
-    console.log("Data submit:", data);
     if (isSubmitting) {
       toast("Please wait...", {
         icon: "⏳", // hourglass
@@ -519,10 +514,6 @@ export default function ReviewBookingClient() {
         if (contentType.includes("application/json")) {
           const json = await res.json();
           //RESPONSE ADD TO CART
-          console.log("+++++ FORM BODY +++++");
-          console.log(formBody.toString());
-          console.log("+++++ RESPONSE ADD TO CART ++++++");
-          console.log(json);
           // set data cart api disini
           saveCartApi(json.msg);
           toast.success("Success add to cart");

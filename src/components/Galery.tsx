@@ -32,7 +32,6 @@ const Galery: React.FC<GaleryProps> = ({
     : [];
   const [open, setOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  console.log("GALERYA :", galleryArray);
   // galleryArray.unshift("/videos/bali-kaur.mp4"); //tambah vidio index 0
   // galleryArray.push("/videos/bali-kaur.mp4"); //tambah vidio index terakhir
   // galleryArray.splice(2, 0, "/videos/bali-kaur.mp4"); //sisipkan diindex 2

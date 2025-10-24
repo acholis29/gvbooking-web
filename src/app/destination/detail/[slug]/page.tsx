@@ -218,7 +218,6 @@ export default function DetailDestination() {
 
         if (contentType.includes("application/json")) {
           const json = await res.json();
-          console.log("Poduct Sub", json);
           setDataProductSub(json);
         }
       } catch (err: any) {
@@ -265,8 +264,6 @@ export default function DetailDestination() {
 
         if (contentType.includes("application/json")) {
           const json = await res.json();
-          console.log(json);
-          console.log("Canceled : ", json);
           fetchSecondDataInitial(json.msg);
           setRepCode(json.msg.default_rep_code); //R-BC
           setDefaultCanceText(json.msg.default_cancelText); //Cancel Text
@@ -289,7 +286,6 @@ export default function DetailDestination() {
           email: profile.email ?? "",
           mobile: profile.phone ?? "",
         });
-        console.log(formBody.toString());
         const res = await fetch(
           `${API_HOSTS.host1}/excursion.asmx/v2_product_search_initialize`,
           {
@@ -302,8 +298,6 @@ export default function DetailDestination() {
         );
 
         const json = await res.json();
-        console.log("Response 2:", json.msg);
-        console.log("Cart Item :", json.msg.cart_item);
         const languageList = json.msg.company_language.map((item: any) => ({
           MSLanguage: item.language_code,
         }));

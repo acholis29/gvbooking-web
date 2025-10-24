@@ -96,7 +96,6 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) => {
         setDestination(data); // ✅ langsung set array-nya
-        console.log(data);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -152,7 +151,6 @@ export default function Home() {
     // Gabung jadi string dipisah koma
     const joined = lastSearch.join(",");
 
-    console.log(joined);
     fetch(
       `/api/excursion/attr/last-search?exc_j=${joined}`, // gunakan '' untuk mendapatkan semua rekomendasi
       {
