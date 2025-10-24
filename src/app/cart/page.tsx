@@ -1058,7 +1058,8 @@ export default function Cart() {
                           )}
                         </p>
                         <p className="text-sm text-gray-700 font-semibold">
-                          {item.currency_local} {item.price_local_in_format}
+                          {/* {item.currency_local} {item.price_local_in_format} */}
+                          {item.currency} {item.priceori_in_format}
                         </p>
                       </div>
                     );
@@ -1070,7 +1071,7 @@ export default function Cart() {
               <div className="flex flex-row justify-between mb-2">
                 <p className="text-sm text-gray-700 font-bold">Subtotal</p>
                 <p className="text-sm text-gray-700 font-semibold">
-                  {" "}
+                  {buyCurrencyMF}{" "}
                   {formatRibuanInternational(subtotalSummeryOrder)}
                 </p>
               </div>
@@ -1078,18 +1079,28 @@ export default function Cart() {
               <div className="flex flex-row justify-between mb-2">
                 <p className="text-sm text-gray-700 font-semibold">Disc</p>
                 <p className="text-sm text-gray-700 font-semibold">
-                  {" "}
+                  {buyCurrencyMF}{" "}
                   {formatRibuanInternational(discTotalSummerOrder)}
                 </p>
               </div>
               <hr className="my-2 border border-gray-400 opacity-50" />
               <div className="flex flex-row justify-between mb-2">
-                <p className="text-gray-700 font-semibold">Grand Total</p>
+                <p className="text-gray-700 font-semibold">Total</p>
                 <p className="text-gray-700 font-semibold">
-                  {" "}
+                  {buyCurrencyMF}{" "}
                   {formatRibuanInternational(
                     subtotalSummeryOrder - discTotalSummerOrder
                   )}
+                </p>
+              </div>
+              <hr className="my-2 border border-gray-400 opacity-50" />
+              <div className="flex flex-row justify-between mb-2">
+                <p className="text-gray-700 font-semibold">
+                  Pay with local currency
+                </p>
+                <p className="text-gray-700 font-semibold">
+                  {locaCurrencyMF}{" "}
+                  {formatRibuanInternational(subtotalSummeryOrderLocal)}
                 </p>
               </div>
               <div className="flex justify-between gap-2">
