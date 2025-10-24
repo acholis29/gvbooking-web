@@ -34,6 +34,7 @@ import { useProfile } from "@/context/ProfileContext";
 import ModalComponent from "./ModalComponent";
 // Helper
 import { capitalizeWords, truncateText } from "@/helper/helper";
+import toast from "react-hot-toast";
 
 export default function DrawerComponent({
   isOpen,
@@ -192,28 +193,40 @@ export default function DrawerComponent({
                   isDropdownProfilOpen ? "block" : "hidden"
                 } py-2 space-y-2`}
               >
-                <li>
-                  <a
-                    href="/profile"
-                    onClick={() => {
-                      openModal(); // ⬅️ Ini akan memunculkan modal
-                      setMenuSelected(`SignIn`);
-                    }}
-                    className="flex items-center w-full p-2 text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 "
-                  >
-                    <FontAwesomeIcon
-                      icon={faGear}
-                      className="w-5 h-5 text-sm text-gray-400"
-                    />{" "}
-                    Options
-                  </a>
-                </li>
+                {status == "unauthenticated" && (
+                  <li>
+                    <a
+                      href="/profile"
+                      onClick={() => {
+                        openModal(); // ⬅️ Ini akan memunculkan modal
+                        setMenuSelected(`SignIn`);
+                      }}
+                      className="flex items-center w-full p-2 text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 "
+                    >
+                      <FontAwesomeIcon
+                        icon={faGear}
+                        className="w-5 h-5 text-sm text-gray-400"
+                      />{" "}
+                      Options
+                    </a>
+                  </li>
+                )}
+
                 <li>
                   <a
                     href="#"
                     onClick={() => {
-                      openModal(); // ⬅️ Ini akan memunculkan modal
                       setMenuSelected(`Currency`);
+                      if (cartApiCount > 0) {
+                        toast(
+                          "Currency can only be changed with an empty cart. Please clear your cart to switch currency.",
+                          {
+                            icon: "⚠️", // warning emoji
+                          }
+                        );
+                      } else {
+                        openModal(); // ⬅️ Ini akan memunculkan modal
+                      }
                     }}
                     className="flex items-center w-full p-2 text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 "
                   >
