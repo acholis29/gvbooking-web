@@ -9,7 +9,11 @@ export async function GET(
     // Get the additional parameters from the URL query string
     const idx_comp = searchParams.get('idx-comp-alias') || ''; // Default to empty string if not provided
     try {
-        const result = await prisma.$queryRawUnsafe(`api_MSExcursion_Filter '${idx_comp}' ,'h'`);
+        // const result = await prisma.$queryRawUnsafe(`api_MSExcursion_Filter '${idx_comp}' ,'h'`);
+        // Gunakan parameter binding agar aman dari SQL injection
+        const result = await prisma.$queryRaw`
+      exec api_MSExcursion_Filter ${idx_comp}, 'h'
+    `;
         return Response.json(result);
     } catch (error) {
         console.error('Error GET /api/excursion/activity_country:', error);

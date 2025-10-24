@@ -14,7 +14,16 @@ export async function GET(
   const price_max = searchParams.get('price-max') || ''; // Default to empty string if not provided
 
   try {
-    const result = await prisma.$queryRawUnsafe(`api_MSExcursion_List '${idx_comp}' ,'${state}','${holiday}', '${price_min}', '${price_max}'`);
+    // const result = await prisma.$queryRawUnsafe(`api_MSExcursion_List '${idx_comp}' ,'${state}','${holiday}', '${price_min}', '${price_max}'`);
+    // Gunakan parameterized query agar aman dari SQL injection
+    const result = await prisma.$queryRaw`
+      exec api_MSExcursion_List
+      ${idx_comp},
+      ${state},
+      ${holiday},
+      ${price_min},
+      ${price_max}
+    `;
     return Response.json(result);
   } catch (error) {
     console.error('Error GET /api/excursion/local_destination/detail:', error);

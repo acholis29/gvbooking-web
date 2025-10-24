@@ -8,7 +8,11 @@ export async function GET(
   const idx_comp = (await params).idx_comp;
 
   try {
-    const result = await prisma.$queryRawUnsafe(`api_MSExcursion_Filter '${idx_comp}' ,'s'`);
+    // const result = await prisma.$queryRawUnsafe(`api_MSExcursion_Filter '${idx_comp}' ,'s'`);
+    // Gunakan parameter binding agar aman dari SQL injection
+    const result = await prisma.$queryRaw`
+      exec api_MSExcursion_Filter ${idx_comp}, 's'
+    `;
     return Response.json(result);
   } catch (error) {
     console.error('Error GET /api/excursion/local_destination/[idx_comp]:', error);

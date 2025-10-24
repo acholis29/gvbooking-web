@@ -13,26 +13,34 @@ export async function GET(
   let ssql = ''; // Default to empty string if not provided
 
   try {
-
+    let result; // ✅ deklarasi sekali saja
     switch (act) {
       case 'recomended':
-        ssql = `api_MSExcursion_Recom '${idx_comp}'`;
+        // ssql = `api_MSExcursion_Recom '${idx_comp}'`;
+        // Gunakan parameter binding agar aman dari SQL injection
+        result = await prisma.$queryRaw`exec api_MSExcursion_Recom ${idx_comp}`;
         break;
       case 'search':
-        ssql = `api_MSExcursion_List_search '${keyword}'`;
+        // ssql = `api_MSExcursion_List_search '${keyword}'`;
+        result = await prisma.$queryRaw`exec api_MSExcursion_List_search ${keyword}`;
         break;
       case 'search-excursion':
-        ssql = `select * from dbo.MSExcursion where Idx_excursion = '${keyword}'`;
+        // ssql = `select * from dbo.MSExcursion where Idx_excursion = '${keyword}'`;
+        result = await prisma.$queryRaw`
+          select * from dbo.MSExcursion where Idx_excursion = ${keyword}
+        `;
         break;
       case 'last-search':
-        ssql = `api_MSExcursion_LastOpen '${excursion_join}'`;
+        // ssql = `api_MSExcursion_LastOpen '${excursion_join}'`;
+        result = await prisma.$queryRaw`exec api_MSExcursion_LastOpen ${excursion_join}`;
         break;
       default:
         console.log("Invalid day of the week.");
+        return Response.json({ error: 'Invalid action' }, { status: 400 });
     }
 
 
-    const result = await prisma.$queryRawUnsafe(ssql);
+    // const result = await prisma.$queryRawUnsafe(ssql);
     return Response.json(result);
   } catch (error) {
     console.error('Error GET /api/excursion/recomended_destinaton/[idx_comp]:', error);
