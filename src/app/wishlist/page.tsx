@@ -67,10 +67,12 @@ export default function Wishlist() {
                   key={index}
                   idx_comp={item.idx_comp}
                   idx_excursion={item.idx_excursion}
-                  image="/images/destination/tanah-lot/tanah-lot6.jpg"
+                  image={
+                    item.image ?? "/images/icon/android-chrome-512x512.png"
+                  }
                   title={item.title}
                   sub_title={item.sub_title}
-                  link="/cart"
+                  link={item.link ?? "#"}
                   currency={`${item.currency}`}
                   price={`${item.price}`}
                   onDelete={loadWish} // ✅ ini dikirim ke anak
@@ -87,7 +89,7 @@ export default function Wishlist() {
             )}
           </div>
           {/* Konten Kanan */}
-          <div className="md:w-2/6 text-black">
+          {/* <div className="md:w-2/6 text-black">
             <div className="border p-3 rounded-2xl bg-gray-600">
               <div className="flex flex-row justify-between">
                 <div className="">
@@ -96,21 +98,21 @@ export default function Wishlist() {
                   </p>
                 </div>
                 <div className="">
-                  <p className="font-bold text-lg  text-white">
-                    {/* Total */}
-                    {ListWishlist[0].currency}{" "}
+                  <p className="font-bold text-lg  text-white"> */}
+          {/* Total */}
+          {/* {ListWishlist[0].currency}{" "}
                     {ListWishlist.reduce(
                       (total, item) => total + Number(item.price),
                       0
-                    ).toLocaleString("id-ID")}
-                  </p>
+                    ).toLocaleString("id-ID")} */}
+          {/* </p>
                   <p className="text-sm  text-white">
                     *include tax and service
                   </p>
                 </div>
-              </div>
+              </div> */}
 
-              <button
+          {/* <button
                 type="button"
                 onClick={() => {
                   addAllToCart();
@@ -122,9 +124,9 @@ export default function Wishlist() {
                   icon={faCartPlus}
                   className="w-4 h-4 text-white ml-2"
                 />
-              </button>
-            </div>
-          </div>
+              </button> */}
+          {/* </div>
+          </div> */}
         </section>
       ) : (
         <div className="col-span-4 text-center text-gray-500 py-10 my-30">

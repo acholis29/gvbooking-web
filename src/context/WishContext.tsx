@@ -8,6 +8,8 @@ type WishItem = {
   sub_title: string;
   price: string;
   currency?: string;
+  link?: string;
+  image?: string;
 };
 
 type WishContextType = {

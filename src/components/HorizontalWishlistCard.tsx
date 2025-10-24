@@ -63,7 +63,7 @@ const HorizontalWishlistCard: React.FC<HorizontalWishlistCardProps> = ({
       >
         <FontAwesomeIcon icon={faMinus} className="w-3 h-3" />
       </button>
-      <button
+      {/* <button
         type="button"
         className="absolute top-12 right-2 bg-white border border-gray-300 hover:bg-red-100 text-green-800 p-1 rounded-full shadow transition"
         onClick={(e) => {
@@ -73,9 +73,9 @@ const HorizontalWishlistCard: React.FC<HorizontalWishlistCardProps> = ({
         }}
       >
         <FontAwesomeIcon icon={faCartPlus} className="w-3 h-3" />
-      </button>
+      </button> */}
       <img
-        className="w-30 h-40 p-2 object-cover rounded-2xl"
+        className="w-30 h-30 p-2 object-cover rounded-2xl"
         src={image}
         alt={image}
         onError={(e) => {
@@ -89,11 +89,11 @@ const HorizontalWishlistCard: React.FC<HorizontalWishlistCardProps> = ({
           {title}
         </h5>
         <p className="text-xs md:text-sm text-gray-700">{sub_title}</p>
-        <p className="text-xs md:text-sm text-gray-700">
+        {/* <p className="text-xs md:text-sm text-gray-700">
           Thursday, July 10, 2025・13:30
         </p>
         <p className="text-xs md:text-sm text-gray-700">2 Adult</p>
-        <p className="text-xs md:text-sm text-gray-700">Language: English</p>
+        <p className="text-xs md:text-sm text-gray-700">Language: English</p> */}
         <p className="text-md md:text-2xl font-bold text-gray-700 text-right pr-2">
           {currency} {price}
         </p>

@@ -52,6 +52,8 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
     sub_title: sub_title ?? "",
     price: price ?? "",
     currency: currency ?? "",
+    link: link ?? "#",
+    image: image ?? "/images/icon/android-chrome-512x512.png",
   };
 
   const { addToCart } = useCart();
