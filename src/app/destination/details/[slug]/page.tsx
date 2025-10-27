@@ -735,7 +735,7 @@ export default function DetailDestination() {
         (a) => a.sub_excursion_id === item.sub_excursion_id
       );
       const matchAllotmentDate = matchedAllotment?.allotment_list.find(
-        (b) => b.date === date
+        (b) => b.date === date && b.status === "1"
       );
       return !!matchAllotmentDate;
     }) ?? [];
@@ -1315,7 +1315,7 @@ export default function DetailDestination() {
                 } else {
                   const matchAllotmentDate =
                     matchedAllotment.allotment_list.find(
-                      (b) => b.date === date
+                      (b) => b.date === date && b.status === "1"
                     );
                   if (matchAllotmentDate == undefined) {
                     return null;
