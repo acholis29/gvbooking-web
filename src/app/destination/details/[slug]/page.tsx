@@ -229,12 +229,15 @@ export default function DetailDestination() {
   const [isLoadingProdukDetail, setIsLoadingProdukDetail] = useState(true);
   const [isLoadingProdukDetailSub, setIsLoadingProdukDetailSub] =
     useState(true);
+  const [isLoadingAllotmentArr, setIsLoadingAllotmentArr] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Konversi string ke Date (atau fallback ke hari ini jika kosong)
   const initialDate = date ? new Date(date) : new Date();
   // Datepicker Local
-  const disabledDates = [new Date("2025-07-16"), new Date("2025-07-25")];
+  const disabledDates = [new Date("2025-10-28"), new Date("2025-10-29")];
+  const [disabledDatesArr, setDisabledDateArr] = useState<Date[]>([]);
+  const [undisableDatesArr, setUndisabledDateArr] = useState<Date[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate);
   // open dropdown pax (adult, child, infant)
   const [openDropdownPax, setOpenDropdownPax] = useState(false);
@@ -267,6 +270,11 @@ export default function DetailDestination() {
     setChildAges(updatedAges);
   };
 
+  useEffect(() => {
+    if (undisableDatesArr.length > 0) {
+      setSelectedDate(undisableDatesArr[0]);
+    }
+  }, [undisableDatesArr]);
   // Hanlde First Load Age
   const prevCountRef = useRef(childCount);
   useEffect(() => {
@@ -643,6 +651,8 @@ export default function DetailDestination() {
         if (contentType.includes("application/json")) {
           const json = await res.json();
           setAllotmentResponse(json);
+          joinDateAllotmentForDisabled(json);
+          joinDateAllotmentForUndisabled(json);
         }
       } catch (err: any) {
         setError(err.message || "Terjadi kesalahan");
@@ -654,6 +664,34 @@ export default function DetailDestination() {
 
     fetchDataAllotment();
   }, [dataProductSub]);
+
+  function joinDateAllotmentForDisabled(data: AllotmentResponse) {
+    setIsLoadingAllotmentArr(true);
+    // Fungsi untuk mengabungkan semua allotment date yang false
+    const allDates = data.msg.flatMap((item) =>
+      item.allotment_list.filter((a) => a.status === "0").map((a) => a.date)
+    );
+
+    // Hapus duplikat dan ubah ke Date object
+    const uniqueDates = [...new Set(allDates)].map((d) => new Date(d));
+    setDisabledDateArr(uniqueDates);
+    setIsLoadingAllotmentArr(false);
+    return uniqueDates;
+  }
+
+  function joinDateAllotmentForUndisabled(data: AllotmentResponse) {
+    setIsLoadingAllotmentArr(true);
+    // Fungsi untuk mengabungkan semua allotment date yang false
+    const allDates = data.msg.flatMap((item) =>
+      item.allotment_list.filter((a) => a.status === "1").map((a) => a.date)
+    );
+
+    // Hapus duplikat dan ubah ke Date object
+    const uniqueDates = [...new Set(allDates)].map((d) => new Date(d));
+    setUndisabledDateArr(uniqueDates);
+    setIsLoadingAllotmentArr(false);
+    return uniqueDates;
+  }
 
   useEffect(() => {
     const checkMobile = () => {
@@ -913,34 +951,38 @@ export default function DetailDestination() {
                       <p className="text-sm">per person</p>
                     </div>
                     <div className="flex flex-col">
-                      <button
-                        className="w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer"
-                        onClick={() => {
-                          const target = document.getElementById(
-                            "availability-section"
-                          );
+                      {isLoadingProdukDetailSub ? (
+                        <div className="w-60 h-10 bg-gray-300 text-white font-bold rounded-2xl px-4 py-2 animate-pulse" />
+                      ) : (
+                        <button
+                          className="w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer"
+                          onClick={() => {
+                            const target = document.getElementById(
+                              "availability-section"
+                            );
 
-                          if (target) {
-                            // Scroll ke tengah layar dengan efek halus
-                            target.scrollIntoView({
-                              behavior: "smooth",
-                              block: "center",
-                              inline: "nearest",
-                            });
+                            if (target) {
+                              // Scroll ke tengah layar dengan efek halus
+                              target.scrollIntoView({
+                                behavior: "smooth",
+                                block: "center",
+                                inline: "nearest",
+                              });
 
-                            // Efek highlight sementara
-                            target.classList.add("ring-2", "ring-gray-500");
-                            setTimeout(() => {
-                              target.classList.remove(
-                                "ring-2",
-                                "ring-gray-500"
-                              );
-                            }, 1500);
-                          }
-                        }}
-                      >
-                        Check Avaibility
-                      </button>
+                              // Efek highlight sementara
+                              target.classList.add("ring-2", "ring-gray-500");
+                              setTimeout(() => {
+                                target.classList.remove(
+                                  "ring-2",
+                                  "ring-gray-500"
+                                );
+                              }, 1500);
+                            }
+                          }}
+                        >
+                          Check Avaibility
+                        </button>
+                      )}
                     </div>
                   </div>
                   <div className="w-full flex flex-row mt-2">
@@ -1231,6 +1273,7 @@ export default function DetailDestination() {
                               }
                               setCheckAvaibility(false);
                             }}
+                            excludeDates={disabledDatesArr} //Disabled date
                             minDate={(() => {
                               const tomorrow = new Date();
                               tomorrow.setDate(tomorrow.getDate() + 1);
@@ -1272,12 +1315,18 @@ export default function DetailDestination() {
 
                   {/* Kanan: button */}
                   <div className="p-2 md:ml-20 w-full">
-                    <button
-                      type="submit"
-                      className="w-full md:w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl mt-4 md:mt-0 px-4 py-2 cursor-pointer"
-                    >
-                      Check Availability
-                    </button>
+                    {dataChargeType.length > 0 && !isLoadingAllotmentArr ? (
+                      <button
+                        type="submit"
+                        className="w-full md:w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl mt-4 md:mt-0 px-4 py-2 cursor-pointer"
+                      >
+                        Check Availability
+                      </button>
+                    ) : (
+                      <div className="w-full h-10 bg-gray-400 text-white font-bold rounded-2xl px-4 py-2 text-center animate-pulse">
+                        <p className="text-white">Please Wait ...</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1364,32 +1413,38 @@ export default function DetailDestination() {
                   <p className="text-xs text-gray-700">per person</p>
                 </div>
                 <div className="flex flex-col flex-2">
-                  <button
-                    type="submit"
-                    className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-3xl text-sm px-5 py-2.5 me-2 mb-2"
-                    onClick={() => {
-                      const target = document.getElementById(
-                        "availability-section"
-                      );
+                  {isLoadingProdukDetailSub ? (
+                    <div className="w-full h-10 bg-gray-400 focus:ring-4 font-bold rounded-3xl text-sm text-center px-5 py-2.5 me-2 mb-2 animate-pulse">
+                      <p className="text-white">Please Wait ...</p>
+                    </div>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-3xl text-sm px-5 py-2.5 me-2 mb-2"
+                      onClick={() => {
+                        const target = document.getElementById(
+                          "availability-section"
+                        );
 
-                      if (target) {
-                        // Scroll ke tengah layar dengan efek halus
-                        target.scrollIntoView({
-                          behavior: "smooth",
-                          block: "center",
-                          inline: "nearest",
-                        });
+                        if (target) {
+                          // Scroll ke tengah layar dengan efek halus
+                          target.scrollIntoView({
+                            behavior: "smooth",
+                            block: "center",
+                            inline: "nearest",
+                          });
 
-                        // Efek highlight sementara
-                        target.classList.add("ring-2", "ring-gray-500");
-                        setTimeout(() => {
-                          target.classList.remove("ring-2", "ring-gray-500");
-                        }, 1500);
-                      }
-                    }}
-                  >
-                    Check Avaibility
-                  </button>
+                          // Efek highlight sementara
+                          target.classList.add("ring-2", "ring-gray-500");
+                          setTimeout(() => {
+                            target.classList.remove("ring-2", "ring-gray-500");
+                          }, 1500);
+                        }
+                      }}
+                    >
+                      Check Avaibility
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
