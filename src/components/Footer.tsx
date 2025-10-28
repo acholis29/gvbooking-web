@@ -104,7 +104,7 @@ export default function FooterComponent() {
                     </a>
                   </li>
                   <li className="mb-4">
-                    <a href="#" className="hover:underline">
+                    <a href="/contact_us" className="hover:underline">
                       Contact Us
                     </a>
                   </li>
@@ -117,17 +117,23 @@ export default function FooterComponent() {
                 </h2>
                 <ul className="text-gray-900  font-medium">
                   <li className="mb-4">
-                    <a href="#" className="hover:underline">
+                    <a
+                      href="/legal?m=privacy policy"
+                      className="hover:underline"
+                    >
                       Privacy Policy
                     </a>
                   </li>
                   <li className="mb-4">
-                    <a href="#" className="hover:underline">
+                    <a href="/legal?m=licensing" className="hover:underline">
                       Licensing
                     </a>
                   </li>
                   <li className="mb-4">
-                    <a href="#" className="hover:underline">
+                    <a
+                      href="/legal?m=terms and conditions"
+                      className="hover:underline"
+                    >
                       Terms &amp; Conditions
                     </a>
                   </li>
