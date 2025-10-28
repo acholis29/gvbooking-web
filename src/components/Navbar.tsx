@@ -731,6 +731,7 @@ export default function NavbarComponent() {
                 // }
                 if (drawer.classList.contains("translate-x-full")) {
                   drawer.classList.remove("translate-x-full");
+                  setDrawerOpen(true);
                 } else {
                   drawer.classList.add("translate-x-full");
                 }
