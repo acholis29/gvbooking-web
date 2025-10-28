@@ -146,6 +146,7 @@ export default function NavbarComponent() {
     setResourceInitial,
     setProfileInitial,
     setCoreInitial,
+    setRepresentative,
   } = useInitial();
 
   // Timeout Delay
@@ -269,6 +270,12 @@ export default function NavbarComponent() {
     if (savedProfileInitial) {
       const parsedData = JSON.parse(savedProfileInitial);
       setProfileInitial(parsedData);
+    }
+
+    const savedRepresentative = localStorage.getItem("representative");
+    if (savedRepresentative) {
+      const parsedData = JSON.parse(savedRepresentative);
+      setRepresentative(parsedData);
     }
 
     const savedCart = JSON.parse(localStorage.getItem("cart_api") || "[]");

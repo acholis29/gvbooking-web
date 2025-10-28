@@ -105,6 +105,7 @@ export default function DestinationClient({ slug }: Props) {
     setResourceInitial,
     setProfileInitial,
     coreInitial,
+    setRepresentative,
   } = useInitial();
 
   // host sesuai country
@@ -200,6 +201,8 @@ export default function DestinationClient({ slug }: Props) {
         setAgent(json.msg.resource.agent_id);
         setResourceInitial(json.msg.resource);
         setProfileInitial(json.msg.profile);
+        setRepresentative(json.msg.representative);
+        console.log(json.msg.representative);
         // proses hasil dari fetch kedua di sini
         localStorage.setItem("language", param.default_language); // simpan ke localStorage
         localStorage.setItem(
@@ -209,6 +212,10 @@ export default function DestinationClient({ slug }: Props) {
         localStorage.setItem(
           "profile_initial",
           JSON.stringify(json.msg.profile)
+        );
+        localStorage.setItem(
+          "representative",
+          JSON.stringify(json.msg.representative)
         );
         saveCartApi(json.msg.cart_item);
       } catch (err: any) {

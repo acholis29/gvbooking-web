@@ -74,6 +74,7 @@ export default function DetailDestination() {
     setResourceInitial,
     profileInitial,
     setProfileInitial,
+    setRepresentative,
   } = useInitial();
   // Profil
   const { profile } = useProfile();
@@ -327,6 +328,7 @@ export default function DetailDestination() {
         setAgent(json.msg.resource.agent_id);
         setResourceInitial(json.msg.resource);
         setProfileInitial(json.msg.profile);
+        setRepresentative(json.msg.representative);
         localStorage.setItem("language", param.default_language); // simpan ke localStorage
         localStorage.setItem(
           "resource_initial",
@@ -335,6 +337,10 @@ export default function DetailDestination() {
         localStorage.setItem(
           "profile_initial",
           JSON.stringify(json.msg.profile)
+        );
+        localStorage.setItem(
+          "representative",
+          JSON.stringify(json.msg.representative)
         );
         saveCartApi(json.msg.cart_item);
 

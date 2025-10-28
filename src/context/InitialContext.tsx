@@ -45,6 +45,21 @@ type profileType = {
   voucher: string;
 };
 
+type representativeType = {
+  representative_id: string;
+  representative_code: string;
+  representative_name: string;
+  biography: string;
+  email: string;
+  favorite_product: string;
+  join_date: string; // format: "YYYY-MM-DD"
+  language1: string;
+  language2: string;
+  mobile1: string;
+  mobile2: string;
+  photo: string;
+};
+
 // Tipe data untuk context
 type InitialContextType = {
   agent: string;
@@ -57,6 +72,8 @@ type InitialContextType = {
   setProfileInitial: (value: profileType[]) => void;
   coreInitial: coreType[];
   setCoreInitial: (value: coreType[]) => void;
+  representative: representativeType[];
+  setRepresentative: (value: representativeType[]) => void;
 };
 
 // Inisialisasi context
@@ -106,6 +123,23 @@ export const InitialProvider = ({ children }: { children: ReactNode }) => {
     },
   ]);
 
+  const [representative, setRepresentative] = useState<representativeType[]>([
+    {
+      representative_id: "",
+      representative_code: "",
+      representative_name: "",
+      biography: "",
+      email: "",
+      favorite_product: "",
+      join_date: "", // format: "YYYY-MM-DD"
+      language1: "",
+      language2: "",
+      mobile1: "",
+      mobile2: "",
+      photo: "",
+    },
+  ]);
+
   return (
     <InitialContext.Provider
       value={{
@@ -119,6 +153,8 @@ export const InitialProvider = ({ children }: { children: ReactNode }) => {
         setProfileInitial,
         coreInitial,
         setCoreInitial,
+        representative,
+        setRepresentative,
       }}
     >
       {children}
