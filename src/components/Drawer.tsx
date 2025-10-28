@@ -1,7 +1,7 @@
 "use client";
 // DrawerComponent.tsx
 // Hooks
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 // Library
@@ -66,6 +66,30 @@ export default function DrawerComponent({
   // Login with Google
   const { data: session, status } = useSession();
 
+  const drawerRef = useRef<HTMLDivElement>(null); // 🆕 ref untuk drawer
+  // 🆕 Tutup drawer jika klik di luar
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        drawerRef.current &&
+        !drawerRef.current.contains(event.target as Node)
+      ) {
+        const drawer = document.getElementById("drawer-navigation");
+        if (drawer) drawer.classList.add("translate-x-full");
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, onClose]);
+
   useEffect(() => {
     fetch("/api/currency", {
       cache: "no-store", // ⛔ jangan ambil dari cache
@@ -100,6 +124,7 @@ export default function DrawerComponent({
   return (
     <>
       <div
+        ref={drawerRef} // 🆕 ref di sini
         id="drawer-navigation"
         // className="fixed top-0 left-0 z-40 h-screen p-4 overflow-y-auto transition-transform -translate-x-full bg-white w-64 "
         className="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-64 "
