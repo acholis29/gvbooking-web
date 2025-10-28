@@ -237,7 +237,7 @@ export default function DetailDestination() {
   // Datepicker Local
   const disabledDates = [new Date("2025-10-28"), new Date("2025-10-29")];
   const [disabledDatesArr, setDisabledDateArr] = useState<Date[]>([]);
-  const [undisableDatesArr, setUndisabledDateArr] = useState<Date[]>([]);
+  const [enabledDatesArr, setEnabledDateArr] = useState<Date[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate);
   // open dropdown pax (adult, child, infant)
   const [openDropdownPax, setOpenDropdownPax] = useState(false);
@@ -271,10 +271,12 @@ export default function DetailDestination() {
   };
 
   useEffect(() => {
-    if (undisableDatesArr.length > 0) {
-      setSelectedDate(undisableDatesArr[0]);
+    if (enabledDatesArr.length > 0) {
+      setSelectedDate(enabledDatesArr[0]);
+    } else {
+      setSelectedDate(null);
     }
-  }, [undisableDatesArr]);
+  }, [enabledDatesArr]);
   // Hanlde First Load Age
   const prevCountRef = useRef(childCount);
   useEffect(() => {
@@ -688,7 +690,7 @@ export default function DetailDestination() {
 
     // Hapus duplikat dan ubah ke Date object
     const uniqueDates = [...new Set(allDates)].map((d) => new Date(d));
-    setUndisabledDateArr(uniqueDates);
+    setEnabledDateArr(uniqueDates);
     setIsLoadingAllotmentArr(false);
     return uniqueDates;
   }
@@ -1273,7 +1275,8 @@ export default function DetailDestination() {
                               }
                               setCheckAvaibility(false);
                             }}
-                            excludeDates={disabledDatesArr} //Disabled date
+                            // excludeDates={disabledDatesArr} //Disabled date
+                            includeDates={enabledDatesArr} //Disabled date
                             minDate={(() => {
                               const tomorrow = new Date();
                               tomorrow.setDate(tomorrow.getDate() + 1);
