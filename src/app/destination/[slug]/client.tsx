@@ -202,7 +202,6 @@ export default function DestinationClient({ slug }: Props) {
         setResourceInitial(json.msg.resource);
         setProfileInitial(json.msg.profile);
         setRepresentative(json.msg.representative);
-        console.log(json.msg.representative);
         // proses hasil dari fetch kedua di sini
         localStorage.setItem("language", param.default_language); // simpan ke localStorage
         localStorage.setItem(

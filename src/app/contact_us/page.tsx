@@ -3,16 +3,34 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { useInitial } from "@/context/InitialContext";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useModal } from "@/context/ModalContext";
+import ModalComponent from "@/components/ModalComponent";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { useSelectModal } from "@/context/SelectModalContext";
+
+type representativeType = {
+  representative_id: string;
+  representative_code: string;
+  representative_name: string;
+  biography: string;
+  email: string;
+  favorite_product: string;
+  join_date: string; // format: "YYYY-MM-DD"
+  language1: string;
+  language2: string;
+  mobile1: string;
+  mobile2: string;
+  photo: string;
+};
 
 export default function ContactUs() {
   // Initial Global (AgentId dan RepCode)
   const { representative, resourceInitial } = useInitial();
-  useEffect(() => {
-    if (representative.length > 0) {
-      console.log(representative);
-    }
-  }, [representative]);
+  const { selectModal, setSelectModal } = useSelectModal();
+  const [dataRepModal, setDataRepModal] = useState<representativeType>();
+  // Modal
+  const { openModal } = useModal();
 
   return (
     <div className="max-w-screen-xl mx-auto">
@@ -39,6 +57,11 @@ export default function ContactUs() {
                 <div
                   key={index}
                   className="flex items-center mt-3 border-b border-gray-200 pb-3"
+                  onClick={() => {
+                    setSelectModal(`RepresentativeModal`);
+                    setDataRepModal(item);
+                    openModal(); // ⬅️ Ini akan memunculkan modal
+                  }}
                 >
                   {/* Foto Kiri */}
                   <div className="w-14 h-14 rounded-full overflow-hidden border border-gray-300 mr-4 flex-shrink-0">
@@ -149,7 +172,65 @@ export default function ContactUs() {
             </button>
           </form>
         </div>
+
+        {selectModal == "RepresentativeModal" && (
+          <ModalComponent title="Representative" icon={faUser} size="lg">
+            <RepresentativeModal data={dataRepModal} />
+          </ModalComponent>
+        )}
       </section>
     </div>
   );
 }
+
+const RepresentativeModal = ({ data }: { data?: representativeType }) => {
+  const { closeModal } = useModal();
+  const { representative, resourceInitial } = useInitial();
+
+  if (!data) {
+    // kalau data belum ada, bisa tampil placeholder / loading state
+    return (
+      <div className="text-center text-gray-500 py-6">
+        No representative data available.
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="max-w-sm mx-auto">
+        <div className="mb-5 flex flex-col justify-center items-center">
+          <img
+            src={
+              data.photo && data.photo !== ""
+                ? resourceInitial.url_img_team + data.photo
+                : "/images/icon/android-chrome-192x192.png"
+            }
+            alt="Profile"
+            className="w-45 h-45 rounded-full object-cover border-4 border-gray-300"
+          />
+          <p className="font-bold text-gray-600 mt-2 text-md">
+            {data.representative_name}
+          </p>
+          <p className="text-gray-600 mt-2 text-sm">
+            {data.email ?? "No email"}
+          </p>
+          <p className="text-gray-600 mt-2 text-sm">
+            {data.mobile1 ?? "No phone"}
+          </p>
+          <p className="text-gray-600 mt-3 text-sm">
+            <span className="font-bold">Biografi</span>
+            <br />
+            {data.biography}
+          </p>
+          <p className="text-gray-600 mt-3 text-sm">
+            {" "}
+            <span className="font-bold">Recommended</span>
+            <br />
+            {data.favorite_product}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
