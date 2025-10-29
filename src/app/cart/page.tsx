@@ -381,6 +381,11 @@ export default function Cart() {
       return null;
     }
 
+    if (subtotalSummeryOrderLocal < 0) {
+      toast.error("Checkout is not allowed when the total is below zero!");
+      return null;
+    }
+
     // check auth google
     if (status != "authenticated") {
       setSelectModal("ProfilAsGuest");
@@ -982,7 +987,7 @@ export default function Cart() {
                       router.push("/");
                     }
                   }}
-                  className="text-white w-1/2 bg-gray-500 hover:bg-gray-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
+                  className="text-white w-1/2 bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
                 >
                   Browse More Tours
                 </button>
@@ -990,7 +995,12 @@ export default function Cart() {
                 <button
                   type="button"
                   onClick={validationAccountPayment}
-                  className={`text-white w-1/2 bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer`}
+                  disabled={subtotalSummeryOrderLocal < 0}
+                  className={`text-white w-1/2 ${
+                    subtotalSummeryOrderLocal < 0
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 cursor-pointer "
+                  }  font-bold rounded-lg text-sm px-5 py-2.5 `}
                 >
                   {isSubmitting && <Spinner />} Checkout{" "}
                   {status == "authenticated" ? "With Google" : ""}
@@ -1112,6 +1122,7 @@ export default function Cart() {
                 <button
                   type="button"
                   onClick={validationAccountPayment}
+                  disabled={subtotalSummeryOrderLocal < 0}
                   className="text-white w-1/2 bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
                 >
                   {isSubmitting && <Spinner />} Checkout{" "}
