@@ -655,6 +655,25 @@ export default function NavbarComponent() {
                             } else if (item == "Sign Out") {
                               signOut();
                               sessionStorage.setItem("oauth", "false");
+                              let DataProfile =
+                                localStorage.getItem("profileData");
+
+                              if (DataProfile != null) {
+                                const parsedData = JSON.parse(DataProfile);
+
+                                // 🔹 Ganti firstname dan lastname sesuai kebutuhan
+                                parsedData.firstname = "GUEST"; // Saat Sign Out
+                                parsedData.lastname = "";
+
+                                // 🔹 Simpan kembali ke localStorage
+                                localStorage.setItem(
+                                  "profileData",
+                                  JSON.stringify(parsedData)
+                                );
+
+                                // 🔹 Jika kamu pakai state React (misalnya setProfile)
+                                setProfile(parsedData);
+                              }
                             } else {
                               setSelectModal(`${item}`);
                               if (item == "Currency" && cartApiCount > 0) {
@@ -665,6 +684,7 @@ export default function NavbarComponent() {
                                   }
                                 );
                               } else {
+                                // Sign In
                                 openModal(); // ⬅️ Ini akan memunculkan modal
                               }
                             }
@@ -1125,7 +1145,7 @@ const SignInContent = () => {
             signIn("google");
             // sessionStorage.setItem("oauth", "true");
           }}
-          className="flex items-center justify-center w-full px-5 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
+          className="flex items-center justify-center w-full px-5 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 cursor-pointer"
         >
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
