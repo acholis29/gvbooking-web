@@ -2,8 +2,9 @@
 import Breadcrumb from "@/components/Breadcrumb";
 import { capitalizeWords } from "@/helper/helper";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function Legal() {
+function LegalContent() {
   const searchParams = useSearchParams();
   const menu = searchParams.get("m"); // Ambil nilai query ?menu=A
   return (
@@ -255,5 +256,13 @@ export default function Legal() {
         )}
       </section>
     </div>
+  );
+}
+
+export default function Legal() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LegalContent />
+    </Suspense>
   );
 }
