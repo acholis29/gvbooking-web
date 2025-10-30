@@ -1039,7 +1039,7 @@ export default function DetailDestination() {
                 id="availability-section"
               >
                 <p className="text-sm md:text-lg font-semibold">
-                  Select participants, date, and language
+                  Select participants, date, and pickup area
                 </p>
 
                 <div className="flex flex-col md:flex-row items-center justify-between mt-5">
