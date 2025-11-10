@@ -90,6 +90,8 @@ export default function DetailDestination() {
   const [checkAvaibility, setCheckAvaibility] = useState(false);
   // Pickup Area
   const [pickupAreaId, setPickupAreaId] = useState("");
+  // Refresh Key Untuk Load Berulang Card ProductSubNew
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // Form Validate
   const {
@@ -101,8 +103,18 @@ export default function DetailDestination() {
     formState: { errors },
   } = useForm();
   const onSubmit = (data: any) => {
-    setCheckAvaibility(true);
+    // setCheckAvaibility(true);
     setPickupAreaId(data.pickup_area);
+
+    // Toggle ulang pemanggilan
+    setCheckAvaibility(false);
+
+    // Force reload komponen
+    setRefreshKey((prev) => prev + 1);
+
+    setTimeout(() => {
+      setCheckAvaibility(true);
+    }, 50);
   };
 
   // Currency
@@ -1398,7 +1410,8 @@ export default function DetailDestination() {
                   } else {
                     return (
                       <ProductSubNew
-                        key={index}
+                        // key={index}
+                        key={`${index}-${refreshKey}`}
                         dataSub={item}
                         pickupArea={labelSelectPickup}
                         pickupArea_id={pickupAreaId}
