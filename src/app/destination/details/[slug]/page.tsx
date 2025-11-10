@@ -1280,6 +1280,8 @@ export default function DetailDestination() {
                                 localStorage.setItem("booking_date", formatted);
                               }
                               setCheckAvaibility(false);
+                              // Langsung Tutup Calendar
+                              setOpenDateAvaibility(false);
                             }}
                             // excludeDates={disabledDatesArr} //Disabled date
                             includeDates={enabledDatesArr} //Disabled date
