@@ -118,6 +118,7 @@ const CardAccordion: React.FC<Props> = ({
   const { saveCartApi } = useCartApi();
   const [isRemoving, setIsRemoving] = useState(false);
   const [isRedirect, setIsRedirect] = useState(false);
+  const [useDefaultLocation, setUseDefaultLocation] = useState(true);
   const router = useRouter();
   // Inital Global
   const { agent, repCode, coreInitial, resourceInitial } = useInitial();
@@ -588,6 +589,12 @@ const CardAccordion: React.FC<Props> = ({
       toast.error("Please Wait");
       return null;
     }
+
+    if (locationId == "") {
+      toast.error("Pickup area is required");
+      return null;
+    }
+
     setIsLoadingSave(true);
     let objChild = {
       count: childCount,
@@ -675,7 +682,7 @@ const CardAccordion: React.FC<Props> = ({
         id_contract: contractId ?? "", // Examp : "543662F5-0BC9-4198-8076-54440FBDDF38"
         id_market: marketId ?? "", // Examp : "4AD24FF1-2F16-47DB-BBC8-D2E5395773EB"
         id_supplier: supplierId ?? "", // Examp : "155D1088-BC9C-D85A-E9BC-96778772AC0F"
-        id_pickup_area: item.location_id ?? "", // Examp pickup id : "12EBA6A1-533A-4875-B0A7-CA6362370FF3"
+        id_pickup_area: locationId ?? "", // Examp pickup id : "12EBA6A1-533A-4875-B0A7-CA6362370FF3"
         pickup_point: item.location_detail ?? "", //Exam : Lobby
         pickup_date: selectedDate.toISOString().split("T")[0] ?? "", // 2025-08-01 ini sub exc
         pickup_time: locationPickupTime ?? "", //05:45
@@ -705,6 +712,7 @@ const CardAccordion: React.FC<Props> = ({
           saveCartApi(json.msg);
           removeItemCart();
           setIsEdit(false);
+          setUseDefaultLocation(true);
           toast.success("Success add to cart");
         }
       } catch (err: any) {
@@ -1038,9 +1046,16 @@ const CardAccordion: React.FC<Props> = ({
                           id_excursion={item.excursion_id ?? ""}
                           placeholder="Find Pickup Area ..."
                           value={field.value}
-                          defaultLabel={item.location_name} // opsional hanya untuk edit atau update
-                          defaultValue={item.location_id} // opsional hanya untuk edit atau update
+                          // defaultLabel={item.location_name} // opsional hanya untuk edit atau update
+                          // defaultValue={item.location_id} // opsional hanya untuk edit atau update
+                          defaultLabel={
+                            useDefaultLocation ? item.location_name : undefined
+                          }
+                          defaultValue={
+                            useDefaultLocation ? item.location_id : undefined
+                          }
                           onChange={(val) => {
+                            setUseDefaultLocation(false); // stop memakai default setelah user klik sesuatu
                             field.onChange(val?.value);
                             setLocaltionId(val?.value ?? "");
                             setLocationPickupTime(val?.data.time_pickup_from);
