@@ -40,6 +40,7 @@ import DatePicker from "react-datepicker";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useLanguage } from "@/context/LanguageContext";
 import SelectCustomAsynNew from "./SelectCustomAsynNew";
+import Link from "next/link";
 
 type DetailPax = {
   charge_type: string;
@@ -116,6 +117,7 @@ const CardAccordion: React.FC<Props> = ({
   const [isOpenAccordion, setAccordion] = useState(false);
   const { saveCartApi } = useCartApi();
   const [isRemoving, setIsRemoving] = useState(false);
+  const [isRedirect, setIsRedirect] = useState(false);
   const router = useRouter();
   // Inital Global
   const { agent, repCode, coreInitial, resourceInitial } = useInitial();
@@ -305,6 +307,35 @@ const CardAccordion: React.FC<Props> = ({
       // Redirect Ke Detail Product Sambil Bawa trancation_id lama untuk dihapus dari cart jika berhasil
       router.push(
         `/destination/details/${json[0].Country}?id=${json[0].idx_comp}&country=${json[0].Country}&state=${json[0].State}&exc=${json[0].Idx_excursion}&transaction_id=${item.transaction_id}`
+      );
+    } else {
+      toast.error("Sorry, there is someting wrong!");
+    }
+  };
+
+  //Handle Redirect
+  const handleRedirect = async () => {
+    //
+    if (isRedirect) {
+      toast("Please wait!...", {
+        icon: "⏳", // hourglass
+      });
+      return; // cegah klik ganda
+    }
+    // Ambil idx_excursion
+    // Cari Country dan Statenya
+    const res = await fetch(
+      `/api/excursion/attr/search-excursion?keyword=${item.excursion_id}`,
+      {
+        cache: "no-store", // ⛔ jangan ambil dari cache
+      }
+    );
+
+    const json = await res.json();
+    if (json.length > 0) {
+      // Redirect Ke Detail Product Sambil Bawa trancation_id lama untuk dihapus dari cart jika berhasil
+      router.push(
+        `/destination/details/${json[0].Country}?id=${json[0].idx_comp}&country=${json[0].Country}&state=${json[0].State}&exc=${json[0].Idx_excursion}`
       );
     } else {
       toast.error("Sorry, there is someting wrong!");
@@ -735,9 +766,20 @@ const CardAccordion: React.FC<Props> = ({
             />
           </div>
           <div className="flex flex-col justify-between px-3 pt-2 leading-normal">
-            <h5 className="mb-2 text-md md:text-xl pr-7 font-bold tracking-tight text-gray-900 flex-wrap cursor-pointer">
+            {/* <Link
+              href={`/destination/details/${item.Country}?id=${item.company_id}&country=${item.Country}&state=${item.State}&exc=${item.excursion_id}`}
+            > */}
+            <h5
+              className="mb-2 text-md md:text-xl pr-7 font-bold tracking-tight text-gray-900 flex-wrap cursor-pointer hover:underline"
+              onClick={() => {
+                setIsRedirect(true);
+                handleRedirect();
+                setIsRedirect(false);
+              }}
+            >
               {item.excursion_name ?? "-"}
             </h5>
+            {/* </Link> */}
             <div className="flex flex-row"></div>
 
             {!isEdit && (
