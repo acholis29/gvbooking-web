@@ -73,6 +73,7 @@ export default function DetailDestination() {
   const [defaultCancelText, setDefaultCanceText] = useState("");
   const [labelSelectPickup, setLabelSelectPickup] = useState<string>("");
   const [pickupTimeFrom, setPickupTimeFrom] = useState<string>("");
+  const [disabledCheckAvailable, setDisabledCheckAvailable] = useState(false);
 
   type ChargeTypeProps = {
     name: string;
@@ -1314,6 +1315,15 @@ export default function DetailDestination() {
                               setLabelSelectPickup(val?.label ?? "");
                               setPickupTimeFrom(val?.data.time_pickup_from);
                               setCheckAvaibility(false);
+
+                              // Jika value == N/A atau Pickup Unvailable
+                              // Maka Disable Button Check Available
+                              if (val?.value == "NA") {
+                                // Disable button check available
+                                setDisabledCheckAvailable(true);
+                              } else {
+                                setDisabledCheckAvailable(false);
+                              }
                             }}
                             onBlur={field.onBlur}
                             name={field.name}
@@ -1329,7 +1339,13 @@ export default function DetailDestination() {
                     {dataChargeType.length > 0 && !isLoadingAllotmentArr ? (
                       <button
                         type="submit"
-                        className="w-full md:w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl mt-4 md:mt-0 px-4 py-2 cursor-pointer"
+                        disabled={disabledCheckAvailable}
+                        className={`w-full md:w-60 text-white font-bold rounded-2xl mt-4 md:mt-0 px-4 py-2
+                      ${
+                        disabledCheckAvailable
+                          ? "bg-gray-400 cursor-not-allowed opacity-60"
+                          : "bg-red-600 hover:bg-red-700 cursor-pointer"
+                      }`}
                       >
                         Check Availability
                       </button>
