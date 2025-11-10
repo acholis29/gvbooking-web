@@ -89,3 +89,23 @@ body {
 .swiper-pagination-bullet-active {
   background-color: white !important;
 }
+
+/* Input Country Code Modal Number Phone */
+.PhoneInputInput {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.PhoneInputInput:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.PhoneInput {
+  /* border: none !important; */
+  outline: none !important;
+  box-shadow: none !important;
+  background: white; /* opsional */
+}

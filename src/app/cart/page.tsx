@@ -18,6 +18,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
+import type { Country } from "react-phone-number-input";
+
 // Form Libraries
 import { useForm, Controller, useFieldArray, Form } from "react-hook-form";
 // component
@@ -1372,6 +1376,57 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
   const { profileInitial, setProfileInitial, resourceInitial, coreInitial } =
     useInitial();
 
+  const [countryCode, setCountryCode] = useState("");
+  const [country, setCountry] = useState("");
+  const [countryCodeUser, setCountryCodeUser] = useState("ID");
+
+  // Geolocation
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setLocation({
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          });
+        },
+        (err) => {
+          setError(err.message);
+        }
+      );
+    } else {
+      setError("Geolocation tidak didukung di browser ini.");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!location) return;
+
+    const fetchCountry = async () => {
+      try {
+        let country_code = await checkCountry(location.lat, location.lng);
+        setCountryCodeUser(country_code.toUpperCase());
+      } catch (err) {
+        console.error("Error ambil negara:", err);
+      }
+    };
+
+    fetchCountry();
+  }, [location]);
+
+  // Function Get Country OpenStreetmap
+  async function checkCountry(lat: number, lng: number) {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+    );
+    const data = await res.json();
+    return data.address.country_code; // contoh: "Indonesia"
+  }
+
   // function Update Email Local Modal
   async function updateEmail(email: string) {
     try {
@@ -1439,6 +1494,7 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
   const {
     register,
     handleSubmit,
+    control, // ✅ tambahkan ini
     formState: { errors },
   } = useForm<FormData>();
 
@@ -1510,14 +1566,6 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
             </label>
             {/* <input
               {...register("phone")}
-              type="number"
-              id="phone"
-              defaultValue={profile.temp == "true" ? "" : profile.phone}
-              className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              placeholder="Phone Number"
-            /> */}
-            <input
-              {...register("phone")}
               type="text"
               inputMode="numeric"
               maxLength={15}
@@ -1529,6 +1577,52 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
               defaultValue={profile.temp == "true" ? "" : profile.phone}
               className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               placeholder="Phone Number"
+            /> */}
+            {/* <PhoneInput
+              {...register("phone")}
+              placeholder="Enter phone number"
+              className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5"
+              value={profile.temp == "true" ? "" : profile.phone}
+              onChange={(value) => {
+                console.log(value); // contoh +62812...
+                console.log(value?.match(/^\+\d+/)?.[0] ?? ""); // ambil +62
+              }}
+              onCountryChange={(c) => {
+                console.log(c); // contoh "ID"
+              }}
+            /> */}
+            <Controller
+              name="phone"
+              control={control}
+              defaultValue={profile.temp == "true" ? "" : profile.phone}
+              rules={{ required: "Phone number is required" }}
+              render={({ field, fieldState }) => (
+                <>
+                  <PhoneInput
+                    {...field}
+                    defaultCountry={countryCodeUser as Country}
+                    placeholder="Enter phone number"
+                    value={field.value}
+                    onChange={(value) => {
+                      field.onChange(value);
+
+                      // Ambil code negara (+62)
+                      const cc = value?.match(/^\+\d+/)?.[0] ?? "";
+                      setCountryCode(cc);
+
+                      // Simpan country code juga kalau diperlukan
+                    }}
+                    onCountryChange={(c) => {
+                      setCountry(c ?? ""); // contoh "ID"
+                    }}
+                    className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5"
+                  />
+
+                  {fieldState.error && (
+                    <p className="text-red-500">{fieldState.error.message}</p>
+                  )}
+                </>
+              )}
             />
           </div>
           <div className="mb-4">
