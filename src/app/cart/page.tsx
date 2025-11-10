@@ -1508,9 +1508,23 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
             >
               Phone Number
             </label>
-            <input
+            {/* <input
               {...register("phone")}
               type="number"
+              id="phone"
+              defaultValue={profile.temp == "true" ? "" : profile.phone}
+              className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="Phone Number"
+            /> */}
+            <input
+              {...register("phone")}
+              type="text"
+              inputMode="numeric"
+              maxLength={15}
+              onInput={(e) => {
+                const input = e.target as HTMLInputElement;
+                input.value = input.value.replace(/\D/g, "");
+              }}
               id="phone"
               defaultValue={profile.temp == "true" ? "" : profile.phone}
               className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
