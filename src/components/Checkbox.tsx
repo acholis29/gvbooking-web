@@ -22,7 +22,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
       <input
         id={`checkbox-${title}`}
         type="checkbox"
-        // checked={checked}
+        checked={checked}
         onChange={handleChange}
         className="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-red-500 focus:ring-2"
       />

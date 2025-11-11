@@ -13,8 +13,10 @@ import Radio from "@/components/Radio";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheck,
+  faClose,
   faFilter,
   faSliders,
+  faTrash,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 // Helper
@@ -465,6 +467,9 @@ export default function ListClient() {
                       key={item.holiday_type}
                       title={item.holiday_type}
                       onChange={handleCheckboxChange}
+                      checked={selectedTypesHolidayArrDesk.includes(
+                        item.holiday_type_id
+                      )} // ✅ penting
                       value={item.holiday_type_id}
                     />
                   ))}
@@ -472,10 +477,18 @@ export default function ListClient() {
               )}
             </div>
           </div>
+          <p
+            className="text-xs text-gray-500 hover:text-red-800 cursor-pointer italic text-right"
+            onClick={() => {
+              setSelectedTypesHolidayArrDesk([]); // ✅ kosongkan semua checkbox
+            }}
+          >
+            clear or reset
+          </p>
           <button
             type="button"
             onClick={handleApply}
-            className="mt-4 text-white bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 me-2 mb-2  focus:outline-none w-full"
+            className="mt-4 text-white bg-blue-800 hover:bg-blue-900 focus:ring-4 cursor-pointer focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 me-2 mb-2  focus:outline-none w-full"
           >
             <FontAwesomeIcon
               icon={faFilter}
