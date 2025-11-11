@@ -72,8 +72,10 @@ export default function DetailDestination() {
   const [isMobile, setIsMobile] = useState(false);
   const [defaultCancelText, setDefaultCanceText] = useState("");
   const [labelSelectPickup, setLabelSelectPickup] = useState<string>("");
+  const [valueSelectPickup, setValueSelectPickup] = useState<string>("");
   const [pickupTimeFrom, setPickupTimeFrom] = useState<string>("");
   const [disabledCheckAvailable, setDisabledCheckAvailable] = useState(false);
+  const [useLastLocation, setUseLastLocation] = useState(true);
 
   type ChargeTypeProps = {
     name: string;
@@ -100,9 +102,22 @@ export default function DetailDestination() {
     setValue,
     getValues,
     control,
+    reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      pickup_area: valueSelectPickup,
+      // contoh default value
+    },
+  });
+
   const onSubmit = (data: any) => {
+    let last_location = {
+      value: data.pickup_area,
+      label: labelSelectPickup,
+    };
+    // save last location ke localstorage
+    localStorage.setItem("last_location", JSON.stringify(last_location));
     // setCheckAvaibility(true);
     setPickupAreaId(data.pickup_area);
 
@@ -292,6 +307,56 @@ export default function DetailDestination() {
     }
   }, [enabledDatesArr]);
 
+  // Handle initial / default last location
+  useEffect(() => {
+    const lastLocation = JSON.parse(
+      localStorage.getItem("last_location") || "{}"
+    );
+    if (lastLocation.label && lastLocation.value) {
+      // Check apakah ada last location di api /v2_product_pickup_list
+      const CheckLocation = async () => {
+        const formBody = new URLSearchParams({
+          shared_key: idx_comp ?? "",
+          xml: "false",
+          id_excursion: idx_excursion ?? "",
+          keyword: lastLocation.label,
+        });
+
+        try {
+          const res = await fetch(
+            `${API_HOSTS.host1}/excursion.asmx/v2_product_pickup_list`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: formBody.toString(),
+            }
+          );
+
+          const json = await res.json();
+          const matched = json.msg.find(
+            (item: any) => item.location_id === lastLocation.value
+          );
+
+          if (matched) {
+            // Jika ada set value dan label jika tidak
+            setLabelSelectPickup(lastLocation.label);
+            setValueSelectPickup(lastLocation.value);
+            reset({
+              pickup_area: lastLocation.value,
+            });
+          } else {
+            // Jika tidak sudah ada value default ""
+          }
+        } catch (err: any) {
+          console.error(err);
+        }
+      };
+
+      CheckLocation();
+    }
+  }, []);
   // Handle Change Currency And Close / Hide Sub excursion
   useEffect(() => {
     setCheckAvaibility(false);
@@ -1328,7 +1393,25 @@ export default function DetailDestination() {
                             id_excursion={idx_excursion ?? ""}
                             placeholder="Find Pickup Area ..."
                             value={field.value}
+                            // defaultLabel={"THE SAMAYA SEMINYAK - BALI"}
+                            // defaultValue={
+                            //   "0075E95D-FFD0-4732-AF25-AF27DF697DE9"
+                            // }
+                            defaultLabel={
+                              useLastLocation ? labelSelectPickup : undefined
+                            }
+                            defaultValue={
+                              useLastLocation ? valueSelectPickup : undefined
+                            }
                             onChange={(val) => {
+                              if (!val) {
+                                // CLEAR
+                                setUseLastLocation(false);
+                                field.onChange(null);
+                                setLabelSelectPickup("");
+                                return;
+                              }
+
                               field.onChange(val?.value);
                               setLabelSelectPickup(val?.label ?? "");
                               setPickupTimeFrom(val?.data.time_pickup_from);
