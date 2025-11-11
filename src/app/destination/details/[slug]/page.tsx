@@ -291,6 +291,12 @@ export default function DetailDestination() {
       setSelectedDate(null);
     }
   }, [enabledDatesArr]);
+
+  // Handle Change Currency And Close / Hide Sub excursion
+  useEffect(() => {
+    setCheckAvaibility(false);
+  }, [currency]);
+
   // Hanlde First Load Age
   const prevCountRef = useRef(childCount);
   useEffect(() => {
