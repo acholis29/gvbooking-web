@@ -455,11 +455,11 @@ export default function ListClient() {
                 </>
               ) : (
                 <>
-                  <Checkbox
+                  {/* <Checkbox
                     title={"ALL TYPE"}
                     onChange={handleCheckboxChange}
                     value={""}
-                  />
+                  /> */}
                   {masterHolidayApi.map((item) => (
                     <Checkbox
                       key={item.holiday_type}
@@ -537,7 +537,7 @@ export default function ListClient() {
               </div>
 
               {/* Button All Type */}
-              <div
+              {/* <div
                 key={`mobileHoliday-all-type`}
                 className={`w-auto h-10  border-gray-500  ${
                   "ALL TYPE" == SelectBadgeFilterMobile
@@ -558,14 +558,7 @@ export default function ListClient() {
                 <p className="text-sm text-gray-500">
                   {capitalizeWords("ALL TYPE")}
                 </p>
-
-                {/* {"ALL TYPE" == SelectBadgeFilterMobile && (
-                  <FontAwesomeIcon
-                    icon={faCheck}
-                    className="w-5 h-5 text-red-600"
-                  />
-                )} */}
-              </div>
+              </div> */}
 
               {/* Button Master Holiday Type */}
               {masterHolidayApi.map((item) => (
