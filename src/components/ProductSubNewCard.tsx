@@ -446,7 +446,43 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
         {/* Badge */}
         <div className="flex flex-col flex-2/3">
           <h1 className="text-sm font-bold">
-            Surcharge {isLoadingSurCharge && <Spinner />}
+            Mandatory Surcharge {isLoadingSurCharge && <Spinner />}
+          </h1>
+          <div className="flex flex-col md:flex-row gap-2 flex-wrap">
+            {/* Table Surgery && Data Surcharge */}
+            {isLoadingSurCharge && (
+              <div
+                role="status"
+                className="max-w-sm animate-pulse flex flex-col md:flex-row md:gap-2 mt-2"
+              >
+                <div className="h-6 bg-gray-200 rounded-md  w-60 mb-3 md:mb-4"></div>
+                <div className="h-6 bg-gray-200 rounded-md  w-60 mb-3 md:mb-4"></div>
+                <div className="h-6 bg-gray-200 rounded-md  w-60 mb-3 md:mb-4"></div>
+
+                <span className="sr-only">Loading...</span>
+              </div>
+            )}
+            {dataSurcharge.length > 0 ? (
+              dataSurcharge.map((items, index) => {
+                if (items.mandatory.toLocaleLowerCase() == "true") {
+                  return (
+                    <p
+                      key={index}
+                      className="text-xs text-red-900 font-semibold"
+                    >
+                      {" "}
+                      {items.surcharge_name} ~ {items.currency} 
+                      {items.price_in_format}
+                    </p>
+                  );
+                }
+              })
+            ) : (
+              <p className="text-xs">-</p>
+            )}
+          </div>
+          <h1 className="text-sm font-bold">
+            Add Surcharge {isLoadingSurCharge && <Spinner />}
           </h1>
           <div className="flex flex-col md:flex-row gap-2 flex-wrap">
             {/* Table Surgery && Data Surcharge */}
@@ -469,36 +505,37 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
                   (item) => item.surcharge_id === items.surcharge_id
                 );
 
-                return (
-                  <span
-                    key={index}
-                    className={`bg-gray-300 text-gray-800 text-xs font-semibold me-2 px-2.5 py-1 rounded-md ${
-                      items.mandatory.toLocaleLowerCase() == "true"
-                        ? "border border-red-700"
-                        : "cursor-pointer"
-                    } ${isExist ? "border border-red-700" : ""}`}
-                    onClick={() => {
-                      if (items.mandatory.toLocaleLowerCase() != "true") {
-                        handleBadgeSurchargeChange(items);
-                      }
-                    }}
-                    title={`${
-                      items.mandatory.toLocaleLowerCase() == "true"
-                        ? "Included"
-                        : `${isExist ? "Click to remove" : "Click to include"}`
-                    } `}
-                  >
-                    {items.surcharge_name} ~ {items.currency} 
-                    {items.price_in_format}
-                  </span>
-                );
+                if (items.mandatory.toLocaleLowerCase() == "false") {
+                  return (
+                    <span
+                      key={index}
+                      className={`bg-gray-300 hover:bg-amber-600 text-gray-800 text-xs font-semibold me-2 px-2.5 py-1 rounded-md ${
+                        items.mandatory.toLocaleLowerCase() == "true"
+                          ? "border border-red-700"
+                          : "cursor-pointer"
+                      } ${isExist ? "border border-red-700" : ""}`}
+                      onClick={() => {
+                        if (items.mandatory.toLocaleLowerCase() != "true") {
+                          handleBadgeSurchargeChange(items);
+                        }
+                      }}
+                      title={`${
+                        items.mandatory.toLocaleLowerCase() == "true"
+                          ? "Included"
+                          : `${
+                              isExist ? "Click to remove" : "Click to include"
+                            }`
+                      } `}
+                    >
+                      {items.surcharge_name} ~ {items.currency} 
+                      {items.price_in_format}
+                    </span>
+                  );
+                }
               })
             ) : (
               <p className="text-xs">-</p>
             )}
-            {/* <span className="bg-gray-300 text-gray-800 text-xs font-semibold me-2 px-2.5 py-1 rounded-md border border-red-700">
-              GUIDE SURCHARGE FOREIGN ~ EUR 10.00
-            </span> */}
           </div>
         </div>
       </div>
