@@ -29,7 +29,7 @@ export default function ModalBottomSheet({ isOpen, onClose, children }: Props) {
 
       {/* Bottom Sheet */}
       <div
-        className="relative w-full h-70 max-w-md bg-white rounded-t-2xl p-4 transition-transform duration-300 transform translate-y-0"
+        className="relative w-full h-50 max-w-md bg-white rounded-t-2xl p-4 transition-transform duration-300 transform translate-y-0"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="h-1 w-12 bg-gray-300 rounded-full mx-auto mb-4" />

@@ -781,7 +781,7 @@ export default function ListClient() {
                     htmlFor="default-radio-1"
                     className="ms-2 text-sm font-medium text-gray-900 "
                   >
-                    Price Asc
+                    Price Ascending
                   </label>
                 </div>
                 <div className="flex items-center">
@@ -798,16 +798,16 @@ export default function ListClient() {
                     htmlFor="default-radio-2"
                     className="ms-2 text-sm font-medium text-gray-900 "
                   >
-                    Price Desc
+                    Price Descending
                   </label>
                 </div>
 
-                <button
+                {/* <button
                   onClick={() => setOpenBottomSheet(false)}
                   className="mt-4 bg-red-600 text-white px-4 py-2 rounded"
                 >
                   Tutup
-                </button>
+                </button> */}
               </div>
             </ModalBottomSheet>
           </div>
