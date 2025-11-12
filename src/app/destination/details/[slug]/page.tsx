@@ -115,6 +115,7 @@ export default function DetailDestination() {
     let last_location = {
       value: data.pickup_area,
       label: labelSelectPickup,
+      pickup_time_from: pickupTimeFrom,
     };
     // save last location ke localstorage
     localStorage.setItem("last_location", JSON.stringify(last_location));
@@ -343,6 +344,7 @@ export default function DetailDestination() {
             // Jika ada set value dan label jika tidak
             setLabelSelectPickup(lastLocation.label);
             setValueSelectPickup(lastLocation.value);
+            setPickupTimeFrom(lastLocation.pickup_time_from);
             reset({
               pickup_area: lastLocation.value,
             });
