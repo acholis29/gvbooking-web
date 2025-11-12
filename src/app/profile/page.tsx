@@ -2,7 +2,7 @@
 import Breadcrumb from "@/components/Breadcrumb";
 import { parse } from "path";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 // Context Global
@@ -12,6 +12,9 @@ import { useCartApi } from "@/context/CartApiContext";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { API_HOSTS } from "@/lib/apihost";
 import { useInitial } from "@/context/InitialContext";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
+import type { Country } from "react-phone-number-input";
 
 export default function Profile() {
   // Login with Google
@@ -20,6 +23,9 @@ export default function Profile() {
   const router = useRouter();
   // Context global
   const { profileInitial, resourceInitial, coreInitial } = useInitial();
+  const [countryCodeUser, setCountryCodeUser] = useState("ID");
+  const [countryCode, setCountryCode] = useState("");
+  const [country, setCountry] = useState("");
 
   type FormData = {
     firstname: string;
@@ -63,6 +69,7 @@ export default function Profile() {
   const {
     register,
     handleSubmit,
+    control, // ✅ tambahkan ini
     formState: { errors },
   } = useForm<FormData>();
 
@@ -173,7 +180,7 @@ export default function Profile() {
                   >
                     Mobile Phone
                   </label>
-                  <input
+                  {/* <input
                     {...register("phone")}
                     type="number"
                     id="phone"
@@ -184,6 +191,41 @@ export default function Profile() {
                     }
                     className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     placeholder="phone number (optional)"
+                  /> */}
+                  <Controller
+                    name="phone"
+                    control={control}
+                    defaultValue={profile.temp == "true" ? "" : profile.phone}
+                    rules={{ required: "Phone number is required" }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <PhoneInput
+                          {...field}
+                          defaultCountry={countryCodeUser as Country}
+                          placeholder="Enter phone number"
+                          value={field.value}
+                          onChange={(value) => {
+                            field.onChange(value);
+
+                            // Ambil code negara (+62)
+                            const cc = value?.match(/^\+\d+/)?.[0] ?? "";
+                            setCountryCode(cc);
+
+                            // Simpan country code juga kalau diperlukan
+                          }}
+                          onCountryChange={(c) => {
+                            setCountry(c ?? ""); // contoh "ID"
+                          }}
+                          className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5"
+                        />
+
+                        {fieldState.error && (
+                          <p className="text-red-500">
+                            {fieldState.error.message}
+                          </p>
+                        )}
+                      </>
+                    )}
                   />
                 </div>
                 <div className="mb-5 w-full">
