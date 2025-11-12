@@ -141,6 +141,10 @@ const CardAccordion: React.FC<Props> = ({
 
   const [inputItem, setInputItem] = useState<string>("");
   const [inputSurcharge, setInputSurcharge] = useState<string>("");
+  const [enabledDatesArr, setEnabledDateArr] = useState<Date[]>([]);
+  const [isLoadingAllotmentArr, setIsLoadingAllotmentArr] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // set adult, child, infant
   const [adultCount, setAdultCount] = useState(1);
@@ -194,6 +198,52 @@ const CardAccordion: React.FC<Props> = ({
     markup_type_PV: string;
     markup_type_HJ_HB: string;
     category_MA: string;
+  };
+
+  type ChargeType = {
+    name: string; // "Adult", "Child", "Infant"
+    code: string; // "A", "C", "I"
+    min_pax: string;
+    max_pax: string;
+    age_from: string;
+    age_to: string;
+  };
+
+  type Allotment = {
+    date: string;
+    date_detail: {
+      year: string;
+      month: string;
+      month_name: string;
+      day: string;
+      day_name: string;
+    };
+    balance: string;
+    type: string; // "PP"
+    info: string; // e.g. "Availability: 99 Pax"
+    currency: string; // "IDR"
+    price_in_raw: string; // "1936000"
+    price_in_format: string; // "1,936,000.00"
+    status: string; // "1"
+  };
+
+  type AllotmentMsg = {
+    excursion_id: string;
+    sub_excursion_id: string;
+    allotment_list: Allotment[];
+    charge_type: ChargeType[];
+  };
+
+  type AllotmentResponse = {
+    error: string;
+    msg: AllotmentMsg[];
+    len: {
+      current_row: string;
+      total_row: string;
+      total_page: string;
+      time: string;
+    };
+    id: string;
   };
 
   // Allotment untuk lihat jenis pax Adult, Child, Infant
@@ -724,6 +774,62 @@ const CardAccordion: React.FC<Props> = ({
     PostDataCart();
   }
 
+  function joinDateAllotmentForUndisabled(data: AllotmentResponse) {
+    setIsLoadingAllotmentArr(true);
+    // Fungsi untuk mengabungkan semua allotment date yang false
+    const allDates = data.msg.flatMap((item) =>
+      item.allotment_list.filter((a) => a.status === "1").map((a) => a.date)
+    );
+
+    // Hapus duplikat dan ubah ke Date object
+    const uniqueDates = [...new Set(allDates)].map((d) => new Date(d));
+    setEnabledDateArr(uniqueDates);
+    setIsLoadingAllotmentArr(false);
+    return uniqueDates;
+  }
+
+  useEffect(() => {
+    const fetchDataAllotment = async () => {
+      setIsLoading(true); // mulai loading
+      const formBody = new URLSearchParams({
+        shared_key: item.company_id || "", // ← ambil dari props // examp : "4D340942-88D3-44DD-A52C-EAF00EACADE8"
+        xml: "false",
+        id_excursion: item.excursion_id || "", // Examp : "03208A45-4A41-4E1B-A597-20525C090E52"
+        id_excursion_sub: item.excursion_sub_id, // Examp : "03208A45-4A41-4E1B-A597-20525C090E52,03208A45-4A41-4E1B-A597-20525C090E52 "
+        tour_date: item.pickup_date, //2025-07-07
+        code_of_currency: item.currency, //IDR, EUR, USD
+        promo_code: "R-BC",
+      });
+
+      try {
+        const res = await fetch(
+          `${API_HOSTS.host1}/excursion.asmx/v2_product_allotment_list_batch`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formBody.toString(),
+          }
+        );
+
+        const contentType = res.headers.get("content-type") || "";
+
+        if (contentType.includes("application/json")) {
+          const json = await res.json();
+          joinDateAllotmentForUndisabled(json);
+        }
+      } catch (err: any) {
+        setError(err.message || "Terjadi kesalahan");
+        console.error("Fetch error:", err);
+      } finally {
+        setIsLoading(false); // selesai loading
+      }
+    };
+
+    fetchDataAllotment();
+  }, []);
+
   useEffect(() => {
     if (total == 0 && priceChargeType.length == 0) return;
     handleSubmitToCart();
@@ -841,7 +947,9 @@ const CardAccordion: React.FC<Props> = ({
                           onChange={(date) => {
                             if (!date) return; // stop kalau date null
                             setSelectedDate(date);
+                            setOpenDateEdit(!openDateEdit);
                           }}
+                          includeDates={enabledDatesArr} //Disabled date
                           minDate={(() => {
                             const tomorrow = new Date();
                             tomorrow.setDate(tomorrow.getDate() + 1);
