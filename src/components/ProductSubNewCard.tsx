@@ -445,9 +445,20 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
         </div>
         {/* Badge */}
         <div className="flex flex-col flex-2/3">
-          <h1 className="text-sm font-bold">
-            Mandatory Surcharge {isLoadingSurCharge && <Spinner />}
-          </h1>
+          {dataSurcharge.length > 0 &&
+            (() => {
+              const mandatoryItem = dataSurcharge.find(
+                (item) => item.mandatory.toLocaleLowerCase() == "true"
+              );
+              if (mandatoryItem) {
+                return (
+                  <h1 className="text-sm font-bold">
+                    Mandatory Surcharge {isLoadingSurCharge && <Spinner />}
+                  </h1>
+                );
+              }
+              return null;
+            })()}
           <div className="flex flex-col md:flex-row gap-2 flex-wrap">
             {/* Table Surgery && Data Surcharge */}
             {isLoadingSurCharge && (
@@ -478,12 +489,24 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
                 }
               })
             ) : (
-              <p className="text-xs">-</p>
+              <p className="text-xs"></p>
             )}
           </div>
-          <h1 className="text-sm font-bold">
-            Add Surcharge {isLoadingSurCharge && <Spinner />}
-          </h1>
+          {dataSurcharge.length > 0 &&
+            (() => {
+              const mandatoryItem = dataSurcharge.find(
+                (item) => item.mandatory.toLocaleLowerCase() == "false"
+              );
+              if (mandatoryItem) {
+                return (
+                  <h1 className="text-sm font-bold">
+                    Add Surcharge {isLoadingSurCharge && <Spinner />}
+                  </h1>
+                );
+              }
+              return null;
+            })()}
+
           <div className="flex flex-col md:flex-row gap-2 flex-wrap">
             {/* Table Surgery && Data Surcharge */}
             {isLoadingSurCharge && (
@@ -534,7 +557,7 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
                 }
               })
             ) : (
-              <p className="text-xs">-</p>
+              <p className="text-xs"></p>
             )}
           </div>
         </div>
@@ -611,9 +634,11 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
             {!isLoadingChargeType && (
               <>
                 {" "}
-                <p className="text-xs">
-                  Surcharge x {currency} {totalSurcharge}
-                </p>
+                {totalSurcharge > 0 && (
+                  <p className="text-xs">
+                    Surcharge x {currency} {totalSurcharge}
+                  </p>
+                )}
                 {/* Discount tidak ada disini hanya ada di cart */}
                 <p className="text-xs">Discount {currency} 0</p>
               </>
