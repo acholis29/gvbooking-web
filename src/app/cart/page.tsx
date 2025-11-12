@@ -975,6 +975,27 @@ export default function Cart() {
                   {formatRibuanInternational(subtotalSummeryOrderLocal)}
                 </p>
               </div>
+              <form className="max-w-md my-2">
+                <div className="flex flex-row items-center gap-2">
+                  {/* INPUT MENGISI RUANG TERSISA */}
+                  <input
+                    type="text"
+                    id="promoCode"
+                    className="flex-grow bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-200 focus:border-blue-200 p-2.5 h-8"
+                    placeholder="Input Promo Code"
+                  />
+
+                  {/* TOMBOL WIDTH FIXED */}
+                  <button
+                    type="button"
+                    onClick={() => {}}
+                    className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-4 h-8"
+                  >
+                    Apply
+                  </button>
+                </div>
+              </form>
+
               <div className="flex justify-between gap-2">
                 <button
                   type="button"
