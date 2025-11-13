@@ -23,7 +23,7 @@ import PhoneInput from "react-phone-number-input";
 import type { Country } from "react-phone-number-input";
 
 // Form Libraries
-import { useForm, Controller, useFieldArray, Form } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 // component
 import Breadcrumb from "@/components/Breadcrumb";
 import CardAccordion from "@/components/CardAccordion";
@@ -44,6 +44,8 @@ import { useModal } from "@/context/ModalContext";
 import ModalComponent from "@/components/ModalComponent";
 import { useSelectModal } from "@/context/SelectModalContext";
 import { API_HOSTS } from "@/lib/apihost";
+import { Toast } from "flowbite-react";
+import { finished } from "stream";
 
 // Type Property
 type DetailPax = {
@@ -185,6 +187,7 @@ export default function Cart() {
   const { language } = useLanguage();
   // State Data Loading
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingPromoCode, setIsLoadingPromoCode] = useState(false);
   const [isRemove, setIsRemove] = useState(false);
   const [isOpenAccordion, setAccordion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -223,11 +226,26 @@ export default function Cart() {
   const { profileInitial, setProfileInitial, resourceInitial, coreInitial } =
     useInitial();
   const { profile } = useProfile();
-  const { cartApiItems, idxCompCart, setIdxCompCart } = useCartApi();
+  const { cartApiItems, idxCompCart, setIdxCompCart, saveCartApi } =
+    useCartApi();
   const { openModal } = useModal();
   const { selectModal, setSelectModal } = useSelectModal();
 
   resourceInitial.app_string = "newweb";
+
+  type FormData = {
+    promoCode: string;
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
+
+  const onSubmit = async (data: FormData) => {
+    await addPromoCode(data.promoCode);
+  };
 
   useEffect(() => {
     const cart = JSON.parse(localStorage.getItem("cart_api") || "[]");
@@ -366,6 +384,43 @@ export default function Cart() {
       const data = await response.json();
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  async function addPromoCode(promoCode: string) {
+    try {
+      setIsLoadingPromoCode(true);
+      const formBody = new URLSearchParams({
+        shared_key: idxCompCart, // Indo Or Others
+        xml: "false",
+        voucher: promoCode,
+        email: profileInitial[0].email,
+        id_master_file: profileInitial[0].idx_mf,
+        language_code: language,
+        id_transaction: "",
+      });
+
+      let url = `${API_HOSTS.host1}/excursion.asmx/v2_card_promo`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formBody.toString(),
+      });
+
+      if (!response.ok) throw new Error("add promo code failed");
+
+      // Response Html
+      const data = await response.json();
+      // Update Cart
+      saveCartApi(data.msg);
+      toast.success("Promo Code Success");
+    } catch (error) {
+      console.error(error);
+      setIsLoadingPromoCode(false);
+    } finally {
+      setIsLoadingPromoCode(false);
     }
   }
 
@@ -808,6 +863,10 @@ export default function Cart() {
   }, [ChekedCart]);
 
   useEffect(() => {
+    hitungSubtotalSummeryOrder(cartApiItems);
+  }, [cartApiItems]);
+
+  useEffect(() => {
     ListCart.map((items, index) => {
       handleOnChangeCard(items, true);
     });
@@ -975,25 +1034,33 @@ export default function Cart() {
                   {formatRibuanInternational(subtotalSummeryOrderLocal)}
                 </p>
               </div>
-              <form className="max-w-md my-2">
+              <form onSubmit={handleSubmit(onSubmit)} className="max-w-md my-2">
                 <div className="flex flex-row items-center gap-2">
                   {/* INPUT MENGISI RUANG TERSISA */}
                   <input
+                    {...register("promoCode", {
+                      required: "Please input your promo code",
+                    })}
                     type="text"
                     id="promoCode"
                     className="flex-grow bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-200 focus:border-blue-200 p-2.5 h-8"
-                    placeholder="Input Promo Code"
+                    placeholder="Input Promo Code (Optional)"
                   />
 
                   {/* TOMBOL WIDTH FIXED */}
                   <button
-                    type="button"
+                    type="submit"
                     onClick={() => {}}
                     className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-4 h-8"
                   >
-                    Apply
+                    {isLoadingPromoCode && <Spinner />} Apply
                   </button>
-                </div>
+                </div>{" "}
+                {errors.promoCode && (
+                  <p className="text-red-600 text-xs mt-1 italic">
+                    *{errors.promoCode.message}
+                  </p>
+                )}
               </form>
 
               <div className="flex justify-between gap-2">
@@ -1123,6 +1190,34 @@ export default function Cart() {
                   {formatRibuanInternational(subtotalSummeryOrderLocal)}
                 </p>
               </div>
+              <form onSubmit={handleSubmit(onSubmit)} className="max-w-md my-2">
+                <div className="flex flex-row items-center gap-2">
+                  {/* INPUT MENGISI RUANG TERSISA */}
+                  <input
+                    {...register("promoCode", {
+                      required: "Please input your promo code",
+                    })}
+                    type="text"
+                    id="promoCode"
+                    className="flex-grow bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-200 focus:border-blue-200 p-2.5 h-8"
+                    placeholder="Input Promo Code (Optional)"
+                  />
+
+                  {/* TOMBOL WIDTH FIXED */}
+                  <button
+                    type="submit"
+                    onClick={() => {}}
+                    className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-4 h-8"
+                  >
+                    {isLoadingPromoCode && <Spinner />} Apply
+                  </button>
+                </div>{" "}
+                {errors.promoCode && (
+                  <p className="text-red-600 text-xs mt-1 italic">
+                    *{errors.promoCode.message}
+                  </p>
+                )}
+              </form>
               <div className="flex justify-between gap-2">
                 <button
                   type="button"

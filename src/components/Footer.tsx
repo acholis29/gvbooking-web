@@ -196,7 +196,7 @@ export default function FooterComponent() {
                 </a>
                 . All Rights Reserved. <br />
                 <small className="italic text-gray-500">
-                  Last update : 2025-11-12
+                  Last update : 2025-11-13
                 </small>
               </span>
               <div className="flex mt-4 justify-between items-center md:mt-0 space-x-5 rtl:space-x-reverse">
