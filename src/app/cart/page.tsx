@@ -269,19 +269,6 @@ export default function Cart() {
         .catch((err) => console.error(err));
     }
 
-    // if (resourceInitial.url_fo != "") {
-    //   fetch(`${resourceInitial.url_fo}/mobile/data.json`, {
-    //     cache: "no-store",
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       setPayment(data.payment); // ✅ langsung set array-nya
-    //       if (data.onepay_param != null) {
-    //         setOnepayParam(data.onepay_param);
-    //       }
-    //     })
-    //     .catch((err) => console.error(err));
-    // }
     loadCart();
   }, [cartApiItems, idxCompCart]);
 
@@ -605,8 +592,6 @@ export default function Cart() {
 
   async function paymentGateway() {
     try {
-      // resourceInitial.url_b2c=window.location.origin.toString();
-      // let grandtotal = subtotalSummeryOrder - discTotalSummerOrder;
       let profile_pay = JSON.parse(
         localStorage.getItem("profilePay") || JSON.stringify(profile)
       );
@@ -710,17 +695,6 @@ export default function Cart() {
         setSelectModal("payment");
         openModal();
       }
-
-      // Reset Temp supaya kalo temp true harus isi form lagi
-      // let UpdateProfile = {
-      //   email: profile.email,
-      //   firstname: profile.firstname,
-      //   lastname: profile.lastname,
-      //   phone: "08199882",
-      //   temp: "true",
-      // };
-
-      // localStorage.setItem("profileData", JSON.stringify(UpdateProfile));
     } catch (error) {
       console.error("Payment error:", error);
       toast.error("Payment . Please try again.");
@@ -1376,31 +1350,6 @@ const ProfileAsGuestContent = () => {
             your Govacation account.
           </p>
 
-          {/* <div className="flex flex-row gap-2">
-            <button
-              type="button"
-              onClick={() => {
-                signIn("google");
-                sessionStorage.setItem("oauth", "true");
-              }}
-              className="text-gray-400 mb-3 hover:text-white border-2 border-gray-400 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer"
-            >
-              <FontAwesomeIcon icon={faGoogle} className=" w-5 h-5" />
-            </button>
-            <button
-              type="button"
-              className="text-gray-400 mb-3 hover:text-white border-2 border-gray-400 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer"
-            >
-              <FontAwesomeIcon icon={faApple} className=" w-5 h-5" />
-            </button>
-            <button
-              type="button"
-              className="text-gray-400 mb-3 hover:text-white border-2 border-gray-400 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer"
-            >
-              <FontAwesomeIcon icon={faFacebook} className=" w-5 h-5" />
-            </button>
-          </div> */}
-
           <div className="flex flex-row gap-2">
             {/* Google */}
             <button
@@ -1418,56 +1367,7 @@ const ProfileAsGuestContent = () => {
               />
               <span>Google</span>
             </button>
-
-            {/* Apple */}
-            {/* <button
-              type="button"
-              className="flex items-center justify-center text-gray-700 mb-3 hover:text-white border-2 border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer gap-2"
-            >
-              <img
-                src="https://www.svgrepo.com/show/508761/apple.svg"
-                alt="Apple"
-                className="w-5 h-5"
-              />
-              <span>Apple</span>
-            </button> */}
-
-            {/* Facebook */}
-            {/* <button
-              type="button"
-              className="flex items-center justify-center text-gray-700 mb-3 hover:text-white border-2 border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer gap-2"
-            >
-              <img
-                src="https://www.svgrepo.com/show/475647/facebook-color.svg"
-                alt="Facebook"
-                className="w-5 h-5"
-              />
-              <span>Facebook</span>
-            </button> */}
           </div>
-
-          {/* <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mb-3">
-              <input
-                {...register("email")}
-                type="email"
-                id="email"
-                defaultValue=""
-                className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5"
-                placeholder="Email"
-              />
-              {errors.firstname && (
-                <p className="text-red-500">{errors.firstname.message}</p>
-              )}
-            </div>
-            <button
-              type="submit"
-              onClick={() => signIn("google")}
-              className="text-red-800 hover:text-white border-2 border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-3xl text-sm px-5 py-2.5 text-center w-full cursor-pointer"
-            >
-              Continue with email
-            </button>
-          </form> */}
         </div>
       </div>
     </div>
@@ -1680,33 +1580,6 @@ const GoPaymentContent = ({ onClick }: GoPaymentContentProps) => {
             >
               Phone Number
             </label>
-            {/* <input
-              {...register("phone")}
-              type="text"
-              inputMode="numeric"
-              maxLength={15}
-              onInput={(e) => {
-                const input = e.target as HTMLInputElement;
-                input.value = input.value.replace(/\D/g, "");
-              }}
-              id="phone"
-              defaultValue={profile.temp == "true" ? "" : profile.phone}
-              className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              placeholder="Phone Number"
-            /> */}
-            {/* <PhoneInput
-              {...register("phone")}
-              placeholder="Enter phone number"
-              className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5"
-              value={profile.temp == "true" ? "" : profile.phone}
-              onChange={(value) => {
-                console.log(value); // contoh +62812...
-                console.log(value?.match(/^\+\d+/)?.[0] ?? ""); // ambil +62
-              }}
-              onCountryChange={(c) => {
-                console.log(c); // contoh "ID"
-              }}
-            /> */}
             <Controller
               name="phone"
               control={control}

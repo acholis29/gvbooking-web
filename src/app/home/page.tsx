@@ -204,14 +204,7 @@ export default function Home() {
 
       {/* Section Destination */}
       <section className="py-6 px-4 max-w-screen-xl mx-auto">
-        <p className="text-red-gvi font-bold text-3xl mt-10">
-          {/* {" "}
-          <FontAwesomeIcon
-            icon={faMapLocationDot}
-            className="w-10 h-10 text-red-gvi 0 pl-2"
-          />{" "} */}
-          Destinations
-        </p>
+        <p className="text-red-gvi font-bold text-3xl mt-10">Destinations</p>
       </section>
       <section className="max-w-screen-xl mx-auto flex gap-3 overflow-x-auto md:grid md:grid-cols-4 md:overflow-visible whitespace-nowrap flex-nowrap px-4">
         {destination.length > 0 ? (
@@ -284,7 +277,6 @@ export default function Home() {
                   sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                   price={`${item.PriceFrom}`}
                   currency={item.Currency}
-                  // link="/destination/details/indonesia"
                   link={`/destination/details/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
                 />
               );
@@ -340,7 +332,6 @@ export default function Home() {
                   sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                   price={`${item.PriceFrom}`}
                   currency={item.Currency}
-                  // link="/destination/details/indonesia"
                   link={`/destination/details/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
                 />
               );

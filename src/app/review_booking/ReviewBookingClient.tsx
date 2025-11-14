@@ -590,10 +590,6 @@ export default function ReviewBookingClient() {
                   adult={adult ?? ""}
                   child={child.count ?? ""}
                   infant={infant ?? ""}
-                  // onRoomChange={(val) => {
-                  //   setRoomNumber(val);
-                  //   // atau simpan ke state
-                  // }}
                   roomValue={field.value}
                   onRoomChange={field.onChange}
                   onTimeChange={(val) => {
@@ -783,27 +779,6 @@ export default function ReviewBookingClient() {
 
             {/* Div Bantu */}
             <div className="block md:hidden h-96 w-full "></div>
-
-            {/* <div className="md:max-w-3xl flex h-20 w-full bg-gray-200 mt-15 rounded-sm shadow-md">
-              <div className="basis-[60%] flex flex-col items-start justify-center pl-3"> */}
-            {/* Kolom 1 (60%) */}
-            {/* <p className="font-semibold text-gray-700">Total</p>
-                <p className="font-bold text-gray-800">
-                  {currency} {total.toLocaleString()}
-                </p>
-              </div>
-              <div className="basis-[40%] flex items-center justify-center"> */}
-            {/* Kolom 2 (40%) */}
-            {/* {!isLoadingSurcharge && (
-                  <button
-                    type="submit"
-                    className="text-gray-700 font-bold  shadow-2xl bg-amber-400 w-full hover:bg-amber-500 focus:ring-4 focus:ring-amber-300 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
-                  >
-                    Add Cart
-                  </button>
-                )}
-              </div> */}
-            {/* </div> */}
           </div>
 
           {/* Konten kanan */}

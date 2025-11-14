@@ -88,45 +88,6 @@ export default function Wishlist() {
               </div>
             )}
           </div>
-          {/* Konten Kanan */}
-          {/* <div className="md:w-2/6 text-black">
-            <div className="border p-3 rounded-2xl bg-gray-600">
-              <div className="flex flex-row justify-between">
-                <div className="">
-                  <p className="font-bold text-lg  text-white">
-                    Total Item ( {ListWishlist.length} )
-                  </p>
-                </div>
-                <div className="">
-                  <p className="font-bold text-lg  text-white"> */}
-          {/* Total */}
-          {/* {ListWishlist[0].currency}{" "}
-                    {ListWishlist.reduce(
-                      (total, item) => total + Number(item.price),
-                      0
-                    ).toLocaleString("id-ID")} */}
-          {/* </p>
-                  <p className="text-sm  text-white">
-                    *include tax and service
-                  </p>
-                </div>
-              </div> */}
-
-          {/* <button
-                type="button"
-                onClick={() => {
-                  addAllToCart();
-                }}
-                className="mt-3 md:mt-10 w-full text-white bg-red-gvi hover:bg-red-900 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 cursor-pointer"
-              >
-                ADD ALL TO CART
-                <FontAwesomeIcon
-                  icon={faCartPlus}
-                  className="w-4 h-4 text-white ml-2"
-                />
-              </button> */}
-          {/* </div>
-          </div> */}
         </section>
       ) : (
         <div className="col-span-4 text-center text-gray-500 py-10 my-30">

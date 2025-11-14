@@ -180,18 +180,6 @@ export default function Profile() {
                   >
                     Mobile Phone
                   </label>
-                  {/* <input
-                    {...register("phone")}
-                    type="number"
-                    id="phone"
-                    defaultValue={
-                      profile.temp.toLocaleLowerCase() == "true"
-                        ? ""
-                        : profile.phone
-                    }
-                    className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                    placeholder="phone number (optional)"
-                  /> */}
                   <Controller
                     name="phone"
                     control={control}
@@ -265,54 +253,6 @@ export default function Profile() {
               </div>
             </div>
           </div>
-          {/* Booking Options */}
-          {/* <h1 className="text-gray-700 font-semibold ml-2">Booking Options</h1>
-          <div className="flex flex-row mb-2 p-2 md:p-0">
-          <div className="w-[100%] md:w-1/2 bg-gray-300 rounded-sm p-6">
-          <div className="mb-5">
-          <label
-          htmlFor="destination"
-          className="block mb-2 text-sm font-semibold text-gray-700"
-          >
-          Destination
-          </label>
-          <input
-          type="text"
-          id="destination"
-          className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          placeholder="Destination"
-          />
-          </div>
-          <div className="mb-5">
-          <label
-          htmlFor="currency"
-          className="block mb-2 text-sm font-semibold text-gray-700"
-          >
-          Currency
-          </label>
-          <input
-          type="text"
-          id="currency"
-                  className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  placeholder="Currency"
-                  />
-                  </div>
-                  <div className="mb-5">
-                  <label
-                  htmlFor="language"
-                  className="block mb-2 text-sm font-semibold text-gray-700"
-                  >
-                  Language
-                  </label>
-                  <input
-                  type="text"
-                  id="language"
-                  className="shadow-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  placeholder="Language"
-                  />
-                  </div>
-                  </div>
-                  </div> */}
           {/* Apply */}
           <div className="flex flex-row mb-2 w-[100%] md:w-1/2 p-2 md:p-0">
             <button

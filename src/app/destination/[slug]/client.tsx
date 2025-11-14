@@ -415,51 +415,6 @@ export default function DestinationClient({ slug }: Props) {
             </span>
           </p>
         </section>
-        {/* Ini yang lama Tour In Indonesia */}
-        {/* <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
-          {isLoadingRecom ? (
-            <>
-              <SkeletonCard />
-              <SkeletonCard />
-              <SkeletonCard />
-              <SkeletonCard />
-            </>
-          ) : recomdedDestination.length > 0 ? (
-            recomdedDestination.map((item, index) => {
-              let imgUrl = "/images/icon/android-chrome-512x512.png";
-              if (item.Gbr != "") {
-                imgUrl =
-                  getCountryImageUrl(
-                    coreInitial,
-                    item.idx_comp,
-                    `media/${item.code_exc}/TN_400_${item.Gbr}`
-                  ) ?? "/images/icon/android-chrome-512x512.png";
-              }
-              return (
-                <RecentlyCard
-                  key={index}
-                  idx_comp={item.idx_comp}
-                  idx_excursion={item.Idx_excursion}
-                  // image={`https://picsum.photos/800/600?random=${index}`}
-                  image={imgUrl}
-                  title={`${item.State}, ${item.Name_excursion}`}
-                  sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
-                  price={`${item.PriceFrom}`}
-                  currency={item.Currency}
-                  link={`/destination/details/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
-                />
-              );
-            })
-          ) : (
-            <p className="col-span-4 text-gray-500 text-center">
-              <FontAwesomeIcon
-                icon={faInbox}
-                className="w-10 h-10 text-red-gvi 0 pl-2"
-              />{" "}
-              Recently viewed is empty.
-            </p>
-          )}
-        </section> */}
         <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
           {isLoadingLastSearch ? (
             <>

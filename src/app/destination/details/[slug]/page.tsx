@@ -1501,7 +1501,6 @@ export default function DetailDestination() {
                   } else {
                     return (
                       <ProductSubNew
-                        // key={index}
                         key={`${index}-${refreshKey}`}
                         dataSub={item}
                         pickupArea={labelSelectPickup}

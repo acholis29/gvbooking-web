@@ -397,14 +397,6 @@ export default function ListClient() {
         <div className="md:hidden flex flex-col md:flex-row md:justify-between md:items-center gap-4">
           {/* Search akan full width di HP */}
           <div className="">{/* <Search /> */}</div>
-
-          {/* Badge akan di bawah search di HP, dan di samping saat md */}
-          {/* <div className="flex flex-wrap gap-1">
-            <Badge title="New" />
-            <Badge title="Price Ascending" />
-            <Badge title="Price Descending" />
-            <Badge title="Rating" />
-          </div> */}
         </div>
       </section>
       <section className="flex flex-col md:flex-row bg-white md:gap-6">
@@ -420,12 +412,6 @@ export default function ListClient() {
             />
           ))}
           {/* Range Price */}
-          {/* <Range
-            min="0"
-            max={currency == "USD" || currency == "EUR" ? "1000" : "10000000"}
-            value={price}
-            onChange={setPrice}
-          /> */}
           <div className="mt-5 mb-5">
             <hr className="text-gray-200" />
           </div>
@@ -457,11 +443,6 @@ export default function ListClient() {
                 </>
               ) : (
                 <>
-                  {/* <Checkbox
-                    title={"ALL TYPE"}
-                    onChange={handleCheckboxChange}
-                    value={""}
-                  /> */}
                   {masterHolidayApi.map((item) => (
                     <Checkbox
                       key={item.holiday_type}
@@ -549,30 +530,6 @@ export default function ListClient() {
                 />
               </div>
 
-              {/* Button All Type */}
-              {/* <div
-                key={`mobileHoliday-all-type`}
-                className={`w-auto h-10  border-gray-500  ${
-                  "ALL TYPE" == SelectBadgeFilterMobile
-                    ? "bg-red-200 border-1 border-red-500"
-                    : "border-1"
-                }  rounded-lg text-center align-middle flex items-center justify-center p-2 whitespace-nowrap`}
-                onClick={() => {
-                  if ("ALL TYPE" == SelectBadgeFilterMobile) {
-                    setSelectBadgeFilterMobile("");
-                    handleApplyMobile();
-                  } else {
-                    setSelectBadgeFilterMobile("ALL TYPE");
-                    setSelectedTypesById("");
-                    handleApplyMobile();
-                  }
-                }}
-              >
-                <p className="text-sm text-gray-500">
-                  {capitalizeWords("ALL TYPE")}
-                </p>
-              </div> */}
-
               {/* Button Master Holiday Type */}
               {masterHolidayApi.map((item) => (
                 <div
@@ -587,8 +544,6 @@ export default function ListClient() {
                     if (
                       selectedTypesHolidayArrMob.includes(item.holiday_type_id)
                     ) {
-                      // setSelectBadgeFilterMobile("");
-                      // handleApplyMobile();
                       handleBadgeChange(
                         false,
                         item.holiday_type,
@@ -601,22 +556,12 @@ export default function ListClient() {
                         item.holiday_type,
                         item.holiday_type_id
                       );
-                      // setSelectBadgeFilterMobile(item.holiday_type);
-                      // setSelectedTypesById(item.holiday_type_id);
-                      // handleApplyMobile();
                     }
                   }}
                 >
                   <p className="text-sm text-gray-500">
                     {capitalizeWords(item.holiday_type)}
                   </p>
-
-                  {/* {item.holiday_type == SelectBadgeFilterMobile && (
-                    <FontAwesomeIcon
-                      icon={faCheck}
-                      className="w-5 h-5 text-red-600"
-                    />
-                  )} */}
                 </div>
               ))}
             </>
@@ -766,7 +711,6 @@ export default function ListClient() {
             >
               <div className="text-center">
                 <h2 className="text-lg font-bold mb-2">Filter</h2>
-                {/* <p>Isi Filter Disini</p> */}
                 <div className="flex items-center mb-4">
                   <input
                     id="default-radio-1"
@@ -801,13 +745,6 @@ export default function ListClient() {
                     Price Descending
                   </label>
                 </div>
-
-                {/* <button
-                  onClick={() => setOpenBottomSheet(false)}
-                  className="mt-4 bg-red-600 text-white px-4 py-2 rounded"
-                >
-                  Tutup
-                </button> */}
               </div>
             </ModalBottomSheet>
           </div>
