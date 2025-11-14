@@ -636,7 +636,7 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
                 {" "}
                 {totalSurcharge > 0 && (
                   <p className="text-xs">
-                    Surcharge x {currency} {totalSurcharge}
+                    Surcharge x {currency} {totalSurcharge.toLocaleString()}
                   </p>
                 )}
                 {/* Discount tidak ada disini hanya ada di cart */}
