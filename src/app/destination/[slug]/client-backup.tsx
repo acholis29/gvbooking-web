@@ -325,42 +325,30 @@ export default function DestinationClient({ slug }: Props) {
           Local Destinations :
         </p>
       </section>
-
-      {/* Local Destination */}
-      {/* use grid-flow to avoid abrupt layout switching and reserve space with min-h */}
-      <section className="max-w-screen-xl mx-auto flex space-x-3 overflow-x-auto pl-3 pr-4 min-h-[240px] gap-7 md:grid md:grid-cols-4 md:gap-4 md:space-x-0 md:overflow-visible md:pl-0">
+      <section className="max-w-screen-xl mx-auto flex gap-3 overflow-x-auto md:grid md:grid-cols-4 md:overflow-visible whitespace-nowrap flex-nowrap px-4">
         {isLoadingLocalDest ? (
-          // show skeletons with matching size to final cards
           <>
-            <div className="w-[260px] md:w-auto min-h-[240px]">
-              <SkeletonImage />
-            </div>
-            <div className="w-[260px] md:w-auto min-h-[240px]">
-              <SkeletonImage />
-            </div>
-            <div className="w-[260px] md:w-auto min-h-[240px]">
-              <SkeletonImage />
-            </div>
-            <div className="w-[260px] md:w-auto min-h-[240px]">
-              <SkeletonImage />
-            </div>
+            <SkeletonImage />
+            <SkeletonImage />
+            <SkeletonImage />
+            <SkeletonImage />
           </>
         ) : (
           <>
+            {" "}
             {localDestination.length > 0 ? (
               localDestination.map((item, index) => (
-                <div className="w-[260px] md:w-auto min-h-[240px]" key={index}>
-                  <DestinationCard
-                    image={`/images/destination/${slug}.jpg`}
-                    title={`${item.State}`}
-                    activities={item.qty}
-                    idx_comp={idx_comp ?? ""}
-                    link={`/list?id=${idx_comp}&country=${country}&state=${item.State}&id-state=${item.idx_state}`}
-                  />
-                </div>
+                <DestinationCard
+                  key={index}
+                  image={`/images/destination/${slug}.jpg`}
+                  title={`${item.State}`}
+                  activities={item.qty}
+                  idx_comp={idx_comp ?? ""}
+                  link={`/list?id=${idx_comp}&country=${country}&state=${item.State}&id-state=${item.idx_state}`}
+                />
               ))
             ) : (
-              <p className="col-span-4 text-gray-500 text-center w-full">
+              <p className="col-span-4 text-gray-500 text-center">
                 <FontAwesomeIcon
                   icon={faInbox}
                   className="w-10 h-10 text-red-gvi 0 pl-2"
@@ -377,44 +365,35 @@ export default function DestinationClient({ slug }: Props) {
         <section className="py-6 px-4 max-w-screen-xl mx-auto">
           <p className="text-red-gvi font-bold text-3xl">Recomended</p>
         </section>
-
-        <section className="max-w-screen-xl mx-auto grid grid-flow-col md:grid-flow-row md:gap-3 overflow-x-auto pl-3 pr-0 md:grid-cols-4 md:overflow-visible min-h-[350px]">
+        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
           {isLoadingRecomApi ? (
             <>
-              <div className="w-[300px] md:w-auto min-h-[350px] mr-3">
-                <SkeletonCard />
-              </div>
-              <div className="w-[300px] md:w-auto min-h-[350px] mr-3">
-                <SkeletonCard />
-              </div>
-              <div className="w-[300px] md:w-auto min-h-[350px] mr-3">
-                <SkeletonCard />
-              </div>
-              <div className="w-[300px] md:w-auto min-h-[350px] mr-3">
-                <SkeletonCard />
-              </div>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
             </>
           ) : recomdedDestinationApi.length > 0 ? (
             recomdedDestinationApi.map((item, index) => (
-              <div className="w-[300px] md:w-auto min-h-[350px]" key={index}>
-                <EcommersCard
-                  idx_comp={idx_comp ?? ""}
-                  idx_excursion={item.excursion_id}
-                  image={`${host_img}/${item.picture}`}
-                  title={`${item.location_state}, ${item.excursion_name}`}
-                  sub_title={`${item.location_state}, ${item.location_country}`.toUpperCase()}
-                  price={`${item.price_in_format}`}
-                  currency={item.currency}
-                  link={`/destination/details/${
-                    item.location_country
-                  }?id=${idx_comp}&country=${item.location_country.toLowerCase()}&state=${item.location_state.toLowerCase()}&exc=${
-                    item.excursion_id
-                  }`}
-                />
-              </div>
+              <EcommersCard
+                key={index}
+                idx_comp={idx_comp ?? ""}
+                idx_excursion={item.excursion_id}
+                image={`${host_img}/${item.picture}`} // image={`https://picsum.photos/800/600?random=${index}`}
+                title={`${item.location_state}, ${item.excursion_name}`}
+                sub_title={`${item.location_state}, ${item.location_country}`.toUpperCase()}
+                price={`${item.price_in_format}`}
+                currency={item.currency}
+                // link="/destination/details/indonesia"
+                link={`/destination/details/${
+                  item.location_country
+                }?id=${idx_comp}&country=${item.location_country.toLowerCase()}&state=${item.location_state.toLowerCase()}&exc=${
+                  item.excursion_id
+                }`}
+              />
             ))
           ) : (
-            <p className="col-span-4 text-gray-500 text-center w-full">
+            <p className="col-span-4 text-gray-500 text-center">
               <FontAwesomeIcon
                 icon={faInbox}
                 className="w-10 h-10 text-red-gvi 0 pl-2"
@@ -436,22 +415,13 @@ export default function DestinationClient({ slug }: Props) {
             </span>
           </p>
         </section>
-
-        <section className="max-w-screen-xl mx-auto grid grid-flow-col md:grid-flow-row md:gap-3 overflow-x-auto px-4 md:grid-cols-4 md:overflow-visible min-h-[350px]">
+        <section className="max-w-screen-xl mx-auto flex gap-4 overflow-x-auto flex-nowrap px-4 md:grid md:grid-cols-4">
           {isLoadingLastSearch ? (
             <>
-              <div className="w-[300px] md:w-auto min-h-[350px] mr-3 md:mr-0">
-                <SkeletonCard />
-              </div>
-              <div className="w-[300px] md:w-auto min-h-[350px] mr-3">
-                <SkeletonCard />
-              </div>
-              <div className="w-[300px] md:w-auto min-h-[350px] mr-3">
-                <SkeletonCard />
-              </div>
-              <div className="w-[300px] md:w-auto min-h-[350px] mr-3">
-                <SkeletonCard />
-              </div>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
             </>
           ) : LastSearch.length > 0 ? (
             LastSearch.map((item, index) => {
@@ -466,25 +436,21 @@ export default function DestinationClient({ slug }: Props) {
               }
               if (item.idx_comp == idx_comp)
                 return (
-                  <div
-                    className="w-[300px] md:w-auto min-h-[350px]"
+                  <RecentlyCard
                     key={index}
-                  >
-                    <RecentlyCard
-                      idx_comp={item.idx_comp}
-                      idx_excursion={item.Idx_excursion}
-                      image={imgUrl}
-                      title={`${item.State}, ${item.Name_excursion}`}
-                      sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
-                      price={`${item.PriceFrom}`}
-                      currency={item.Currency}
-                      link={`/destination/details/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
-                    />
-                  </div>
+                    idx_comp={item.idx_comp}
+                    idx_excursion={item.Idx_excursion}
+                    image={imgUrl}
+                    title={`${item.State}, ${item.Name_excursion}`}
+                    sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
+                    price={`${item.PriceFrom}`}
+                    currency={item.Currency}
+                    link={`/destination/details/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
+                  />
                 );
             })
           ) : (
-            <p className="col-span-4 text-gray-500 text-center w-full">
+            <p className="col-span-4 text-gray-500 text-center">
               <FontAwesomeIcon
                 icon={faInbox}
                 className="w-10 h-10 text-red-gvi 0 pl-2"
