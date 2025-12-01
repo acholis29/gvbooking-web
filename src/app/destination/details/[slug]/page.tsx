@@ -255,6 +255,7 @@ export default function DetailDestination() {
   const [dataProductSub, setDataProductSub] = useState<ProductResponse | null>(
     null
   );
+  const [hasProductSub, setHasProductSub] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingProdukDetail, setIsLoadingProdukDetail] = useState(true);
   const [isLoadingProdukDetailSub, setIsLoadingProdukDetailSub] =
@@ -307,6 +308,17 @@ export default function DetailDestination() {
       setSelectedDate(null);
     }
   }, [enabledDatesArr]);
+
+  // Handle Product Sub Yang Kosong
+  useEffect(() => {
+    if (dataProductSub !== undefined && dataProductSub !== null) {
+      if (dataProductSub.msg !== undefined && dataProductSub.msg !== null) {
+        if (dataProductSub.msg.product_subs.length > 0) {
+          setHasProductSub(true);
+        }
+      }
+    }
+  }, [dataProductSub]);
 
   // Handle initial / default last location
   useEffect(() => {
@@ -452,6 +464,8 @@ export default function DetailDestination() {
 
         if (contentType.includes("application/json")) {
           const json = await res.json();
+          console.log("DATA PRODUCT");
+          console.log(json);
           setDataProduct(json);
         }
       } catch (err: any) {
@@ -497,7 +511,8 @@ export default function DetailDestination() {
 
         if (contentType.includes("application/json")) {
           const json = await res.json();
-
+          console.log("DATA SUB EXCURSION");
+          console.log(json);
           setDataProductSub(json);
         }
       } catch (err: any) {
@@ -1026,72 +1041,74 @@ export default function DetailDestination() {
               </div>
 
               {/* Kanan */}
-              <div className="w-1/3 hidden md:block">
-                <div className="bg-gray-200 shadow-lg rounded-lg p-5">
-                  <div className="w-full flex flex-row justify-between items-center">
-                    <div className="flex flex-col">
-                      <p className="font-semibold text-sm">From</p>
-                      {/* <p className="font-bold text-lg">EUR 180.000</p> */}
-                      {isLoadingProdukDetailSub && (
-                        <div className="flex flex-row items-center">
-                          <Spinner />{" "}
-                          <p className="text-xs animate-pulse">Please wait</p>
-                        </div>
-                      )}
-                      <p className="font-bold text-lg">
-                        {dataProductSub?.msg.product_subs[0].currency ?? ""}{" "}
-                        {dataProductSub?.msg.product_subs[0].price ?? ""}
+              {hasProductSub && (
+                <div className="w-1/3 hidden md:block">
+                  <div className="bg-gray-200 shadow-lg rounded-lg p-5">
+                    <div className="w-full flex flex-row justify-between items-center">
+                      <div className="flex flex-col">
+                        <p className="font-semibold text-sm">From</p>
+                        {/* <p className="font-bold text-lg">EUR 180.000</p> */}
+                        {isLoadingProdukDetailSub && (
+                          <div className="flex flex-row items-center">
+                            <Spinner />{" "}
+                            <p className="text-xs animate-pulse">Please wait</p>
+                          </div>
+                        )}
+                        <p className="font-bold text-lg">
+                          {dataProductSub?.msg.product_subs[0].currency ?? ""}{" "}
+                          {dataProductSub?.msg.product_subs[0].price ?? ""}
+                        </p>
+                        <p className="text-sm">per person</p>
+                      </div>
+                      <div className="flex flex-col">
+                        {isLoadingProdukDetailSub ? (
+                          <div className="w-60 h-10 bg-gray-300 text-white font-bold rounded-2xl px-4 py-2 animate-pulse" />
+                        ) : (
+                          <button
+                            className="w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer"
+                            onClick={() => {
+                              const target = document.getElementById(
+                                "availability-section"
+                              );
+
+                              if (target) {
+                                // Scroll ke tengah layar dengan efek halus
+                                target.scrollIntoView({
+                                  behavior: "smooth",
+                                  block: "center",
+                                  inline: "nearest",
+                                });
+
+                                // Efek highlight sementara
+                                target.classList.add("ring-2", "ring-gray-500");
+                                setTimeout(() => {
+                                  target.classList.remove(
+                                    "ring-2",
+                                    "ring-gray-500"
+                                  );
+                                }, 1500);
+                              }
+                            }}
+                          >
+                            Check Avaibility
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <div className="w-full flex flex-row mt-2">
+                      <FontAwesomeIcon
+                        icon={faCalendarAlt}
+                        className="w-4 h-4 text-gray-500 mr-1"
+                        size="sm"
+                      />
+                      <p className="text-xs">
+                        Reserve now & pay later to book your spot and pay
+                        nothing today.
                       </p>
-                      <p className="text-sm">per person</p>
                     </div>
-                    <div className="flex flex-col">
-                      {isLoadingProdukDetailSub ? (
-                        <div className="w-60 h-10 bg-gray-300 text-white font-bold rounded-2xl px-4 py-2 animate-pulse" />
-                      ) : (
-                        <button
-                          className="w-60 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl px-4 py-2 cursor-pointer"
-                          onClick={() => {
-                            const target = document.getElementById(
-                              "availability-section"
-                            );
-
-                            if (target) {
-                              // Scroll ke tengah layar dengan efek halus
-                              target.scrollIntoView({
-                                behavior: "smooth",
-                                block: "center",
-                                inline: "nearest",
-                              });
-
-                              // Efek highlight sementara
-                              target.classList.add("ring-2", "ring-gray-500");
-                              setTimeout(() => {
-                                target.classList.remove(
-                                  "ring-2",
-                                  "ring-gray-500"
-                                );
-                              }, 1500);
-                            }
-                          }}
-                        >
-                          Check Avaibility
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  <div className="w-full flex flex-row mt-2">
-                    <FontAwesomeIcon
-                      icon={faCalendarAlt}
-                      className="w-4 h-4 text-gray-500 mr-1"
-                      size="sm"
-                    />
-                    <p className="text-xs">
-                      Reserve now & pay later to book your spot and pay nothing
-                      today.
-                    </p>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Judul Deskripsi  */}
@@ -1119,348 +1136,359 @@ export default function DetailDestination() {
             />
 
             {/* Card Check Available */}
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div
-                className="w-full md:h-40 bg-gray-300 rounded-2xl mt-5 p-8"
-                id="availability-section"
-              >
-                <p className="text-sm md:text-lg font-semibold">
-                  Select participants, date, and pickup area
-                </p>
+            {hasProductSub && (
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <div
+                  className="w-full md:h-40 bg-gray-300 rounded-2xl mt-5 p-8"
+                  id="availability-section"
+                >
+                  <p className="text-sm md:text-lg font-semibold">
+                    Select participants, date, and pickup area
+                  </p>
 
-                <div className="flex flex-col md:flex-row items-center justify-between mt-5">
-                  {/* Kiri: input-input */}
-                  <div className="flex flex-col md:flex-row gap-2 md:gap-5">
-                    {/* Pax Adult, Child, Infant */}
-                    <div className="relative" ref={refPax}>
-                      {/* Trigger */}
-                      <div
-                        className="h-10 w-70 px-3 flex flex-row justify-between items-center bg-white rounded-xl cursor-pointer"
-                        onClick={() => setOpenDropdownPax(!openDropdownPax)}
-                      >
-                        <div className="flex items-center">
+                  <div className="flex flex-col md:flex-row items-center justify-between mt-5">
+                    {/* Kiri: input-input */}
+                    <div className="flex flex-col md:flex-row gap-2 md:gap-5">
+                      {/* Pax Adult, Child, Infant */}
+                      <div className="relative" ref={refPax}>
+                        {/* Trigger */}
+                        <div
+                          className="h-10 w-70 px-3 flex flex-row justify-between items-center bg-white rounded-xl cursor-pointer"
+                          onClick={() => setOpenDropdownPax(!openDropdownPax)}
+                        >
+                          <div className="flex items-center">
+                            <FontAwesomeIcon
+                              icon={faUser}
+                              className="w-4 h-4 text-gray-500 mr-2"
+                              size="lg"
+                            />
+                            <p className="text-sm font-bold">
+                              {valDropdownPax}
+                              {/* Adult x 1, Child x 1, Infant x 1 */}
+                            </p>
+                          </div>
                           <FontAwesomeIcon
-                            icon={faUser}
-                            className="w-4 h-4 text-gray-500 mr-2"
+                            icon={faCaretDown}
+                            className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
+                              openDropdownPax ? "rotate-180" : ""
+                            }`}
                             size="lg"
                           />
-                          <p className="text-sm font-bold">
-                            {valDropdownPax}
-                            {/* Adult x 1, Child x 1, Infant x 1 */}
-                          </p>
                         </div>
-                        <FontAwesomeIcon
-                          icon={faCaretDown}
-                          className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
-                            openDropdownPax ? "rotate-180" : ""
-                          }`}
-                          size="lg"
-                        />
-                      </div>
 
-                      {/* Dropdown list muncul di bawah trigger */}
-                      {openDropdownPax && (
-                        <div className="absolute top-full mt-2 w-52 bg-white rounded-xl shadow-lg border border-gray-200 z-10">
-                          <ul className="py-2">
-                            {/* Adult */}
-                            {dataChargeType.map((item, index) => {
-                              if (item.name.toLowerCase() == "adult") {
-                                return (
-                                  <li
-                                    key={index}
-                                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around"
-                                  >
-                                    <p className="w-10 font-semibold">Adult</p>
-                                    <FontAwesomeIcon
-                                      icon={faMinusCircle}
-                                      className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                        openDropdownPax ? "rotate-180" : ""
-                                      }`}
-                                      size="lg"
-                                      onClick={() => {
-                                        if (adultCount > 0) {
-                                          setAdultCount(adultCount - 1);
-                                          setCheckAvaibility(false);
-                                        }
-                                      }}
-                                    />
-                                    <p className="w-5 text-center">
-                                      {adultCount}
-                                    </p>
-                                    <FontAwesomeIcon
-                                      icon={faPlusCircle}
-                                      className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                        openDropdownPax ? "rotate-180" : ""
-                                      }`}
-                                      size="lg"
-                                      onClick={() => {
-                                        setAdultCount(adultCount + 1);
-                                        setCheckAvaibility(false);
-                                      }}
-                                    />
-                                  </li>
-                                );
-                              }
-                            })}
-
-                            {/* Child */}
-                            {dataChargeType.map((item, index) => {
-                              if (item.name.toLocaleLowerCase() == "child") {
-                                return (
-                                  <li
-                                    key={index}
-                                    className="px-4 py-2 hover:bg-gray-100 flex flex-col"
-                                  >
-                                    <div className="flex flex-row justify-around items-center">
+                        {/* Dropdown list muncul di bawah trigger */}
+                        {openDropdownPax && (
+                          <div className="absolute top-full mt-2 w-52 bg-white rounded-xl shadow-lg border border-gray-200 z-10">
+                            <ul className="py-2">
+                              {/* Adult */}
+                              {dataChargeType.map((item, index) => {
+                                if (item.name.toLowerCase() == "adult") {
+                                  return (
+                                    <li
+                                      key={index}
+                                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around"
+                                    >
                                       <p className="w-10 font-semibold">
-                                        Child
+                                        Adult
                                       </p>
                                       <FontAwesomeIcon
                                         icon={faMinusCircle}
-                                        className="w-4 h-4 text-red-400"
+                                        className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                          openDropdownPax ? "rotate-180" : ""
+                                        }`}
+                                        size="lg"
                                         onClick={() => {
-                                          childCount > 0 &&
-                                            setChildCount(childCount - 1);
+                                          if (adultCount > 0) {
+                                            setAdultCount(adultCount - 1);
+                                            setCheckAvaibility(false);
+                                          }
+                                        }}
+                                      />
+                                      <p className="w-5 text-center">
+                                        {adultCount}
+                                      </p>
+                                      <FontAwesomeIcon
+                                        icon={faPlusCircle}
+                                        className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                          openDropdownPax ? "rotate-180" : ""
+                                        }`}
+                                        size="lg"
+                                        onClick={() => {
+                                          setAdultCount(adultCount + 1);
+                                          setCheckAvaibility(false);
+                                        }}
+                                      />
+                                    </li>
+                                  );
+                                }
+                              })}
+
+                              {/* Child */}
+                              {dataChargeType.map((item, index) => {
+                                if (item.name.toLocaleLowerCase() == "child") {
+                                  return (
+                                    <li
+                                      key={index}
+                                      className="px-4 py-2 hover:bg-gray-100 flex flex-col"
+                                    >
+                                      <div className="flex flex-row justify-around items-center">
+                                        <p className="w-10 font-semibold">
+                                          Child
+                                        </p>
+                                        <FontAwesomeIcon
+                                          icon={faMinusCircle}
+                                          className="w-4 h-4 text-red-400"
+                                          onClick={() => {
+                                            childCount > 0 &&
+                                              setChildCount(childCount - 1);
+                                            setCheckAvaibility(false);
+                                          }}
+                                        />
+                                        <p className="w-5 text-center">
+                                          {childCount}
+                                        </p>
+                                        <FontAwesomeIcon
+                                          icon={faPlusCircle}
+                                          className="w-4 h-4 text-red-400"
+                                          onClick={() => {
+                                            setChildCount(childCount + 1);
+                                            setCheckAvaibility(false);
+                                          }}
+                                        />
+                                      </div>
+
+                                      {/* Input umur anak */}
+                                      {childCount > 0 && (
+                                        <div className="mt-2 ml-5 flex flex-col gap-1">
+                                          {[...Array(childCount)].map(
+                                            (_, i) => (
+                                              <div
+                                                key={i}
+                                                className="flex items-center gap-2"
+                                              >
+                                                <p className="text-xs w-10 text-gray-500">
+                                                  Age {i + 1}
+                                                </p>
+                                                <input
+                                                  type="number"
+                                                  min="1"
+                                                  max="12"
+                                                  className="w-16 px-2 py-1 border rounded-md text-sm"
+                                                  value={childAges[i] || "12"}
+                                                  onChange={(e) =>
+                                                    handleAgeChange(
+                                                      i,
+                                                      e.target.value
+                                                    )
+                                                  }
+                                                  placeholder="0–12"
+                                                />
+                                              </div>
+                                            )
+                                          )}
+                                        </div>
+                                      )}
+                                    </li>
+                                  );
+                                }
+                              })}
+
+                              {/* Infant */}
+                              {dataChargeType.map((item, index) => {
+                                if (item.name.toLocaleLowerCase() == "infant") {
+                                  return (
+                                    <li
+                                      key={index}
+                                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around"
+                                    >
+                                      <p className="w-10 font-semibold">
+                                        Infant
+                                      </p>
+                                      <FontAwesomeIcon
+                                        icon={faMinusCircle}
+                                        className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                          openDropdownPax ? "rotate-180" : ""
+                                        }`}
+                                        size="lg"
+                                        onClick={() => {
+                                          if (infantCount > 0) {
+                                            setInfantCount(infantCount - 1);
+                                          }
                                           setCheckAvaibility(false);
                                         }}
                                       />
                                       <p className="w-5 text-center">
-                                        {childCount}
+                                        {infantCount}
                                       </p>
                                       <FontAwesomeIcon
                                         icon={faPlusCircle}
-                                        className="w-4 h-4 text-red-400"
+                                        className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
+                                          openDropdownPax ? "rotate-180" : ""
+                                        }`}
+                                        size="lg"
                                         onClick={() => {
-                                          setChildCount(childCount + 1);
+                                          setInfantCount(infantCount + 1);
                                           setCheckAvaibility(false);
                                         }}
                                       />
-                                    </div>
-
-                                    {/* Input umur anak */}
-                                    {childCount > 0 && (
-                                      <div className="mt-2 ml-5 flex flex-col gap-1">
-                                        {[...Array(childCount)].map((_, i) => (
-                                          <div
-                                            key={i}
-                                            className="flex items-center gap-2"
-                                          >
-                                            <p className="text-xs w-10 text-gray-500">
-                                              Age {i + 1}
-                                            </p>
-                                            <input
-                                              type="number"
-                                              min="1"
-                                              max="12"
-                                              className="w-16 px-2 py-1 border rounded-md text-sm"
-                                              value={childAges[i] || "12"}
-                                              onChange={(e) =>
-                                                handleAgeChange(
-                                                  i,
-                                                  e.target.value
-                                                )
-                                              }
-                                              placeholder="0–12"
-                                            />
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
-                                  </li>
-                                );
-                              }
-                            })}
-
-                            {/* Infant */}
-                            {dataChargeType.map((item, index) => {
-                              if (item.name.toLocaleLowerCase() == "infant") {
-                                return (
-                                  <li
-                                    key={index}
-                                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex flex-row justify-around"
-                                  >
-                                    <p className="w-10 font-semibold">Infant</p>
-                                    <FontAwesomeIcon
-                                      icon={faMinusCircle}
-                                      className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                        openDropdownPax ? "rotate-180" : ""
-                                      }`}
-                                      size="lg"
-                                      onClick={() => {
-                                        if (infantCount > 0) {
-                                          setInfantCount(infantCount - 1);
-                                        }
-                                        setCheckAvaibility(false);
-                                      }}
-                                    />
-                                    <p className="w-5 text-center">
-                                      {infantCount}
-                                    </p>
-                                    <FontAwesomeIcon
-                                      icon={faPlusCircle}
-                                      className={`w-4 h-4 text-red-400 transition-transform duration-300 ${
-                                        openDropdownPax ? "rotate-180" : ""
-                                      }`}
-                                      size="lg"
-                                      onClick={() => {
-                                        setInfantCount(infantCount + 1);
-                                        setCheckAvaibility(false);
-                                      }}
-                                    />
-                                  </li>
-                                );
-                              }
-                            })}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Select Date */}
-                    <div
-                      className="relative h-10 md:w-50 flex flex-row items-center bg-white rounded-xl cursor-pointer"
-                      ref={refDate}
-                    >
-                      <div
-                        className="h-10 w-full md:w-50 px-3 flex flex-row justify-between items-center bg-white rounded-xl cursor-pointer"
-                        onClick={() => {
-                          setOpenDateAvaibility(!openDateAvaibility);
-                        }}
-                      >
-                        {/* Kiri: Icon Kalender + Tanggal */}
-                        <div className="flex flex-row items-center">
-                          <FontAwesomeIcon
-                            icon={faCalendarAlt}
-                            className="w-4 h-4 text-gray-500 mr-2"
-                            size="lg"
-                          />
-                          <p className="text-sm font-bold">
-                            {selectedDate
-                              ? selectedDate.toLocaleDateString("en-GB") // format: dd/mm/yyyy
-                              : "Select Date"}
-                          </p>
-                        </div>
-
-                        {/* Kanan: Icon Panah */}
-                        <FontAwesomeIcon
-                          icon={faCaretDown}
-                          className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
-                            openDateAvaibility ? "rotate-180" : ""
-                          }`}
-                          size="lg"
-                        />
+                                    </li>
+                                  );
+                                }
+                              })}
+                            </ul>
+                          </div>
+                        )}
                       </div>
 
-                      {/* Popup Kalender */}
-                      {openDateAvaibility && (
-                        <div className="absolute top-full mt-2 right-0 z-10 bg-white shadow-lg rounded">
-                          <DatePicker
-                            selected={selectedDate}
-                            onChange={(date) => {
-                              setSelectedDate(date);
-                              if (date) {
-                                const formatted = date
-                                  .toISOString()
-                                  .split("T")[0];
-                                setDate(formatted);
-                                localStorage.setItem("booking_date", formatted);
-                              }
-                              setCheckAvaibility(false);
-                              // Langsung Tutup Calendar
-                              setOpenDateAvaibility(false);
-                            }}
-                            // excludeDates={disabledDatesArr} //Disabled date
-                            includeDates={enabledDatesArr} //Disabled date
-                            minDate={(() => {
-                              const tomorrow = new Date();
-                              tomorrow.setDate(tomorrow.getDate() + 1);
-                              return tomorrow;
-                            })()}
-                            inline
-                            className="p-2"
+                      {/* Select Date */}
+                      <div
+                        className="relative h-10 md:w-50 flex flex-row items-center bg-white rounded-xl cursor-pointer"
+                        ref={refDate}
+                      >
+                        <div
+                          className="h-10 w-full md:w-50 px-3 flex flex-row justify-between items-center bg-white rounded-xl cursor-pointer"
+                          onClick={() => {
+                            setOpenDateAvaibility(!openDateAvaibility);
+                          }}
+                        >
+                          {/* Kiri: Icon Kalender + Tanggal */}
+                          <div className="flex flex-row items-center">
+                            <FontAwesomeIcon
+                              icon={faCalendarAlt}
+                              className="w-4 h-4 text-gray-500 mr-2"
+                              size="lg"
+                            />
+                            <p className="text-sm font-bold">
+                              {selectedDate
+                                ? selectedDate.toLocaleDateString("en-GB") // format: dd/mm/yyyy
+                                : "Select Date"}
+                            </p>
+                          </div>
+
+                          {/* Kanan: Icon Panah */}
+                          <FontAwesomeIcon
+                            icon={faCaretDown}
+                            className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${
+                              openDateAvaibility ? "rotate-180" : ""
+                            }`}
+                            size="lg"
                           />
                         </div>
-                      )}
-                    </div>
 
-                    {/* Find Pickup */}
-                    <div className="h-10 w-70 flex flex-row justify-around items-center">
-                      <Controller //validasi
-                        name="pickup_area"
-                        control={control}
-                        rules={{ required: "pickup area is required!" }}
-                        render={({ field, fieldState }) => (
-                          <SelectCustomAsynNew
-                            idx_comp={idx_comp ?? ""}
-                            id_excursion={idx_excursion ?? ""}
-                            placeholder="Find Pickup Area ..."
-                            value={field.value}
-                            // defaultLabel={"THE SAMAYA SEMINYAK - BALI"}
-                            // defaultValue={
-                            //   "0075E95D-FFD0-4732-AF25-AF27DF697DE9"
-                            // }
-                            defaultLabel={
-                              useLastLocation ? labelSelectPickup : undefined
-                            }
-                            defaultValue={
-                              useLastLocation ? valueSelectPickup : undefined
-                            }
-                            onChange={(val) => {
-                              if (!val) {
-                                // CLEAR
-                                setUseLastLocation(false);
-                                field.onChange(null);
-                                setLabelSelectPickup("");
-                                return;
-                              }
-
-                              field.onChange(val?.value);
-                              setLabelSelectPickup(val?.label ?? "");
-                              setPickupTimeFrom(val?.data.time_pickup_from);
-                              setCheckAvaibility(false);
-
-                              // Jika value == N/A atau Pickup Unvailable
-                              // Maka Disable Button Check Available
-                              if (val?.value == "NA") {
-                                // Disable button check available
-                                setDisabledCheckAvailable(true);
-                              } else {
-                                setDisabledCheckAvailable(false);
-                              }
-                            }}
-                            onBlur={field.onBlur}
-                            name={field.name}
-                            error={fieldState.error?.message}
-                          />
+                        {/* Popup Kalender */}
+                        {openDateAvaibility && (
+                          <div className="absolute top-full mt-2 right-0 z-10 bg-white shadow-lg rounded">
+                            <DatePicker
+                              selected={selectedDate}
+                              onChange={(date) => {
+                                setSelectedDate(date);
+                                if (date) {
+                                  const formatted = date
+                                    .toISOString()
+                                    .split("T")[0];
+                                  setDate(formatted);
+                                  localStorage.setItem(
+                                    "booking_date",
+                                    formatted
+                                  );
+                                }
+                                setCheckAvaibility(false);
+                                // Langsung Tutup Calendar
+                                setOpenDateAvaibility(false);
+                              }}
+                              // excludeDates={disabledDatesArr} //Disabled date
+                              includeDates={enabledDatesArr} //Disabled date
+                              minDate={(() => {
+                                const tomorrow = new Date();
+                                tomorrow.setDate(tomorrow.getDate() + 1);
+                                return tomorrow;
+                              })()}
+                              inline
+                              className="p-2"
+                            />
+                          </div>
                         )}
-                      />
-                    </div>
-                  </div>
+                      </div>
 
-                  {/* Kanan: button */}
-                  <div className="p-2 md:ml-20 w-full">
-                    {dataChargeType.length > 0 && !isLoadingAllotmentArr ? (
-                      <button
-                        type="submit"
-                        disabled={disabledCheckAvailable}
-                        className={`w-full md:w-60 text-white font-bold rounded-2xl mt-4 md:mt-0 px-4 py-2
+                      {/* Find Pickup */}
+                      <div className="h-10 w-70 flex flex-row justify-around items-center">
+                        <Controller //validasi
+                          name="pickup_area"
+                          control={control}
+                          rules={{ required: "pickup area is required!" }}
+                          render={({ field, fieldState }) => (
+                            <SelectCustomAsynNew
+                              idx_comp={idx_comp ?? ""}
+                              id_excursion={idx_excursion ?? ""}
+                              placeholder="Find Pickup Area ..."
+                              value={field.value}
+                              // defaultLabel={"THE SAMAYA SEMINYAK - BALI"}
+                              // defaultValue={
+                              //   "0075E95D-FFD0-4732-AF25-AF27DF697DE9"
+                              // }
+                              defaultLabel={
+                                useLastLocation ? labelSelectPickup : undefined
+                              }
+                              defaultValue={
+                                useLastLocation ? valueSelectPickup : undefined
+                              }
+                              onChange={(val) => {
+                                if (!val) {
+                                  // CLEAR
+                                  setUseLastLocation(false);
+                                  field.onChange(null);
+                                  setLabelSelectPickup("");
+                                  return;
+                                }
+
+                                field.onChange(val?.value);
+                                setLabelSelectPickup(val?.label ?? "");
+                                setPickupTimeFrom(val?.data.time_pickup_from);
+                                setCheckAvaibility(false);
+
+                                // Jika value == N/A atau Pickup Unvailable
+                                // Maka Disable Button Check Available
+                                if (val?.value == "NA") {
+                                  // Disable button check available
+                                  setDisabledCheckAvailable(true);
+                                } else {
+                                  setDisabledCheckAvailable(false);
+                                }
+                              }}
+                              onBlur={field.onBlur}
+                              name={field.name}
+                              error={fieldState.error?.message}
+                            />
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Kanan: button */}
+                    <div className="p-2 md:ml-20 w-full">
+                      {dataChargeType.length > 0 && !isLoadingAllotmentArr ? (
+                        <button
+                          type="submit"
+                          disabled={disabledCheckAvailable}
+                          className={`w-full md:w-60 text-white font-bold rounded-2xl mt-4 md:mt-0 px-4 py-2
                       ${
                         disabledCheckAvailable
                           ? "bg-gray-400 cursor-not-allowed opacity-60"
                           : "bg-red-600 hover:bg-red-700 cursor-pointer"
                       }`}
-                      >
-                        Check Availability
-                      </button>
-                    ) : (
-                      <div className="w-full h-10 bg-gray-400 text-white font-bold rounded-2xl px-4 py-2 text-center animate-pulse">
-                        <p className="text-white">Please Wait ...</p>
-                      </div>
-                    )}
+                        >
+                          Check Availability
+                        </button>
+                      ) : (
+                        <div className="w-full h-10 bg-gray-400 text-white font-bold rounded-2xl px-4 py-2 text-center animate-pulse">
+                          <p className="text-white">Please Wait ...</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </form>
+              </form>
+            )}
 
             {checkAvaibility && (
               <p className="text-md font-semibold mt-5">
@@ -1520,7 +1548,7 @@ export default function DetailDestination() {
           </div>
         </div>
 
-        {isMobile && !isSectionVisible && (
+        {hasProductSub && isMobile && !isSectionVisible && (
           <div className="md:w-[50%] h-auto fixed bottom-0 left-0 w-full z-50 shadow">
             <div className="max-w-xl p-6 bg-gray-300 border border-gray-200 rounded-lg shadow-sm ">
               <div className="flex flex-row gap-1 justify-between mb-2 items-center">
