@@ -381,16 +381,16 @@ export default function DestinationClient({ slug }: Props) {
         <section className="max-w-screen-xl mx-auto grid grid-flow-col md:grid-flow-row md:gap-3 overflow-x-auto pl-3 pr-0 md:grid-cols-4 md:overflow-visible min-h-[350px]">
           {isLoadingRecomApi ? (
             <>
-              <div className="w-[300px] md:w-auto min-h-[350px] mr-3">
+              <div className="w-[300px] md:w-auto min-h-[350px] mr-3 md:mr-0">
                 <SkeletonCard />
               </div>
-              <div className="w-[300px] md:w-auto min-h-[350px] mr-3">
+              <div className="w-[300px] md:w-auto min-h-[350px] mr-3 md:mr-0">
                 <SkeletonCard />
               </div>
-              <div className="w-[300px] md:w-auto min-h-[350px] mr-3">
+              <div className="w-[300px] md:w-auto min-h-[350px] mr-3 md:mr-0">
                 <SkeletonCard />
               </div>
-              <div className="w-[300px] md:w-auto min-h-[350px] mr-3">
+              <div className="w-[300px] md:w-auto min-h-[350px] mr-3 md:mr-0">
                 <SkeletonCard />
               </div>
             </>
@@ -443,13 +443,13 @@ export default function DestinationClient({ slug }: Props) {
               <div className="w-[300px] md:w-auto min-h-[350px] mr-3 md:mr-0">
                 <SkeletonCard />
               </div>
-              <div className="w-[300px] md:w-auto min-h-[350px] mr-3">
+              <div className="w-[300px] md:w-auto min-h-[350px] mr-3 md:mr-0">
                 <SkeletonCard />
               </div>
-              <div className="w-[300px] md:w-auto min-h-[350px] mr-3">
+              <div className="w-[300px] md:w-auto min-h-[350px] mr-3 md:mr-0">
                 <SkeletonCard />
               </div>
-              <div className="w-[300px] md:w-auto min-h-[350px] mr-3">
+              <div className="w-[300px] md:w-auto min-h-[350px] mr-3 md:mr-0">
                 <SkeletonCard />
               </div>
             </>

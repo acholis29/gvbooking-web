@@ -57,39 +57,38 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* Google Tag Manager Script */}
-        <script>
-          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-          })(window,document,'script','dataLayer','GTM-W45QJVFH');`}
-        </script>
-
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-2MWV7Q5T36"
         ></script>
-
         <script>
           {`window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
 
-          gtag('config', 'G-2MWV7Q5T36');`}
+            gtag('config', 'G-2MWV7Q5T36');`}
         </script>
+
+        {/* <!-- Cloudflare Web Analytics --> */}
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon='{"token": "17fc6778b6a24cf3a6a9ec6e0f2d5934"}'
+        ></script>
+        {/* <!-- End Cloudflare Web Analytics --> */}
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* GTM NoScript — wajib tepat setelah <body> buka */}
-        <noscript>
+        {/* <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-W45QJVFH"
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}
           ></iframe>
-        </noscript>
+        </noscript> */}
 
         <CartProvider>
           <CartApiProvider>
