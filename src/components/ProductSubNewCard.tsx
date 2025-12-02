@@ -479,7 +479,7 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
                   return (
                     <p
                       key={index}
-                      className="text-xs text-red-900 font-semibold"
+                      className="text-xs text-red-600 font-semibold mb-3"
                     >
                       {" "}
                       {items.surcharge_name} ~ {items.currency} 
