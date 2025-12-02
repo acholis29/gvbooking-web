@@ -458,15 +458,15 @@ export default function ListClient() {
               )}
             </div>
           </div>
-          <p
+          {/* <p
             className="text-xs text-gray-500 hover:text-red-800 cursor-pointer italic text-right"
             onClick={() => {
               setSelectedTypesHolidayArrDesk([]); // ✅ kosongkan semua checkbox
             }}
           >
             clear or reset
-          </p>
-          <button
+          </p> */}
+          {/* <button
             type="button"
             onClick={handleApply}
             className="mt-4 text-white bg-blue-800 hover:bg-blue-900 focus:ring-4 cursor-pointer focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 me-2 mb-2  focus:outline-none w-full"
@@ -476,7 +476,41 @@ export default function ListClient() {
               className="w-4 h-4 text-gray-100 mr-2"
             />
             Apply
-          </button>
+          </button> */}
+          {selectedTypesHolidayArrDesk.length > 0 ? (
+            <div className="mt-4 flex flex-row items-center justify-between gap-2 w-full">
+              {/* Reset 50% */}
+              <button
+                type="button"
+                onClick={() => setSelectedTypesHolidayArrDesk([])}
+                className="text-blue-800 border border-blue-800 hover:bg-blue-50 
+               font-medium rounded-lg text-sm px-2 py-2 cursor-pointer w-[50%]"
+              >
+                Reset
+              </button>
+
+              {/* Apply 50% */}
+              <button
+                type="button"
+                onClick={handleApply}
+                className="text-white bg-blue-800 hover:bg-blue-900 focus:ring-4 
+               cursor-pointer focus:ring-blue-300 font-medium rounded-lg 
+               text-sm px-4 py-2 w-[50%]"
+              >
+                Apply
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={handleApply}
+              className="text-white bg-blue-800 hover:bg-blue-900 focus:ring-4 
+               cursor-pointer focus:ring-blue-300 font-medium rounded-lg 
+               text-sm px-4 py-2 w-[100%]"
+            >
+              Apply
+            </button>
+          )}
         </div>
         {/* Kontent Kiri Mobile */}
         <div className="flex flex-row gap-2 md:hidden h-15 items-center px-2 overflow-x-auto sticky top-31 z-30 bg-white">
