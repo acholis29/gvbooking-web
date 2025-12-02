@@ -409,7 +409,7 @@ export default function DestinationClient({ slug }: Props) {
                     item.location_country
                   }?id=${idx_comp}&country=${item.location_country.toLowerCase()}&state=${item.location_state.toLowerCase()}&exc=${
                     item.excursion_id
-                  }`}
+                  }&title=${item.excursion_name}`}
                 />
               </div>
             ))
@@ -478,7 +478,7 @@ export default function DestinationClient({ slug }: Props) {
                       sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                       price={`${item.PriceFrom}`}
                       currency={item.Currency}
-                      link={`/destination/details/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}`}
+                      link={`/destination/details/${item.Country}?id=${item.idx_comp}&country=${item.Country}&state=${item.State}&exc=${item.Idx_excursion}&title=${item.Name_excursion}`}
                     />
                   </div>
                 );
