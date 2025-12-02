@@ -53,7 +53,7 @@ const ModalComponent: React.FC<ModalProps> = ({
       <ModalHeader className={`${bgColor} ${textColor}`}>
         <div className="flex items-center gap-2">
           {icon && <FontAwesomeIcon icon={icon} className={`text-white`} />}
-          <span>{title}</span>
+          <span className="text-white">{title}</span>
         </div>
       </ModalHeader>
 
