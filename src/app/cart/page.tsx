@@ -1008,7 +1008,10 @@ export default function Cart() {
                   {formatRibuanInternational(subtotalSummeryOrderLocal)}
                 </p>
               </div>
-              <form onSubmit={handleSubmit(onSubmit)} className="max-w-md my-2">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="max-w-md my-2 mt-3 mb-7"
+              >
                 <div className="flex flex-row items-center gap-2">
                   {/* INPUT MENGISI RUANG TERSISA */}
                   <input
@@ -1106,30 +1109,48 @@ export default function Cart() {
 
               {isOpenAccordion && (
                 <>
-                  {ChekedCart.map((item, index) => {
-                    return (
-                      <div
-                        key={`chekedCart-${index}`}
-                        className="flex flex-row justify-between mb-2"
-                      >
-                        <p className="text-sm text-gray-700 ">
-                          {truncateText(
-                            capitalizeWords(item.excursion_name),
-                            30
-                          )}
-                        </p>
-                        <p className="text-sm text-gray-700 font-semibold">
-                          {/* {item.currency_local} {item.price_local_in_format} */}
-                          {item.currency} {item.priceori_in_format}
-                        </p>
-                      </div>
-                    );
-                  })}
+                  <div className="max-h-20 overflow-y-auto">
+                    {ChekedCart.map((item, index) => {
+                      return (
+                        <div
+                          key={`chekedCart-${index}`}
+                          className="flex flex-row justify-between mb-2"
+                        >
+                          <p className="text-sm text-gray-700 ">
+                            {truncateText(
+                              capitalizeWords(item.excursion_name),
+                              30
+                            )}
+                          </p>
+                          <p className="text-sm text-gray-700 font-semibold">
+                            {/* {item.currency_local} {item.price_local_in_format} */}
+                            {item.currency} {item.priceori_in_format}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <hr className="my-2 border border-gray-400 opacity-50" />
+                  <div className="flex flex-row justify-between mb-2">
+                    <p className="text-sm text-gray-700 font-bold">Subtotal</p>
+                    <p className="text-sm text-gray-700 font-semibold">
+                      {buyCurrencyMF}{" "}
+                      {formatRibuanInternational(subtotalSummeryOrder)}
+                    </p>
+                  </div>
+                  <hr className="my-2 border border-gray-400 opacity-50" />
+                  <div className="flex flex-row justify-between mb-2">
+                    <p className="text-sm text-gray-700 font-semibold">Disc</p>
+                    <p className="text-sm text-gray-700 font-semibold">
+                      {buyCurrencyMF}{" "}
+                      {formatRibuanInternational(discTotalSummerOrder)}
+                    </p>
+                  </div>
                   <hr className="my-2 border border-gray-400 opacity-50" />
                 </>
               )}
 
-              <div className="flex flex-row justify-between mb-2">
+              {/* <div className="flex flex-row justify-between mb-2">
                 <p className="text-sm text-gray-700 font-bold">Subtotal</p>
                 <p className="text-sm text-gray-700 font-semibold">
                   {buyCurrencyMF}{" "}
@@ -1144,7 +1165,7 @@ export default function Cart() {
                   {formatRibuanInternational(discTotalSummerOrder)}
                 </p>
               </div>
-              <hr className="my-2 border border-gray-400 opacity-50" />
+              <hr className="my-2 border border-gray-400 opacity-50" /> */}
               <div className="flex flex-row justify-between mb-2">
                 <p className="text-gray-700 font-semibold">Total</p>
                 <p className="text-gray-700 font-semibold">
@@ -1164,7 +1185,10 @@ export default function Cart() {
                   {formatRibuanInternational(subtotalSummeryOrderLocal)}
                 </p>
               </div>
-              <form onSubmit={handleSubmit(onSubmit)} className="max-w-md my-2">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="max-w-md my-2 mt-3 mb-7"
+              >
                 <div className="flex flex-row items-center gap-2">
                   {/* INPUT MENGISI RUANG TERSISA */}
                   <input
