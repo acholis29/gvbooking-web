@@ -126,6 +126,12 @@ export function splitUsername(fullname: string) {
   return arr
 }
 
+export function safeSrc(url?: string) {
+  if (!url || typeof url !== "string") return "/images/icon/android-chrome-512x512.png";
+  if (url.trim() === "") return "/images/icon/android-chrome-512x512.png";
+  return url;
+};
+
 
 
 

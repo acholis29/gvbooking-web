@@ -7,8 +7,10 @@ export async function generateMetadata({
 }: {
   searchParams: { country?: string; state?: string };
 }) {
-  const country = searchParams.country || "unknown";
-  const state = searchParams.state || "unknown";
+  // WAJIB: tunggu searchParams
+  const query = await searchParams;
+  const country = query.country || "unknown";
+  const state = query.state || "unknown";
 
   const title = `Govacation - List ${capitalizeWords(
     country

@@ -14,6 +14,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import Image from "next/image";
+import { safeSrc } from "@/helper/helper";
 
 type GaleryProps = {
   picture?: string;
@@ -55,7 +57,7 @@ const Galery: React.FC<GaleryProps> = ({
           {/* // Mode Desktop */}
           <div className="hidden md:grid grid-cols-3 gap-2 py-5">
             {/* Gambar Utama */}
-            <div className="">
+            <div className="h-96">
               {galleryArray[0]?.endsWith(".mp4") ? (
                 // Jika Vidio Tampilkan Tumbnile
                 <div
@@ -65,7 +67,7 @@ const Galery: React.FC<GaleryProps> = ({
                     setOpen(true);
                   }}
                 >
-                  <img
+                  {/* <img
                     className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
                     src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
                     alt="Video Thumbnail"
@@ -74,7 +76,20 @@ const Galery: React.FC<GaleryProps> = ({
                       target.onerror = null;
                       target.src = "/images/icon/android-chrome-512x512.png";
                     }}
-                  />
+                  /> */}
+                  <div className="relative w-full h-full">
+                    <Image
+                      className="object-cover rounded-tl-sm rounded-bl-sm"
+                      src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
+                      alt="Video Thumbnail"
+                      fill
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.onerror = null;
+                        target.src = "/images/icon/android-chrome-512x512.png";
+                      }}
+                    />
+                  </div>
                   {/* Overlay icon play */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="bg-black/50 rounded-full p-4">▶ Play</div>
@@ -82,20 +97,37 @@ const Galery: React.FC<GaleryProps> = ({
                 </div>
               ) : (
                 // Jika gambar
-                <img
-                  className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
-                  src={galleryArray[0]}
-                  alt="Galery"
-                  onClick={() => {
-                    setSelectedIndex(0);
-                    setOpen(true);
-                  }}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.onerror = null;
-                    target.src = "/images/icon/android-chrome-512x512.png";
-                  }}
-                />
+                // <img
+                //   className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
+                //   src={galleryArray[0]}
+                //   alt="Galery"
+                //   onClick={() => {
+                //     setSelectedIndex(0);
+                //     setOpen(true);
+                //   }}
+                //   onError={(e) => {
+                //     const target = e.target as HTMLImageElement;
+                //     target.onerror = null;
+                //     target.src = "/images/icon/android-chrome-512x512.png";
+                //   }}
+                // />
+                <div className="relative w-full h-full">
+                  <Image
+                    src={safeSrc(galleryArray[0])}
+                    alt="Galery"
+                    fill
+                    className="object-cover rounded-tl-sm rounded-bl-sm"
+                    onClick={() => {
+                      setSelectedIndex(0);
+                      setOpen(true);
+                    }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.onerror = null;
+                      target.src = "/images/icon/android-chrome-512x512.png";
+                    }}
+                  />
+                </div>
               )}
             </div>
             <div className="">
@@ -108,7 +140,7 @@ const Galery: React.FC<GaleryProps> = ({
                     setOpen(true);
                   }}
                 >
-                  <img
+                  {/* <img
                     className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
                     src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
                     alt="Video Thumbnail"
@@ -117,27 +149,57 @@ const Galery: React.FC<GaleryProps> = ({
                       target.onerror = null;
                       target.src = "/images/icon/android-chrome-512x512.png";
                     }}
-                  />
+                  /> */}
+                  <div className="relative w-full h-full">
+                    <Image
+                      className="object-cover rounded-tl-sm rounded-bl-sm"
+                      src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
+                      alt="Video Thumbnail"
+                      fill
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.onerror = null;
+                        target.src = "/images/icon/android-chrome-512x512.png";
+                      }}
+                    />
+                  </div>
                   {/* Overlay icon play */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="bg-black/50 rounded-full p-4">▶ Play</div>
                   </div>
                 </div>
               ) : (
-                <img
-                  className="w-full h-full object-cover"
-                  src={galleryArray[1]}
-                  alt="Galery"
-                  onClick={() => {
-                    setSelectedIndex(1); // index gambar yang diklik
-                    setOpen(true);
-                  }}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.onerror = null;
-                    target.src = "/images/icon/android-chrome-512x512.png";
-                  }}
-                />
+                // <img
+                //   className="w-full h-full object-cover"
+                //   src={galleryArray[1]}
+                //   alt="Galery"
+                //   onClick={() => {
+                //     setSelectedIndex(1); // index gambar yang diklik
+                //     setOpen(true);
+                //   }}
+                //   onError={(e) => {
+                //     const target = e.target as HTMLImageElement;
+                //     target.onerror = null;
+                //     target.src = "/images/icon/android-chrome-512x512.png";
+                //   }}
+                // />
+                <div className="relative w-full h-full">
+                  <Image
+                    className="object-cover"
+                    src={safeSrc(galleryArray[1])}
+                    alt="Galery"
+                    fill
+                    onClick={() => {
+                      setSelectedIndex(1); // index gambar yang diklik
+                      setOpen(true);
+                    }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.onerror = null;
+                      target.src = "/images/icon/android-chrome-512x512.png";
+                    }}
+                  />
+                </div>
               )}
             </div>
             <div className="grid grid-rows-2 gap-2">
@@ -151,7 +213,7 @@ const Galery: React.FC<GaleryProps> = ({
                       setOpen(true);
                     }}
                   >
-                    <img
+                    {/* <img
                       className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
                       src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
                       alt="Video Thumbnail"
@@ -160,27 +222,58 @@ const Galery: React.FC<GaleryProps> = ({
                         target.onerror = null;
                         target.src = "/images/icon/android-chrome-512x512.png";
                       }}
-                    />
+                    /> */}
+                    <div className="relative w-full h-full">
+                      <Image
+                        className="object-cover rounded-tl-sm rounded-bl-sm"
+                        src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
+                        alt="Video Thumbnail"
+                        fill
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.onerror = null;
+                          target.src =
+                            "/images/icon/android-chrome-512x512.png";
+                        }}
+                      />
+                    </div>
                     {/* Overlay icon play */}
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="bg-black/50 rounded-full p-4">▶ Play</div>
                     </div>
                   </div>
                 ) : (
-                  <img
-                    className="w-full h-full object-cover rounded-tr-sm"
-                    src={galleryArray[2]}
-                    alt="Galery"
-                    onClick={() => {
-                      setSelectedIndex(2); // index gambar yang diklik
-                      setOpen(true);
-                    }}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.onerror = null;
-                      target.src = "/images/icon/android-chrome-512x512.png";
-                    }}
-                  />
+                  // <img
+                  //   className="w-full h-full object-cover rounded-tr-sm"
+                  //   src={galleryArray[2]}
+                  //   alt="Galery"
+                  //   onClick={() => {
+                  //     setSelectedIndex(2); // index gambar yang diklik
+                  //     setOpen(true);
+                  //   }}
+                  //   onError={(e) => {
+                  //     const target = e.target as HTMLImageElement;
+                  //     target.onerror = null;
+                  //     target.src = "/images/icon/android-chrome-512x512.png";
+                  //   }}
+                  // />
+                  <div className="relative w-full h-full">
+                    <Image
+                      className="object-cover rounded-tr-sm"
+                      src={safeSrc(galleryArray[2])}
+                      alt="Galery"
+                      fill
+                      onClick={() => {
+                        setSelectedIndex(2); // index gambar yang diklik
+                        setOpen(true);
+                      }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.onerror = null;
+                        target.src = "/images/icon/android-chrome-512x512.png";
+                      }}
+                    />
+                  </div>
                 )}
               </div>
               <div className="relative">
@@ -193,7 +286,7 @@ const Galery: React.FC<GaleryProps> = ({
                       setOpen(true);
                     }}
                   >
-                    <img
+                    {/* <img
                       className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
                       src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
                       alt="Video Thumbnail"
@@ -202,27 +295,58 @@ const Galery: React.FC<GaleryProps> = ({
                         target.onerror = null;
                         target.src = "/images/icon/android-chrome-512x512.png";
                       }}
-                    />
+                    /> */}
+                    <div className="relative w-full h-full">
+                      <Image
+                        className="object-cover rounded-tl-sm rounded-bl-sm"
+                        src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
+                        alt="Video Thumbnail"
+                        fill
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.onerror = null;
+                          target.src =
+                            "/images/icon/android-chrome-512x512.png";
+                        }}
+                      />
+                    </div>
                     {/* Overlay icon play */}
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="bg-black/50 rounded-full p-4">▶ Play</div>
                     </div>
                   </div>
                 ) : (
-                  <img
-                    className="w-full h-full object-cover rounded-br-sm"
-                    src={galleryArray[3]}
-                    alt="Galery"
-                    onClick={() => {
-                      setSelectedIndex(3); // index gambar yang diklik
-                      setOpen(true);
-                    }}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.onerror = null;
-                      target.src = "/images/icon/android-chrome-512x512.png";
-                    }}
-                  />
+                  // <img
+                  //   className="w-full h-full object-cover rounded-br-sm"
+                  //   src={galleryArray[3]}
+                  //   alt="Galery"
+                  //   onClick={() => {
+                  //     setSelectedIndex(3); // index gambar yang diklik
+                  //     setOpen(true);
+                  //   }}
+                  //   onError={(e) => {
+                  //     const target = e.target as HTMLImageElement;
+                  //     target.onerror = null;
+                  //     target.src = "/images/icon/android-chrome-512x512.png";
+                  //   }}
+                  // />
+                  <div className="relative w-full h-full">
+                    <Image
+                      className="object-cover rounded-br-sm"
+                      src={safeSrc(galleryArray[3])}
+                      alt="Galery"
+                      fill
+                      onClick={() => {
+                        setSelectedIndex(3); // index gambar yang diklik
+                        setOpen(true);
+                      }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.onerror = null;
+                        target.src = "/images/icon/android-chrome-512x512.png";
+                      }}
+                    />
+                  </div>
                 )}
                 {/* Button pojok kanan bawah */}
                 {galleryArray.length > 4 && (
@@ -309,21 +433,39 @@ const Galery: React.FC<GaleryProps> = ({
                       </div>
                     ) : (
                       // Jika Gambar
-                      <img
-                        src={media}
-                        className="w-full h-full object-cover rounded"
-                        alt={`Gallery ${index + 1}`}
-                        onClick={() => {
-                          setSelectedIndex(index);
-                          setOpen(true);
-                        }}
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.onerror = null;
-                          target.src =
-                            "/images/icon/android-chrome-512x512.png";
-                        }}
-                      />
+                      // <img
+                      //   src={media}
+                      //   className="w-full h-full object-cover rounded"
+                      //   alt={`Gallery ${index + 1}`}
+                      //   onClick={() => {
+                      //     setSelectedIndex(index);
+                      //     setOpen(true);
+                      //   }}
+                      //   onError={(e) => {
+                      //     const target = e.target as HTMLImageElement;
+                      //     target.onerror = null;
+                      //     target.src =
+                      //       "/images/icon/android-chrome-512x512.png";
+                      //   }}
+                      // />
+                      <div className="relative w-full h-full">
+                        <Image
+                          src={media}
+                          className="object-cover rounded"
+                          alt={`Gallery ${index + 1}`}
+                          fill
+                          onClick={() => {
+                            setSelectedIndex(index);
+                            setOpen(true);
+                          }}
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.onerror = null;
+                            target.src =
+                              "/images/icon/android-chrome-512x512.png";
+                          }}
+                        />
+                      </div>
                     )}
                   </SwiperSlide>
                 ))}
@@ -335,7 +477,7 @@ const Galery: React.FC<GaleryProps> = ({
         <div className="grid grid-cols-1 gap-2 py-5">
           {/* Gambar Utama */}
           <div className="">
-            <img
+            {/* <img
               className="w-full h-full object-cover rounded-tl-sm rounded-bl-sm"
               src={"/images/error/no-image.svg"}
               alt="Galery"
@@ -348,7 +490,24 @@ const Galery: React.FC<GaleryProps> = ({
                 target.onerror = null;
                 target.src = "/images/icon/android-chrome-512x512.png";
               }}
-            />
+            /> */}
+            <div className="relative w-full h-full">
+              <Image
+                className="object-cover rounded-tl-sm rounded-bl-sm"
+                src={"/images/error/no-image.svg"}
+                alt="Galery"
+                fill
+                onClick={() => {
+                  setSelectedIndex(0); // index gambar yang diklik
+                  setOpen(true);
+                }}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null;
+                  target.src = "/images/icon/android-chrome-512x512.png";
+                }}
+              />
+            </div>
           </div>
         </div>
       )}

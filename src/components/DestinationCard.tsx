@@ -4,6 +4,8 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { useCartApi } from "@/context/CartApiContext";
 import Swal from "sweetalert2";
+import Image from "next/image";
+import { safeSrc } from "@/helper/helper";
 
 type DestinationCardProps = {
   image: string;
@@ -59,16 +61,19 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
       }}
     >
       <div className="relative shrink-0 md:shrink h-48 w-72 md:w-full rounded-xl overflow-hidden shadow-lg">
-        <img
-          className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-150"
-          src={image}
-          alt={title}
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.onerror = null;
-            target.src = "/images/icon/android-chrome-512x512.png";
-          }}
-        />
+        <div className="relative w-full h-full">
+          <Image
+            className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-150"
+            src={safeSrc(image)}
+            alt={title}
+            fill
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.onerror = null;
+              target.src = "/images/icon/android-chrome-512x512.png";
+            }}
+          />
+        </div>
         <div className="absolute bottom-0 left-0 right-0 bg-black/40 p-4">
           <h3
             className="text-white text-lg font-bold uppercase truncate"

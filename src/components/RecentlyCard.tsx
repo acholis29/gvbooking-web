@@ -15,6 +15,8 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 // Path
 import { usePathname } from "next/navigation";
+import Image from "next/image";
+import { safeSrc } from "@/helper/helper";
 
 type RecentlyCardProps = {
   idx_comp: string;
@@ -67,16 +69,19 @@ const RecentlyCard: React.FC<RecentlyCardProps> = ({
   return (
     <div className="relative w-72 md:w-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
       <Link href={link} className="relative block overflow-hidden rounded-t-lg">
-        <img
-          className="w-full h-65 object-cover transition-transform duration-300 ease-in-out hover:scale-150"
-          src={image}
-          alt={title}
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.onerror = null;
-            target.src = "/images/icon/android-chrome-512x512.png";
-          }}
-        />
+        <div className="relative w-full h-65">
+          <Image
+            className="object-cover transition-transform duration-300 ease-in-out hover:scale-150"
+            src={safeSrc(image)}
+            alt={title}
+            fill
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.onerror = null;
+              target.src = "/images/icon/android-chrome-512x512.png";
+            }}
+          />
+        </div>
       </Link>
       {/* {colorWish.toString()} */}
       {/* Wishlist button - posisi atas kanan gambar */}

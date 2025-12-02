@@ -34,6 +34,7 @@ import { useInitial } from "@/context/InitialContext";
 import Checkbox from "@/components/Checkbox";
 import { useSession } from "next-auth/react";
 import { useProfile } from "@/context/ProfileContext";
+import Image from "next/image";
 
 type DestinationItemApi = {
   excursion_id: string;
@@ -728,7 +729,7 @@ export default function ListClient() {
               <div className="col-span-4 text-center text-gray-500 py-10 flex flex-col justify-center items-center">
                 {apply != 0 && (
                   <>
-                    <img
+                    <Image
                       src="/images/error/empty.jpg"
                       alt=""
                       className="w-50 md:w-100 h-auto"

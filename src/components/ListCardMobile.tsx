@@ -21,6 +21,8 @@ import { useWish } from "@/context/WishContext";
 // Toast
 import toast from "react-hot-toast";
 import Link from "next/link";
+import Image from "next/image";
+import { safeSrc } from "@/helper/helper";
 
 type ListCardMobileProps = {
   idx_comp: string;
@@ -75,16 +77,19 @@ const ListCardMobile: React.FC<ListCardMobileProps> = ({
             href={link}
             className="relative block overflow-hidden rounded-sm"
           >
-            <img
-              className="object-cover w-full rounded-sm h-40 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg transition-transform duration-300 ease-in-out hover:scale-115"
-              src={image}
-              alt={title}
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.onerror = null;
-                target.src = "/images/icon/android-chrome-512x512.png";
-              }}
-            />
+            <div className="relative w-full h-40 md:h-auto md:w-48">
+              <Image
+                className="object-cover rounded-sm md:rounded-none md:rounded-s-lg transition-transform duration-300 ease-in-out hover:scale-115"
+                src={safeSrc(image)}
+                alt={title}
+                fill
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null;
+                  target.src = "/images/icon/android-chrome-512x512.png";
+                }}
+              />
+            </div>
           </Link>
           {/* Wishlist button - posisi atas kanan gambar */}
           <button

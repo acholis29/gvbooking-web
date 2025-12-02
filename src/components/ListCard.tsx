@@ -21,6 +21,8 @@ import { useWish } from "@/context/WishContext";
 // Toast
 import toast from "react-hot-toast";
 import Link from "next/link";
+import Image from "next/image";
+import { safeSrc } from "@/helper/helper";
 
 type ListCardProps = {
   idx_comp: string;
@@ -70,10 +72,12 @@ const ListCard: React.FC<ListCardProps> = ({
   return (
     <div className="relative w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
       <Link href={link} className="relative block overflow-hidden rounded-t-lg">
-        <img
-          className="w-full h-40 md:h-50 object-cover transition-transform duration-300 ease-in-out hover:scale-115"
-          src={image}
+        <div className="relative w-full h-40 md:h-50 "></div>
+        <Image
+          className="object-cover transition-transform duration-300 ease-in-out hover:scale-115"
+          src={safeSrc(image)}
           alt={title}
+          fill
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.onerror = null;
