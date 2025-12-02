@@ -1,13 +1,8 @@
 import { capitalizeWords } from "@/helper/helper";
 import DetailDestination from "./client";
 
-// --- Dynamic Metadata ---
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: { country?: string; state?: string; title?: string };
-}) {
-  // WAJIB: tunggu searchParams
+export async function generateMetadata({ searchParams }: any) {
+  // WAJIB (Next.js 15): searchParams harus di-await
   const query = await searchParams;
 
   const country = query.country || "unknown";

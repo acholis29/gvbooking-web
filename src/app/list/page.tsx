@@ -2,13 +2,10 @@ import { Suspense } from "react";
 import ListClient from "./ListClient";
 import { capitalizeWords } from "@/helper/helper";
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: { country?: string; state?: string };
-}) {
-  // WAJIB: tunggu searchParams
+export async function generateMetadata({ searchParams }: any) {
+  // WAJIB (Next.js 15): searchParams harus di-await
   const query = await searchParams;
+
   const country = query.country || "unknown";
   const state = query.state || "unknown";
 
@@ -18,7 +15,7 @@ export async function generateMetadata({
 
   return {
     title,
-    description: `Halaman untuk list ${state}, ${country}`,
+    description: `Halaman untuk ${state}, ${country}`,
   };
 }
 
