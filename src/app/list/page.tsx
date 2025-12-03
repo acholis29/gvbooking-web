@@ -9,9 +9,9 @@ export async function generateMetadata({ searchParams }: any) {
   const country = query.country || "unknown";
   const state = query.state || "unknown";
 
-  const title = `Govacation - List ${capitalizeWords(
-    country
-  )} (${capitalizeWords(state)})`;
+  const title = `Govacation - ${capitalizeWords(country)} (${capitalizeWords(
+    state
+  )})`;
 
   return {
     title,
