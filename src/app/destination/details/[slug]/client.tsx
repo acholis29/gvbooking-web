@@ -464,8 +464,6 @@ export default function DetailDestination() {
 
         if (contentType.includes("application/json")) {
           const json = await res.json();
-          console.log("DATA PRODUCT");
-          console.log(json);
           setDataProduct(json);
         }
       } catch (err: any) {
@@ -511,8 +509,6 @@ export default function DetailDestination() {
 
         if (contentType.includes("application/json")) {
           const json = await res.json();
-          console.log("DATA SUB EXCURSION");
-          console.log(json);
           setDataProductSub(json);
         }
       } catch (err: any) {

@@ -15,7 +15,7 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import Image from "next/image";
-import { safeSrc } from "@/helper/helper";
+import { safeSrc, sanitizeImage } from "@/helper/helper";
 
 type GaleryProps = {
   picture?: string;
@@ -83,6 +83,7 @@ const Galery: React.FC<GaleryProps> = ({
                       src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
                       alt="Video Thumbnail"
                       fill
+                      sizes="(max-width: 768px) 260px, 25vw"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.onerror = null;
@@ -113,9 +114,10 @@ const Galery: React.FC<GaleryProps> = ({
                 // />
                 <div className="relative w-full h-full">
                   <Image
-                    src={safeSrc(galleryArray[0])}
+                    src={sanitizeImage(safeSrc(galleryArray[0]))}
                     alt="Galery"
                     fill
+                    sizes="(max-width: 768px) 260px, 25vw"
                     className="object-cover rounded-tl-sm rounded-bl-sm"
                     onClick={() => {
                       setSelectedIndex(0);
@@ -156,6 +158,7 @@ const Galery: React.FC<GaleryProps> = ({
                       src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
                       alt="Video Thumbnail"
                       fill
+                      sizes="(max-width: 768px) 260px, 25vw"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.onerror = null;
@@ -186,9 +189,10 @@ const Galery: React.FC<GaleryProps> = ({
                 <div className="relative w-full h-full">
                   <Image
                     className="object-cover"
-                    src={safeSrc(galleryArray[1])}
+                    src={sanitizeImage(safeSrc(galleryArray[1]))}
                     alt="Galery"
                     fill
+                    sizes="(max-width: 768px) 260px, 25vw"
                     onClick={() => {
                       setSelectedIndex(1); // index gambar yang diklik
                       setOpen(true);
@@ -229,6 +233,7 @@ const Galery: React.FC<GaleryProps> = ({
                         src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
                         alt="Video Thumbnail"
                         fill
+                        sizes="(max-width: 768px) 260px, 25vw"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.onerror = null;
@@ -260,9 +265,10 @@ const Galery: React.FC<GaleryProps> = ({
                   <div className="relative w-full h-full">
                     <Image
                       className="object-cover rounded-tr-sm"
-                      src={safeSrc(galleryArray[2])}
+                      src={sanitizeImage(safeSrc(galleryArray[2]))}
                       alt="Galery"
                       fill
+                      sizes="(max-width: 768px) 260px, 25vw"
                       onClick={() => {
                         setSelectedIndex(2); // index gambar yang diklik
                         setOpen(true);
@@ -302,6 +308,7 @@ const Galery: React.FC<GaleryProps> = ({
                         src="/images/thumbnile/thumbnile-vidio1.jpg" // ✅ thumbnail static
                         alt="Video Thumbnail"
                         fill
+                        sizes="(max-width: 768px) 260px, 25vw"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.onerror = null;
@@ -333,9 +340,10 @@ const Galery: React.FC<GaleryProps> = ({
                   <div className="relative w-full h-full">
                     <Image
                       className="object-cover rounded-br-sm"
-                      src={safeSrc(galleryArray[3])}
+                      src={sanitizeImage(safeSrc(galleryArray[3]))}
                       alt="Galery"
                       fill
+                      sizes="(max-width: 768px) 260px, 25vw"
                       onClick={() => {
                         setSelectedIndex(3); // index gambar yang diklik
                         setOpen(true);
@@ -450,10 +458,11 @@ const Galery: React.FC<GaleryProps> = ({
                       // />
                       <div className="relative w-full h-full">
                         <Image
-                          src={media}
+                          src={sanitizeImage(safeSrc(media))}
                           className="object-cover rounded"
                           alt={`Gallery ${index + 1}`}
                           fill
+                          sizes="(max-width: 768px) 260px, 25vw"
                           onClick={() => {
                             setSelectedIndex(index);
                             setOpen(true);
@@ -497,6 +506,7 @@ const Galery: React.FC<GaleryProps> = ({
                 src={"/images/error/no-image.svg"}
                 alt="Galery"
                 fill
+                sizes="(max-width: 768px) 260px, 25vw"
                 onClick={() => {
                   setSelectedIndex(0); // index gambar yang diklik
                   setOpen(true);

@@ -22,7 +22,7 @@ import { useWish } from "@/context/WishContext";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import Image from "next/image";
-import { safeSrc } from "@/helper/helper";
+import { safeSrc, sanitizeImage } from "@/helper/helper";
 
 type ListCardProps = {
   idx_comp: string;
@@ -75,9 +75,10 @@ const ListCard: React.FC<ListCardProps> = ({
         <div className="relative w-full h-40 md:h-50 "></div>
         <Image
           className="object-cover transition-transform duration-300 ease-in-out hover:scale-115"
-          src={safeSrc(image)}
+          src={sanitizeImage(safeSrc(image))}
           alt={title}
           fill
+          sizes="(max-width: 768px) 260px, 25vw"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.onerror = null;

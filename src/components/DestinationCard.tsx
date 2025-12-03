@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCartApi } from "@/context/CartApiContext";
 import Swal from "sweetalert2";
 import Image from "next/image";
-import { safeSrc } from "@/helper/helper";
+import { safeSrc, sanitizeImage } from "@/helper/helper";
 
 type DestinationCardProps = {
   image: string;
@@ -64,9 +64,10 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
         <div className="relative w-full h-full">
           <Image
             className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-150"
-            src={safeSrc(image)}
+            src={sanitizeImage(safeSrc(image))}
             alt={title}
             fill
+            sizes="(max-width: 768px) 260px, 25vw"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.onerror = null;
