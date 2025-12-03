@@ -72,19 +72,20 @@ const ListCard: React.FC<ListCardProps> = ({
   return (
     <div className="relative w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm shrink-0 md:shrink flex flex-col h-full">
       <Link href={link} className="relative block overflow-hidden rounded-t-lg">
-        <div className="relative w-full h-40 md:h-50 "></div>
-        <Image
-          className="object-cover transition-transform duration-300 ease-in-out hover:scale-115"
-          src={sanitizeImage(safeSrc(image))}
-          alt={title}
-          fill
-          sizes="(max-width: 768px) 260px, 25vw"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.onerror = null;
-            target.src = "/images/icon/android-chrome-512x512.png";
-          }}
-        />
+        <div className="relative w-full h-40 md:h-50 ">
+          <Image
+            className="object-cover transition-transform duration-300 ease-in-out hover:scale-115"
+            src={sanitizeImage(safeSrc(image))}
+            alt={title}
+            fill
+            sizes="(max-width: 768px) 260px, 25vw"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.onerror = null;
+              target.src = "/images/icon/android-chrome-512x512.png";
+            }}
+          />
+        </div>
       </Link>
       {/* Wishlist button - posisi atas kanan gambar */}
       <button
