@@ -64,6 +64,9 @@ const ListCard: React.FC<ListCardProps> = ({
 
   // State Data Loading
   const [isWish, setIsWish] = useState(false);
+  // Image
+  const [imgSrc, setImgSrc] = useState(sanitizeImage(safeSrc(image)));
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     setIsWish(colorWish);
@@ -75,14 +78,21 @@ const ListCard: React.FC<ListCardProps> = ({
         <div className="relative w-full h-40 md:h-50 ">
           <Image
             className="object-cover transition-transform duration-300 ease-in-out hover:scale-115"
-            src={sanitizeImage(safeSrc(image))}
+            // src={sanitizeImage(safeSrc(image))}
+            src={imgSrc}
             alt={title}
             fill
             sizes="(max-width: 768px) 260px, 25vw"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.onerror = null;
-              target.src = "/images/icon/android-chrome-512x512.png";
+            // onError={(e) => {
+            //   const target = e.target as HTMLImageElement;
+            //   target.onerror = null;
+            //   target.src = "/images/icon/android-chrome-512x512.png";
+            // }}
+            onError={() => {
+              if (!hasError) {
+                setHasError(true);
+                setImgSrc("/images/icon/android-chrome-512x512.png");
+              }
             }}
           />
         </div>
