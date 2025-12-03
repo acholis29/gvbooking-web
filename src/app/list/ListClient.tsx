@@ -729,11 +729,20 @@ export default function ListClient() {
               <div className="col-span-4 text-center text-gray-500 py-10 flex flex-col justify-center items-center">
                 {apply != 0 && (
                   <>
-                    <Image
+                    {/* <Image
                       src="/images/error/empty.jpg"
                       alt=""
                       className="w-50 md:w-100 h-auto"
-                    />
+                    /> */}
+                    <div className="relative w-50 md:w-100 aspect-[4/3]">
+                      <Image
+                        src="/images/error/empty.jpg"
+                        alt="empty"
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+
                     <p className="text-2xl">Activities not found</p>
                   </>
                 )}
