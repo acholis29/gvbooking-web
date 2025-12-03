@@ -58,6 +58,9 @@ const RecentlyCard: React.FC<RecentlyCardProps> = ({
 
   // State Data Loading
   const [isWish, setIsWish] = useState(colorWish);
+  // Image
+  const [imgSrc, setImgSrc] = useState(sanitizeImage(safeSrc(image)));
+  const [hasError, setHasError] = useState(false);
   // Hide
   const pathname = usePathname();
   const hidePrice = pathname === "/" || pathname === "/home";
@@ -72,14 +75,20 @@ const RecentlyCard: React.FC<RecentlyCardProps> = ({
         <div className="relative w-full h-65">
           <Image
             className="object-cover transition-transform duration-300 ease-in-out hover:scale-150"
-            src={sanitizeImage(safeSrc(image))}
+            src={imgSrc}
             alt={title}
             fill
             sizes="(max-width: 768px) 260px, 25vw"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.onerror = null;
-              target.src = "/images/icon/android-chrome-512x512.png";
+            // onError={(e) => {
+            //   const target = e.target as HTMLImageElement;
+            //   target.onerror = null;
+            //   target.src = "/images/icon/android-chrome-512x512.png";
+            // }}
+            onError={() => {
+              if (!hasError) {
+                setHasError(true);
+                setImgSrc("/images/icon/android-chrome-512x512.png");
+              }
             }}
           />
         </div>

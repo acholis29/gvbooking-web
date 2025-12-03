@@ -1,6 +1,6 @@
 // components/DestinationCard.tsx
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCartApi } from "@/context/CartApiContext";
 import Swal from "sweetalert2";
@@ -26,6 +26,9 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
   const router = useRouter();
   // Cart API Counter
   const { cartApiCount, idxCompCart } = useCartApi();
+  // Image
+  const [imgSrc, setImgSrc] = useState(sanitizeImage(safeSrc(image)));
+  const [hasError, setHasError] = useState(false);
 
   return (
     // <Link href={link} className="block group">
@@ -64,14 +67,20 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
         <div className="relative w-full h-full">
           <Image
             className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-150"
-            src={sanitizeImage(safeSrc(image))}
+            src={imgSrc}
             alt={title}
             fill
             sizes="(max-width: 768px) 260px, 25vw"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.onerror = null;
-              target.src = "/images/icon/android-chrome-512x512.png";
+            // onError={(e) => {
+            //   const target = e.target as HTMLImageElement;
+            //   target.onerror = null;
+            //   target.src = "/images/icon/android-chrome-512x512.png";
+            // }}
+            onError={() => {
+              if (!hasError) {
+                setHasError(true);
+                setImgSrc("/images/icon/android-chrome-512x512.png");
+              }
             }}
           />
         </div>
