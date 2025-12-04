@@ -121,7 +121,26 @@ const ListCardMobile: React.FC<ListCardMobileProps> = ({
             } hover:text-red-500 hover:border-red-500 p-2 rounded-full transition`}
             aria-label="Add to wishlist"
           >
-            <FontAwesomeIcon icon={faHeart} className="w-4 h-4" />
+            {/* <FontAwesomeIcon icon={faHeart} className="w-4 h-4" /> */}
+            <div className="relative inline-flex items-center justify-center">
+              {/* Layer bawah (border merah, lebih besar) */}
+              <FontAwesomeIcon
+                icon={faHeart}
+                size="1x"
+                className={`absolute inset-0 ${
+                  isWish ? "text-red-500" : "text-gray-400"
+                }  scale-110 top-40`}
+              />
+
+              {/* Layer atas (heart putih) */}
+              <FontAwesomeIcon
+                icon={faHeart}
+                size="1x"
+                className={`${
+                  isWish ? "text-red-500" : "text-white hover:text-red-500"
+                } z-10`}
+              />
+            </div>
           </button>
         </div>
       </div>
