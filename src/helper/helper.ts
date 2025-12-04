@@ -135,8 +135,7 @@ export function safeSrc(url?: string) {
 export function sanitizeImage(url: string) {
   return url
     .replace(/([^:]\/)\/+/g, "$1") // hilangkan double slash
-    .replace(/ /g, "%20") // encode spasi
-    .replace(/\?/g, "%3F"); // encode '?'
+    .replace(/ /g, "%20"); // encode spasi
 }
 
 

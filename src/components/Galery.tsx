@@ -39,6 +39,27 @@ const Galery: React.FC<GaleryProps> = ({
   // galleryArray.splice(2, 0, "/videos/bali-kaur.mp4"); //sisipkan diindex 2
 
   const [isMobile, setIsMobile] = useState(false);
+  // Image
+  const [imgSrc0, setImgSrc0] = useState(
+    "/images/icon/android-chrome-512x512.png"
+  );
+  const [hasError0, setHasError0] = useState(false);
+  const [imgSrc1, setImgSrc1] = useState(
+    "/images/icon/android-chrome-512x512.png"
+  );
+  const [hasError1, setHasError1] = useState(false);
+  const [imgSrc2, setImgSrc2] = useState(
+    "/images/icon/android-chrome-512x512.png"
+  );
+  const [hasError2, setHasError2] = useState(false);
+  const [imgSrc3, setImgSrc3] = useState(
+    "/images/icon/android-chrome-512x512.png"
+  );
+  const [hasError3, setHasError3] = useState(false);
+  const [imgSrc4, setImgSrc4] = useState(
+    "/images/icon/android-chrome-512x512.png"
+  );
+  const [hasError4, setHasError4] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -49,6 +70,32 @@ const Galery: React.FC<GaleryProps> = ({
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    if (galleryArray.length > 0) {
+      for (let index = 0; index < galleryArray.length; index++) {
+        if (index == 0) {
+          setImgSrc0(sanitizeImage(safeSrc(galleryArray[index])));
+        }
+
+        if (index == 1) {
+          setImgSrc1(sanitizeImage(safeSrc(galleryArray[index])));
+        }
+
+        if (index == 2) {
+          setImgSrc2(sanitizeImage(safeSrc(galleryArray[index])));
+        }
+
+        if (index == 3) {
+          setImgSrc3(sanitizeImage(safeSrc(galleryArray[index])));
+        }
+
+        if (index == 4) {
+          setImgSrc4(sanitizeImage(safeSrc(galleryArray[index])));
+        }
+      }
+    }
+  }, [galleryArray]);
 
   return (
     <>
@@ -84,10 +131,16 @@ const Galery: React.FC<GaleryProps> = ({
                       alt="Video Thumbnail"
                       fill
                       sizes="(max-width: 768px) 260px, 25vw"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.onerror = null;
-                        target.src = "/images/icon/android-chrome-512x512.png";
+                      // onError={(e) => {
+                      //   const target = e.target as HTMLImageElement;
+                      //   target.onerror = null;
+                      //   target.src = "/images/icon/android-chrome-512x512.png";
+                      // }}
+                      onError={() => {
+                        if (!hasError0) {
+                          setHasError0(true);
+                          setImgSrc0("/images/icon/android-chrome-512x512.png");
+                        }
                       }}
                     />
                   </div>
@@ -114,7 +167,8 @@ const Galery: React.FC<GaleryProps> = ({
                 // />
                 <div className="relative w-full h-full">
                   <Image
-                    src={sanitizeImage(safeSrc(galleryArray[0]))}
+                    // src={sanitizeImage(safeSrc(galleryArray[0]))}
+                    src={imgSrc0}
                     alt="Galery"
                     fill
                     sizes="(max-width: 768px) 260px, 25vw"
@@ -123,10 +177,16 @@ const Galery: React.FC<GaleryProps> = ({
                       setSelectedIndex(0);
                       setOpen(true);
                     }}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.onerror = null;
-                      target.src = "/images/icon/android-chrome-512x512.png";
+                    // onError={(e) => {
+                    //   const target = e.target as HTMLImageElement;
+                    //   target.onerror = null;
+                    //   target.src = "/images/icon/android-chrome-512x512.png";
+                    // }}
+                    onError={() => {
+                      if (!hasError0) {
+                        setHasError0(true);
+                        setImgSrc0("/images/icon/android-chrome-512x512.png");
+                      }
                     }}
                   />
                 </div>
@@ -159,10 +219,16 @@ const Galery: React.FC<GaleryProps> = ({
                       alt="Video Thumbnail"
                       fill
                       sizes="(max-width: 768px) 260px, 25vw"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.onerror = null;
-                        target.src = "/images/icon/android-chrome-512x512.png";
+                      // onError={(e) => {
+                      //   const target = e.target as HTMLImageElement;
+                      //   target.onerror = null;
+                      //   target.src = "/images/icon/android-chrome-512x512.png";
+                      // }}
+                      onError={() => {
+                        if (!hasError1) {
+                          setHasError1(true);
+                          setImgSrc1("/images/icon/android-chrome-512x512.png");
+                        }
                       }}
                     />
                   </div>
@@ -189,7 +255,8 @@ const Galery: React.FC<GaleryProps> = ({
                 <div className="relative w-full h-full">
                   <Image
                     className="object-cover"
-                    src={sanitizeImage(safeSrc(galleryArray[1]))}
+                    // src={sanitizeImage(safeSrc(galleryArray[1]))}
+                    src={imgSrc1}
                     alt="Galery"
                     fill
                     sizes="(max-width: 768px) 260px, 25vw"
@@ -197,10 +264,16 @@ const Galery: React.FC<GaleryProps> = ({
                       setSelectedIndex(1); // index gambar yang diklik
                       setOpen(true);
                     }}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.onerror = null;
-                      target.src = "/images/icon/android-chrome-512x512.png";
+                    // onError={(e) => {
+                    //   const target = e.target as HTMLImageElement;
+                    //   target.onerror = null;
+                    //   target.src = "/images/icon/android-chrome-512x512.png";
+                    // }}
+                    onError={() => {
+                      if (!hasError1) {
+                        setHasError1(true);
+                        setImgSrc1("/images/icon/android-chrome-512x512.png");
+                      }
                     }}
                   />
                 </div>
@@ -234,11 +307,19 @@ const Galery: React.FC<GaleryProps> = ({
                         alt="Video Thumbnail"
                         fill
                         sizes="(max-width: 768px) 260px, 25vw"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.onerror = null;
-                          target.src =
-                            "/images/icon/android-chrome-512x512.png";
+                        // onError={(e) => {
+                        //   const target = e.target as HTMLImageElement;
+                        //   target.onerror = null;
+                        //   target.src =
+                        //     "/images/icon/android-chrome-512x512.png";
+                        // }}
+                        onError={() => {
+                          if (!hasError2) {
+                            setHasError2(true);
+                            setImgSrc2(
+                              "/images/icon/android-chrome-512x512.png"
+                            );
+                          }
                         }}
                       />
                     </div>
@@ -265,7 +346,8 @@ const Galery: React.FC<GaleryProps> = ({
                   <div className="relative w-full h-full">
                     <Image
                       className="object-cover rounded-tr-sm"
-                      src={sanitizeImage(safeSrc(galleryArray[2]))}
+                      // src={sanitizeImage(safeSrc(galleryArray[2]))}
+                      src={imgSrc2}
                       alt="Galery"
                       fill
                       sizes="(max-width: 768px) 260px, 25vw"
@@ -273,10 +355,16 @@ const Galery: React.FC<GaleryProps> = ({
                         setSelectedIndex(2); // index gambar yang diklik
                         setOpen(true);
                       }}
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.onerror = null;
-                        target.src = "/images/icon/android-chrome-512x512.png";
+                      // onError={(e) => {
+                      //   const target = e.target as HTMLImageElement;
+                      //   target.onerror = null;
+                      //   target.src = "/images/icon/android-chrome-512x512.png";
+                      // }}
+                      onError={() => {
+                        if (!hasError2) {
+                          setHasError2(true);
+                          setImgSrc2("/images/icon/android-chrome-512x512.png");
+                        }
                       }}
                     />
                   </div>
@@ -309,11 +397,19 @@ const Galery: React.FC<GaleryProps> = ({
                         alt="Video Thumbnail"
                         fill
                         sizes="(max-width: 768px) 260px, 25vw"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.onerror = null;
-                          target.src =
-                            "/images/icon/android-chrome-512x512.png";
+                        // onError={(e) => {
+                        //   const target = e.target as HTMLImageElement;
+                        //   target.onerror = null;
+                        //   target.src =
+                        //     "/images/icon/android-chrome-512x512.png";
+                        // }}
+                        onError={() => {
+                          if (!hasError3) {
+                            setHasError3(true);
+                            setImgSrc3(
+                              "/images/icon/android-chrome-512x512.png"
+                            );
+                          }
                         }}
                       />
                     </div>
@@ -340,7 +436,8 @@ const Galery: React.FC<GaleryProps> = ({
                   <div className="relative w-full h-full">
                     <Image
                       className="object-cover rounded-br-sm"
-                      src={sanitizeImage(safeSrc(galleryArray[3]))}
+                      // src={sanitizeImage(safeSrc(galleryArray[3]))}
+                      src={imgSrc3}
                       alt="Galery"
                       fill
                       sizes="(max-width: 768px) 260px, 25vw"
@@ -348,10 +445,16 @@ const Galery: React.FC<GaleryProps> = ({
                         setSelectedIndex(3); // index gambar yang diklik
                         setOpen(true);
                       }}
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.onerror = null;
-                        target.src = "/images/icon/android-chrome-512x512.png";
+                      // onError={(e) => {
+                      //   const target = e.target as HTMLImageElement;
+                      //   target.onerror = null;
+                      //   target.src = "/images/icon/android-chrome-512x512.png";
+                      // }}
+                      onError={() => {
+                        if (!hasError3) {
+                          setHasError3(true);
+                          setImgSrc3("/images/icon/android-chrome-512x512.png");
+                        }
                       }}
                     />
                   </div>
@@ -467,11 +570,19 @@ const Galery: React.FC<GaleryProps> = ({
                             setSelectedIndex(index);
                             setOpen(true);
                           }}
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.onerror = null;
-                            target.src =
-                              "/images/icon/android-chrome-512x512.png";
+                          // onError={(e) => {
+                          //   const target = e.target as HTMLImageElement;
+                          //   target.onerror = null;
+                          //   target.src =
+                          //     "/images/icon/android-chrome-512x512.png";
+                          // }}
+                          onError={() => {
+                            if (!hasError4) {
+                              setHasError4(true);
+                              setImgSrc4(
+                                "/images/icon/android-chrome-512x512.png"
+                              );
+                            }
                           }}
                         />
                       </div>
@@ -511,10 +622,16 @@ const Galery: React.FC<GaleryProps> = ({
                   setSelectedIndex(0); // index gambar yang diklik
                   setOpen(true);
                 }}
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.onerror = null;
-                  target.src = "/images/icon/android-chrome-512x512.png";
+                // onError={(e) => {
+                //   const target = e.target as HTMLImageElement;
+                //   target.onerror = null;
+                //   target.src = "/images/icon/android-chrome-512x512.png";
+                // }}
+                onError={() => {
+                  if (!hasError4) {
+                    setHasError4(true);
+                    setImgSrc4("/images/icon/android-chrome-512x512.png");
+                  }
                 }}
               />
             </div>
