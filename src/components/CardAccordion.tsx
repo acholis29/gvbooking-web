@@ -906,7 +906,7 @@ const CardAccordion: React.FC<Props> = ({
               <p className="mb-3 text-xs md:text-md text-gray-700">
                 {item.location_name} | {formatDate(item.pickup_date)}
                 {" • "}
-                {item.pickup_time}
+                {item.pickup_time} {"(Local Time)"}
                 {/* <FontAwesomeIcon icon={faClock} className="w-4 h-4 ml-1" /> */}
               </p>
             )}
