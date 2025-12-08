@@ -191,6 +191,12 @@ export default function ListClient() {
   }, [selectedTypesHolidayArrMob]);
 
   useEffect(() => {
+    if (selectedTypesHolidayArrDesk.length == 0) {
+      handleApply();
+    }
+  }, [selectedTypesHolidayArrDesk]);
+
+  useEffect(() => {
     setIsLoadList(true);
     let sorting = selectedSorting == "price asc" ? "0" : "1";
     const formBody = new URLSearchParams({
