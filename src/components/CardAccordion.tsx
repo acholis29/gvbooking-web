@@ -835,6 +835,12 @@ const CardAccordion: React.FC<Props> = ({
     handleSubmitToCart();
   }, [priceSurcharge]);
 
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "";
+    const [year, month, day] = dateString.split("-");
+    return `${day}-${month}-${year}`;
+  };
+
   return (
     <div className="relative md:max-w-3xl mb-4">
       {/* Tombol pojok kanan atas */}
@@ -898,7 +904,9 @@ const CardAccordion: React.FC<Props> = ({
 
             {!isEdit && (
               <p className="mb-3 text-xs md:text-md text-gray-700">
-                {item.location_name} | {item.pickup_time}
+                {item.location_name} | {formatDate(item.pickup_date)}
+                {" • "}
+                {item.pickup_time}
                 {/* <FontAwesomeIcon icon={faClock} className="w-4 h-4 ml-1" /> */}
               </p>
             )}
