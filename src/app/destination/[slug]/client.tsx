@@ -21,6 +21,7 @@ import { useDate } from "@/context/DateContext";
 import { useCartApi } from "@/context/CartApiContext";
 // Helper
 import {
+  cleanString,
   getCountryImageUrl,
   getHostImageUrl,
   splitUsername,
@@ -353,7 +354,10 @@ export default function DestinationClient({ slug }: Props) {
               localDestination.map((item, index) => (
                 <div className="w-[260px] md:w-auto min-h-[240px]" key={index}>
                   <DestinationCard
-                    image={`/images/destination/${slug}.jpg`}
+                    // image={`/images/destination/${slug}.jpg`}
+                    image={`/images/destination/webp/${cleanString(
+                      item.State
+                    )}.webp`}
                     title={`${item.State}`}
                     activities={item.qty}
                     idx_comp={idx_comp ?? ""}

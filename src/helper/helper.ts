@@ -116,11 +116,13 @@ export const getHostImageUrl = (
   return `${found.url_img}`;
 };
 
+// Generate Temp Email
 export function generateTempEmail(): string {
   const randomStr = Math.random().toString(36).substring(2, 10);
   return `${randomStr}@temp.com`;
 }
 
+// Split username dari gmail login
 export function splitUsername(fullname: string) {
   const arr: string[] = fullname.split(" ");
   return arr
@@ -132,10 +134,18 @@ export function safeSrc(url?: string) {
   return url;
 };
 
+// Sanitasi
 export function sanitizeImage(url: string) {
   return url
     .replace(/([^:]\/)\/+/g, "$1") // hilangkan double slash
     .replace(/ /g, "%20"); // encode spasi
+}
+
+// utils/cleanString.ts
+export function cleanString(input: string): string {
+  return input
+    .toLowerCase()
+    .replace(/[^a-z0-9]/gi, ""); // hapus semua selain huruf & angka
 }
 
 
