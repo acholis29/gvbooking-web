@@ -1592,6 +1592,8 @@ export default function DetailDestination() {
                           target.classList.add("ring-2", "ring-gray-500");
                           setTimeout(() => {
                             target.classList.remove("ring-2", "ring-gray-500");
+                            //Set Hidden Check Avaibilty Mobile
+                            setIsSectionVisible(true);
                           }, 1500);
                         }
                       }}
