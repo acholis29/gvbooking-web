@@ -181,6 +181,7 @@ export default function DestinationClient({ slug }: Props) {
         setLanguage(param.default_language);
         // set recomendation api
         setRecomendedDestinationApi(json.msg.product_search_recommendation);
+        console.log(json.msg.product_search_recommendation);
         setMasterCurrency(currencyList);
         let presentCurrency = localStorage.getItem("currency") ?? "";
         if (presentCurrency == "") {
@@ -315,7 +316,8 @@ export default function DestinationClient({ slug }: Props) {
     <div>
       {/* Jumbotron */}
       <JumbotronComponent
-        image={`/images/destination/${slug}.jpg`}
+        // image={`/images/destination/${slug}.jpg`}
+        image={`/images/destination/webp/${slug}.webp`}
         destination={slug}
       />
 

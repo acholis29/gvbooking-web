@@ -79,6 +79,7 @@ const EcommersCard: React.FC<EcommersCardProps> = ({
             alt={title}
             fill
             sizes="(max-width: 768px) 260px, 25vw"
+            // unoptimized
             // onError={(e) => {
             //   const target = e.target as HTMLImageElement;
             //   target.onerror = null;

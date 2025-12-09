@@ -532,11 +532,13 @@ const ProductSubNew: React.FC<ProductSubNewProps> = ({
                   return (
                     <span
                       key={index}
-                      className={` text-gray-800 text-xs font-semibold me-2 px-2.5 py-1 rounded-md ${
+                      className={` text-gray-800 text-xs font-semibold me-2 px-3 py-3 rounded-md ${
                         items.mandatory.toLocaleLowerCase() == "true"
                           ? "border border-red-700"
                           : "cursor-pointer border border-amber-50 hover:border-amber-500" // mandatory false
-                      } ${isExist ? "bg-amber-500" : "bg-gray-300"}`}
+                      } ${
+                        isExist ? "bg-amber-500" : "bg-gray-100 border-gray-500"
+                      }`}
                       onClick={() => {
                         if (items.mandatory.toLocaleLowerCase() != "true") {
                           handleBadgeSurchargeChange(items);
