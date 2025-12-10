@@ -35,6 +35,7 @@ import Checkbox from "@/components/Checkbox";
 import { useSession } from "next-auth/react";
 import { useProfile } from "@/context/ProfileContext";
 import Image from "next/image";
+import Breadcrumb from "@/components/Breadcrumb";
 
 type DestinationItemApi = {
   excursion_id: string;
@@ -399,6 +400,12 @@ export default function ListClient() {
   return (
     // List Page
     <div className="max-w-screen-xl mx-auto">
+      <Breadcrumb
+        pageName="List"
+        country={country || ""}
+        state={state || ""}
+        idx_comp={idx_comp || ""}
+      />
       <section className="flex flex-col md:flex-row px-6 md:pb-6 bg-white gap-6">
         {/* Search List Mobile  */}
         <div className="md:hidden flex flex-col md:flex-row md:justify-between md:items-center gap-4">

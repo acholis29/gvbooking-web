@@ -64,7 +64,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
               </svg>
               <Link
                 href={`/destination/${country}?id=${idx_comp}&country=${country}`}
-                className="ms-1 uppercase text-xs md:text-sm font-medium text-gray-500 md:ms-2"
+                className="ms-1 uppercase text-xs md:text-sm font-medium text-gray-500 md:ms-2  hover:text-red-500"
               >
                 {country}
               </Link>
@@ -92,7 +92,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
               </svg>
               <Link
                 href={`/list?id=${idx_comp}&country=${country}&state=${state}`}
-                className="ms-1 uppercase text-xs md:text-sm font-medium text-gray-500 md:ms-2"
+                className="ms-1 uppercase text-xs md:text-sm font-medium text-gray-500 md:ms-2  hover:text-red-500"
               >
                 {state}
               </Link>
