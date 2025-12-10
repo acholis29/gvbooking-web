@@ -169,6 +169,9 @@ export default function DestinationClient({ slug }: Props) {
             body: formBody.toString(),
           }
         );
+        // Check Error Cambodia
+        // const raw = await res.text();
+        // console.log("RAW RESPONSE:", raw);
 
         const json = await res.json();
         const languageList = json.msg.company_language.map((item: any) => ({
@@ -182,7 +185,6 @@ export default function DestinationClient({ slug }: Props) {
         setLanguage(param.default_language);
         // set recomendation api
         setRecomendedDestinationApi(json.msg.product_search_recommendation);
-        console.log(json.msg.product_search_recommendation);
         setMasterCurrency(currencyList);
         let presentCurrency = localStorage.getItem("currency") ?? "";
         if (presentCurrency == "") {
@@ -237,7 +239,6 @@ export default function DestinationClient({ slug }: Props) {
       .then((res) => res.json())
       .then((data) => {
         setLocalDestination(data);
-        console.log(data);
       })
       .catch((err) => console.error(err))
       .finally(() => {
