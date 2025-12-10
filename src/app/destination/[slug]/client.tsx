@@ -237,6 +237,7 @@ export default function DestinationClient({ slug }: Props) {
       .then((res) => res.json())
       .then((data) => {
         setLocalDestination(data);
+        console.log(data);
       })
       .catch((err) => console.error(err))
       .finally(() => {
@@ -318,7 +319,7 @@ export default function DestinationClient({ slug }: Props) {
       {/* Jumbotron */}
       <JumbotronComponent
         // image={`/images/destination/${slug}.jpg`}
-        image={`/images/destination/webp/${slug}.webp`}
+        image={`/images/destination/country/${slug}/${slug}.webp`}
         destination={slug}
       />
 
@@ -355,8 +356,8 @@ export default function DestinationClient({ slug }: Props) {
                 <div className="w-[260px] md:w-auto min-h-[240px]" key={index}>
                   <DestinationCard
                     // image={`/images/destination/${slug}.jpg`}
-                    image={`/images/destination/webp/${cleanString(
-                      item.State
+                    image={`/images/destination/country/${slug}/state/${cleanString(
+                      item.State.toLowerCase()
                     )}.webp`}
                     title={`${item.State}`}
                     activities={item.qty}

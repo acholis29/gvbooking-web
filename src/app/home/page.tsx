@@ -200,7 +200,7 @@ export default function Home() {
     // Home Page
     <div>
       {/* Jumbotron */}
-      <JumbotronComponent image="/images/hero/hero.jpg" />
+      <JumbotronComponent image="/images/hero/hero-second.webp" />
 
       {/* Section Destination */}
       <section className="py-6 px-4 max-w-screen-xl mx-auto">
