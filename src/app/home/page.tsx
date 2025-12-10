@@ -273,7 +273,8 @@ export default function Home() {
                   // image={`https://picsum.photos/800/600?random=${index}`}
                   // image={`https://bo.govacation.biz/media/${item.code_exc}/TN_400_${item.Gbr}`}
                   image={imgUrl}
-                  title={`${item.State}, ${item.Name_excursion}`}
+                  // title={`${item.State}, ${item.Name_excursion}`}
+                  title={`${item.Name_excursion}`}
                   sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                   price={`${item.PriceFrom}`}
                   currency={item.Currency}
@@ -328,7 +329,8 @@ export default function Home() {
                   // image={`https://picsum.photos/800/600?random=${index}`}
                   // image={`https://bo.govacation.biz/media/${item.code_exc}/TN_400_${item.Gbr}`}
                   image={imgUrl}
-                  title={`${item.State}, ${item.Name_excursion}`}
+                  // title={`${item.State}, ${item.Name_excursion}`}
+                  title={`${item.Name_excursion}`}
                   sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                   price={`${item.PriceFrom}`}
                   currency={item.Currency}

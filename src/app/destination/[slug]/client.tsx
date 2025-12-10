@@ -409,7 +409,8 @@ export default function DestinationClient({ slug }: Props) {
                   idx_comp={idx_comp ?? ""}
                   idx_excursion={item.excursion_id}
                   image={`${host_img}/${item.picture}`}
-                  title={`${item.location_state}, ${item.excursion_name}`}
+                  // title={`${item.location_state}, ${item.excursion_name}`}
+                  title={`${item.excursion_name}`}
                   sub_title={`${item.location_state}, ${item.location_country}`.toUpperCase()}
                   price={`${item.price_in_format}`}
                   currency={item.currency}
@@ -482,7 +483,8 @@ export default function DestinationClient({ slug }: Props) {
                       idx_comp={item.idx_comp}
                       idx_excursion={item.Idx_excursion}
                       image={imgUrl}
-                      title={`${item.State}, ${item.Name_excursion}`}
+                      // title={`${item.State}, ${item.Name_excursion}`}
+                      title={`${item.Name_excursion}`}
                       sub_title={`${item.Holiday_Type} • ${item.Duration_Type} | ${item.State}, ${item.Country}`.toUpperCase()}
                       price={`${item.PriceFrom}`}
                       currency={item.Currency}
