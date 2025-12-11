@@ -662,8 +662,8 @@ export default function DetailDestination() {
     stored.unshift(idx_excursion);
 
     // Batasi maksimal 5 item
-    if (stored.length > 5) {
-      stored = stored.slice(0, 5);
+    if (stored.length > 8) {
+      stored = stored.slice(0, 8);
     }
 
     // Simpan lagi
