@@ -107,12 +107,14 @@ type Props = {
   item: CartApiItem; // Ganti `any` dengan tipe yang sesuai jika ada
   onChangeCart: (item: CartApiItem, checked: boolean) => void;
   onRemoveCart: (item: CartApiItem) => void;
+  total_item: Number;
 };
 
 const CardAccordion: React.FC<Props> = ({
   item,
   onChangeCart,
   onRemoveCart,
+  total_item,
 }) => {
   const [isOpenAccordion, setAccordion] = useState(false);
   const { saveCartApi } = useCartApi();
@@ -297,7 +299,9 @@ const CardAccordion: React.FC<Props> = ({
       if (contentType.includes("application/json")) {
         const json = await res.json();
         saveCartApi(json.msg);
-        toast.success("Cart Removed");
+        if (total_item != 1) {
+          toast.success("Cart Removed");
+        }
 
         onRemoveCart(item);
         // Reload Ulang Cart

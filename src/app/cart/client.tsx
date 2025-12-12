@@ -939,6 +939,7 @@ export default function Cart() {
                   item={item}
                   onChangeCart={handleOnChangeCard}
                   onRemoveCart={handleOnRemoveCard}
+                  total_item={ListCart.length}
                 />
               );
             })}
